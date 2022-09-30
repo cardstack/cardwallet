@@ -10,6 +10,7 @@ import {
   ScrollView,
   SeedPhraseTable,
 } from '@cardstack/components';
+import { Device } from '@cardstack/utils';
 
 import { WordPressableGroup } from './components/WordPressableGroup';
 import { strings } from './strings';
@@ -25,6 +26,7 @@ const BackupSeedPhraseConfirmationScreen = () => {
     shuffledWords,
     selectedWordsIndexes,
     selectedSeedPhraseAsString,
+    handleBackupToCloudPress,
   } = useBackupSeedPhraseConfirmationScreen();
 
   return (
@@ -55,7 +57,14 @@ const BackupSeedPhraseConfirmationScreen = () => {
         <PageWithStackHeaderFooter>
           <CenteredContainer>
             {isSeedPhraseCorrect ? (
-              <Button onPress={handleConfirmPressed}>{strings.doneBtn}</Button>
+              <>
+                <Button onPress={handleConfirmPressed}>
+                  {strings.doneBtn}
+                </Button>
+                <Button variant="linkWhite" onPress={handleBackupToCloudPress}>
+                  {strings.backupToCloudBtn(Device.cloudPlatform)}
+                </Button>
+              </>
             ) : (
               <Button variant="red" onPress={handleClearPressed}>
                 {strings.retryBtn}

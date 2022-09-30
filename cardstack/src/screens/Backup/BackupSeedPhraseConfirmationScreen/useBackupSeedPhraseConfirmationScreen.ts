@@ -62,6 +62,11 @@ export const useBackupSeedPhraseConfirmationScreen = () => {
     setSelectedWords([]);
   }, [selectedWordsIndexes, setSelectedWords]);
 
+  const handleBackupToCloudPress = useCallback(() => {
+    confirmBackup();
+    navigate(Routes.BACKUP_CLOUD_PASSWORD);
+  }, [navigate, confirmBackup]);
+
   return {
     handleWordPressed,
     handleConfirmPressed,
@@ -71,5 +76,6 @@ export const useBackupSeedPhraseConfirmationScreen = () => {
     shuffledWords,
     selectedWordsIndexes,
     selectedSeedPhraseAsString,
+    handleBackupToCloudPress,
   };
 };

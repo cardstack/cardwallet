@@ -1,9 +1,10 @@
 import { isEmpty } from 'lodash';
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { useAccountSettings } from '.';
 import { findLatestBackUp } from '@cardstack/models/backup';
+import { getSeedPhrase } from '@cardstack/models/secure-storage';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import { Account } from '@rainbow-me/model/wallet';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
@@ -25,6 +26,7 @@ const walletSelector = createSelector(
 );
 
 export default function useWallets() {
+  const [seedPhrase, setSeedPhrase] = useState('');
   const { latestBackup, selectedWallet, walletNames, wallets } = useSelector(
     walletSelector
   );
@@ -57,6 +59,20 @@ export default function useWallets() {
     [accountAddress, selectedWallet.addresses]
   );
 
+  const loadSeedPhrase = useCallback(async () => {
+    try {
+      const seedphrase = await getSeedPhrase(selectedWallet.id);
+
+      setSeedPhrase(seedphrase);
+    } catch (error) {
+      logger.log('Error getting seed phrase', error);
+    }
+  }, [selectedWallet]);
+
+  useEffect(() => {
+    loadSeedPhrase();
+  }, [loadSeedPhrase]);
+
   return {
     isDamaged,
     isReadOnlyWallet: selectedWallet.type === WalletTypes.readOnly,
@@ -67,5 +83,6 @@ export default function useWallets() {
     selectedWallet,
     accountAddress,
     walletReady,
+    seedPhrase,
   };
 }

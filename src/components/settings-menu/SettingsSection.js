@@ -31,7 +31,7 @@ export default function SettingsSection({
   onPressDS,
   onPressSecurity,
 }) {
-  const { selectedWallet } = useWallets();
+  const { selectedWallet, seedPhrase } = useWallets();
   const { nativeCurrency, network, accountAddress } = useAccountSettings();
 
   const onSendFeedback = useSendFeedback();
@@ -64,8 +64,8 @@ export default function SettingsSection({
   }, [navigate]);
 
   const onPressNewBackup = useCallback(() => {
-    navigate(Routes.BACKUP_EXPLANATION);
-  }, [navigate]);
+    navigate(Routes.BACKUP_EXPLANATION, { seedPhrase });
+  }, [navigate, seedPhrase]);
 
   return (
     <ScrollView backgroundColor="white">
