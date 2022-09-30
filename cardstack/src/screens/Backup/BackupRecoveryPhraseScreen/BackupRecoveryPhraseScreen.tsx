@@ -14,8 +14,6 @@ import {
 } from '@cardstack/components';
 import { Device } from '@cardstack/utils';
 
-import { ButtonLink } from '../components/ButtonLink';
-
 import { strings } from './strings';
 import { useBackupRecoveryPhraseScreen } from './useBackupRecoveryPhraseScreen';
 
@@ -29,30 +27,51 @@ const BackupRecoveryPhraseScreen = () => {
   const {
     handleCloudBackupOnPress,
     handleManualBackupOnPress,
-    backedUp,
+    handleDeleteOnPress,
+    hasManualBackup,
+    hasCloudBackup,
     seedPhrase,
   } = useBackupRecoveryPhraseScreen();
 
-  const backupStatus = useMemo(
-    () => <BackupStatus status={backedUp ? 'success' : 'missing'} />,
-    [backedUp]
+  const backupStatusComponent = useMemo(
+    () => <BackupStatus status={hasManualBackup ? 'success' : 'missing'} />,
+    [hasManualBackup]
   );
 
+  const cloudBackupButtonsConfig = useMemo(() => {
+    const backupToCloudConfig = {
+      variant: 'linkWhite' as const,
+      onPress: handleCloudBackupOnPress,
+    };
+
+    const deleteCloudBackup = {
+      variant: 'red' as const,
+      onPress: handleDeleteOnPress,
+    };
+
+    return hasCloudBackup ? deleteCloudBackup : backupToCloudConfig;
+  }, [hasCloudBackup, handleCloudBackupOnPress, handleDeleteOnPress]);
+
   return (
-    <PageWithStackHeader headerChildren={backupStatus}>
+    <PageWithStackHeader
+      headerChildren={backupStatusComponent}
+      showSkip={false}
+    >
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={style.scrollview}
       >
-        <Container flex={1} width="90%" marginBottom={10}>
-          <Text variant="pageHeader" paddingBottom={4}>
+        <Container flex={1} width="90%" marginBottom={8}>
+          <Text variant="pageHeader" paddingBottom={2}>
             {strings.title}
           </Text>
-          <Text color="grayText" letterSpacing={0.4}>
-            {strings.description}
-          </Text>
+          {!hasManualBackup && (
+            <Text color="grayText" letterSpacing={0.4}>
+              {strings.description}
+            </Text>
+          )}
         </Container>
-        <SeedPhraseTable seedPhrase={seedPhrase} hideOnOpen />
+        <SeedPhraseTable seedPhrase={seedPhrase} hideOnOpen allowCopy />
         <Text
           color="grayText"
           letterSpacing={0.28}
@@ -64,12 +83,16 @@ const BackupRecoveryPhraseScreen = () => {
       </ScrollView>
       <PageWithStackHeaderFooter>
         <CenteredContainer>
-          <Button onPress={handleCloudBackupOnPress}>
-            {strings.primaryBtn(Device.cloudPlatform)}
+          {!hasManualBackup && (
+            <Button onPress={handleManualBackupOnPress} marginBottom={4}>
+              {strings.manualBackupBtn}
+            </Button>
+          )}
+          <Button {...cloudBackupButtonsConfig}>
+            {hasCloudBackup
+              ? strings.deleteBackupBtn(Device.cloudPlatform)
+              : strings.cloudBackupBtn(Device.cloudPlatform)}
           </Button>
-          <ButtonLink onPress={handleManualBackupOnPress}>
-            {strings.secondaryBtn}
-          </ButtonLink>
         </CenteredContainer>
       </PageWithStackHeaderFooter>
     </PageWithStackHeader>
