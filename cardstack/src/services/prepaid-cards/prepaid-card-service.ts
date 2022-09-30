@@ -1,10 +1,10 @@
 import { getSDK, PrepaidCardSafe } from '@cardstack/cardpay-sdk';
 
-import { getSafesInstance } from '@cardstack/models';
 import {
   EthersSignerParams,
   getWeb3ProviderWithEthSigner,
 } from '@cardstack/models/ethers-wallet';
+import { getSafesInstance } from '@cardstack/models/safes-providers';
 import { getSafeData } from '@cardstack/services';
 import { PrepaidCardType } from '@cardstack/types';
 import { fetchCardCustomizationFromDID } from '@cardstack/utils';

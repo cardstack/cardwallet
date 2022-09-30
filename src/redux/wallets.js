@@ -1,7 +1,6 @@
 import { captureException, captureMessage } from '@sentry/react-native';
 import { toChecksumAddress } from 'ethereumjs-util';
 import { get, isEmpty, keys } from 'lodash';
-import { backupUserDataIntoCloud } from '../handlers/cloudBackup';
 import { saveKeychainIntegrityState } from '../handlers/localstorage/globalSettings';
 import { getWalletNames } from '../handlers/localstorage/walletNames';
 import WalletBackupTypes from '../helpers/walletBackupTypes';
@@ -19,6 +18,7 @@ import {
 import { logger } from '../utils';
 import { addressKey } from '../utils/keychainConstants';
 import { settingsUpdateAccountAddress } from './settings';
+import { backupUserDataIntoCloud } from '@cardstack/models/rn-cloud';
 import { getPrivateKey, getSeedPhrase } from '@cardstack/models/secure-storage';
 
 // -- Constants --------------------------------------- //

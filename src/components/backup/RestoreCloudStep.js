@@ -9,16 +9,16 @@ import {
   Input,
   Text,
 } from '@cardstack/components';
-import { restoreCloudBackup } from '@cardstack/models/backup';
+import {
+  cloudBackupPasswordMinLength,
+  isCloudBackupPasswordValid,
+  restoreCloudBackup,
+} from '@cardstack/models/backup';
 import {
   dismissKeyboardOnAndroid,
   useLoadingOverlay,
 } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils/device';
-import {
-  cloudBackupPasswordMinLength,
-  isCloudBackupPasswordValid,
-} from '@rainbow-me/handlers/cloudBackup';
 import { isValidSeed } from '@rainbow-me/helpers/validators';
 import WalletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import { useWalletManager } from '@rainbow-me/hooks';

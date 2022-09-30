@@ -4,34 +4,16 @@ import { captureException } from '@sentry/react-native';
 import { forEach, startsWith } from 'lodash';
 
 import { getSeedPhrase } from '@cardstack/models/secure-storage';
+import { BackupUserData, BackedUpData } from '@cardstack/types';
 
-import {
-  encryptAndSaveDataToCloud,
-  getDataFromCloud,
-} from '@rainbow-me/handlers/cloudBackup';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import { AllRainbowWallets, RainbowWallet } from '@rainbow-me/model/wallet';
 import logger from 'logger';
 
-interface BackedUpData {
-  [key: string]:
-    | string
-    | {
-        version: number;
-        wallets: AllRainbowWallets;
-      };
-}
+import { encryptAndSaveDataToCloud, getDataFromCloud } from './rn-cloud';
 
-interface BackupUserData {
-  wallets: AllRainbowWallets;
-}
-
-export interface ICloudBackupData {
-  createdAt: number;
-  updatedAt: number;
-  secrets?: { [key: string]: string };
-  seedPhrase?: string;
-}
+export const cloudBackupPasswordMinLength = 8;
+export const iCloudPasswordRules = `minlength: ${cloudBackupPasswordMinLength}; required: digit;`;
 
 const isBackedUpWallet = (wallet: RainbowWallet) =>
   wallet.backedUp &&
@@ -153,3 +135,9 @@ export async function findAndParseOldSeed(
     captureException(e);
   }
 }
+
+// TODO: remove after old backup implementation is gone.
+export const isCloudBackupPasswordValid = (password: string) =>
+  password &&
+  password !== '' &&
+  password.length >= cloudBackupPasswordMinLength;

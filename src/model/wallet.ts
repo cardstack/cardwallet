@@ -37,6 +37,7 @@ import {
 } from '../utils/keychainConstants';
 import * as keychain from './keychain';
 import { getEthersWalletWithSeed } from '@cardstack/models/ethers-wallet';
+import { backupUserDataIntoCloud } from '@cardstack/models/rn-cloud';
 
 import {
   getPin,
@@ -51,7 +52,6 @@ import { skipProfileCreation } from '@cardstack/redux/persistedFlagsSlice';
 import { restartApp } from '@cardstack/utils';
 import { Device } from '@cardstack/utils/device';
 
-import { backupUserDataIntoCloud } from '@rainbow-me/handlers/cloudBackup';
 import {
   deleteKeychainIntegrityState,
   deletePinAuthAttemptsData,
@@ -636,7 +636,8 @@ export const createOrImportWallet = async ({
     await saveAddress(walletAddress);
     logger.sentry('[createWallet] - saveAddress');
 
-    // updates the cloud backup in case the user is importing a wallet from the backup
+    // updates the wallet_id on the UserData.json cloud backup file
+    // because importing via seedphrase creates a new wallet_id
     if (isBackedUp) {
       try {
         await backupUserDataIntoCloud({ wallets: allWallets });

@@ -1,9 +1,8 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
+import * as rnCloud from '@cardstack/models/rn-cloud';
 import { Routes } from '@cardstack/navigation/routes';
 import { Device } from '@cardstack/utils/device';
-
-import * as cloudBackup from '@rainbow-me/handlers/cloudBackup';
 
 import { useWelcomeScreen } from '../hooks';
 
@@ -48,13 +47,13 @@ describe('useWelcomeScreen', () => {
   };
 
   const spyIsCloudAvailable = jest
-    .spyOn(cloudBackup, 'isCloudBackupAvailable')
+    .spyOn(rnCloud, 'isIOSCloudBackupAvailable')
     .mockReturnValue(Promise.resolve(true));
 
-  jest.spyOn(cloudBackup, 'syncCloud').mockReturnValue(Promise.resolve(true));
+  jest.spyOn(rnCloud, 'syncCloudIOS').mockReturnValue(Promise.resolve(true));
 
   const fetchUserDataFromCloud = jest
-    .spyOn(cloudBackup, 'fetchUserDataFromCloud')
+    .spyOn(rnCloud, 'fetchUserDataFromCloud')
     .mockResolvedValue(Promise.resolve(mockedUserData));
 
   afterEach(() => {

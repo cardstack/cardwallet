@@ -6,12 +6,12 @@ import { useDispatch } from 'react-redux';
 import { setWalletBackedUp } from '../redux/wallets';
 import useWallets from './useWallets';
 import { backupWalletToCloud } from '@cardstack/models/backup';
-import { useLoadingOverlay } from '@cardstack/navigation';
-import { Device } from '@cardstack/utils/device';
 import {
   CLOUD_BACKUP_ERRORS,
-  isCloudBackupAvailable,
-} from '@rainbow-me/handlers/cloudBackup';
+  isIOSCloudBackupAvailable,
+} from '@cardstack/models/rn-cloud';
+import { useLoadingOverlay } from '@cardstack/navigation';
+import { Device } from '@cardstack/utils/device';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import logger from 'logger';
@@ -52,26 +52,28 @@ export default function useWalletCloudBackup() {
       password,
       walletId,
     }) => {
-      const isAvailable = await isCloudBackupAvailable();
-      if (!isAvailable) {
-        Alert.alert(
-          'iCloud Not Enabled',
-          `Looks like iCloud drive is not enabled on your device.
-          Do you want to see how to enable it?`,
-          [
-            {
-              onPress: () => {
-                Linking.openURL('https://support.apple.com/en-us/HT204025');
+      if (Device.isIOS) {
+        const isAvailable = await isIOSCloudBackupAvailable();
+        if (!isAvailable) {
+          Alert.alert(
+            'iCloud Not Enabled',
+            `Looks like iCloud drive is not enabled on your device.
+            Do you want to see how to enable it?`,
+            [
+              {
+                onPress: () => {
+                  Linking.openURL('https://support.apple.com/en-us/HT204025');
+                },
+                text: 'Yes, Show me',
               },
-              text: 'Yes, Show me',
-            },
-            {
-              style: 'cancel',
-              text: 'No thanks',
-            },
-          ]
-        );
-        return;
+              {
+                style: 'cancel',
+                text: 'No thanks',
+              },
+            ]
+          );
+          return;
+        }
       }
 
       if (!password && !latestBackup) {
@@ -88,7 +90,7 @@ export default function useWalletCloudBackup() {
 
       showLoadingOverlay({ title: walletLoadingStates.BACKING_UP_WALLET });
 
-      let updatedBackupFile: string | null = null;
+      let updatedBackupFile: string | undefined;
       try {
         logger.log(`backing up to ${cloudPlatform}`, wallets[walletId]);
         updatedBackupFile = await backupWalletToCloud(

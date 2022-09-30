@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo, useState } from 'react';
+import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
 
 import {
   Container,
@@ -6,7 +6,6 @@ import {
   Icon,
   IconName,
   Input,
-  InputProps,
   Text,
   Touchable,
   BaseInputProps,
@@ -14,28 +13,22 @@ import {
 import { palette } from '@cardstack/theme';
 import { hitSlop } from '@cardstack/utils';
 
-const baseInputProps: InputProps = {
-  paddingHorizontal: 5,
-  paddingVertical: 3,
-  color: 'white',
-  selectionColor: 'teal',
-};
-
 interface PasswordInputProps extends BaseInputProps {
-  value?: string;
   containerProps?: ContainerProps;
   isValid: boolean;
   validationMessage: string;
 }
 
-const PasswordInput = ({
-  containerProps,
-  onChangeText,
-  value = '',
-  isValid,
-  validationMessage,
-  ...inputProps
-}: PasswordInputProps) => {
+const PasswordInput = forwardRef((props: PasswordInputProps, ref) => {
+  const {
+    containerProps,
+    onChangeText,
+    value,
+    isValid,
+    validationMessage,
+    ...inputProps
+  } = props;
+
   const [isPasswordVisible, setPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = useCallback(() => {
@@ -59,13 +52,21 @@ const PasswordInput = ({
       >
         <Container flex={1}>
           <Input
-            {...baseInputProps}
+            paddingHorizontal={5}
+            paddingVertical={3}
+            color="white"
+            selectionColor="teal"
+            autoCompleteType="password"
+            blurOnSubmit={false}
+            selectTextOnFocus={true}
+            textContentType="password"
             {...inputProps}
             placeholderTextColor={palette.blueText}
             secureTextEntry={!isPasswordVisible}
             autoCapitalize="none"
             onChangeText={onChangeText}
             value={value}
+            ref={ref}
           />
         </Container>
         <Touchable
@@ -90,6 +91,6 @@ const PasswordInput = ({
       </Container>
     </Container>
   );
-};
+});
 
 export default memo(PasswordInput);

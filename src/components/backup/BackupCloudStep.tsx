@@ -24,8 +24,8 @@ import {
   Input,
   Text,
 } from '@cardstack/components';
+import { isCloudBackupPasswordValid } from '@cardstack/models/backup';
 import { Routes } from '@cardstack/navigation';
-import { isCloudBackupPasswordValid } from '@rainbow-me/handlers/cloudBackup';
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import {
   useRouteExistsInNavigationState,
