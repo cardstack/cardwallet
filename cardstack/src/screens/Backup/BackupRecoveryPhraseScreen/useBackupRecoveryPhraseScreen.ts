@@ -33,8 +33,6 @@ export const useBackupRecoveryPhraseScreen = () => {
     hasCloudBackup:
       selectedWallet.backedUp &&
       selectedWallet.backupType === WalletBackupTypes.cloud,
-    hasManualBackup:
-      selectedWallet.backedUp &&
-      selectedWallet.backupType === WalletBackupTypes.manual,
+    hasManualBackup: selectedWallet.manuallyBackedUp,
   };
 };
