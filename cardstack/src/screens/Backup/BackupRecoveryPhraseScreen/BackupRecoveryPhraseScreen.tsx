@@ -65,11 +65,9 @@ const BackupRecoveryPhraseScreen = () => {
           <Text variant="pageHeader" paddingBottom={2}>
             {strings.title}
           </Text>
-          {!hasManualBackup && (
-            <Text color="grayText" letterSpacing={0.4}>
-              {strings.description}
-            </Text>
-          )}
+          <Text color="grayText" letterSpacing={0.4}>
+            {strings.description}
+          </Text>
         </Container>
         <SeedPhraseTable seedPhrase={seedPhrase} hideOnOpen allowCopy />
         <Text
