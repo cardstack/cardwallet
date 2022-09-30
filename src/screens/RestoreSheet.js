@@ -33,14 +33,14 @@ export default function RestoreSheet() {
         const data = await fetchUserDataFromCloud();
         if (data) {
           setParams({ userData: data });
-        } else {
-          setNoBackupsFound(true);
         }
       }
 
       // Animate transforming into backup sheet
       layoutEasingAnimation();
       setParams({ step: WalletBackupStepTypes.cloud });
+    } catch {
+      setNoBackupsFound(true);
     } finally {
       setIsFetchingBackups(false);
     }

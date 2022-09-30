@@ -109,7 +109,7 @@ export const getDataFromCloud = async (
   if (!backups || !backups.files || !backups.files.length) {
     logger.log('[BACKUP] No backups found');
 
-    return;
+    throw '[BACKUP] No backups found';
   }
 
   const document = getBackupDocumentByFilename(backups, filename);
