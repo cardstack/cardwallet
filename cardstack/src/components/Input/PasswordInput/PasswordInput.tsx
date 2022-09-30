@@ -6,26 +6,12 @@ import {
   Icon,
   IconName,
   Input,
-  InputProps,
   Text,
   Touchable,
   BaseInputProps,
 } from '@cardstack/components';
 import { palette } from '@cardstack/theme';
 import { hitSlop } from '@cardstack/utils';
-
-const baseInputProps: InputProps = {
-  paddingHorizontal: 5,
-  paddingVertical: 3,
-  color: 'white',
-  selectionColor: 'teal',
-  autoCompleteType: 'password',
-  blurOnSubmit: false,
-  selectTextOnFocus: true,
-  textContentType: 'password',
-  autoCapitalize: 'none',
-  placeholderTextColor: palette.blueText,
-};
 
 interface PasswordInputProps extends BaseInputProps {
   containerProps?: ContainerProps;
@@ -66,7 +52,14 @@ const PasswordInput = forwardRef((props: PasswordInputProps, ref) => {
       >
         <Container flex={1}>
           <Input
-            {...baseInputProps}
+            paddingHorizontal={5}
+            paddingVertical={3}
+            color="white"
+            selectionColor="teal"
+            autoCompleteType="password"
+            blurOnSubmit={false}
+            selectTextOnFocus={true}
+            textContentType="password"
             {...inputProps}
             placeholderTextColor={palette.blueText}
             secureTextEntry={!isPasswordVisible}
