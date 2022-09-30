@@ -33,6 +33,8 @@ export default function RestoreSheet() {
         const data = await fetchUserDataFromCloud();
         if (data) {
           setParams({ userData: data });
+        } else {
+          setNoBackupsFound(true);
         }
       }
 
