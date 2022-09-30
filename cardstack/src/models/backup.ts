@@ -136,6 +136,7 @@ export async function findAndParseOldSeed(
   }
 }
 
+// TODO: remove after old backup implementation is gone.
 export const isCloudBackupPasswordValid = (password: string) =>
   password &&
   password !== '' &&
