@@ -91,9 +91,6 @@ export const walletsLoadState = () => async (dispatch, getState) => {
       selectedWallet.backupType === WalletBackupTypes.manual &&
       !selectedWallet.manuallyBackedUp
     ) {
-      console.log('::: setting manuallyBackedUp', {
-        manual: selectedWallet.manuallyBackedUp,
-      });
       selectedWallet.manuallyBackedUp = true;
     }
 
