@@ -39,6 +39,10 @@ const BackupRecoveryPhraseScreen = () => {
   );
 
   const cloudBackupButtonsConfig = useMemo(() => {
+    const backupToCloudAsPrimaryConfig = {
+      onPress: handleCloudBackupOnPress,
+    };
+
     const backupToCloudConfig = {
       variant: 'linkWhite' as const,
       onPress: handleCloudBackupOnPress,
@@ -49,8 +53,21 @@ const BackupRecoveryPhraseScreen = () => {
       onPress: handleDeleteOnPress,
     };
 
-    return hasCloudBackup ? deleteCloudBackup : backupToCloudConfig;
-  }, [hasCloudBackup, handleCloudBackupOnPress, handleDeleteOnPress]);
+    if (hasCloudBackup) {
+      return deleteCloudBackup;
+    }
+
+    if (hasManualBackup) {
+      return backupToCloudAsPrimaryConfig;
+    }
+
+    return backupToCloudConfig;
+  }, [
+    hasCloudBackup,
+    hasManualBackup,
+    handleCloudBackupOnPress,
+    handleDeleteOnPress,
+  ]);
 
   return (
     <PageWithStackHeader
