@@ -85,6 +85,15 @@ export const walletsLoadState = () => async (dispatch, getState) => {
       );
     }
 
+    // Migrate backup generic info if set to manual type to specific manuallyBackedUp flag.
+    if (
+      selectedWallet.backedUp &&
+      selectedWallet.backupType === WalletBackupTypes.manual &&
+      !selectedWallet.manuallyBackedUp
+    ) {
+      selectedWallet.manuallyBackedUp = true;
+    }
+
     const walletNames = await getWalletNames();
 
     dispatch({
@@ -119,7 +128,18 @@ export const walletsSetSelected = wallet => async dispatch => {
   });
 };
 
-export const setWalletBackedUp = (walletId, method, backupFile = '') => async (
+export const setWalletManualBackup = walletId => async (dispatch, getState) => {
+  const { wallets } = getState().wallets;
+  const newWallets = { ...wallets };
+  newWallets[walletId] = {
+    ...newWallets[walletId],
+    manuallyBackedUp: true,
+  };
+
+  await dispatch(walletsUpdate(newWallets));
+};
+
+export const setWalletCloudBackup = (walletId, backupFile = '') => async (
   dispatch,
   getState
 ) => {
@@ -130,7 +150,7 @@ export const setWalletBackedUp = (walletId, method, backupFile = '') => async (
     backedUp: true,
     backupDate: Date.now(),
     backupFile,
-    backupType: method,
+    backupType: WalletBackupTypes.cloud,
   };
 
   await dispatch(walletsUpdate(newWallets));
@@ -138,14 +158,12 @@ export const setWalletBackedUp = (walletId, method, backupFile = '') => async (
     await dispatch(walletsSetSelected(newWallets[walletId]));
   }
 
-  if (method === WalletBackupTypes.cloud) {
-    try {
-      await backupUserDataIntoCloud({ wallets: newWallets });
-    } catch (e) {
-      logger.sentry('SAVING WALLET USERDATA FAILED');
-      captureException(e);
-      throw e;
-    }
+  try {
+    await backupUserDataIntoCloud({ wallets: newWallets });
+  } catch (e) {
+    logger.sentry('SAVING WALLET USERDATA FAILED');
+    captureException(e);
+    throw e;
   }
 };
 

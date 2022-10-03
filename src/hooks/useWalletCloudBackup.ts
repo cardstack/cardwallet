@@ -3,7 +3,7 @@ import { values } from 'lodash';
 import { useCallback } from 'react';
 import { Alert, Linking } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { setWalletBackedUp } from '../redux/wallets';
+import { setWalletCloudBackup } from '../redux/wallets';
 import useWallets from './useWallets';
 import { backupWalletToCloud } from '@cardstack/models/backup';
 import {
@@ -12,7 +12,6 @@ import {
 } from '@cardstack/models/rn-cloud';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils/device';
-import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import logger from 'logger';
 
@@ -110,13 +109,7 @@ export default function useWalletCloudBackup() {
 
       try {
         logger.log('backup completed!');
-        await dispatch(
-          setWalletBackedUp(
-            walletId,
-            WalletBackupTypes.cloud,
-            updatedBackupFile
-          )
-        );
+        await dispatch(setWalletCloudBackup(walletId, updatedBackupFile));
         logger.log('backup saved everywhere!');
         dismissLoadingOverlay();
 

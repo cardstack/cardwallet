@@ -130,7 +130,7 @@ export default function SettingsSection({
           <ListItemArrowGroup showArrow={false}>
             <Icon
               iconSize="medium"
-              name={selectedWallet.backedUp ? 'success' : 'warning'}
+              name={selectedWallet.manuallyBackedUp ? 'success' : 'warning'}
             />
           </ListItemArrowGroup>
         </ListItem>
