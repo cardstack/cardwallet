@@ -12,7 +12,6 @@ import {
 } from '@cardstack/models/rn-cloud';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils/device';
-import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import logger from 'logger';
 
