@@ -88,9 +88,13 @@ export const walletsLoadState = () => async (dispatch, getState) => {
     // Migrate backup generic info if set to manual type to specific manuallyBackedUp flag.
     if (
       selectedWallet.backedUp &&
-      selectedWallet.backupType === WalletBackupTypes.manual
+      selectedWallet.backupType === WalletBackupTypes.manual &&
+      !selectedWallet.manuallyBackedUp
     ) {
-      await dispatch(setWalletManualBackup(selectedWallet.id));
+      console.log('::: setting manuallyBackedUp', {
+        manual: selectedWallet.manuallyBackedUp,
+      });
+      selectedWallet.manuallyBackedUp = true;
     }
 
     const walletNames = await getWalletNames();
