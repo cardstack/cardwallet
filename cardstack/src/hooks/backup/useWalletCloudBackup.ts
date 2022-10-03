@@ -9,10 +9,9 @@ import { useLoadingOverlay } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils';
 
 import { Alert } from '@rainbow-me/components/alerts';
-import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import { useWallets } from '@rainbow-me/hooks';
-import { setWalletBackedUp } from '@rainbow-me/redux/wallets';
+import { setWalletCloudBackup } from '@rainbow-me/redux/wallets';
 import { logger } from '@rainbow-me/utils';
 
 import { getFriendlyErrorMessage } from './utils';
@@ -72,11 +71,7 @@ export const useWalletCloudBackup = () => {
         if (updatedBackupFile) {
           logger.log('[BACKUP] Backup completed!');
           await dispatch(
-            setWalletBackedUp(
-              selectedWallet.id,
-              WalletBackupTypes.cloud,
-              updatedBackupFile
-            )
+            setWalletCloudBackup(selectedWallet.id, updatedBackupFile)
           );
 
           logger.log('[BACKUP] Backup saved everywhere!');
