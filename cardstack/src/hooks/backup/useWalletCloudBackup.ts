@@ -18,8 +18,6 @@ import { useWallets } from '@rainbow-me/hooks';
 import { setWalletBackedUp } from '@rainbow-me/redux/wallets';
 import { logger } from '@rainbow-me/utils';
 
-import { getFriendlyErrorMessage } from './utils';
-
 interface BackupToCloud {
   password: string;
 }
@@ -89,17 +87,16 @@ export const useWalletCloudBackup = () => {
       } catch (error) {
         const title = `Error while trying to backup wallet to ${Device.cloudPlatform}`;
 
-        const message = getFriendlyErrorMessage(
-          error.message ||
-            CLOUD_BACKUP_ERRORS.WALLET_BACKUP_STATUS_UPDATE_FAILED
-        );
+        const message =
+          error?.message ||
+          CLOUD_BACKUP_ERRORS.WALLET_BACKUP_STATUS_UPDATE_FAILED;
 
         Alert({
           title,
           message,
         });
 
-        logger.sentry(`${title}: ${message}`);
+        logger.sentry(`[BACKUP] ${message}`);
         captureException(error);
       }
     },
