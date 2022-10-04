@@ -55,15 +55,13 @@ export default function AlreadyBackedUpView() {
 
   const walletStatus = useMemo(() => {
     let status = null;
-    if (
-      wallets[walletId].manuallyBackedUp ||
-      (wallets[walletId].backedUp &&
-        wallets[walletId].backupType === WalletBackupTypes.manual)
-    ) {
+    const wallet = wallets[walletId];
+
+    if (wallet.manuallyBackedUp) {
       status = WalletBackupStatus.MANUAL_BACKUP;
     } else if (
-      wallets[walletId].backedUp &&
-      wallets[walletId].backupType === WalletBackupTypes.cloud
+      wallet.backedUp &&
+      wallet.backupType === WalletBackupTypes.cloud
     ) {
       status = WalletBackupStatus.CLOUD_BACKUP;
     } else {
