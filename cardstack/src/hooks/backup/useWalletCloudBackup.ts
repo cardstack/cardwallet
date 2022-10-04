@@ -1,3 +1,4 @@
+import { StackActions, useNavigation } from '@react-navigation/native';
 import { captureException } from '@sentry/react-native';
 import { useCallback } from 'react';
 import { Linking } from 'react-native';
@@ -43,6 +44,7 @@ export const useWalletCloudBackup = () => {
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
   const { selectedWallet } = useWallets();
   const dispatch = useDispatch();
+  const { dispatch: navDispatch } = useNavigation();
 
   const backupToCloud = useCallback(
     async ({ password }: BackupToCloud) => {
@@ -76,9 +78,9 @@ export const useWalletCloudBackup = () => {
           );
 
           logger.log('[BACKUP] Backup saved everywhere!');
+          dismissLoadingOverlay();
+          navDispatch(StackActions.popToTop());
         }
-
-        dismissLoadingOverlay();
       } catch (error) {
         const title = `Error while trying to backup wallet to ${Device.cloudPlatform}`;
 
