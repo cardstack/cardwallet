@@ -34,12 +34,9 @@ export const useSelectedWallet = () => {
     [selectedWallet]
   );
 
-  const hasManualBackup = useMemo(
-    () =>
-      selectedWallet.backedUp &&
-      selectedWallet.backupType === WalletBackupTypes.manual,
-    [selectedWallet]
-  );
+  const hasManualBackup = useMemo(() => selectedWallet.manuallyBackedUp, [
+    selectedWallet,
+  ]);
 
   return {
     seedPhrase,
