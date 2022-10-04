@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { backupWalletToCloud } from '@cardstack/models/backup';
 import {
   CLOUD_BACKUP_ERRORS,
+  deleteAllBackups,
   isIOSCloudBackupAvailable,
 } from '@cardstack/models/rn-cloud';
 import { useLoadingOverlay } from '@cardstack/navigation';
@@ -15,7 +16,7 @@ import { Device } from '@cardstack/utils';
 import { Alert } from '@rainbow-me/components/alerts';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import { useWallets } from '@rainbow-me/hooks';
-import { setWalletCloudBackup } from '@rainbow-me/redux/wallets';
+import { setWalletCloudBackup, walletsUpdate } from '@rainbow-me/redux/wallets';
 import { logger } from '@rainbow-me/utils';
 
 interface BackupToCloud {
@@ -42,7 +43,7 @@ Do you want to see how to enable it?`,
 
 export const useWalletCloudBackup = () => {
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
-  const { selectedWallet } = useWallets();
+  const { selectedWallet, wallets } = useWallets();
   const dispatch = useDispatch();
   const { dispatch: navDispatch } = useNavigation();
 
@@ -82,6 +83,8 @@ export const useWalletCloudBackup = () => {
           navDispatch(StackActions.popToTop());
         }
       } catch (error) {
+        dismissLoadingOverlay();
+
         const title = `Error while trying to backup wallet to ${Device.cloudPlatform}`;
 
         const message =
@@ -97,26 +100,61 @@ export const useWalletCloudBackup = () => {
         captureException(error);
       }
     },
-    [showLoadingOverlay, selectedWallet, dismissLoadingOverlay, dispatch]
+    [
+      showLoadingOverlay,
+      selectedWallet,
+      dismissLoadingOverlay,
+      dispatch,
+      navDispatch,
+    ]
   );
+
+  const handleOnPressConfirm = useCallback(async () => {
+    showLoadingOverlay({ title: 'Deleting backup...' });
+
+    try {
+      await deleteAllBackups();
+
+      const updatedWallets = { ...wallets };
+      Object.keys(updatedWallets).forEach(key => {
+        updatedWallets[key].backedUp = false;
+        updatedWallets[key].backupDate = undefined;
+        updatedWallets[key].backupFile = undefined;
+        updatedWallets[key].backupType = undefined;
+      });
+
+      await dispatch(walletsUpdate(updatedWallets));
+
+      dismissLoadingOverlay();
+
+      Alert({
+        title: 'Backup successfully deleted!',
+      });
+    } catch (error) {
+      Alert({
+        title: 'Error deleting your backup files.',
+        message:
+          'Try again in a few minutes. Make sure you have a stable internet connection.',
+      });
+    }
+  }, [dispatch, wallets, showLoadingOverlay, dismissLoadingOverlay]);
 
   const deleteCloudBackups = useCallback(() => {
     Alert({
       title: `Are you sure you want to delete your ${Device.cloudPlatform} wallet backups?`,
       buttons: [
         {
-          onPress: () => console.log('delete'),
+          onPress: handleOnPressConfirm,
           style: 'destructive',
           text: 'Confirm and Delete Backups',
         },
         {
-          onPress: () => console.log('cancel'),
           style: 'cancel',
           text: 'Cancel',
         },
       ],
     });
-  }, []);
+  }, [handleOnPressConfirm]);
 
   return {
     backupToCloud,
