@@ -4,7 +4,10 @@ import { Linking } from 'react-native';
 import { useDispatch } from 'react-redux';
 
 import { backupWalletToCloud } from '@cardstack/models/backup';
-import { isIOSCloudBackupAvailable } from '@cardstack/models/rn-cloud';
+import {
+  CLOUD_BACKUP_ERRORS,
+  isIOSCloudBackupAvailable,
+} from '@cardstack/models/rn-cloud';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils';
 
@@ -13,8 +16,6 @@ import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import { useWallets } from '@rainbow-me/hooks';
 import { setWalletCloudBackup } from '@rainbow-me/redux/wallets';
 import { logger } from '@rainbow-me/utils';
-
-import { getFriendlyErrorMessage } from './utils';
 
 interface BackupToCloud {
   password: string;
@@ -81,15 +82,16 @@ export const useWalletCloudBackup = () => {
       } catch (error) {
         const title = `Error while trying to backup wallet to ${Device.cloudPlatform}`;
 
-        console.log('error', error);
-        const message = getFriendlyErrorMessage(error.message);
+        const message =
+          error?.message ||
+          CLOUD_BACKUP_ERRORS.WALLET_BACKUP_STATUS_UPDATE_FAILED;
 
         Alert({
           title,
           message,
         });
 
-        logger.sentry(`${title}: ${message}`);
+        logger.sentry(`[BACKUP] ${message}`);
         captureException(error);
       }
     },

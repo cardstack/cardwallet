@@ -161,7 +161,7 @@ export const encryptAndSaveDataToCloud = async (
     );
 
     if (!encryptedData) {
-      throw new Error('[BACKUP] Error encrypting backup data');
+      throw new Error(`[BACKUP] Encrypted data shouldn't be null`);
     }
 
     // Store it on the FS first
