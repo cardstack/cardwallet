@@ -1,12 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import { useCallback } from 'react';
 
-import { useSelectedWallet } from '@cardstack/hooks';
+import { useSelectedWallet, useWalletCloudBackup } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
 
 export const useBackupRecoveryPhraseScreen = () => {
   const { navigate } = useNavigation();
   const { seedPhrase, hasManualBackup, hasCloudBackup } = useSelectedWallet();
+  const { deleteCloudBackups } = useWalletCloudBackup();
 
   const handleCloudBackupOnPress = useCallback(
     () => navigate(Routes.BACKUP_CLOUD_PASSWORD, { seedPhrase }),
@@ -20,8 +21,8 @@ export const useBackupRecoveryPhraseScreen = () => {
   }, [navigate, seedPhrase]);
 
   const handleDeleteOnPress = useCallback(() => {
-    // TBD.
-  }, []);
+    deleteCloudBackups();
+  }, [deleteCloudBackups]);
 
   return {
     handleCloudBackupOnPress,

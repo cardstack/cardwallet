@@ -98,7 +98,26 @@ export const useWalletCloudBackup = () => {
     [showLoadingOverlay, selectedWallet, dismissLoadingOverlay, dispatch]
   );
 
+  const deleteCloudBackups = useCallback(() => {
+    Alert({
+      title: `Are you sure you want to delete your ${Device.cloudPlatform} wallet backups?`,
+      buttons: [
+        {
+          onPress: () => console.log('delete'),
+          style: 'destructive',
+          text: 'Confirm and Delete Backups',
+        },
+        {
+          onPress: () => console.log('cancel'),
+          style: 'cancel',
+          text: 'Cancel',
+        },
+      ],
+    });
+  }, []);
+
   return {
     backupToCloud,
+    deleteCloudBackups,
   };
 };
