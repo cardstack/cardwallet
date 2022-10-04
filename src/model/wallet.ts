@@ -130,6 +130,7 @@ export interface RainbowWallet {
   backupDate?: string;
   backupType?: string;
   damaged?: boolean;
+  manuallyBackedUp?: boolean;
 }
 
 export interface AllRainbowWallets {
