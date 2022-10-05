@@ -129,7 +129,7 @@ export const walletsSetSelected = wallet => async dispatch => {
 };
 
 export const setWalletManualBackup = walletId => async (dispatch, getState) => {
-  const { wallets } = getState().wallets;
+  const { wallets, selected } = getState().wallets;
   const newWallets = { ...wallets };
   newWallets[walletId] = {
     ...newWallets[walletId],
@@ -137,6 +137,9 @@ export const setWalletManualBackup = walletId => async (dispatch, getState) => {
   };
 
   await dispatch(walletsUpdate(newWallets));
+  if (selected.id === walletId) {
+    await dispatch(walletsSetSelected(newWallets[walletId]));
+  }
 };
 
 export const setWalletCloudBackup = (walletId, backupFile = '') => async (
