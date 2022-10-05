@@ -27,8 +27,8 @@ interface BackupToCloud {
 
 const iCloudAlertConfig = {
   title: 'iCloud Not Enabled',
-  message: `Looks like iCloud drive is not enabled on your device.
-Do you want to see how to enable it?`,
+  message:
+    'Looks like iCloud drive is not enabled on your device. Do you want to see how to enable it?',
   buttons: [
     {
       onPress: () => {
