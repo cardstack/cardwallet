@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
+import { isBackedUpWallet } from '@cardstack/models/backup';
+
 import { useWallets } from '@rainbow-me/hooks';
 import { loadSeedPhrase } from '@rainbow-me/model/wallet';
 import { logger } from '@rainbow-me/utils';
@@ -22,22 +23,18 @@ export const useSelectedWallet = () => {
   }, [selectedWallet]);
 
   useEffect(() => {
-    if (walletReady) {
+    if (walletReady && !seedPhrase) {
       getSeedPhrase();
     }
-  }, [walletReady, getSeedPhrase]);
+  }, [walletReady, getSeedPhrase, seedPhrase]);
 
-  const hasCloudBackup = useMemo(
-    () =>
-      selectedWallet.backedUp &&
-      selectedWallet.backupType === WalletBackupTypes.cloud,
-    [selectedWallet]
-  );
+  const hasCloudBackup = useMemo(() => isBackedUpWallet(selectedWallet), [
+    selectedWallet,
+  ]);
 
-  const hasManualBackup = useMemo(
-    () => selectedWallet?.manuallyBackedUp ?? false,
-    [selectedWallet]
-  );
+  const hasManualBackup = useMemo(() => selectedWallet?.manuallyBackedUp, [
+    selectedWallet,
+  ]);
 
   return {
     seedPhrase,

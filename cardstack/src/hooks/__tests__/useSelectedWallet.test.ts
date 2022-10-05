@@ -78,6 +78,8 @@ describe('useSelectedWallet', () => {
         ...walletMock,
         backedUp: true,
         backupType: WalletBackupTypes.cloud,
+        backupDate: '1657732642021',
+        backupFile: 'latestBackupFile.json',
       },
     });
 
@@ -100,7 +102,7 @@ describe('useSelectedWallet', () => {
     const { result } = renderHook(() => useSelectedWallet());
 
     await waitFor(() => {
-      expect(result.current.hasCloudBackup).toBe(false);
+      expect(result.current.hasCloudBackup).toBeFalsy();
     });
   });
 
@@ -116,7 +118,7 @@ describe('useSelectedWallet', () => {
     const { result } = renderHook(() => useSelectedWallet());
 
     await waitFor(() => {
-      expect(result.current.hasCloudBackup).toBe(false);
+      expect(result.current.hasCloudBackup).toBeFalsy();
     });
   });
 
@@ -139,7 +141,7 @@ describe('useSelectedWallet', () => {
     const { result } = renderHook(() => useSelectedWallet());
 
     await waitFor(() => {
-      expect(result.current.hasManualBackup).toBe(false);
+      expect(result.current.hasManualBackup).toBeFalsy();
     });
   });
 });

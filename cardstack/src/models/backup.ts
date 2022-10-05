@@ -15,7 +15,7 @@ import { encryptAndSaveDataToCloud, getDataFromCloud } from './rn-cloud';
 export const cloudBackupPasswordMinLength = 8;
 export const iCloudPasswordRules = `minlength: ${cloudBackupPasswordMinLength}; required: digit;`;
 
-const hasCloudBackup = (wallet: RainbowWallet) =>
+export const isBackedUpWallet = (wallet: RainbowWallet) =>
   wallet.backedUp &&
   wallet.backupDate &&
   wallet.backupFile &&
@@ -46,7 +46,7 @@ export function findLatestBackUp(wallets: AllRainbowWallets) {
 
   forEach(wallets, wallet => {
     // Check if there's a wallet backed up
-    if (hasCloudBackup(wallet)) {
+    if (isBackedUpWallet(wallet)) {
       // If there is one, let's grab the latest backup
       // @ts-expect-error isBackupWallet checks undefined values
       if (!latestBackup || wallet?.backupDate > latestBackup) {
