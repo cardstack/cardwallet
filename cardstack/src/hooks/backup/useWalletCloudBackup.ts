@@ -16,9 +16,11 @@ import { Device } from '@cardstack/utils';
 import { Alert } from '@rainbow-me/components/alerts';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import { useWallets } from '@rainbow-me/hooks';
-import { setWalletCloudBackup, walletsUpdate } from '@rainbow-me/redux/wallets';
-import { logger } from '@rainbow-me/utils';
-
+import {
+  deleteWalletCloudBackup,
+  setWalletCloudBackup,
+} from '@rainbow-me/redux/wallets';
+import logger from 'logger';
 interface BackupToCloud {
   password: string;
 }
@@ -43,7 +45,7 @@ Do you want to see how to enable it?`,
 
 export const useWalletCloudBackup = () => {
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
-  const { selectedWallet, wallets } = useWallets();
+  const { selectedWallet } = useWallets();
   const dispatch = useDispatch();
   const { dispatch: navDispatch } = useNavigation();
 
@@ -79,9 +81,10 @@ export const useWalletCloudBackup = () => {
           );
 
           logger.log('[BACKUP] Backup saved everywhere!');
-          dismissLoadingOverlay();
           navDispatch(StackActions.popToTop());
         }
+
+        dismissLoadingOverlay();
       } catch (error) {
         dismissLoadingOverlay();
 
@@ -115,15 +118,7 @@ export const useWalletCloudBackup = () => {
     try {
       await deleteAllCloudBackups();
 
-      const updatedWallets = { ...wallets };
-      Object.keys(updatedWallets).forEach(key => {
-        updatedWallets[key].backedUp = false;
-        updatedWallets[key].backupDate = undefined;
-        updatedWallets[key].backupFile = undefined;
-        updatedWallets[key].backupType = undefined;
-      });
-
-      await dispatch(walletsUpdate(updatedWallets));
+      await dispatch(deleteWalletCloudBackup());
 
       dismissLoadingOverlay();
 
@@ -137,7 +132,7 @@ export const useWalletCloudBackup = () => {
           'Try again in a few minutes. Make sure you have a stable internet connection.',
       });
     }
-  }, [dispatch, wallets, showLoadingOverlay, dismissLoadingOverlay]);
+  }, [dispatch, showLoadingOverlay, dismissLoadingOverlay]);
 
   const deleteCloudBackups = useCallback(() => {
     Alert({

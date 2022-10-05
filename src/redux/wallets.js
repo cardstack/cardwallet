@@ -145,6 +145,20 @@ export const setWalletManualBackup = walletId => async (dispatch, getState) => {
   }
 };
 
+export const deleteWalletCloudBackup = () => async (dispatch, getState) => {
+  const { wallets } = getState().wallets;
+
+  const updatedWallets = { ...wallets };
+  Object.keys(updatedWallets).forEach(key => {
+    updatedWallets[key].backedUp = false;
+    updatedWallets[key].backupDate = undefined;
+    updatedWallets[key].backupFile = undefined;
+    updatedWallets[key].backupType = undefined;
+  });
+
+  await dispatch(walletsUpdate(updatedWallets));
+};
+
 export const setWalletCloudBackup = (walletId, backupFile = '') => async (
   dispatch,
   getState
