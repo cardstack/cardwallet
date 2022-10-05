@@ -57,8 +57,6 @@ export const useBackupSeedPhraseConfirmationScreen = () => {
   const handleConfirmPressed = useCallback(() => {
     confirmBackup();
 
-    console.log(':::', { popStackOnSuccess });
-
     if (popStackOnSuccess) {
       navDispatch(StackActions.pop(popStackOnSuccess));
     }
