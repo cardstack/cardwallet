@@ -1,4 +1,4 @@
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { memo, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 
@@ -26,6 +26,7 @@ const style = StyleSheet.create({
 
 const BackupManualScreen = () => {
   const { navigate } = useNavigation();
+
   const { params } = useRoute<RouteType<BackupRouteParams>>();
 
   const handleNextOnPress = useCallback(() => {

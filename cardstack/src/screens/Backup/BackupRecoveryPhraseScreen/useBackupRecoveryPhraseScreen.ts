@@ -10,13 +10,17 @@ export const useBackupRecoveryPhraseScreen = () => {
   const { deleteCloudBackups } = useWalletCloudBackup();
 
   const handleCloudBackupOnPress = useCallback(
-    () => navigate(Routes.BACKUP_CLOUD_PASSWORD, { seedPhrase }),
+    () =>
+      navigate(Routes.BACKUP_CLOUD_PASSWORD, {
+        seedPhrase,
+      }),
     [navigate, seedPhrase]
   );
 
   const handleManualBackupOnPress = useCallback(() => {
     navigate(Routes.BACKUP_MANUAL_BACKUP, {
       seedPhrase,
+      popStackOnSuccess: 2,
     });
   }, [navigate, seedPhrase]);
 

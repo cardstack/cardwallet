@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { captureException } from '@sentry/react-native';
 import { generateMnemonic } from 'bip39';
 import { signTypedData_v4, signTypedDataLegacy } from 'eth-sig-util';
@@ -904,6 +905,9 @@ export const resetWallet = async () => {
     if (allWallets) {
       await wipeSecureStorage(allWallets);
       await keychain.wipeKeychain();
+
+      // clear preferences on redux persist properties
+      await AsyncStorage.clear();
 
       // resets Keychain Integrity Check
       deleteKeychainIntegrityState();

@@ -1,8 +1,4 @@
-import {
-  StackActions,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React, { memo, useCallback } from 'react';
 
 import {
@@ -14,26 +10,31 @@ import {
   Text,
 } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
-import { RouteType } from '@cardstack/navigation/types';
+import { usePersistedFlagsActions } from '@cardstack/redux/persistedFlagsSlice';
 
-import { BackupRouteParams } from '../types';
+import { useWallets } from '@rainbow-me/hooks';
 
 import { strings } from './strings';
 
 const BackupExplanationScreen = () => {
-  const { dispatch: navDispatch, navigate } = useNavigation();
-  const { params } = useRoute<RouteType<BackupRouteParams>>();
+  const { navigate } = useNavigation();
+  const { seedPhrase } = useWallets();
+
+  const { triggerSkipBackup } = usePersistedFlagsActions();
 
   const handleBackupOnPress = useCallback(() => {
-    navigate(Routes.BACKUP_MANUAL_BACKUP, params);
-  }, [navigate, params]);
+    navigate(Routes.BACKUP_MANUAL_BACKUP, { seedPhrase });
+  }, [navigate, seedPhrase]);
 
   const handleLaterOnPress = useCallback(() => {
-    navDispatch(StackActions.popToTop());
-  }, [navDispatch]);
+    triggerSkipBackup();
+  }, [triggerSkipBackup]);
 
   return (
-    <PageWithStackHeader canGoBack={false}>
+    <PageWithStackHeader
+      canGoBack={false}
+      skipPressCallback={handleLaterOnPress}
+    >
       <Container flex={1} width="90%">
         <Text variant="pageHeader" paddingBottom={4}>
           {strings.title}

@@ -1,25 +1,27 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  StackActions,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { useCallback, useRef, useState, useMemo } from 'react';
 
 import { useWalletManualBackup } from '@cardstack/hooks/backup/useWalletManualBackup';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
 
-import { shuffleSeedPhraseAsArray } from './utils';
+import { BackupRouteParams } from '../types';
 
-interface NavParams {
-  seedPhrase: string;
-}
+import { shuffleSeedPhraseAsArray } from './utils';
 
 // Selection UI is hard-coded for 12 words.
 const SEED_PHRASE_LENGTH = 12;
 
 export const useBackupSeedPhraseConfirmationScreen = () => {
   const {
-    params: { seedPhrase },
-  } = useRoute<RouteType<NavParams>>();
+    params: { seedPhrase, popStackOnSuccess = 0 },
+  } = useRoute<RouteType<BackupRouteParams>>();
 
-  const { navigate } = useNavigation();
+  const { navigate, dispatch: navDispatch } = useNavigation();
 
   const { confirmBackup } = useWalletManualBackup();
 
@@ -54,8 +56,13 @@ export const useBackupSeedPhraseConfirmationScreen = () => {
 
   const handleConfirmPressed = useCallback(() => {
     confirmBackup();
-    navigate(Routes.WALLET_SCREEN);
-  }, [navigate, confirmBackup]);
+
+    console.log(':::', { popStackOnSuccess });
+
+    if (popStackOnSuccess) {
+      navDispatch(StackActions.pop(popStackOnSuccess));
+    }
+  }, [confirmBackup, popStackOnSuccess, navDispatch]);
 
   const handleClearPressed = useCallback(() => {
     selectedWordsIndexes.length = 0;
