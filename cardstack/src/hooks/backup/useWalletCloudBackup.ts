@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { backupWalletToCloud } from '@cardstack/models/backup';
 import {
   CLOUD_BACKUP_ERRORS,
-  deleteAllBackups,
+  deleteAllCloudBackups,
   isIOSCloudBackupAvailable,
 } from '@cardstack/models/rn-cloud';
 import { useLoadingOverlay } from '@cardstack/navigation';
@@ -113,7 +113,7 @@ export const useWalletCloudBackup = () => {
     showLoadingOverlay({ title: 'Deleting backup...' });
 
     try {
-      await deleteAllBackups();
+      await deleteAllCloudBackups();
 
       const updatedWallets = { ...wallets };
       Object.keys(updatedWallets).forEach(key => {
