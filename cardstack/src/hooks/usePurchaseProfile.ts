@@ -16,6 +16,11 @@ import { useMutationEffects } from '.';
 // TODO: Fetch Product IDs from hub.
 const skus = { profile: '0001' };
 
+const strings = {
+  loading: 'Loading...',
+  processingPurchase: 'Processing Purchase',
+};
+
 export const useInitIAPProducts = () => {
   const { getProducts } = useIAP();
 
@@ -52,6 +57,8 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
           status: isSuccess,
           callback: () => {
             if (currentPurchase) {
+              dismissLoadingOverlay();
+
               try {
                 // Valid purchases need to be finalized, otherwise they may reverse.
                 finishTransaction(currentPurchase, Device.iap.isConsumable);
@@ -104,8 +111,9 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
   const purchaseProfile = useCallback(async () => {
     if (profileProduct) {
       try {
-        showLoadingOverlay();
+        showLoadingOverlay({ title: strings.loading });
         await requestPurchase(profileProduct.productId);
+        showLoadingOverlay({ title: strings.processingPurchase });
       } catch (e) {
         dismissLoadingOverlay();
         logger.sentry('Error purchasing product', e);
