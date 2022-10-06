@@ -129,6 +129,9 @@ export const useWalletCloudBackup = () => {
         message:
           'Try again in a few minutes. Make sure you have a stable internet connection.',
       });
+
+      logger.sentry(`[BACKUP] ${error}`);
+      captureException(error);
     }
   }, [dispatch, showLoadingOverlay, dismissLoadingOverlay]);
 

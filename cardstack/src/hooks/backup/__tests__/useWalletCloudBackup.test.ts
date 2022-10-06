@@ -1,4 +1,5 @@
 import { act, renderHook } from '@testing-library/react-hooks';
+import { waitFor } from '@testing-library/react-native';
 import { Alert } from 'react-native';
 import * as reactRedux from 'react-redux';
 
@@ -57,6 +58,20 @@ jest.mock('@rainbow-me/hooks', () => ({
     wallets: walletMock,
     selectedWallet: walletMock.wallet_1664823878526,
   }),
+}));
+
+jest.mock('react-native-cloud-fs', () => ({
+  listFiles: jest.fn().mockReturnValue({
+    files: [
+      {
+        name: 'backup',
+        id: '123456',
+        path: 'path/to/file', // iOS only
+        lastModified: '1657732642021',
+      },
+    ],
+  }),
+  deleteFromCloud: jest.fn().mockResolvedValue(true),
 }));
 
 describe('useWalletCloudBackup', () => {
@@ -139,10 +154,45 @@ describe('useWalletCloudBackup', () => {
       expect(mockedDismissOverlay).toBeCalled();
     });
 
-    it.todo(`should show an Alert if backupWalletToCloud wasn't successful`);
+    it(`should show an Alert if backupWalletToCloud wasn't successful`, async () => {
+      spyIsCloudAvailable.mockReturnValue(Promise.resolve(true));
+
+      backupWalletToCloudSpy.mockRejectedValue(new Error());
+
+      const { result } = renderHook(useWalletCloudBackup);
+
+      await act(async () => {
+        await result.current.backupToCloud({ password: mockedPassword });
+      });
+
+      expect(mockedShowOverlay).toBeCalledWith({
+        title: walletLoadingStates.BACKING_UP_WALLET,
+      });
+
+      expect(spyAlert).toBeCalledWith(
+        'Error while trying to backup wallet to iCloud',
+        rnCloud.CLOUD_BACKUP_ERRORS.WALLET_BACKUP_STATUS_UPDATE_FAILED,
+        undefined,
+        undefined
+      );
+    });
+
+    it.todo(
+      `should update Redux with the wallet ID and filename if backupWalletToCloud was successful`
+    );
   });
 
   describe('Delete Backup from Cloud', () => {
+    const deleteAllCloudBackupsSpy = jest.spyOn(
+      rnCloud,
+      'deleteAllCloudBackups'
+    );
+
+    const setDeleteWalletCloudBackup = jest.spyOn(
+      walletsActions,
+      'deleteWalletCloudBackup'
+    );
+
     it(`should show an Alert with two options: confirm and cancel`, () => {
       const { result } = renderHook(useWalletCloudBackup);
 
@@ -168,12 +218,71 @@ describe('useWalletCloudBackup', () => {
       );
     });
 
-    it.todo(`should delete all files in the remote directory on confirm press`);
+    it(`should show an Alert confirming that the deletion was successful`, async () => {
+      const { result } = renderHook(useWalletCloudBackup);
+
+      act(() => {
+        result.current.deleteCloudBackups();
+      });
+
+      // tap on the confirm and delete button
+      act(() => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        spyAlert.mock.calls[0][2][0].onPress();
+      });
+
+      expect(mockedShowOverlay).toBeCalledWith({
+        title: 'Deleting backup...',
+      });
+
+      await waitFor(() => {
+        expect(deleteAllCloudBackupsSpy).toBeCalled();
+      });
+
+      expect(mockDispatchFn).toBeCalled();
+      expect(setDeleteWalletCloudBackup).toBeCalled();
+
+      expect(mockedDismissOverlay).toBeCalled();
+
+      expect(spyAlert).toBeCalledWith(
+        `Backup successfully deleted!`,
+        undefined,
+        undefined,
+        undefined
+      );
+    });
+
+    it(`should show an Alert if the deletion failed`, async () => {
+      const { result } = renderHook(useWalletCloudBackup);
+
+      deleteAllCloudBackupsSpy.mockRejectedValue(new Error());
+
+      act(() => {
+        result.current.deleteCloudBackups();
+      });
+
+      // tap on the confirm and delete button
+      act(() => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        spyAlert.mock.calls[0][2][0].onPress();
+      });
+
+      await waitFor(() => {
+        expect(deleteAllCloudBackupsSpy).toBeCalled();
+      });
+
+      expect(spyAlert).toBeCalledWith(
+        `Error deleting your backup files.`,
+        'Try again in a few minutes. Make sure you have a stable internet connection.',
+        undefined,
+        undefined
+      );
+    });
+
     it.todo(
       `should update Redux resetting the cloud backup flags to false/undefined`
     );
-
-    it.todo(`should show an Alert confirming that the deletion was successful`);
-    it.todo(`should show an Alert if the deletion failed`);
   });
 });
