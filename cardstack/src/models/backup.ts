@@ -15,7 +15,7 @@ import { encryptAndSaveDataToCloud, getDataFromCloud } from './rn-cloud';
 export const cloudBackupPasswordMinLength = 8;
 export const iCloudPasswordRules = `minlength: ${cloudBackupPasswordMinLength}; required: digit;`;
 
-const isBackedUpWallet = (wallet: RainbowWallet) =>
+export const isBackedUpWallet = (wallet: RainbowWallet) =>
   wallet.backedUp &&
   wallet.backupDate &&
   wallet.backupFile &&

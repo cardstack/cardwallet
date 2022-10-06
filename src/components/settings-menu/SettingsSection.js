@@ -13,13 +13,10 @@ import {
 } from '../list';
 import { CenteredContainer, Icon, ScrollView } from '@cardstack/components';
 import { SettingsExternalURLs } from '@cardstack/constants';
+import { useSelectedWallet } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
-import {
-  useAccountSettings,
-  useSendFeedback,
-  useWallets,
-} from '@rainbow-me/hooks';
+import { useAccountSettings, useSendFeedback } from '@rainbow-me/hooks';
 
 export default function SettingsSection({
   onPressDev,
@@ -31,7 +28,7 @@ export default function SettingsSection({
   onPressDS,
   onPressSecurity,
 }) {
-  const { selectedWallet, seedPhrase } = useWallets();
+  const { seedPhrase, hasManualBackup } = useSelectedWallet();
   const { nativeCurrency, network, accountAddress } = useAccountSettings();
 
   const onSendFeedback = useSendFeedback();
@@ -130,7 +127,7 @@ export default function SettingsSection({
           <ListItemArrowGroup showArrow={false}>
             <Icon
               iconSize="medium"
-              name={selectedWallet.manuallyBackedUp ? 'success' : 'warning'}
+              name={hasManualBackup ? 'success' : 'warning'}
             />
           </ListItemArrowGroup>
         </ListItem>

@@ -17,3 +17,4 @@ export * from './useAppRequirements';
 export * from './useAppState';
 export * from './useProfileJobPolling';
 export * from './profile/useProfileUpdate';
+export * from './useSelectedWallet';
