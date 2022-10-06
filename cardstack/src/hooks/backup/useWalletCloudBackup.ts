@@ -86,8 +86,6 @@ export const useWalletCloudBackup = () => {
 
         dismissLoadingOverlay();
       } catch (error) {
-        dismissLoadingOverlay();
-
         const title = `Error while trying to backup wallet to ${Device.cloudPlatform}`;
 
         const message =
