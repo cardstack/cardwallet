@@ -16,14 +16,14 @@ import {
 import profilePreview from '../../../assets/profile-preview.png';
 
 import { strings } from './strings';
-import { usePurchaseCTAScreen } from './usePurchaseCTAScreen';
+import { useProfilePurchaseScreen } from './useProfilePurchaseScreen';
 
 interface BenefitsItem {
   iconName: IconName;
   copy: string;
 }
 
-const PurchaseCTAScreen = () => {
+const ProfilePurchaseScreen = () => {
   const {
     onPressChargeExplanation,
     onPressBuy,
@@ -32,7 +32,7 @@ const PurchaseCTAScreen = () => {
     onPressPrepaidCards,
     showPrepaidCardOption,
     triggerSkipProfileCreation,
-  } = usePurchaseCTAScreen();
+  } = useProfilePurchaseScreen();
 
   const purchaseBtnLabel = `${strings.button.purchase} ${localizedValue}`;
 
@@ -115,4 +115,4 @@ const styles = StyleSheet.create({
   iapPreview: { width: '100%', flex: 0.5 },
 });
 
-export default PurchaseCTAScreen;
+export default ProfilePurchaseScreen;

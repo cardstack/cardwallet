@@ -19,7 +19,7 @@ interface NavParams {
   profile: CreateProfileInfoParams;
 }
 
-export const usePurchaseCTAScreen = () => {
+export const useProfilePurchaseScreen = () => {
   const { navigate } = useNavigation();
 
   const { network, accountAddress, nativeCurrency } = useAccountSettings();
