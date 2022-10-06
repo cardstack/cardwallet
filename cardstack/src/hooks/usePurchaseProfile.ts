@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useMemo } from 'react';
-import { useIAP } from 'react-native-iap';
+import { useIAP, Product } from 'react-native-iap';
 
 import { defaultErrorAlert } from '@cardstack/constants';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
@@ -21,8 +21,24 @@ const strings = {
   processingPurchase: 'Processing Purchase',
 };
 
+export const defaultProfilePrice = '$0.99';
+
+// Helper function to find the profile product.
+const findProfileProduct = (products: Product[]) =>
+  products.find(
+    prod => prod.productId === skus.profile && prod.type === Device.iap.type
+  );
+
+/**
+ * useInitIAPProducts hook to be called as soon as possible to prepare for purchases.
+ * @returns profileProduct: Product, filtered product matching profile specs.
+ */
 export const useInitIAPProducts = () => {
-  const { getProducts } = useIAP();
+  const { getProducts, products } = useIAP();
+
+  const profileProduct = useMemo(() => findProfileProduct(products), [
+    products,
+  ]);
 
   /**
    * Fetches IAPs descriptions and succesfull purchases.
@@ -30,6 +46,8 @@ export const useInitIAPProducts = () => {
   useEffect(() => {
     getProducts(Object.values(skus));
   }, [getProducts]);
+
+  return { profileProduct };
 };
 
 export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
@@ -97,13 +115,9 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
     )
   );
 
-  const profileProduct = useMemo(
-    () =>
-      products.find(
-        prod => prod.productId === skus.profile && prod.type === Device.iap.type
-      ),
-    [products]
-  );
+  const profileProduct = useMemo(() => findProfileProduct(products), [
+    products,
+  ]);
 
   /**
    * Asks IAP service to start a purchase of a profile.

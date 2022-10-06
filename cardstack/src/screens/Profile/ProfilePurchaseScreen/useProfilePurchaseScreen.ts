@@ -3,7 +3,10 @@ import { useCallback, useMemo } from 'react';
 
 import { useBooleanState, useRemoteConfigs } from '@cardstack/hooks';
 import { useCreateProfile } from '@cardstack/hooks/merchant/useCreateProfile';
-import { usePurchaseProfile } from '@cardstack/hooks/usePurchaseProfile';
+import {
+  usePurchaseProfile,
+  defaultProfilePrice,
+} from '@cardstack/hooks/usePurchaseProfile';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
 import { usePersistedFlagsActions } from '@cardstack/redux/persistedFlagsSlice';
@@ -14,7 +17,6 @@ import { isLayer1 } from '@cardstack/utils';
 import { Alert } from '@rainbow-me/components/alerts';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
-const defaultPrice = '$0.99';
 interface NavParams {
   profile: CreateProfileInfoParams;
 }
@@ -46,7 +48,7 @@ export const useProfilePurchaseScreen = () => {
   const { purchaseWithPrepaidCard } = useCreateProfile(profile);
 
   const localizedValue = useMemo(
-    () => profileProduct?.localizedPrice || defaultPrice,
+    () => profileProduct?.localizedPrice || defaultProfilePrice,
     [profileProduct]
   );
 
