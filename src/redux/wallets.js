@@ -116,11 +116,11 @@ export const walletsUpdate = wallets => async (dispatch, getState) => {
   const { selected } = getState().wallets;
 
   await saveAllWallets(wallets);
-  await dispatch(walletsSetSelected(wallets[selected.id]));
   dispatch({
     payload: wallets,
     type: WALLETS_UPDATE,
   });
+  await dispatch(walletsSetSelected(wallets[selected.id]));
 };
 
 export const walletsSetSelected = wallet => async dispatch => {
