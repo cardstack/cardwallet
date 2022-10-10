@@ -36,6 +36,11 @@ export const useShowOnboarding = () => {
   const navigateToNextOnboardingStep = useCallback(
     (step?: string) => {
       if (step) {
+        // Avoid showing profile flow when not needed.
+        if (step === Routes.PROFILE_SLUG && !shouldShowProfileCreationFlow) {
+          return;
+        }
+
         navigate(step);
 
         return;
