@@ -21,7 +21,7 @@ export const WalletScreen = () => {
 
   const initialized = useRef(!!params?.initialized);
 
-  const { navigateToNextOnboardingStep } = useShowOnboarding();
+  const { navigateToNextOnboardingStep, isLoadingSafes } = useShowOnboarding();
   // This is necessary since other instances of useShowOnboading will
   // trigger a re-render on navigateToNextOnboardingStep reference changing.
   const calledOnboardingOnce = useRef(false);
@@ -34,11 +34,11 @@ export const WalletScreen = () => {
   }, [initializeWallet, walletReady]);
 
   useEffect(() => {
-    if (!calledOnboardingOnce.current && walletReady) {
+    if (!calledOnboardingOnce.current && walletReady && !isLoadingSafes) {
       navigateToNextOnboardingStep();
       calledOnboardingOnce.current = true;
     }
-  }, [walletReady, navigateToNextOnboardingStep]);
+  }, [walletReady, navigateToNextOnboardingStep, isLoadingSafes]);
 
   return (
     <Container backgroundColor="backgroundDarkPurple" flex={1} height="100%">

@@ -63,5 +63,6 @@ export const useShowOnboarding = () => {
     navigateToNextOnboardingStep,
     shouldShowBackupFlow,
     shouldShowProfileCreationFlow,
+    isLoadingSafes,
   };
 };
