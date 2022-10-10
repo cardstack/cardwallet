@@ -622,6 +622,7 @@ export const createOrImportWallet = async ({
       color: color || 0,
       id: walletId,
       imported: isImported,
+      manuallyBackedUp: isImported,
       damaged: false,
       name: walletName,
       primary,
