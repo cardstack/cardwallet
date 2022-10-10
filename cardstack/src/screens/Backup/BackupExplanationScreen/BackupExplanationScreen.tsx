@@ -9,17 +9,16 @@ import {
   PageWithStackHeaderFooter,
   Text,
 } from '@cardstack/components';
+import { useSelectedWallet } from '@cardstack/hooks';
 import { useShowOnboarding } from '@cardstack/hooks/onboarding/useShowOnboarding';
 import { Routes } from '@cardstack/navigation';
 import { usePersistedFlagsActions } from '@cardstack/redux/persistedFlagsSlice';
-
-import { useWallets } from '@rainbow-me/hooks';
 
 import { strings } from './strings';
 
 const BackupExplanationScreen = () => {
   const { navigate } = useNavigation();
-  const { seedPhrase } = useWallets();
+  const { seedPhrase } = useSelectedWallet();
 
   const { navigateToNextOnboardingStep } = useShowOnboarding();
 
