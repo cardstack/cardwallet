@@ -90,6 +90,21 @@ describe('useShowOnboarding', () => {
     expect(mockedNavigate).toBeCalledWith(Routes.PROFILE_SLUG);
   });
 
+  it('should NOT navigate to profile flow when safes are loading', () => {
+    mockPrimarySafeHelper({
+      hasProfile: false,
+      isLoadingOnInit: true,
+    });
+
+    const { result } = renderHook(useShowOnboarding);
+
+    act(() => {
+      result.current.navigateToNextOnboardingStep();
+    });
+
+    expect(mockedNavigate).not.toBeCalled();
+  });
+
   it('should NOT navigate to profile flow when profile has been fetched and it exists', () => {
     mockPrimarySafeHelper({
       hasProfile: true,
