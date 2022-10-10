@@ -52,7 +52,6 @@ const ProfileSlugScreen = () => {
               {strings.input.description}
             </Text>
           </Container>
-
           <Text paddingTop={2} variant="pageDescriptionSmall">
             {purchaseDisclaimer}
           </Text>

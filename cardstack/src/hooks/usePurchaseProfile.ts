@@ -21,13 +21,16 @@ const strings = {
   processingPurchase: 'Processing Purchase',
 };
 
-export const defaultProfilePrice = '$0.99';
+const defaultProfilePrice = '$0.99';
 
 // Helper function to find the profile product.
 const findProfileProduct = (products: Product[]) =>
   products.find(
     prod => prod.productId === skus.profile && prod.type === Device.iap.type
   );
+
+const getLocalizedPriceOrFallback = (product?: Product) =>
+  product?.localizedPrice || defaultProfilePrice;
 
 /**
  * useInitIAPProducts hook to be called as soon as possible to prepare for purchases.
@@ -40,6 +43,11 @@ export const useInitIAPProducts = () => {
     products,
   ]);
 
+  const localizedPrice = useMemo(
+    () => getLocalizedPriceOrFallback(profileProduct),
+    [profileProduct]
+  );
+
   /**
    * Fetches IAPs descriptions and succesfull purchases.
    */
@@ -47,7 +55,7 @@ export const useInitIAPProducts = () => {
     getProducts(Object.values(skus));
   }, [getProducts]);
 
-  return { profileProduct };
+  return { profileProduct, localizedPrice };
 };
 
 export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
@@ -119,6 +127,11 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
     products,
   ]);
 
+  const localizedPrice = useMemo(
+    () => getLocalizedPriceOrFallback(profileProduct),
+    [profileProduct]
+  );
+
   /**
    * Asks IAP service to start a purchase of a profile.
    */
@@ -176,5 +189,6 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
   return {
     purchaseProfile,
     profileProduct,
+    localizedPrice,
   };
 };

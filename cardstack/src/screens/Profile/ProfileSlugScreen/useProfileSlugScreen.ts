@@ -2,10 +2,7 @@ import { validateMerchantId } from '@cardstack/cardpay-sdk';
 import { useNavigation } from '@react-navigation/native';
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 
-import {
-  useInitIAPProducts,
-  defaultProfilePrice,
-} from '@cardstack/hooks/usePurchaseProfile';
+import { useInitIAPProducts } from '@cardstack/hooks/usePurchaseProfile';
 import { Routes } from '@cardstack/navigation';
 import { usePersistedFlagsActions } from '@cardstack/redux/persistedFlagsSlice';
 import { useLazyValidateProfileSlugQuery } from '@cardstack/services';
@@ -14,7 +11,7 @@ import { matchMinLength } from '@cardstack/utils/validators';
 import { strings, MIN_SLUG_LENGTH } from './strings';
 
 export const useProfileSlugScreen = () => {
-  const { profileProduct } = useInitIAPProducts();
+  const { localizedPrice } = useInitIAPProducts();
 
   const { navigate } = useNavigation();
 
@@ -84,11 +81,8 @@ export const useProfileSlugScreen = () => {
   );
 
   const purchaseDisclaimer = useMemo(
-    () =>
-      strings.purchaseDisclaimer(
-        profileProduct?.localizedPrice || defaultProfilePrice
-      ),
-    [profileProduct]
+    () => strings.purchaseDisclaimer(localizedPrice),
+    [localizedPrice]
   );
 
   const { triggerSkipProfileCreation } = usePersistedFlagsActions();

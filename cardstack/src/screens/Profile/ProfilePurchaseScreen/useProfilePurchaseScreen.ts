@@ -1,12 +1,9 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 
 import { useBooleanState, useRemoteConfigs } from '@cardstack/hooks';
 import { useCreateProfile } from '@cardstack/hooks/merchant/useCreateProfile';
-import {
-  usePurchaseProfile,
-  defaultProfilePrice,
-} from '@cardstack/hooks/usePurchaseProfile';
+import { usePurchaseProfile } from '@cardstack/hooks/usePurchaseProfile';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
 import { usePersistedFlagsActions } from '@cardstack/redux/persistedFlagsSlice';
@@ -43,18 +40,15 @@ export const useProfilePurchaseScreen = () => {
     params: { profile },
   } = useRoute<RouteType<NavParams>>();
 
-  const { purchaseProfile, profileProduct } = usePurchaseProfile(profile);
+  const { purchaseProfile, localizedPrice } = usePurchaseProfile(profile);
 
   const { purchaseWithPrepaidCard } = useCreateProfile(profile);
 
-  const localizedValue = useMemo(
-    () => profileProduct?.localizedPrice || defaultProfilePrice,
-    [profileProduct]
-  );
-
   const onPressChargeExplanation = useCallback(() => {
-    navigate(Routes.PROFILE_CHARGE_EXPLANATION, { localizedValue });
-  }, [localizedValue, navigate]);
+    navigate(Routes.PROFILE_CHARGE_EXPLANATION, {
+      localizedValue: localizedPrice,
+    });
+  }, [localizedPrice, navigate]);
 
   const [
     inPurchaseOngoing,
@@ -85,7 +79,7 @@ export const useProfilePurchaseScreen = () => {
     inPurchaseOngoing,
     onPressPrepaidCards: purchaseWithPrepaidCard,
     showPrepaidCardOption,
-    localizedValue,
+    localizedPrice,
     triggerSkipProfileCreation,
   };
 };

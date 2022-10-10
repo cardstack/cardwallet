@@ -28,13 +28,13 @@ const ProfilePurchaseScreen = () => {
     onPressChargeExplanation,
     onPressBuy,
     inPurchaseOngoing,
-    localizedValue,
+    localizedPrice,
     onPressPrepaidCards,
     showPrepaidCardOption,
     triggerSkipProfileCreation,
   } = useProfilePurchaseScreen();
 
-  const purchaseBtnLabel = `${strings.button.purchase} ${localizedValue}`;
+  const purchaseBtnLabel = `${strings.button.purchase} ${localizedPrice}`;
 
   const BenefitsItem = useCallback(
     ({ iconName, copy }: BenefitsItem) => (
