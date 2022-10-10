@@ -2,7 +2,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { TextInput } from 'react-native';
 
 import { usePasswordInput } from '@cardstack/components';
-import { useWalletCloudBackup } from '@cardstack/hooks/backup/useWalletCloudBackup';
+import { useWalletCloudBackup } from '@cardstack/hooks';
 import { cloudBackupPasswordMinLength } from '@cardstack/models/backup';
 import {
   hasAtLeastOneDigit,

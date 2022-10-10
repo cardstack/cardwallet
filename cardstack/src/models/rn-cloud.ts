@@ -28,7 +28,7 @@ export const CLOUD_BACKUP_ERRORS = {
 /**
  * Goes through the cloud backup directory and deletes all files.
  */
-export const deleteAllBackups = async () => {
+export const deleteAllCloudBackups = async () => {
   try {
     if (Device.isAndroid) {
       await RNCloudFs.loginIfNeeded();

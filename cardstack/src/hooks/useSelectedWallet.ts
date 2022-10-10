@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { isBackedUpWallet } from '@cardstack/models/backup';
 
@@ -28,17 +28,9 @@ export const useSelectedWallet = () => {
     }
   }, [walletReady, getSeedPhrase, seedPhrase]);
 
-  const hasCloudBackup = useMemo(() => isBackedUpWallet(selectedWallet), [
-    selectedWallet,
-  ]);
-
-  const hasManualBackup = useMemo(() => selectedWallet?.manuallyBackedUp, [
-    selectedWallet,
-  ]);
-
   return {
     seedPhrase,
-    hasCloudBackup,
-    hasManualBackup,
+    hasCloudBackup: isBackedUpWallet(selectedWallet),
+    hasManualBackup: selectedWallet?.manuallyBackedUp,
   };
 };

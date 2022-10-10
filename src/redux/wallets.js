@@ -112,12 +112,15 @@ export const walletsLoadState = () => async (dispatch, getState) => {
   }
 };
 
-export const walletsUpdate = wallets => async dispatch => {
+export const walletsUpdate = wallets => async (dispatch, getState) => {
+  const { selected } = getState().wallets;
+
   await saveAllWallets(wallets);
-  dispatch({
+  await dispatch({
     payload: wallets,
     type: WALLETS_UPDATE,
   });
+  await dispatch(walletsSetSelected(wallets[selected.id]));
 };
 
 export const walletsSetSelected = wallet => async dispatch => {
@@ -129,7 +132,7 @@ export const walletsSetSelected = wallet => async dispatch => {
 };
 
 export const setWalletManualBackup = walletId => async (dispatch, getState) => {
-  const { wallets, selected } = getState().wallets;
+  const { wallets } = getState().wallets;
   const newWallets = { ...wallets };
   newWallets[walletId] = {
     ...newWallets[walletId],
@@ -137,16 +140,27 @@ export const setWalletManualBackup = walletId => async (dispatch, getState) => {
   };
 
   await dispatch(walletsUpdate(newWallets));
-  if (selected.id === walletId) {
-    await dispatch(walletsSetSelected(newWallets[walletId]));
-  }
+};
+
+export const deleteWalletCloudBackup = () => async (dispatch, getState) => {
+  const { wallets } = getState().wallets;
+
+  const updatedWallets = { ...wallets };
+  Object.keys(updatedWallets).forEach(key => {
+    updatedWallets[key].backedUp = false;
+    updatedWallets[key].backupDate = undefined;
+    updatedWallets[key].backupFile = undefined;
+    updatedWallets[key].backupType = undefined;
+  });
+
+  await dispatch(walletsUpdate(updatedWallets));
 };
 
 export const setWalletCloudBackup = (walletId, backupFile = '') => async (
   dispatch,
   getState
 ) => {
-  const { wallets, selected } = getState().wallets;
+  const { wallets } = getState().wallets;
   const newWallets = { ...wallets };
   newWallets[walletId] = {
     ...newWallets[walletId],
@@ -157,9 +171,6 @@ export const setWalletCloudBackup = (walletId, backupFile = '') => async (
   };
 
   await dispatch(walletsUpdate(newWallets));
-  if (selected.id === walletId) {
-    await dispatch(walletsSetSelected(newWallets[walletId]));
-  }
 
   try {
     await backupUserDataIntoCloud({ wallets: newWallets });
@@ -284,13 +295,9 @@ export const checkKeychainIntegrity = () => async (dispatch, getState) => {
         wallet.damaged = true;
         await dispatch(walletsUpdate(wallets));
 
-        // Update selected wallet if needed
-        if (wallet.id === selected.id) {
-          logger.sentry(
-            '[KeychainIntegrityCheck]: declaring selected wallet unhealthy...'
-          );
-          await dispatch(walletsSetSelected(wallets[wallet.id]));
-        }
+        logger.sentry(
+          '[KeychainIntegrityCheck]: declaring selected wallet unhealthy...'
+        );
         logger.sentry('[KeychainIntegrityCheck]: done updating wallets');
       }
     }

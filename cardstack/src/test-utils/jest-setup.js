@@ -111,7 +111,6 @@ jest.mock('@react-native-firebase/messaging', () => ({
 
 jest.mock('react-native-cloud-fs', () => ({
   RNCloudFs: jest.fn(),
-  RNFS: jest.fn(),
 }));
 
 jest.mock('react-native-fs', () => ({

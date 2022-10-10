@@ -21,9 +21,6 @@ const shouldCreateImgixClient = (): ImgixClient | null => {
       secureURLToken,
     });
   }
-  console.log(
-    '[Imgix] Image signing disabled. Please ensure you have specified both IMGIX_DOMAIN and IMGIX_TOKEN inside your .env.'
-  );
   return null;
 };
 
