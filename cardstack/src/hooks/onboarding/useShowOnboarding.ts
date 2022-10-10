@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { useMemo, useCallback, useEffect } from 'react';
+import { useMemo, useCallback } from 'react';
 
 import { Routes } from '@cardstack/navigation/routes';
 import { useAuthSelector } from '@cardstack/redux/authSlice';
@@ -32,13 +32,6 @@ export const useShowOnboarding = () => {
 
     return hasWallet && noProfile && !hasSkippedProfileCreation;
   }, [hasProfile, hasSkippedProfileCreation, hasWallet, isLoadingSafes]);
-
-  useEffect(() => {
-    console.log('::: useShowOnboarding', {
-      shouldShowBackupFlow,
-      shouldShowProfileCreationFlow,
-    });
-  }, [shouldShowBackupFlow, shouldShowProfileCreationFlow]);
 
   const navigateToNextOnboardingStep = useCallback(
     (step?: string) => {
