@@ -20,6 +20,14 @@ jest.mock('@cardstack/navigation', () => ({
   },
 }));
 
+const mockNavigateOnboarding = jest.fn();
+
+jest.mock('@cardstack/hooks/onboarding/useShowOnboarding', () => ({
+  useShowOnboarding: () => ({
+    navigateToNextOnboardingStep: mockNavigateOnboarding,
+  }),
+}));
+
 const mockConfirmBackup = jest.fn();
 
 jest.mock('@cardstack/hooks/backup/useWalletManualBackup', () => ({
@@ -106,7 +114,7 @@ describe('BackupSeedPhraseConfirmationScreen', () => {
     expect(result.current.isSeedPhraseCorrect).toBeFalsy();
   });
 
-  it('should confirm Backup but not pop navigation if not requested by nav params', () => {
+  it('should confirm Backup and navigate to next onboading step', () => {
     const { result } = renderHook(useBackupSeedPhraseConfirmationScreen);
 
     act(() => {
@@ -114,7 +122,8 @@ describe('BackupSeedPhraseConfirmationScreen', () => {
     });
 
     expect(mockConfirmBackup).toBeCalled();
-    expect(mockNavDispatch).toBeCalledTimes(0);
+    expect(mockNavDispatch).not.toBeCalled();
+    expect(mockNavigateOnboarding).toBeCalled();
   });
 
   it('should confirm Backup and navigate back when requested by nav params', () => {

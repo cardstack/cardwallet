@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react-hooks';
 
 import { useShowOnboarding } from '@cardstack/hooks/onboarding/useShowOnboarding';
 import { Routes } from '@cardstack/navigation/routes';
@@ -66,7 +66,11 @@ describe('useShowOnboarding', () => {
   it('should NOT navigate to profile flow when profile hasnt been fetched', () => {
     mockPrimarySafeHelper({ hasProfile: false, isLoadingOnInit: true });
 
-    renderHook(useShowOnboarding);
+    const { result } = renderHook(useShowOnboarding);
+
+    act(() => {
+      result.current.navigateToNextOnboardingStep();
+    });
 
     expect(mockedNavigate).not.toBeCalled();
   });
@@ -77,7 +81,11 @@ describe('useShowOnboarding', () => {
       isLoadingOnInit: false,
     });
 
-    renderHook(useShowOnboarding);
+    const { result } = renderHook(useShowOnboarding);
+
+    act(() => {
+      result.current.navigateToNextOnboardingStep();
+    });
 
     expect(mockedNavigate).toBeCalledWith(Routes.PROFILE_SLUG);
   });
@@ -88,12 +96,16 @@ describe('useShowOnboarding', () => {
       isLoadingOnInit: false,
     });
 
-    renderHook(useShowOnboarding);
+    const { result } = renderHook(useShowOnboarding);
+
+    act(() => {
+      result.current.navigateToNextOnboardingStep();
+    });
 
     expect(mockedNavigate).not.toBeCalled();
   });
 
-  it('should NOT navigate to profile flow if user has not wallet', () => {
+  it('should NOT navigate to profile flow if no wallet', () => {
     (useAuthSelector as jest.Mock).mockReturnValueOnce({
       hasWallet: false,
     });
@@ -103,7 +115,11 @@ describe('useShowOnboarding', () => {
       isLoadingOnInit: false,
     });
 
-    renderHook(useShowOnboarding);
+    const { result } = renderHook(useShowOnboarding);
+
+    act(() => {
+      result.current.navigateToNextOnboardingStep();
+    });
 
     expect(mockedNavigate).not.toBeCalled();
   });
@@ -113,7 +129,11 @@ describe('useShowOnboarding', () => {
       hasSkippedProfileCreation: true,
     });
 
-    renderHook(useShowOnboarding);
+    const { result } = renderHook(useShowOnboarding);
+
+    act(() => {
+      result.current.navigateToNextOnboardingStep();
+    });
 
     expect(mockedNavigate).not.toBeCalled();
   });
@@ -121,7 +141,11 @@ describe('useShowOnboarding', () => {
   it('should navigate to backup flow if not backedup', () => {
     mockUseWallets({ selectedWallet: { manuallyBackedUp: false } });
 
-    renderHook(useShowOnboarding);
+    const { result } = renderHook(useShowOnboarding);
+
+    act(() => {
+      result.current.navigateToNextOnboardingStep();
+    });
 
     expect(mockedNavigate).toBeCalledWith(Routes.BACKUP_EXPLANATION);
   });
@@ -132,7 +156,11 @@ describe('useShowOnboarding', () => {
       hasSkippedBackup: true,
     });
 
-    renderHook(useShowOnboarding);
+    const { result } = renderHook(useShowOnboarding);
+
+    act(() => {
+      result.current.navigateToNextOnboardingStep();
+    });
 
     expect(mockedNavigate).not.toBeCalledWith(Routes.BACKUP_EXPLANATION);
   });
