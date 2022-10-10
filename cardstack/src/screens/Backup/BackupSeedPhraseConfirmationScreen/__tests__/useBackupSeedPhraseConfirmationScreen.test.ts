@@ -2,6 +2,7 @@ import { StackActions, useRoute } from '@react-navigation/native';
 import { renderHook } from '@testing-library/react-hooks';
 import { act } from 'react-test-renderer';
 
+import { BackupRouteParams } from '../../types';
 import { useBackupSeedPhraseConfirmationScreen } from '../useBackupSeedPhraseConfirmationScreen';
 import { seedPhraseStringToArray } from '../utils';
 
@@ -29,11 +30,11 @@ const mockSeedPhrase =
   'loan velvet fall cluster renew animal trophy clinic adjust fix soon enrich';
 
 describe('BackupSeedPhraseConfirmationScreen', () => {
-  const mockParams = (overwrite: any = {}) => {
+  const mockParams = (overwriteParams: Partial<BackupRouteParams> = {}) => {
     (useRoute as jest.Mock).mockImplementation(() => ({
       params: {
         seedPhrase: mockSeedPhrase,
-        ...overwrite,
+        ...overwriteParams,
       },
     }));
   };

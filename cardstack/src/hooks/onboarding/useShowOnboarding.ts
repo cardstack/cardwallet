@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { useEffect } from 'react';
+import { useMemo, useCallback, useEffect } from 'react';
 
 import { Routes } from '@cardstack/navigation/routes';
 import { useAuthSelector } from '@cardstack/redux/authSlice';
@@ -9,7 +9,7 @@ import { usePersistedFlagsSelector } from '@cardstack/redux/persistedFlagsSlice'
 import { useWallets } from '@rainbow-me/hooks';
 
 export const useShowOnboarding = () => {
-  const { selectedWallet, walletReady } = useWallets();
+  const { selectedWallet } = useWallets();
 
   const { hasProfile, isLoadingOnInit: isLoadingSafes } = usePrimarySafe();
 
@@ -22,32 +22,48 @@ export const useShowOnboarding = () => {
 
   const { hasWallet } = useAuthSelector();
 
-  useEffect(() => {
-    // Wait until wallet and backup info has properly being loaded.
-    if (!walletReady) return;
+  const shouldShowBackupFlow = useMemo(
+    () => !selectedWallet.manuallyBackedUp && !hasSkippedBackup,
+    [selectedWallet, hasSkippedBackup]
+  );
 
-    if (!selectedWallet.manuallyBackedUp && !hasSkippedBackup) {
-      navigate(Routes.BACKUP_EXPLANATION);
-
-      return;
-    }
-
+  const shouldShowProfileCreationFlow = useMemo(() => {
     const noProfile = !isLoadingSafes && !hasProfile;
 
-    const shouldShowProfileCreationFlow =
-      hasWallet && noProfile && !hasSkippedProfileCreation;
+    return hasWallet && noProfile && !hasSkippedProfileCreation;
+  }, [hasProfile, hasSkippedProfileCreation, hasWallet, isLoadingSafes]);
 
-    if (shouldShowProfileCreationFlow) {
-      navigate(Routes.PROFILE_SLUG);
-    }
-  }, [
-    walletReady,
-    selectedWallet,
-    hasSkippedBackup,
-    hasProfile,
-    hasSkippedProfileCreation,
-    hasWallet,
-    isLoadingSafes,
-    navigate,
-  ]);
+  useEffect(() => {
+    console.log('::: useShowOnboarding', {
+      shouldShowBackupFlow,
+      shouldShowProfileCreationFlow,
+    });
+  }, [shouldShowBackupFlow, shouldShowProfileCreationFlow]);
+
+  const navigateToNextOnboardingStep = useCallback(
+    (step?: string) => {
+      if (step) {
+        navigate(step);
+
+        return;
+      }
+
+      if (shouldShowBackupFlow) {
+        navigate(Routes.BACKUP_EXPLANATION);
+
+        return;
+      }
+
+      if (shouldShowProfileCreationFlow) {
+        navigate(Routes.PROFILE_SLUG);
+      }
+    },
+    [navigate, shouldShowBackupFlow, shouldShowProfileCreationFlow]
+  );
+
+  return {
+    navigateToNextOnboardingStep,
+    shouldShowBackupFlow,
+    shouldShowProfileCreationFlow,
+  };
 };

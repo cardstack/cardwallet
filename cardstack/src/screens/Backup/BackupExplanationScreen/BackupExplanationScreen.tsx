@@ -9,6 +9,7 @@ import {
   PageWithStackHeaderFooter,
   Text,
 } from '@cardstack/components';
+import { useShowOnboarding } from '@cardstack/hooks/onboarding/useShowOnboarding';
 import { Routes } from '@cardstack/navigation';
 import { usePersistedFlagsActions } from '@cardstack/redux/persistedFlagsSlice';
 
@@ -20,6 +21,8 @@ const BackupExplanationScreen = () => {
   const { navigate } = useNavigation();
   const { seedPhrase } = useWallets();
 
+  const { navigateToNextOnboardingStep } = useShowOnboarding();
+
   const { triggerSkipBackup } = usePersistedFlagsActions();
 
   const handleBackupOnPress = useCallback(() => {
@@ -28,7 +31,8 @@ const BackupExplanationScreen = () => {
 
   const handleLaterOnPress = useCallback(() => {
     triggerSkipBackup();
-  }, [triggerSkipBackup]);
+    navigateToNextOnboardingStep(Routes.PROFILE_SLUG);
+  }, [triggerSkipBackup, navigateToNextOnboardingStep]);
 
   return (
     <PageWithStackHeader

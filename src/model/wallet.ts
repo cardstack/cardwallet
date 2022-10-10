@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { captureException } from '@sentry/react-native';
 import { generateMnemonic } from 'bip39';
 import { signTypedData_v4, signTypedDataLegacy } from 'eth-sig-util';
@@ -49,7 +48,7 @@ import {
   updateSecureStorePin,
   wipeSecureStorage,
 } from '@cardstack/models/secure-storage';
-import { skipProfileCreation } from '@cardstack/redux/persistedFlagsSlice';
+import { clearFlags } from '@cardstack/redux/persistedFlagsSlice';
 import { restartApp } from '@cardstack/utils';
 import { Device } from '@cardstack/utils/device';
 
@@ -57,7 +56,7 @@ import {
   deleteKeychainIntegrityState,
   deletePinAuthAttemptsData,
 } from '@rainbow-me/handlers/localstorage/globalSettings';
-import store from '@rainbow-me/redux/store';
+import store, { persistor } from '@rainbow-me/redux/store';
 import logger from 'logger';
 
 const encryptor = new AesEncryptor();
@@ -906,16 +905,14 @@ export const resetWallet = async () => {
       await wipeSecureStorage(allWallets);
       await keychain.wipeKeychain();
 
-      // clear preferences on redux persist properties
-      await AsyncStorage.clear();
-
       // resets Keychain Integrity Check
       deleteKeychainIntegrityState();
 
       await deletePinAuthAttemptsData();
 
-      // clear profile creation skip
-      store.dispatch(skipProfileCreation(false));
+      // clear preferences on redux persist properties
+      store.dispatch(clearFlags());
+      await persistor.flush();
 
       logger.log('Wallet reset done!');
 

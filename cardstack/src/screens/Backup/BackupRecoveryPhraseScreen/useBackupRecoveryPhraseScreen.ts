@@ -12,9 +12,9 @@ export const useBackupRecoveryPhraseScreen = () => {
   const handleCloudBackupOnPress = useCallback(
     () =>
       navigate(Routes.BACKUP_CLOUD_PASSWORD, {
-        seedPhrase,
+        popStackOnSuccess: 1,
       }),
-    [navigate, seedPhrase]
+    [navigate]
   );
 
   const handleManualBackupOnPress = useCallback(() => {

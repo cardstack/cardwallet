@@ -6,6 +6,7 @@ import {
 import { useCallback, useRef, useState, useMemo } from 'react';
 
 import { useWalletManualBackup } from '@cardstack/hooks/backup/useWalletManualBackup';
+import { useShowOnboarding } from '@cardstack/hooks/onboarding/useShowOnboarding';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
 
@@ -21,9 +22,11 @@ export const useBackupSeedPhraseConfirmationScreen = () => {
     params: { seedPhrase, popStackOnSuccess = 0 },
   } = useRoute<RouteType<BackupRouteParams>>();
 
-  const { navigate, dispatch: navDispatch } = useNavigation();
+  const { dispatch: navDispatch } = useNavigation();
 
   const { confirmBackup } = useWalletManualBackup();
+
+  const { navigateToNextOnboardingStep } = useShowOnboarding();
 
   const selectedWordsIndexes = useRef<number[]>([]).current;
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
@@ -54,23 +57,30 @@ export const useBackupSeedPhraseConfirmationScreen = () => {
     [shuffledWords, selectedWords, selectedWordsIndexes, setSelectedWords]
   );
 
-  const handleConfirmPressed = useCallback(() => {
-    confirmBackup();
-
-    if (popStackOnSuccess) {
-      navDispatch(StackActions.pop(popStackOnSuccess));
-    }
-  }, [confirmBackup, popStackOnSuccess, navDispatch]);
-
   const handleClearPressed = useCallback(() => {
     selectedWordsIndexes.length = 0;
     setSelectedWords([]);
   }, [selectedWordsIndexes, setSelectedWords]);
 
+  const handleConfirmPressed = useCallback(() => {
+    confirmBackup();
+
+    if (popStackOnSuccess) {
+      navDispatch(StackActions.pop(popStackOnSuccess));
+    } else {
+      navigateToNextOnboardingStep();
+    }
+  }, [
+    confirmBackup,
+    popStackOnSuccess,
+    navDispatch,
+    navigateToNextOnboardingStep,
+  ]);
+
   const handleBackupToCloudPress = useCallback(() => {
     confirmBackup();
-    navigate(Routes.BACKUP_CLOUD_PASSWORD);
-  }, [navigate, confirmBackup]);
+    navigateToNextOnboardingStep(Routes.BACKUP_CLOUD_PASSWORD);
+  }, [navigateToNextOnboardingStep, confirmBackup]);
 
   return {
     handleWordPressed,

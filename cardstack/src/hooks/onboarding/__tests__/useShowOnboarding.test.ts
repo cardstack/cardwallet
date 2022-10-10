@@ -36,7 +36,9 @@ jest.mock('@cardstack/redux/persistedFlagsSlice', () => ({
 }));
 
 describe('useShowOnboarding', () => {
-  const mockUseWallets = (overwriteParams: any = {}) => {
+  const mockUseWallets = (
+    overwriteParams: Partial<ReturnType<typeof useWallets>> = {}
+  ) => {
     (useWallets as jest.Mock).mockImplementation(() => ({
       selectedWallet: { manuallyBackedUp: true },
       walletReady: true,
@@ -44,7 +46,9 @@ describe('useShowOnboarding', () => {
     }));
   };
 
-  const mockPrimarySafeHelper = (overwriteParams: any = {}) =>
+  const mockPrimarySafeHelper = (
+    overwriteParams: Partial<ReturnType<typeof usePrimarySafe>> = {}
+  ) =>
     (usePrimarySafe as jest.Mock).mockImplementation(() => ({
       hasProfile: false,
       isLoadingOnInit: true,
