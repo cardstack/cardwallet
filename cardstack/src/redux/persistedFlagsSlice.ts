@@ -24,13 +24,8 @@ const slice = createSlice({
     skipBackup(state, action: PayloadAction<boolean>) {
       state.hasSkippedBackup = action.payload;
     },
-    clearFlags(state) {
-      state = initialState;
-
-      // Hack note: Returning the state in slice reducers is not necessary generally,
-      // but this state does not update when the action is dispatched
-      // from resetWallet in wallet model for some unknown reason.
-      return state;
+    clearFlags() {
+      return initialState;
     },
   },
 });
