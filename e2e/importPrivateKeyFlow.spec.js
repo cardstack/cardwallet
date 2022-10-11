@@ -47,13 +47,6 @@ describe('Import from private key flow', () => {
     await Helpers.checkIfVisible('wallet-screen');
   });
 
-  // Saving for now in case we want to test iCloud back up sheet
-  // it('Should show the backup sheet', async () => {
-  //   await Helpers.delay(3000);
-  //   await Helpers.checkIfVisible('backup-sheet');
-  //   await Helpers.tap('backup-sheet-imported-cancel-button');
-  // });
-
   it('with 0x - Should say "PKEY" in the Profile Screen header', async () => {
     await Helpers.delay(1000);
     await Helpers.swipe('wallet-screen', 'right');
@@ -127,13 +120,6 @@ describe('Import from private key flow', () => {
     await Helpers.delay(4000);
     await Helpers.checkIfVisible('wallet-screen');
   });
-
-  // Saving for now in case we want to test iCloud back up sheet
-  // it('Should show the backup sheet', async () => {
-  //   await Helpers.delay(3000);
-  //   await Helpers.checkIfVisible('backup-sheet');
-  //   await Helpers.tap('backup-sheet-imported-cancel-button');
-  // });
 
   it('without 0x - Should say "TKEY" in the Profile Screen header', async () => {
     await Helpers.delay(1000);
