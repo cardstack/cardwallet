@@ -1,27 +1,32 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  StackActions,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { useCallback, useRef, useState, useMemo } from 'react';
 
 import { useWalletManualBackup } from '@cardstack/hooks/backup/useWalletManualBackup';
+import { useShowOnboarding } from '@cardstack/hooks/onboarding/useShowOnboarding';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
 
-import { shuffleSeedPhraseAsArray } from './utils';
+import { BackupRouteParams } from '../types';
 
-interface NavParams {
-  seedPhrase: string;
-}
+import { shuffleSeedPhraseAsArray } from './utils';
 
 // Selection UI is hard-coded for 12 words.
 const SEED_PHRASE_LENGTH = 12;
 
 export const useBackupSeedPhraseConfirmationScreen = () => {
   const {
-    params: { seedPhrase },
-  } = useRoute<RouteType<NavParams>>();
+    params: { seedPhrase, popStackOnSuccess = 0 },
+  } = useRoute<RouteType<BackupRouteParams>>();
 
-  const { navigate } = useNavigation();
+  const { dispatch: navDispatch } = useNavigation();
 
   const { confirmBackup } = useWalletManualBackup();
+
+  const { navigateToNextOnboardingStep } = useShowOnboarding();
 
   const selectedWordsIndexes = useRef<number[]>([]).current;
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
@@ -52,20 +57,30 @@ export const useBackupSeedPhraseConfirmationScreen = () => {
     [shuffledWords, selectedWords, selectedWordsIndexes, setSelectedWords]
   );
 
-  const handleConfirmPressed = useCallback(() => {
-    confirmBackup();
-    navigate(Routes.WALLET_SCREEN);
-  }, [navigate, confirmBackup]);
-
   const handleClearPressed = useCallback(() => {
     selectedWordsIndexes.length = 0;
     setSelectedWords([]);
   }, [selectedWordsIndexes, setSelectedWords]);
 
+  const handleConfirmPressed = useCallback(() => {
+    confirmBackup();
+
+    if (popStackOnSuccess) {
+      navDispatch(StackActions.pop(popStackOnSuccess));
+    } else {
+      navigateToNextOnboardingStep();
+    }
+  }, [
+    confirmBackup,
+    popStackOnSuccess,
+    navDispatch,
+    navigateToNextOnboardingStep,
+  ]);
+
   const handleBackupToCloudPress = useCallback(() => {
     confirmBackup();
-    navigate(Routes.BACKUP_CLOUD_PASSWORD);
-  }, [navigate, confirmBackup]);
+    navigateToNextOnboardingStep(Routes.BACKUP_CLOUD_PASSWORD);
+  }, [navigateToNextOnboardingStep, confirmBackup]);
 
   return {
     handleWordPressed,

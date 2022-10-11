@@ -1,8 +1,4 @@
-import {
-  StackActions,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React, { memo, useCallback } from 'react';
 
 import {
@@ -13,27 +9,35 @@ import {
   PageWithStackHeaderFooter,
   Text,
 } from '@cardstack/components';
+import { useSelectedWallet } from '@cardstack/hooks';
+import { useShowOnboarding } from '@cardstack/hooks/onboarding/useShowOnboarding';
 import { Routes } from '@cardstack/navigation';
-import { RouteType } from '@cardstack/navigation/types';
-
-import { BackupRouteParams } from '../types';
+import { usePersistedFlagsActions } from '@cardstack/redux/persistedFlagsSlice';
 
 import { strings } from './strings';
 
 const BackupExplanationScreen = () => {
-  const { dispatch: navDispatch, navigate } = useNavigation();
-  const { params } = useRoute<RouteType<BackupRouteParams>>();
+  const { navigate } = useNavigation();
+  const { seedPhrase } = useSelectedWallet();
+
+  const { navigateToNextOnboardingStep } = useShowOnboarding();
+
+  const { triggerSkipBackup } = usePersistedFlagsActions();
 
   const handleBackupOnPress = useCallback(() => {
-    navigate(Routes.BACKUP_MANUAL_BACKUP, params);
-  }, [navigate, params]);
+    navigate(Routes.BACKUP_MANUAL_BACKUP, { seedPhrase });
+  }, [navigate, seedPhrase]);
 
   const handleLaterOnPress = useCallback(() => {
-    navDispatch(StackActions.popToTop());
-  }, [navDispatch]);
+    triggerSkipBackup();
+    navigateToNextOnboardingStep(Routes.PROFILE_SLUG);
+  }, [triggerSkipBackup, navigateToNextOnboardingStep]);
 
   return (
-    <PageWithStackHeader canGoBack={false}>
+    <PageWithStackHeader
+      canGoBack={false}
+      skipPressCallback={handleLaterOnPress}
+    >
       <Container flex={1} width="90%">
         <Text variant="pageHeader" paddingBottom={4}>
           {strings.title}

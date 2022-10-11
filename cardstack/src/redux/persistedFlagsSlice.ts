@@ -6,10 +6,12 @@ import { AppState } from '@rainbow-me/redux/store';
 
 type SliceType = {
   hasSkippedProfileCreation: boolean;
+  hasSkippedBackup: boolean;
 };
 
 const initialState: SliceType = {
   hasSkippedProfileCreation: false,
+  hasSkippedBackup: false,
 };
 
 const slice = createSlice({
@@ -19,12 +21,18 @@ const slice = createSlice({
     skipProfileCreation(state, action: PayloadAction<boolean>) {
       state.hasSkippedProfileCreation = action.payload;
     },
+    skipBackup(state, action: PayloadAction<boolean>) {
+      state.hasSkippedBackup = action.payload;
+    },
+    clearFlags() {
+      return initialState;
+    },
   },
 });
 
 export const {
   name: persistedFlagsName,
-  actions: { skipProfileCreation },
+  actions: { skipProfileCreation, skipBackup, clearFlags },
 } = slice;
 
 export const usePersistedFlagsSelector = () => {
@@ -40,8 +48,13 @@ export const usePersistedFlagsActions = () => {
     dispatch(skipProfileCreation(true));
   }, [dispatch]);
 
+  const triggerSkipBackup = useCallback(() => {
+    dispatch(skipBackup(true));
+  }, [dispatch]);
+
   return {
     triggerSkipProfileCreation,
+    triggerSkipBackup,
   };
 };
 

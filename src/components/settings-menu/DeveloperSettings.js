@@ -33,10 +33,6 @@ const DeveloperSettings = () => {
       <ListItem label="🔄 Restart app" onPress={restartApp} />
       <ListItem label="🗑️ Remove all backups" onPress={deleteAllBackups} />
       <ListItem
-        label="🤷 Restore default experimental config"
-        onPress={() => AsyncStorage.removeItem('experimentalConfig')}
-      />
-      <ListItem
         label="‍👾 Connect to ganache"
         onPress={connectToGanache}
         testID="ganache-section"

@@ -1,23 +1,31 @@
-import { useRoute } from '@react-navigation/native';
+import { StackActions, useRoute } from '@react-navigation/native';
 import { renderHook } from '@testing-library/react-hooks';
 import { act } from 'react-test-renderer';
 
-import { Routes } from '@cardstack/navigation/routes';
-
+import { BackupRouteParams } from '../../types';
 import { useBackupSeedPhraseConfirmationScreen } from '../useBackupSeedPhraseConfirmationScreen';
 import { seedPhraseStringToArray } from '../utils';
 
-const mockNavigate = jest.fn();
+const mockNavDispatch = jest.fn();
 
 jest.mock('@react-navigation/native', () => ({
-  useNavigation: () => ({ navigate: mockNavigate }),
+  useNavigation: () => ({ navigate: jest.fn(), dispatch: mockNavDispatch }),
   useRoute: jest.fn(),
+  StackActions: { pop: jest.fn() },
 }));
 
 jest.mock('@cardstack/navigation', () => ({
   Routes: {
     WALLET_SCREEN: 'WalletScreen',
   },
+}));
+
+const mockNavigateOnboarding = jest.fn();
+
+jest.mock('@cardstack/hooks/onboarding/useShowOnboarding', () => ({
+  useShowOnboarding: () => ({
+    navigateToNextOnboardingStep: mockNavigateOnboarding,
+  }),
 }));
 
 const mockConfirmBackup = jest.fn();
@@ -30,10 +38,11 @@ const mockSeedPhrase =
   'loan velvet fall cluster renew animal trophy clinic adjust fix soon enrich';
 
 describe('BackupSeedPhraseConfirmationScreen', () => {
-  const mockParams = () => {
+  const mockParams = (overwriteParams: Partial<BackupRouteParams> = {}) => {
     (useRoute as jest.Mock).mockImplementation(() => ({
       params: {
         seedPhrase: mockSeedPhrase,
+        ...overwriteParams,
       },
     }));
   };
@@ -105,7 +114,7 @@ describe('BackupSeedPhraseConfirmationScreen', () => {
     expect(result.current.isSeedPhraseCorrect).toBeFalsy();
   });
 
-  it('should navigate forward and confirm manual backup on confirmation', () => {
+  it('should confirm Backup and navigate to next onboading step', () => {
     const { result } = renderHook(useBackupSeedPhraseConfirmationScreen);
 
     act(() => {
@@ -113,6 +122,19 @@ describe('BackupSeedPhraseConfirmationScreen', () => {
     });
 
     expect(mockConfirmBackup).toBeCalled();
-    expect(mockNavigate).toBeCalledWith(Routes.WALLET_SCREEN);
+    expect(mockNavDispatch).not.toBeCalled();
+    expect(mockNavigateOnboarding).toBeCalled();
+  });
+
+  it('should confirm Backup and navigate back when requested by nav params', () => {
+    mockParams({ popStackOnSuccess: 2 });
+    const { result } = renderHook(useBackupSeedPhraseConfirmationScreen);
+
+    act(() => {
+      result.current.handleConfirmPressed();
+    });
+
+    expect(mockConfirmBackup).toBeCalled();
+    expect(mockNavDispatch).toBeCalledWith(StackActions.pop(2));
   });
 });
