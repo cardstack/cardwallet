@@ -25,7 +25,6 @@ export const MainRoutes = {
   REWARD_WITHDRAW_TO: 'RewardWithdrawToScreen',
   REWARD_WITHDRAW_CONFIRMATION: 'RewardWithdrawConfirmationScreen',
   TRANSACTION_CONFIRMATION_SHEET: 'TransactionConfirmationScreen',
-  BACKUP_SHEET: 'BackupSheet',
   REQUEST_PREPAID_CARD: 'RequestPrepaidCardScreen',
   CONFIRM_REQUEST: 'ConfirmRequest',
   CURRENCY_SELECTION_MODAL: 'CurrencySelectionModal',
