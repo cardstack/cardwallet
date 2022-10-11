@@ -1,11 +1,11 @@
 import { cardSpaceSuffix } from '@cardstack/constants';
 
 export const strings = {
-  title: 'Purchase a CardSpace\nProfile to do the following:',
+  title: 'Create a payment profile to:',
   benefits: {
-    payments: 'Accept payments from customers',
-    cardProfile: `Setup a profile page on ${cardSpaceSuffix}`,
-    rewards: 'Earn Rewards in the Card Ecosystem',
+    payments: 'Send & receive payments',
+    cardProfile: `Get your own profile page on ${cardSpaceSuffix}`,
+    rewards: 'Earn rewards in the Cardstack ecosystem',
   },
   button: {
     purchase: 'Buy for',

@@ -21,6 +21,7 @@ const ProfileSlugScreen = () => {
     canContinue,
     onContinuePress,
     triggerSkipProfileCreation,
+    purchaseDisclaimer,
   } = useProfileSlugScreen();
 
   return (
@@ -51,6 +52,9 @@ const ProfileSlugScreen = () => {
               {strings.input.description}
             </Text>
           </Container>
+          <Text paddingTop={2} variant="pageDescriptionSmall">
+            {purchaseDisclaimer}
+          </Text>
         </Container>
       </Container>
       <PageWithStackHeaderFooter>

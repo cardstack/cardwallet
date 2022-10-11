@@ -64,7 +64,7 @@ export const useProfileNameScreen = () => {
   const onContinuePress = useCallback(() => {
     // creation flow
     if (!currentProfile.name) {
-      navigate(Routes.PROFILE_PURCHASE_CTA, { profile });
+      navigate(Routes.PROFILE_PURCHASE, { profile });
 
       return;
     }

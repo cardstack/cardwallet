@@ -11,7 +11,7 @@ import { matchMinLength } from '@cardstack/utils/validators';
 import { strings, MIN_SLUG_LENGTH } from './strings';
 
 export const useProfileSlugScreen = () => {
-  useInitIAPProducts();
+  const { localizedPrice } = useInitIAPProducts();
 
   const { navigate } = useNavigation();
 
@@ -80,6 +80,11 @@ export const useProfileSlugScreen = () => {
     [isFetching, isLoading, slugValidation.slugAvailable]
   );
 
+  const purchaseDisclaimer = useMemo(
+    () => strings.purchaseDisclaimer(localizedPrice),
+    [localizedPrice]
+  );
+
   const { triggerSkipProfileCreation } = usePersistedFlagsActions();
 
   return {
@@ -89,5 +94,6 @@ export const useProfileSlugScreen = () => {
     slugValidation,
     canContinue,
     triggerSkipProfileCreation,
+    purchaseDisclaimer,
   };
 };

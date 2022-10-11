@@ -1,5 +1,5 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 
 import { useBooleanState, useRemoteConfigs } from '@cardstack/hooks';
 import { useCreateProfile } from '@cardstack/hooks/merchant/useCreateProfile';
@@ -14,12 +14,11 @@ import { isLayer1 } from '@cardstack/utils';
 import { Alert } from '@rainbow-me/components/alerts';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
-const defaultPrice = '$0.99';
 interface NavParams {
   profile: CreateProfileInfoParams;
 }
 
-export const usePurchaseCTAScreen = () => {
+export const useProfilePurchaseScreen = () => {
   const { navigate } = useNavigation();
 
   const { network, accountAddress, nativeCurrency } = useAccountSettings();
@@ -41,18 +40,15 @@ export const usePurchaseCTAScreen = () => {
     params: { profile },
   } = useRoute<RouteType<NavParams>>();
 
-  const { purchaseProfile, profileProduct } = usePurchaseProfile(profile);
+  const { purchaseProfile, localizedPrice } = usePurchaseProfile(profile);
 
   const { purchaseWithPrepaidCard } = useCreateProfile(profile);
 
-  const localizedValue = useMemo(
-    () => profileProduct?.localizedPrice || defaultPrice,
-    [profileProduct]
-  );
-
   const onPressChargeExplanation = useCallback(() => {
-    navigate(Routes.PROFILE_CHARGE_EXPLANATION, { localizedValue });
-  }, [localizedValue, navigate]);
+    navigate(Routes.PROFILE_CHARGE_EXPLANATION, {
+      localizedValue: localizedPrice,
+    });
+  }, [localizedPrice, navigate]);
 
   const [
     inPurchaseOngoing,
@@ -83,7 +79,7 @@ export const usePurchaseCTAScreen = () => {
     inPurchaseOngoing,
     onPressPrepaidCards: purchaseWithPrepaidCard,
     showPrepaidCardOption,
-    localizedValue,
+    localizedPrice,
     triggerSkipProfileCreation,
   };
 };

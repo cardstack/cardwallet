@@ -11,6 +11,6 @@ export const strings = {
   input: {
     placeholder: 'Profile name',
     description:
-      'This name is only used for display purposes on your profile. You will need to use your unique ID to make and accept payments',
+      'This name is only used for display purposes on your profile. You will need to use your unique ID to make and accept payments.',
   },
 };

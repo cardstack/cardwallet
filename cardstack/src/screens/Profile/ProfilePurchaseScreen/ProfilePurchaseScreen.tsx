@@ -16,25 +16,25 @@ import {
 import profilePreview from '../../../assets/profile-preview.png';
 
 import { strings } from './strings';
-import { usePurchaseCTAScreen } from './usePurchaseCTAScreen';
+import { useProfilePurchaseScreen } from './useProfilePurchaseScreen';
 
 interface BenefitsItem {
   iconName: IconName;
   copy: string;
 }
 
-const PurchaseCTAScreen = () => {
+const ProfilePurchaseScreen = () => {
   const {
     onPressChargeExplanation,
     onPressBuy,
     inPurchaseOngoing,
-    localizedValue,
+    localizedPrice,
     onPressPrepaidCards,
     showPrepaidCardOption,
     triggerSkipProfileCreation,
-  } = usePurchaseCTAScreen();
+  } = useProfilePurchaseScreen();
 
-  const purchaseBtnLabel = `${strings.button.purchase} ${localizedValue}`;
+  const purchaseBtnLabel = `${strings.button.purchase} ${localizedPrice}`;
 
   const BenefitsItem = useCallback(
     ({ iconName, copy }: BenefitsItem) => (
@@ -115,4 +115,4 @@ const styles = StyleSheet.create({
   iapPreview: { width: '100%', flex: 0.5 },
 });
 
-export default PurchaseCTAScreen;
+export default ProfilePurchaseScreen;

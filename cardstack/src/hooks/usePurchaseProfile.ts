@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useMemo } from 'react';
-import { useIAP } from 'react-native-iap';
+import { useIAP, Product } from 'react-native-iap';
 
 import { defaultErrorAlert } from '@cardstack/constants';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
@@ -16,8 +16,37 @@ import { useMutationEffects } from '.';
 // TODO: Fetch Product IDs from hub.
 const skus = { profile: '0001' };
 
+const strings = {
+  loading: 'Loading...',
+  processingPurchase: 'Processing Purchase',
+};
+
+const defaultProfilePrice = '$0.99';
+
+// Helper function to find the profile product.
+const findProfileProduct = (products: Product[]) =>
+  products.find(
+    prod => prod.productId === skus.profile && prod.type === Device.iap.type
+  );
+
+const getLocalizedPriceOrFallback = (product?: Product) =>
+  product?.localizedPrice || defaultProfilePrice;
+
+/**
+ * useInitIAPProducts hook to be called as soon as possible to prepare for purchases.
+ * @returns profileProduct: Product, filtered product matching profile specs.
+ */
 export const useInitIAPProducts = () => {
-  const { getProducts } = useIAP();
+  const { getProducts, products } = useIAP();
+
+  const profileProduct = useMemo(() => findProfileProduct(products), [
+    products,
+  ]);
+
+  const localizedPrice = useMemo(
+    () => getLocalizedPriceOrFallback(profileProduct),
+    [profileProduct]
+  );
 
   /**
    * Fetches IAPs descriptions and succesfull purchases.
@@ -25,6 +54,8 @@ export const useInitIAPProducts = () => {
   useEffect(() => {
     getProducts(Object.values(skus));
   }, [getProducts]);
+
+  return { profileProduct, localizedPrice };
 };
 
 export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
@@ -52,6 +83,8 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
           status: isSuccess,
           callback: () => {
             if (currentPurchase) {
+              dismissLoadingOverlay();
+
               try {
                 // Valid purchases need to be finalized, otherwise they may reverse.
                 finishTransaction(currentPurchase, Device.iap.isConsumable);
@@ -90,12 +123,13 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
     )
   );
 
-  const profileProduct = useMemo(
-    () =>
-      products.find(
-        prod => prod.productId === skus.profile && prod.type === Device.iap.type
-      ),
-    [products]
+  const profileProduct = useMemo(() => findProfileProduct(products), [
+    products,
+  ]);
+
+  const localizedPrice = useMemo(
+    () => getLocalizedPriceOrFallback(profileProduct),
+    [profileProduct]
   );
 
   /**
@@ -104,8 +138,9 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
   const purchaseProfile = useCallback(async () => {
     if (profileProduct) {
       try {
-        showLoadingOverlay();
+        showLoadingOverlay({ title: strings.loading });
         await requestPurchase(profileProduct.productId);
+        showLoadingOverlay({ title: strings.processingPurchase });
       } catch (e) {
         dismissLoadingOverlay();
         logger.sentry('Error purchasing product', e);
@@ -154,5 +189,6 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
   return {
     purchaseProfile,
     profileProduct,
+    localizedPrice,
   };
 };

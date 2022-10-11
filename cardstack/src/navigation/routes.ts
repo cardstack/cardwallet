@@ -66,7 +66,7 @@ export const NonAuthRoutes = {
 
 const ProfileRoutes = {
   PROFILE_SLUG: 'ProfileSlug',
-  PROFILE_PURCHASE_CTA: 'ProfilePurchaseCTA',
+  PROFILE_PURCHASE: 'ProfilePurchaseScreen',
   PROFILE_NAME: 'ProfileName',
   PROFILE_CHARGE_EXPLANATION: 'ProfileChargeExplanation',
 };
