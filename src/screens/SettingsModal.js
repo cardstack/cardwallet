@@ -11,9 +11,6 @@ import {
   SettingsSection,
   WalletConnectSessionsSection,
 } from '../components/settings-menu';
-import SettingsBackupView from '../components/settings-menu/BackupSection/SettingsBackupView';
-import ShowSecretView from '../components/settings-menu/BackupSection/ShowSecretView';
-import WalletSelectionView from '../components/settings-menu/BackupSection/WalletSelectionView';
 import DeveloperSettings from '../components/settings-menu/DeveloperSettings';
 import { Icon, Text, Touchable } from '@cardstack/components';
 import { NAV_HEADER_HEIGHT } from '@cardstack/components/MainHeader/components/MainHeaderWrapper';
@@ -216,31 +213,6 @@ export default function SettingsModal() {
             />
           )
       )}
-
-      <Stack.Screen
-        component={WalletSelectionView}
-        name="WalletSelectionView"
-        options={{
-          cardStyleInterpolator,
-          headerTitle: 'Backup',
-        }}
-      />
-      <Stack.Screen
-        component={SettingsBackupView}
-        name="SettingsBackupView"
-        options={({ route }) => ({
-          cardStyleInterpolator,
-          title: route.params?.title || 'Backup',
-        })}
-      />
-      <Stack.Screen
-        component={ShowSecretView}
-        name="ShowSecretView"
-        options={({ route }) => ({
-          cardStyleInterpolator,
-          title: route.params?.title || 'Backup',
-        })}
-      />
     </Stack.Navigator>
   );
 }
