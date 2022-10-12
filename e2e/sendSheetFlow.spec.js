@@ -56,12 +56,6 @@ describe('Send Sheet Interaction Flow', () => {
     await Helpers.checkIfVisible('wallet-screen');
   });
 
-  // Saving for now in case we want to test iCloud back up sheet
-  // it('Should show the backup sheet', async () => {
-  //   await Helpers.delay(3000);
-  //   await Helpers.checkIfVisible('backup-sheet');
-  //   await Helpers.tap('backup-sheet-imported-cancel-button');
-  // });
   /*
   it('Should open expanded state', async () => {
     await Helpers.delay(8000);

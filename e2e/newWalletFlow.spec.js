@@ -19,13 +19,6 @@ describe('New Wallet flow', () => {
     await Helpers.checkIfVisible('wallet-screen');
   });
 
-  // Saving for now in case we want to test iCloud back up sheet
-  // it('Should show the backup sheet', async () => {
-  //   await Helpers.delay(5000);
-  //   await Helpers.checkIfVisible('backup-sheet');
-  //   await Helpers.swipe('backup-sheet', 'down');
-  // });
-
   it('should show the "Add funds" button', async () => {
     await Helpers.checkIfVisible('copy-address-button');
   });

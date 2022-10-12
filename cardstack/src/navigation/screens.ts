@@ -40,7 +40,6 @@ import {
 } from '@cardstack/screens/RewardsCenterScreen/flows';
 import { Device } from '@cardstack/utils';
 
-import BackupSheet from '@rainbow-me/screens/BackupSheet';
 import SendSheetEOA from '@rainbow-me/screens/SendSheetEOA';
 import SettingsModal from '@rainbow-me/screens/SettingsModal';
 
@@ -165,11 +164,6 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   TRANSACTION_CONFIRMATION_SHEET: {
     component: TransactionConfirmationSheet,
     options: sheetPreset(),
-  },
-  BACKUP_SHEET: {
-    component: BackupSheet,
-    options: sheetPreset({ bounce: false, backgroundOpacity: 'half' }),
-    listeners: dismissAndroidKeyboardOnClose,
   },
   REQUEST_PREPAID_CARD: {
     component: RequestPrepaidCardScreen,

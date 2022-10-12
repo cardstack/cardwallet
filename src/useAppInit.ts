@@ -5,10 +5,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { Linking } from 'react-native';
 import { useDispatch } from 'react-redux';
 import handleWcDeepLink from './handlers/deeplinks';
-import {
-  runKeychainIntegrityChecks,
-  runWalletBackupStatusChecks,
-} from './handlers/walletReadyEvents';
+import { runKeychainIntegrityChecks } from './handlers/walletReadyEvents';
 
 import { useRainbowSelector } from './redux/hooks';
 import store from './redux/store';
@@ -100,7 +97,6 @@ export const useAppInit = () => {
 
       if (isAuthorized) {
         runKeychainIntegrityChecks();
-        runWalletBackupStatusChecks();
       }
 
       return unsubscribe;
