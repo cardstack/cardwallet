@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
 interface SuffixedInputProps extends TextInputProps {
   suffixText?: string;
   suffixTextProps?: TextProps;
+  readOnly?: boolean;
 }
 
 const DEFAULT_MAX_LENGTH = 25;
@@ -34,6 +35,7 @@ const SuffixedInput = ({
   placeholder = strings.defaultPlaceholder,
   onChangeText,
   value,
+  readOnly,
 }: SuffixedInputProps) => (
   <Container
     width="100%"
@@ -58,6 +60,7 @@ const SuffixedInput = ({
       onChangeText={onChangeText}
       value={value}
       returnKeyType="done"
+      editable={!readOnly}
     />
     <Text
       style={styles.textStyle}

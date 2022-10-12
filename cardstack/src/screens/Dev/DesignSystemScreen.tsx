@@ -8,8 +8,8 @@ import {
   Container,
   Text,
   SeedPhraseTable,
+  SuffixedInput,
 } from '@cardstack/components';
-import SuffixedInput from '@cardstack/components/Input/SuffixedInput/SuffixedInput';
 import { cardSpaceDomain } from '@cardstack/constants';
 import { buttonVariants } from '@cardstack/theme';
 
@@ -22,7 +22,7 @@ const DesignSystemScreen = () => {
   const sections = [
     {
       title: 'Input',
-      data: ['slug'],
+      data: ['slug', 'viewOnly'],
     },
     {
       title: 'Seed Phrase',
@@ -96,6 +96,21 @@ const DesignSystemScreen = () => {
     }
   }, []);
 
+  const renderInputVariants = useCallback(item => {
+    switch (item) {
+      case 'viewOnly':
+        return (
+          <SuffixedInput
+            value="Mandello123"
+            suffixText={cardSpaceDomain}
+            readOnly
+          />
+        );
+      default:
+        return <SuffixedInput suffixText={cardSpaceDomain} />;
+    }
+  }, []);
+
   const renderItem = useCallback(
     ({ item, section: { title } }) => {
       switch (title) {
@@ -104,11 +119,7 @@ const DesignSystemScreen = () => {
             <Container padding={2}>{renderSeedPhraseStates(item)}</Container>
           );
         case 'Input':
-          return (
-            <Container padding={2}>
-              <SuffixedInput suffixText={cardSpaceDomain} />
-            </Container>
-          );
+          return <Container padding={2}>{renderInputVariants(item)}</Container>;
         case 'Buttons':
           return (
             <CenteredContainer padding={2}>
@@ -130,7 +141,7 @@ const DesignSystemScreen = () => {
           );
       }
     },
-    [renderButtonStates, renderSeedPhraseStates]
+    [renderButtonStates, renderSeedPhraseStates, renderInputVariants]
   );
 
   return (
