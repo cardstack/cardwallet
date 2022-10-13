@@ -35,7 +35,6 @@ export { default as useMaxInputBalance } from './useMaxInputBalance';
 export { default as usePrevious } from './usePrevious';
 export { default as useRefreshAccountData } from './useRefreshAccountData';
 export { default as useRequests } from './useRequests';
-export { default as useRouteExistsInNavigationState } from './useRouteExistsInNavigationState';
 export { default as useSafeImageUri } from './useSafeImageUri';
 export { default as useSavingsAccount } from './useSavingsAccount';
 export { default as useSendableCollectibles } from './useSendableCollectibles';
