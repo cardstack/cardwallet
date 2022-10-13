@@ -3,8 +3,8 @@ import React, { memo, useCallback, useRef } from 'react';
 import { VERSION_TAP_COUNT } from 'react-native-dotenv';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-import { Text } from '@cardstack/components';
-import { useBottomToast, useRemoteConfigs } from '@cardstack/hooks';
+import { Text, useToast } from '@cardstack/components';
+import { useRemoteConfigs } from '@cardstack/hooks';
 import {
   setUserAccessType,
   UserAccessType,
@@ -17,8 +17,9 @@ import logger from 'logger';
 const AppVersionStamp = ({ showBetaUserDisclaimer = false }) => {
   const appVersion = useAppVersion();
   const numberOfTaps = useRef(0);
-  const { ToastComponent, showToast } = useBottomToast();
   const { configs, fetchRemoteConfigs } = useRemoteConfigs();
+
+  const { showToast } = useToast();
 
   const handleVersionPress = useCallback(async () => {
     numberOfTaps.current++;
@@ -29,12 +30,22 @@ const AppVersionStamp = ({ showBetaUserDisclaimer = false }) => {
         if (configs.betaAccessGranted) {
           await setUserAccessType(null);
           showToast({
-            label: `Removed from ${UserAccessType.BETA} access.`,
+            message: (
+              <Text>
+                Removed from <Text variant="bold">{UserAccessType.BETA}</Text>{' '}
+                access.
+              </Text>
+            ),
           });
         } else {
           await setUserAccessType(UserAccessType.BETA);
           showToast({
-            label: `You are now part of ${UserAccessType.BETA} access.`,
+            message: (
+              <Text>
+                You are now part of{' '}
+                <Text variant="bold">{UserAccessType.BETA}</Text> access.
+              </Text>
+            ),
           });
         }
         await fetchRemoteConfigs();
@@ -57,7 +68,7 @@ const AppVersionStamp = ({ showBetaUserDisclaimer = false }) => {
           </Text>
         )}
       </TouchableWithoutFeedback>
-      <ToastComponent />
+      {/* <ToastComponent /> */}
     </>
   );
 };

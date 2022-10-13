@@ -19,6 +19,7 @@ import {
   LoadingOverlayScreen,
   ImportSeedSheet,
   SeedPhraseBackup,
+  ToastOverlayScreen,
 } from '@cardstack/screens';
 import { colors } from '@cardstack/theme';
 import { Device, useWorker } from '@cardstack/utils';
@@ -124,6 +125,11 @@ const SharedScreens = ({ navigationKey }: { navigationKey: string }) => (
     <Stack.Screen
       component={LoadingOverlayScreen}
       name={Routes.LOADING_OVERLAY}
+      options={{ ...overlayPreset, gestureEnabled: false }}
+    />
+    <Stack.Screen
+      component={ToastOverlayScreen}
+      name={Routes.TOAST_OVERLAY}
       options={{ ...overlayPreset, gestureEnabled: false }}
     />
     <Stack.Screen

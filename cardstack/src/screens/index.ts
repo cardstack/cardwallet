@@ -42,3 +42,4 @@ export { default as SecurityScreen } from './SecurityScreen/SecurityScreen';
 export * from './Profile';
 export { default as WyreAuthenticationWidget } from './WyreAuthenticationWidget';
 export * from './Backup';
+export { default as ToastOverlayScreen } from './ToastOverlayScreen';
