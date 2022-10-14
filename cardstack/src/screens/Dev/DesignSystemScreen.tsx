@@ -9,6 +9,7 @@ import {
   Text,
   SeedPhraseTable,
   SuffixedInput,
+  PhraseInput,
 } from '@cardstack/components';
 import { cardSpaceDomain } from '@cardstack/constants';
 import { buttonVariants } from '@cardstack/theme';
@@ -22,7 +23,7 @@ const DesignSystemScreen = () => {
   const sections = [
     {
       title: 'Input',
-      data: ['slug', 'viewOnly'],
+      data: ['slug', 'viewOnly', 'phrase'],
     },
     {
       title: 'Seed Phrase',
@@ -106,6 +107,8 @@ const DesignSystemScreen = () => {
             readOnly
           />
         );
+      case 'phrase':
+        return <PhraseInput isValid />;
       default:
         return <SuffixedInput suffixText={cardSpaceDomain} />;
     }

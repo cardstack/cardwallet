@@ -10,7 +10,7 @@ import {
   Touchable,
   BaseInputProps,
 } from '@cardstack/components';
-import { palette } from '@cardstack/theme';
+import { colors } from '@cardstack/theme';
 import { hitSlop } from '@cardstack/utils';
 
 interface PasswordInputProps extends BaseInputProps {
@@ -61,7 +61,7 @@ const PasswordInput = forwardRef((props: PasswordInputProps, ref) => {
             selectTextOnFocus={true}
             textContentType="password"
             {...inputProps}
-            placeholderTextColor={palette.blueText}
+            placeholderTextColor={colors.blueText}
             secureTextEntry={!isPasswordVisible}
             autoCapitalize="none"
             onChangeText={onChangeText}
