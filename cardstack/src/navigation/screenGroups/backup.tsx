@@ -10,6 +10,7 @@ import {
   BackupRecoveryPhraseScreen,
   BackupSeedPhraseConfirmationScreen,
   BackupManualScreen,
+  BackupRestoreExplanationScreen,
 } from '@cardstack/screens';
 
 import { StackType } from '../types';
@@ -19,7 +20,7 @@ export const BackupScreenGroup = ({ Stack }: { Stack: StackType }) => (
     screenOptions={{
       ...horizontalNonStackingInterpolator,
       detachPreviousScreen: false,
-      gestureEnabled: false, // presentation as 'card' brings conflicts with iCloud password autofill.
+      gestureDirection: 'horizontal',
     }}
   >
     <Stack.Screen
@@ -41,6 +42,10 @@ export const BackupScreenGroup = ({ Stack }: { Stack: StackType }) => (
     <Stack.Screen
       component={BackupManualScreen}
       name={Routes.BACKUP_MANUAL_BACKUP}
+    />
+    <Stack.Screen
+      component={BackupRestoreExplanationScreen}
+      name={Routes.BACKUP_RESTORE_EXPLANATION}
     />
   </Stack.Group>
 );
