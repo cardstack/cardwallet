@@ -43,6 +43,7 @@ const PhraseInput = forwardRef((props: PasswordInputProps, ref) => {
         selectionColor="teal"
         allowFontScaling={false}
         autoCompleteType="off"
+        autoCorrect={false}
         autoCapitalize="none"
         blurOnSubmit={false}
         placeholderTextColor={colors.blueText}
