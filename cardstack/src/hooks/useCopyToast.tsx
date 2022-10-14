@@ -12,7 +12,7 @@ interface useCopyToastParams {
 export const useCopyToast = ({
   customCopyLabel,
   dataToCopy,
-}: useCopyToastParams) => {
+}: useCopyToastParams = {}) => {
   const { setClipboard, clipboard } = useClipboard();
 
   const { showToast } = useToast();

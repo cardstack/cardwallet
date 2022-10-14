@@ -69,7 +69,6 @@ const AppVersionStamp = ({ showBetaUserDisclaimer = false }) => {
           </Text>
         )}
       </TouchableWithoutFeedback>
-      {/* <ToastComponent /> */}
     </>
   );
 };

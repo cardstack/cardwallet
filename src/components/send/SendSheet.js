@@ -88,6 +88,11 @@ export default function SendSheet({
     [setRecipient]
   );
 
+  const onInvalidPaste = useCallback(
+    () => showToast({ message: strings.invalidPaste }),
+    [showToast]
+  );
+
   return (
     <Sheet isFullScreen scrollEnabled>
       {ios && <StatusBar barStyle="light-content" />}
@@ -95,7 +100,7 @@ export default function SendSheet({
         contacts={contacts}
         isValidAddress={isValidAddress}
         onChangeAddressInput={onChangeInput}
-        onInvalidPaste={() => showToast({ message: strings.invalidPaste })}
+        onInvalidPaste={onInvalidPaste}
         onPressPaste={setRecipient}
         recipient={recipient}
         recipientFieldRef={recipientFieldRef}
