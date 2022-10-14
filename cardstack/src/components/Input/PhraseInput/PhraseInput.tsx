@@ -2,7 +2,7 @@ import React, { useMemo, forwardRef, memo } from 'react';
 
 import { Container, Input, BaseInputProps } from '@cardstack/components';
 import { colors, textVariants } from '@cardstack/theme';
-import { Device } from '@cardstack/utils';
+import { Device } from '@cardstack/utils/device';
 
 // Note: This is necessary to account for lack of support for
 // lineHeight in Android;
