@@ -108,7 +108,7 @@ const DesignSystemScreen = () => {
           />
         );
       case 'phrase':
-        return <PhraseInput isValid />;
+        return <PhraseInput isValid placeholder="Enter your seed phrase" />;
       default:
         return <SuffixedInput suffixText={cardSpaceDomain} />;
     }

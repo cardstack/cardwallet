@@ -18,7 +18,7 @@ const PhraseInput = forwardRef((props: PasswordInputProps, ref) => {
   const inputStyle = useMemo(
     () => ({
       ...textVariants.semibold,
-      fontSize: 16,
+      fontSize: 18,
       color: isValid ? colors.teal : colors.invalid,
     }),
     [isValid]
