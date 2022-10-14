@@ -1,43 +1,34 @@
 import { useNavigation } from '@react-navigation/native';
-import { useCallback, useRef, ReactNode } from 'react';
+import { useCallback, ReactNode } from 'react';
 
 import { Routes, useDismissCurrentRoute } from '@cardstack/navigation';
 
-const defaultParams = {
-  duration: 3000,
-  loading: false,
-};
+import { useTimeout } from '@rainbow-me/hooks';
+
+const defaultDuration = 3000;
 
 export interface ToastOverlayParams {
   message: string | ReactNode;
-  loading?: boolean;
   duration?: number;
 }
 
 export const useToast = () => {
   const { navigate } = useNavigation();
 
-  const timeoutHandle = useRef<number>();
+  const [startTimeout, stopTimeout] = useTimeout();
 
   const dismissToast = useDismissCurrentRoute(Routes.TOAST_OVERLAY);
 
   const showToast = useCallback(
-    (options?: ToastOverlayParams) => {
-      const params = { ...defaultParams, ...options };
-      navigate(Routes.TOAST_OVERLAY, params);
+    ({ message, duration = defaultDuration }: ToastOverlayParams) => {
+      navigate(Routes.TOAST_OVERLAY, { message });
 
-      if (params.duration) {
-        if (timeoutHandle.current) {
-          clearTimeout(timeoutHandle.current);
-        }
-
-        timeoutHandle.current = setTimeout(
-          () => dismissToast(),
-          params.duration
-        );
+      if (duration) {
+        stopTimeout();
+        startTimeout(dismissToast, duration);
       }
     },
-    [navigate, dismissToast]
+    [navigate, dismissToast, stopTimeout, startTimeout]
   );
 
   return { showToast, dismissToast };

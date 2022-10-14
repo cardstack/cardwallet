@@ -50,7 +50,7 @@ export const SeedPhraseTable = ({
     new Animated.Value(!hideOnOpen ? animConfig.visible : animConfig.blurred)
   ).current;
 
-  const { CopyToastComponent, copyToClipboard } = useCopyToast({});
+  const { copyToClipboard } = useCopyToast({});
 
   const wordColumns = useMemo(
     () =>
@@ -135,7 +135,6 @@ export const SeedPhraseTable = ({
           >
             {strings.copyToClipboard}
           </Button>
-          <CopyToastComponent />
         </CenteredContainer>
       )}
 

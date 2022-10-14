@@ -32,7 +32,7 @@ const CopyAddressSheet = () => {
 
   const [checked, setChecked] = useState(false);
 
-  const { CopyToastComponent, copyToClipboard } = useCopyToast({
+  const { copyToClipboard } = useCopyToast({
     dataToCopy: address,
     customCopyLabel: abbreviations.formatAddressForDisplay(address),
   });
@@ -110,7 +110,6 @@ const CopyAddressSheet = () => {
           )}
         </CenteredContainer>
       </Container>
-      <CopyToastComponent />
     </>
   );
 };

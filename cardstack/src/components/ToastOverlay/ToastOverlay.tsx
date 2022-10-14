@@ -1,8 +1,7 @@
 import React, { memo } from 'react';
-import { StyleSheet, ActivityIndicator } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { CenteredContainer, Text } from '@cardstack/components';
-import { colors } from '@cardstack/theme';
 
 import { ToastOverlayParams } from './useToast';
 
@@ -14,36 +13,24 @@ const styles = StyleSheet.create({
   },
 });
 
-const overlayStyle = {
-  shadowOffset: {
-    width: 0,
-    height: 15,
-  },
-  elevation: 20,
-  shadowRadius: 30,
-  shadowOpacity: 1,
-  borderWidth: 1,
-  width: '90%',
-  paddingTop: 5,
-  paddingBottom: 5,
-  borderRadius: 20,
-};
-
-const ToastOverlay = ({ message, loading = false }: ToastOverlayParams) => (
+const ToastOverlay = ({ message }: ToastOverlayParams) => (
   <CenteredContainer style={styles.overlayWrapper}>
     <CenteredContainer
       backgroundColor="white"
       borderColor="whiteOverlay"
+      borderWidth={1}
+      width="90%"
+      padding={5}
+      borderRadius={20}
+      elevation={20}
       shadowColor="overlay"
-      {...overlayStyle}
+      shadowOffset={{
+        width: 0,
+        height: 15,
+      }}
+      shadowRadius={30}
+      shadowOpacity={1}
     >
-      {loading && (
-        <>
-          <ActivityIndicator color={colors.blueText} />
-          <CenteredContainer paddingBottom={5} />
-        </>
-      )}
-
       <Text color="blueText" size="body" textAlign="center">
         {message}
       </Text>

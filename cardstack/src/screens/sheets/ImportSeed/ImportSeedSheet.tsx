@@ -11,11 +11,6 @@ import {
 import { colors } from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
 
-import {
-  ToastPositionContainer,
-  InvalidPasteToast,
-} from '@rainbow-me/components/toasts';
-
 import { useImportSeedSheet } from './useImportSeedSheet';
 
 const ImportSeedSheet = () => {
@@ -28,7 +23,6 @@ const ImportSeedSheet = () => {
     isSecretValid,
     handlePressPasteButton,
     isClipboardValidSecret,
-    isInvalidPaste,
   } = useImportSeedSheet();
 
   return (
@@ -81,9 +75,6 @@ const ImportSeedSheet = () => {
             )}
           </Container>
         </Container>
-        <ToastPositionContainer>
-          <InvalidPasteToast isInvalidPaste={isInvalidPaste} />
-        </ToastPositionContainer>
       </Sheet>
     </>
   );

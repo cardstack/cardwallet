@@ -15,7 +15,7 @@ export const useWalletAddressScreen = () => {
     accountAddress,
   ]);
 
-  const { CopyToastComponent, copyToClipboard } = useCopyToast({
+  const { copyToClipboard } = useCopyToast({
     dataToCopy: accountAddress,
     customCopyLabel: addressPreview,
   });
@@ -26,7 +26,6 @@ export const useWalletAddressScreen = () => {
 
   return {
     onAddressPress,
-    CopyToastComponent,
     copyToClipboard,
     addressPreview,
     accountAddress,

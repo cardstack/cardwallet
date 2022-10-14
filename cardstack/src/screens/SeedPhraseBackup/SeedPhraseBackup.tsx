@@ -26,7 +26,7 @@ const SeedPhraseBackup = () => {
   const { params } = useRoute<RouteType<SeedPhraseBackupParams>>();
   const { seedPhrases = [], onSuccess } = params;
 
-  const { CopyToastComponent, copyToClipboard } = useCopyToast({});
+  const { copyToClipboard } = useCopyToast({});
 
   useBlockBackButton();
 
@@ -77,8 +77,6 @@ const SeedPhraseBackup = () => {
         />
       </Container>
       <Button onPress={onSuccess}>{strings.button}</Button>
-
-      <CopyToastComponent />
     </SafeAreaView>
   );
 };

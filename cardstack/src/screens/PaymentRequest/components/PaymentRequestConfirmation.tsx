@@ -20,7 +20,7 @@ export const PaymentRequestConfirmation = (
     handleShareLink,
   } = usePaymentLinks(props);
 
-  const { CopyToastComponent, copyToClipboard } = useCopyToast({
+  const { copyToClipboard } = useCopyToast({
     dataToCopy: paymentRequestWebLink,
     customCopyLabel: 'Payment Request Link',
   });
@@ -83,7 +83,6 @@ export const PaymentRequestConfirmation = (
           </Container>
         </Container>
       </Container>
-      <CopyToastComponent />
     </>
   );
 };

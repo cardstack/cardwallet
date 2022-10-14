@@ -43,7 +43,7 @@ const RequestQRCodePage = () => {
     [isSmallPhone]
   );
 
-  const { CopyToastComponent, copyToClipboard } = useCopyToast({
+  const { copyToClipboard } = useCopyToast({
     dataToCopy: paymentRequestWebLink,
     customCopyLabel: 'QRCode',
   });
@@ -136,7 +136,6 @@ const RequestQRCodePage = () => {
             </Button>
           </CenteredContainer>
         </Container>
-        <CopyToastComponent />
       </CenteredContainer>
     </>
   );

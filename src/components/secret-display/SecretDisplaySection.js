@@ -58,7 +58,7 @@ export default function SecretDisplaySection({
 
   const { colors } = useTheme();
 
-  const { CopyToastComponent, copyToClipboard } = useCopyToast({
+  const { copyToClipboard } = useCopyToast({
     dataToCopy: seed,
     customCopyLabel: 'Secret Recovery Phrase',
   });
@@ -102,7 +102,6 @@ export default function SecretDisplaySection({
           </Fragment>
         )}
       </ColumnWithMargins>
-      <CopyToastComponent />
     </>
   );
 }
