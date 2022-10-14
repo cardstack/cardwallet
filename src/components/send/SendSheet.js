@@ -18,7 +18,7 @@ import {
 } from '@rainbow-me/hooks';
 
 const strings = {
-  invalidPaste: "You can't paste that here",
+  invalidPaste: 'Not a valid wallet address',
 };
 
 export const useShowAssetFlags = (isValidAddress, selected) => ({

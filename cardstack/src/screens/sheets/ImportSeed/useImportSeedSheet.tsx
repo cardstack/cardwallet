@@ -26,6 +26,10 @@ import {
 } from '@rainbow-me/utils';
 import logger from 'logger';
 
+const strings = {
+  invalidPaste: 'Not a valid wallet address',
+};
+
 const useImportSeedSheet = () => {
   const { accountAddress } = useAccountSettings();
 
@@ -114,7 +118,7 @@ const useImportSeedSheet = () => {
       }
 
       showToast({
-        message: 'Not a valid wallet address',
+        message: strings.invalidPaste,
       });
     });
   }, [
