@@ -8,7 +8,6 @@ import {
   PageWithStackHeaderFooter,
   Text,
 } from '@cardstack/components';
-import { Device } from '@cardstack/utils';
 
 import { strings } from './strings';
 
@@ -37,7 +36,7 @@ const BackupRestoreExplanationScreen = () => {
             {strings.primaryBtn}
           </Button>
           <Button variant="linkWhite" onPress={handleRecoveryPhraseOnPress}>
-            {strings.secondaryBtn(Device.cloudPlatform)}
+            {strings.secondaryBtn}
           </Button>
         </CenteredContainer>
       </PageWithStackHeaderFooter>

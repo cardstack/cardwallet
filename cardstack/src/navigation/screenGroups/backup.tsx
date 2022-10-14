@@ -20,7 +20,7 @@ export const BackupScreenGroup = ({ Stack }: { Stack: StackType }) => (
     screenOptions={{
       ...horizontalNonStackingInterpolator,
       detachPreviousScreen: false,
-      gestureEnabled: false, // presentation as 'card' brings conflicts with iCloud password autofill.
+      gestureDirection: 'horizontal',
     }}
   >
     <Stack.Screen
