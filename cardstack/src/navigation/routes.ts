@@ -77,6 +77,7 @@ const BackupRoutes = {
   BACKUP_SEEDPHRASE_CONFIRMATION: 'BackupSeedPhraseConfirmationScreen',
   BACKUP_MANUAL_BACKUP: 'BackupManualBackup',
   BACKUP_RESTORE_EXPLANATION: 'BackupRestoreExplanation',
+  BACKUP_RESTORE_CLOUD: 'BackupRestoreCloud',
 };
 
 export const Routes = {
