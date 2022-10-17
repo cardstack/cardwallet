@@ -1,6 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
-import { InteractionManager } from 'react-native';
 
 import Navigation from './Navigation';
 import { MainRoutes, Routes } from './routes';
@@ -28,19 +27,23 @@ export const useCardstackMainScreens = (Stack: StackType) =>
 
 // Once we merge the routes, we can type it better
 export const useDismissCurrentRoute = (routeName: string) => {
-  const { goBack } = useNavigation();
+  const { goBack, getParent, getState } = useNavigation();
 
   const checkAndDismissCurrentRoute = useCallback(() => {
+    const parent = getParent();
+
     if (Navigation.getActiveRouteName() === routeName) {
-      goBack();
-      InteractionManager.runAfterInteractions(() => {
-        // this fixes a bug where the overlay dismiss didn't work on create profile, will investigate more
-        if (Navigation.getActiveRouteName() === routeName) {
-          goBack();
-        }
-      });
+      // Theres a bug in our navigator implementation where in some unknown circunstances
+      // the pushed screen has a lower stack index than it's parent, causing goBack
+      // to pop the parent and not the the active route. The validation
+      // below is a workaround the issue.
+      if (parent && parent.getState().index > getState().index) {
+        parent.goBack();
+      } else {
+        goBack();
+      }
     }
-  }, [goBack, routeName]);
+  }, [getParent, goBack, getState, routeName]);
 
   return checkAndDismissCurrentRoute;
 };
