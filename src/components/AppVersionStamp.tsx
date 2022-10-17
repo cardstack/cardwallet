@@ -33,8 +33,7 @@ const AppVersionStamp = ({ showBetaUserDisclaimer = false }) => {
             message: (
               <Text>
                 Removed from <Text variant="bold">{UserAccessType.BETA}</Text>{' '}
-                access.Removed from{' '}
-                <Text variant="bold">{UserAccessType.BETA}</Text> access.
+                access.
               </Text>
             ),
           });

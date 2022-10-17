@@ -1,16 +1,16 @@
 import { useRoute } from '@react-navigation/native';
 import React from 'react';
 
-import { ToastOverlay, MessageOverlayParams } from '@cardstack/components';
+import { MessageOverlay, MessageOverlayParams } from '@cardstack/components';
 
 import { useBlockBackButton } from '@rainbow-me/hooks/useBlockBackButton';
 
-const ToastOverlayScreen = () => {
+const MessageOverlayScreen = () => {
   const { params } = useRoute() as { params: MessageOverlayParams };
 
   useBlockBackButton();
 
-  return <ToastOverlay {...params} />;
+  return <MessageOverlay {...params} />;
 };
 
-export default ToastOverlayScreen;
+export default MessageOverlayScreen;
