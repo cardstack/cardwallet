@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - uses: volta-cli/action@v1
+      - uses: volta-cli/action@v4
       - name: Set up yarn cache
         uses: actions/cache@v2
         with:
