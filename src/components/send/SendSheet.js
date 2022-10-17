@@ -10,7 +10,7 @@ import {
   SendHeader,
   SendTransactionSpeed,
 } from '.';
-import { Sheet, useToast } from '@cardstack/components';
+import { Sheet, useMessageOverlay } from '@cardstack/components';
 import {
   useAccountSettings,
   useContacts,
@@ -76,7 +76,7 @@ export default function SendSheet({
     isValidAddress,
     selected
   );
-  const { showToast } = useToast();
+  const { showMessage } = useMessageOverlay();
 
   const showEmptyState = !isValidAddress;
 
@@ -89,8 +89,8 @@ export default function SendSheet({
   );
 
   const onInvalidPaste = useCallback(
-    () => showToast({ message: strings.invalidPaste }),
-    [showToast]
+    () => showMessage({ message: strings.invalidPaste }),
+    [showMessage]
   );
 
   return (

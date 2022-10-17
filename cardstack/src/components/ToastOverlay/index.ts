@@ -1,2 +1,2 @@
-export * from './useToast';
-export { default as ToastOverlay } from './ToastOverlay';
+export * from './useMessageOverlay';
+export { default as MessageOverlay } from './MessageOverlay';

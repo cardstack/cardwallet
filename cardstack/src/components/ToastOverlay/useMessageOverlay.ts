@@ -7,29 +7,29 @@ import { useTimeout } from '@rainbow-me/hooks';
 
 const defaultDuration = 3000;
 
-export interface ToastOverlayParams {
+export interface MessageOverlayParams {
   message: string | ReactNode;
   duration?: number;
 }
 
-export const useToast = () => {
+export const useMessageOverlay = () => {
   const { navigate } = useNavigation();
 
   const [startTimeout, stopTimeout] = useTimeout();
 
-  const dismissToast = useDismissCurrentRoute(Routes.TOAST_OVERLAY);
+  const dismissMessage = useDismissCurrentRoute(Routes.MESSAGE_OVERLAY);
 
-  const showToast = useCallback(
-    ({ message, duration = defaultDuration }: ToastOverlayParams) => {
-      navigate(Routes.TOAST_OVERLAY, { message });
+  const showMessage = useCallback(
+    ({ message, duration = defaultDuration }: MessageOverlayParams) => {
+      navigate(Routes.MESSAGE_OVERLAY, { message });
 
       if (duration) {
         stopTimeout();
-        startTimeout(dismissToast, duration);
+        startTimeout(dismissMessage, duration);
       }
     },
-    [navigate, dismissToast, stopTimeout, startTimeout]
+    [navigate, dismissMessage, stopTimeout, startTimeout]
   );
 
-  return { showToast, dismissToast };
+  return { showMessage, dismissMessage };
 };

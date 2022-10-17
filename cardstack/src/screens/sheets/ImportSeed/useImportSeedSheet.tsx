@@ -5,7 +5,7 @@ import { providers } from 'ethers';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { TextInput } from 'react-native';
 
-import { useToast } from '@cardstack/components';
+import { useMessageOverlay } from '@cardstack/components';
 import { dismissKeyboardOnAndroid, Routes } from '@cardstack/navigation';
 
 import { Network } from '@rainbow-me/helpers/networkTypes';
@@ -34,7 +34,7 @@ const useImportSeedSheet = () => {
   const { accountAddress } = useAccountSettings();
 
   const { getClipboard, hasClipboardData, clipboard } = useClipboard();
-  const { showToast } = useToast();
+  const { showMessage } = useMessageOverlay();
 
   const [busy, setBusy] = useState(false);
   const [seedPhrase, setSeedPhrase] = useState('');
@@ -117,7 +117,7 @@ const useImportSeedSheet = () => {
         return handleSetSeedPhrase(result);
       }
 
-      showToast({
+      showMessage({
         message: strings.invalidPaste,
       });
     });
@@ -126,7 +126,7 @@ const useImportSeedSheet = () => {
     getClipboard,
     handleSetSeedPhrase,
     hasClipboardData,
-    showToast,
+    showMessage,
   ]);
 
   return {

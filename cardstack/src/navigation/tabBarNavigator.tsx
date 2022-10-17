@@ -129,8 +129,8 @@ const SharedScreens = ({ navigationKey }: { navigationKey: string }) => (
     />
     <Stack.Screen
       component={ToastOverlayScreen}
-      name={Routes.TOAST_OVERLAY}
-      options={{ ...overlayPreset, gestureEnabled: false }}
+      name={Routes.MESSAGE_OVERLAY}
+      options={sheetPreset({ backgroundOpacity: 'half' })}
     />
     <Stack.Screen
       component={SeedPhraseBackup}

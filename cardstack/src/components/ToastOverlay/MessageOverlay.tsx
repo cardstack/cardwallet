@@ -2,7 +2,9 @@ import React, { memo } from 'react';
 
 import { OverlayContainer, Text } from '@cardstack/components';
 
-const ToastOverlay = (message: string) => (
+import { MessageOverlayParams } from './useMessageOverlay';
+
+const MessageOverlay = ({ message }: MessageOverlayParams) => (
   <OverlayContainer>
     <Text color="blueText" size="body" textAlign="center">
       {message}
@@ -10,4 +12,4 @@ const ToastOverlay = (message: string) => (
   </OverlayContainer>
 );
 
-export default memo(ToastOverlay);
+export default memo(MessageOverlay);

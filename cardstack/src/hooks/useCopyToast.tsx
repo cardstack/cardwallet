@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 
-import { useToast, Text } from '@cardstack/components';
+import { useMessageOverlay, Text } from '@cardstack/components';
 
 import { useClipboard } from '@rainbow-me/hooks';
 
@@ -15,12 +15,12 @@ export const useCopyToast = ({
 }: useCopyToastParams = {}) => {
   const { setClipboard, clipboard } = useClipboard();
 
-  const { showToast } = useToast();
+  const { showMessage } = useMessageOverlay();
 
   const copyToClipboard = useCallback(
     (copy?: string) => {
       setClipboard(dataToCopy || copy);
-      showToast({
+      showMessage({
         message: (
           <Text>
             Copied "
@@ -30,7 +30,7 @@ export const useCopyToast = ({
         ),
       });
     },
-    [clipboard, customCopyLabel, dataToCopy, showToast, setClipboard]
+    [clipboard, customCopyLabel, dataToCopy, showMessage, setClipboard]
   );
 
   return {

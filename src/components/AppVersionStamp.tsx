@@ -3,7 +3,7 @@ import React, { memo, useCallback, useRef } from 'react';
 import { VERSION_TAP_COUNT } from 'react-native-dotenv';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-import { Text, useToast } from '@cardstack/components';
+import { Text, useMessageOverlay } from '@cardstack/components';
 import { useRemoteConfigs } from '@cardstack/hooks';
 import {
   setUserAccessType,
@@ -19,7 +19,7 @@ const AppVersionStamp = ({ showBetaUserDisclaimer = false }) => {
   const numberOfTaps = useRef(0);
   const { configs, fetchRemoteConfigs } = useRemoteConfigs();
 
-  const { showToast } = useToast();
+  const { showMessage } = useMessageOverlay();
 
   const handleVersionPress = useCallback(async () => {
     numberOfTaps.current++;
@@ -29,7 +29,7 @@ const AppVersionStamp = ({ showBetaUserDisclaimer = false }) => {
       try {
         if (configs.betaAccessGranted) {
           await setUserAccessType(null);
-          showToast({
+          showMessage({
             message: (
               <Text>
                 Removed from <Text variant="bold">{UserAccessType.BETA}</Text>{' '}
@@ -40,7 +40,7 @@ const AppVersionStamp = ({ showBetaUserDisclaimer = false }) => {
           });
         } else {
           await setUserAccessType(UserAccessType.BETA);
-          showToast({
+          showMessage({
             message: (
               <Text>
                 You are now part of{' '}
@@ -54,7 +54,7 @@ const AppVersionStamp = ({ showBetaUserDisclaimer = false }) => {
         logger.error('Error while trying to set user property.', error);
       }
     }
-  }, [configs, fetchRemoteConfigs, showToast]);
+  }, [configs, fetchRemoteConfigs, showMessage]);
 
   return (
     <>
