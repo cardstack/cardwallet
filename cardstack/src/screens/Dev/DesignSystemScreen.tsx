@@ -23,7 +23,7 @@ const DesignSystemScreen = () => {
   const sections = [
     {
       title: 'Input',
-      data: ['slug', 'viewOnly', 'phrase'],
+      data: ['slug', 'viewOnly', 'phrase', 'phraseError'],
     },
     {
       title: 'Seed Phrase',
@@ -108,7 +108,9 @@ const DesignSystemScreen = () => {
           />
         );
       case 'phrase':
-        return <PhraseInput isValid placeholder="Enter your seed phrase" />;
+        return <PhraseInput placeholder="Enter your seed phrase" />;
+      case 'phraseError':
+        return <PhraseInput showAsError placeholder="Enter your seed phrase" />;
       default:
         return <SuffixedInput suffixText={cardSpaceDomain} />;
     }

@@ -9,19 +9,19 @@ import { Device } from '@cardstack/utils/device';
 const InputHeight = Device.isIOS ? 139 : 110;
 
 interface PasswordInputProps extends BaseInputProps {
-  isValid: boolean;
+  showAsError?: boolean;
 }
 
 const PhraseInput = forwardRef((props: PasswordInputProps, ref) => {
-  const { onChangeText, value, isValid = true, ...inputProps } = props;
+  const { onChangeText, value, showAsError, ...inputProps } = props;
 
   const inputStyle = useMemo(
     () => ({
       ...textVariants.semibold,
       fontSize: 18,
-      color: isValid ? colors.teal : colors.invalid,
+      color: showAsError ? colors.invalid : colors.teal,
     }),
-    [isValid]
+    [showAsError]
   );
 
   return (
