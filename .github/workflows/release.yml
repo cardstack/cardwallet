@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{ env.CHECKOUT_REF }}
-      - uses: volta-cli/action@v1
+      - uses: volta-cli/action@v4
       - name: Setup Ruby & bundle
         uses: ruby/setup-ruby@v1
         with:
