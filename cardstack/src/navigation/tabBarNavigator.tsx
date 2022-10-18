@@ -42,6 +42,7 @@ import {
   overlayPreset,
   Routes,
   sheetPreset,
+  messageOverlayPreset,
 } from '.';
 
 const Tab = createBottomTabNavigator();
@@ -130,7 +131,7 @@ const SharedScreens = ({ navigationKey }: { navigationKey: string }) => (
     <Stack.Screen
       component={MessageOverlayScreen}
       name={Routes.MESSAGE_OVERLAY}
-      options={sheetPreset({ backgroundOpacity: 'half' })}
+      options={messageOverlayPreset()}
     />
     <Stack.Screen
       component={SeedPhraseBackup}
