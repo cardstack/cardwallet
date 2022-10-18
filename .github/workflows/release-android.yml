@@ -29,7 +29,7 @@ jobs:
           title: Android release started
           color: 0xFFFFFF
       - name: Checkout tag
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: ${{ env.CHECKOUT_REF }}
       - uses: volta-cli/action@v4
@@ -39,11 +39,11 @@ jobs:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - name: Decrypt fastlane vars
         run: yarn fastlane run decrypt_fastlane_vars
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches

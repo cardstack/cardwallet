@@ -20,7 +20,7 @@ jobs:
       BASE_BRANCH: 'develop'
     steps:
       - name: Set environment variables
-        env: 
+        env:
           DEFAULT_VERSION_CHANGE_TYPE: none
           VERSION_CHANGE_BRANCH_TO_TAG: 'release/${{ github.event.inputs.versionChangeType }}-version-${{ github.run_id }}'
         run: |
@@ -34,7 +34,7 @@ jobs:
             echo "BRANCH_TO_TAG=develop" >> $GITHUB_ENV
             echo "VERSION_BUMP=false"
           fi
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ env.BASE_BRANCH }}
       - name: Bump iOS version

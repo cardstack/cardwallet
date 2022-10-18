@@ -17,8 +17,8 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout tag  
-        uses: actions/checkout@v2
+      - name: Checkout tag
+        uses: actions/checkout@v3
       # Runs a single command to fail
       - name: Force failure
         run: exit 1
@@ -27,7 +27,7 @@ jobs:
         if: ${{ failure() }}
         with:
           nodetails: true
-          webhook: ${{ secrets.DISCORD_WEBHOOK }} 
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
           title: Release iOS to TestFlight
-          description: "Click [here](https://github.com/cardstack/cardwallet/actions/runs/`${{github.run_id}}`) to review the issue"
+          description: 'Click [here](https://github.com/cardstack/cardwallet/actions/runs/`${{github.run_id}}`) to review the issue'
           color: 0xff91a4
