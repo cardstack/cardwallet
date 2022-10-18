@@ -78,7 +78,6 @@ const RequestPrepaidCardScreen = () => {
                 autoCompleteType="email"
                 keyboardType="email-address"
                 autoCapitalize="none"
-                returnKeyType="done"
                 value={email}
                 editable={!isLoading}
               />

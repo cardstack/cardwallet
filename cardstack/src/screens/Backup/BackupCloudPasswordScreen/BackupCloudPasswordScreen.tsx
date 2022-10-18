@@ -87,7 +87,6 @@ const BackupCloudPasswordScreen = () => {
               onChangeText={onChangeConfirmation}
               value={confirmation}
               ref={confirmPasswordRef}
-              returnKeyType="done"
               placeholder={strings.placeholders.confirm}
               onSubmitEditing={Keyboard.dismiss}
             />

@@ -295,7 +295,6 @@ export const ProfileNameScreen = () => {
             paddingBottom={4}
             onChangeText={onChangeText}
             value={profile.name}
-            returnKeyType="done"
           />
           <Container width="80%" flex={1}>
             <Text fontSize={12} color="grayText">

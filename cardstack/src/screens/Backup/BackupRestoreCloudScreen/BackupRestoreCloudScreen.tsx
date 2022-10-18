@@ -49,7 +49,6 @@ const BackupRestoreCloudScreen = () => {
             autoFocus
             onChangeText={onChangeText}
             value={password}
-            returnKeyType="done"
             onSubmitEditing={handleRestoreOnPress}
             placeholder={strings.inputPlaceholder}
           />

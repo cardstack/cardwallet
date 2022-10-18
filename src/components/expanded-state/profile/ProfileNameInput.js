@@ -38,7 +38,6 @@ function ProfileNameInput(
         fontSize={20}
         onChange={handleChange}
         ref={ref}
-        returnKeyType="done"
         spellCheck={false}
         testID={testID}
         textAlign="center"

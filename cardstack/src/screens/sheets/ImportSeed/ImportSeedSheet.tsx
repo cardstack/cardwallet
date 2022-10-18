@@ -54,7 +54,6 @@ const ImportSeedSheet = () => {
               placeholder="Enter seed phrase or secret recovery phrase"
               placeholderTextColor={colors.grayText}
               ref={inputRef}
-              returnKeyType="done"
               spellCheck={false}
               testID="import-sheet-input"
               textAlign="center"
