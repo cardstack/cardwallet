@@ -34,6 +34,7 @@ const Device = {
       : ('purchaseToken' as const),
     isConsumable: true,
   },
+  defaultKeyboardVerticalOffset: isIOS ? 100 : 0,
 };
 
 export { Device };
