@@ -9,7 +9,6 @@ import {
   PageWithStackHeader,
   PageWithStackHeaderFooter,
   PasswordInput,
-  ScrollView,
   Text,
 } from '@cardstack/components';
 import { Device } from '@cardstack/utils';
@@ -21,12 +20,6 @@ const styles = StyleSheet.create({
   keyboardAvoidView: {
     flex: 1,
     marginBottom: 50,
-  },
-  scrollView: {
-    marginBottom: 50,
-  },
-  passwordInput: {
-    marginBottom: 5,
   },
 });
 
@@ -40,35 +33,28 @@ const BackupRestoreCloudScreen = () => {
 
   return (
     <PageWithStackHeader showSkip={false}>
-      <ScrollView
-        flex={1}
-        contentContainerStyle={styles.scrollView}
-        showsVerticalScrollIndicator={false}
-      >
-        <KeyboardAvoidingView
-          style={styles.keyboardAvoidView}
-          behavior="position"
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidView}
+        behavior="position"
           keyboardVerticalOffset={Device.isIOS ? 100 : 0}
-        >
-          <Container width="80%" marginBottom={7}>
-            <Text variant="pageHeader">{strings.title}</Text>
-            <Text color="grayText" letterSpacing={0.4} marginTop={4}>
-              {strings.description}
-            </Text>
-          </Container>
-          <Container>
-            <PasswordInput
-              autoFocus
-              containerProps={styles.passwordInput}
-              onChangeText={onChangeText}
-              value={password}
-              returnKeyType="done"
-              onSubmitEditing={handleRestoreOnPress}
-              placeholder={strings.inputPlaceholder}
-            />
-          </Container>
-        </KeyboardAvoidingView>
-      </ScrollView>
+      >
+        <Container width="80%" marginBottom={7}>
+          <Text variant="pageHeader">{strings.title}</Text>
+          <Text color="grayText" letterSpacing={0.4} marginTop={4}>
+            {strings.description}
+          </Text>
+        </Container>
+        <Container>
+          <PasswordInput
+            autoFocus
+            onChangeText={onChangeText}
+            value={password}
+            returnKeyType="done"
+            onSubmitEditing={handleRestoreOnPress}
+            placeholder={strings.inputPlaceholder}
+          />
+        </Container>
+      </KeyboardAvoidingView>
       <PageWithStackHeaderFooter>
         <Container paddingVertical={3}>
           <CenteredContainer flexDirection="row" marginBottom={2}>
