@@ -72,6 +72,7 @@ export const Input = React.forwardRef((props: InputProps, ref) => (
       textContentType="none"
       ref={ref}
       color="black"
+      returnKeyType="done"
       {...props}
     />
     {props.iconProps && (

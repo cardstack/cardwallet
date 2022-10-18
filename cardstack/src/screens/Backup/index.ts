@@ -4,3 +4,4 @@ export { default as BackupRecoveryPhraseScreen } from './BackupRecoveryPhraseScr
 export { default as BackupSeedPhraseConfirmationScreen } from './BackupSeedPhraseConfirmationScreen/BackupSeedPhraseConfirmationScreen';
 export { default as BackupManualScreen } from './BackupManualScreen/BackupManualScreen';
 export { default as BackupRestoreExplanationScreen } from './BackupRestoreExplanationScreen/BackupRestoreExplanationScreen';
+export { default as BackupRestoreCloudScreen } from './BackupRestoreCloudScreen/BackupRestoreCloudScreen';

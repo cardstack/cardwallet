@@ -15,8 +15,8 @@ import { hitSlop } from '@cardstack/utils';
 
 interface PasswordInputProps extends BaseInputProps {
   containerProps?: ContainerProps;
-  isValid: boolean;
-  validationMessage: string;
+  isValid?: boolean;
+  validationMessage?: string;
 }
 
 const PasswordInput = forwardRef((props: PasswordInputProps, ref) => {
@@ -81,13 +81,15 @@ const PasswordInput = forwardRef((props: PasswordInputProps, ref) => {
       </Container>
       <Container flexDirection="row" alignItems="center">
         {isValid && <Icon name="check" color="lightGreen" size={14} />}
-        <Text
-          fontSize={12}
-          color={isValid ? 'white' : 'blueText'}
-          paddingLeft={1}
-        >
-          {validationMessage}
-        </Text>
+        {!!validationMessage && (
+          <Text
+            fontSize={12}
+            color={isValid ? 'white' : 'blueText'}
+            paddingLeft={1}
+          >
+            {validationMessage}
+          </Text>
+        )}
       </Container>
     </Container>
   );

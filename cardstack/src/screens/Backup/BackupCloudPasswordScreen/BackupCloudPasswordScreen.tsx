@@ -56,7 +56,7 @@ const BackupCloudPasswordScreen = () => {
         <KeyboardAvoidingView
           style={styles.keyboardAvoidView}
           behavior="position"
-          keyboardVerticalOffset={Device.isIOS ? 100 : 0}
+          keyboardVerticalOffset={Device.defaultKeyboardVerticalOffset}
         >
           <Container width="80%" marginBottom={7}>
             <Text variant="pageHeader" paddingBottom={4}>
@@ -87,7 +87,6 @@ const BackupCloudPasswordScreen = () => {
               onChangeText={onChangeConfirmation}
               value={confirmation}
               ref={confirmPasswordRef}
-              returnKeyType="done"
               placeholder={strings.placeholders.confirm}
               onSubmitEditing={Keyboard.dismiss}
             />
