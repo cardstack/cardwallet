@@ -3,9 +3,7 @@ import { useCallback } from 'react';
 import { usePasswordInput } from '@cardstack/components';
 
 export const useBackupRestoreCloudScreen = () => {
-  const { password, onChangeText } = usePasswordInput({
-    validation: (text: string) => !text,
-  });
+  const { password, onChangeText } = usePasswordInput({});
 
   const handleRestoreOnPress = useCallback(() => {
     // TBD

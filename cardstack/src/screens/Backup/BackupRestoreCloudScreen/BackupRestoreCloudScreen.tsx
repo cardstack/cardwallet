@@ -58,8 +58,6 @@ const BackupRestoreCloudScreen = () => {
           </Container>
           <Container>
             <PasswordInput
-              isValid={false} // to avoid showing the validation checkmark
-              validationMessage="" // to avoid showing the validation checkmark
               autoFocus
               containerProps={styles.passwordInput}
               onChangeText={onChangeText}
