@@ -97,6 +97,15 @@ export const getDataFromCloud = async (
   backupPassword: string,
   filename: string
 ): Promise<BackupSecretsData | undefined> => {
+  if (Device.isIOS) {
+    const isAvailable = await isIOSCloudBackupAvailable();
+
+    if (isAvailable) {
+      logger.log('[BACKUP] syncing iCloud');
+      await syncCloudIOS();
+    }
+  }
+
   if (Device.isAndroid) {
     await RNCloudFs.loginIfNeeded();
   }
@@ -109,7 +118,7 @@ export const getDataFromCloud = async (
   if (!backups || !backups.files || !backups.files.length) {
     logger.log('[BACKUP] No backups found');
 
-    throw '[BACKUP] No backups found';
+    throw 'No backups found';
   }
 
   const document = getBackupDocumentByFilename(backups, filename);
