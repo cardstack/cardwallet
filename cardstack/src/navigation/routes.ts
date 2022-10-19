@@ -78,6 +78,7 @@ const BackupRoutes = {
   BACKUP_MANUAL_BACKUP: 'BackupManualBackup',
   BACKUP_RESTORE_EXPLANATION: 'BackupRestoreExplanation',
   BACKUP_RESTORE_CLOUD: 'BackupRestoreCloud',
+  BACKUP_RESTORE_PHRASE: 'BackupRestorePhraseScreen',
 };
 
 export const Routes = {

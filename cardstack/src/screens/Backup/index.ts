@@ -5,3 +5,4 @@ export { default as BackupSeedPhraseConfirmationScreen } from './BackupSeedPhras
 export { default as BackupManualScreen } from './BackupManualScreen/BackupManualScreen';
 export { default as BackupRestoreExplanationScreen } from './BackupRestoreExplanationScreen/BackupRestoreExplanationScreen';
 export { default as BackupRestoreCloudScreen } from './BackupRestoreCloudScreen/BackupRestoreCloudScreen';
+export { default as BackupRestorePhraseScreen } from './BackupRestorePhraseScreen/BackupRestorePhraseScreen';
