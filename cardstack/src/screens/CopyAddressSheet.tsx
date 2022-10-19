@@ -13,7 +13,7 @@ import {
   IconProps,
 } from '@cardstack/components';
 import { delayLongPressMs } from '@cardstack/constants';
-import { useCopyToast } from '@cardstack/hooks';
+import { useCopyWithFeedback } from '@cardstack/hooks';
 import { RouteType } from '@cardstack/navigation/types';
 
 import { abbreviations } from '@rainbow-me/utils';
@@ -32,7 +32,7 @@ const CopyAddressSheet = () => {
 
   const [checked, setChecked] = useState(false);
 
-  const { copyToClipboard } = useCopyToast({
+  const { copyToClipboard } = useCopyWithFeedback({
     dataToCopy: address,
     customCopyLabel: abbreviations.formatAddressForDisplay(address),
   });

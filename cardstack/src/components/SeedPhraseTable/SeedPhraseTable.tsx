@@ -8,7 +8,7 @@ import {
   IconProps,
   Image,
 } from '@cardstack/components';
-import { useBooleanState, useCopyToast } from '@cardstack/hooks';
+import { useBooleanState, useCopyWithFeedback } from '@cardstack/hooks';
 import { colors } from '@cardstack/theme';
 
 import WordItem from './components/WordItem';
@@ -50,7 +50,7 @@ export const SeedPhraseTable = ({
     new Animated.Value(!hideOnOpen ? animConfig.visible : animConfig.blurred)
   ).current;
 
-  const { copyToClipboard } = useCopyToast();
+  const { copyToClipboard } = useCopyWithFeedback();
 
   const wordColumns = useMemo(
     () =>

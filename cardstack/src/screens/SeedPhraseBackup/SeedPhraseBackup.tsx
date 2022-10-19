@@ -14,7 +14,7 @@ import {
   SafeAreaView,
   Text,
 } from '@cardstack/components';
-import { useCopyToast } from '@cardstack/hooks';
+import { useCopyWithFeedback } from '@cardstack/hooks';
 import { RouteType } from '@cardstack/navigation/types';
 
 import { useBlockBackButton } from '@rainbow-me/hooks/useBlockBackButton';
@@ -26,7 +26,7 @@ const SeedPhraseBackup = () => {
   const { params } = useRoute<RouteType<SeedPhraseBackupParams>>();
   const { seedPhrases = [], onSuccess } = params;
 
-  const { copyToClipboard } = useCopyToast({});
+  const { copyToClipboard } = useCopyWithFeedback();
 
   useBlockBackButton();
 

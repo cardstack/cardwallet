@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { useCallback, useMemo } from 'react';
 
-import { useCopyToast } from '@cardstack/hooks/useCopyToast';
+import { useCopyWithFeedback } from '@cardstack/hooks/useCopyWithFeedback';
 import { Routes } from '@cardstack/navigation';
 import { getAddressPreview } from '@cardstack/utils';
 
@@ -15,7 +15,7 @@ export const useWalletAddressScreen = () => {
     accountAddress,
   ]);
 
-  const { copyToClipboard } = useCopyToast({
+  const { copyToClipboard } = useCopyWithFeedback({
     dataToCopy: accountAddress,
     customCopyLabel: addressPreview,
   });

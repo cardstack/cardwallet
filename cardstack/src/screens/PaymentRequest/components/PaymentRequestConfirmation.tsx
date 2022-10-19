@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 
 import { Button, Container, StyledQRCode, Text } from '@cardstack/components';
-import { useCopyToast } from '@cardstack/hooks';
+import { useCopyWithFeedback } from '@cardstack/hooks';
 import {
   usePaymentLinkParams,
   usePaymentLinks,
@@ -20,7 +20,7 @@ export const PaymentRequestConfirmation = (
     handleShareLink,
   } = usePaymentLinks(props);
 
-  const { copyToClipboard } = useCopyToast({
+  const { copyToClipboard } = useCopyWithFeedback({
     dataToCopy: paymentRequestWebLink,
     customCopyLabel: 'Payment Request Link',
   });

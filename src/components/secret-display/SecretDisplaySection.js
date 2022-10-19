@@ -7,7 +7,7 @@ import { identifyWalletType, loadSeedPhrase } from '../../model/wallet';
 import { ColumnWithMargins } from '../layout';
 import SecretDisplayCard from './SecretDisplayCard';
 import { Button, Text } from '@cardstack/components';
-import { useCopyToast } from '@cardstack/hooks';
+import { useCopyWithFeedback } from '@cardstack/hooks';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import { useWallets } from '@rainbow-me/hooks';
 import logger from 'logger';
@@ -58,7 +58,7 @@ export default function SecretDisplaySection({
 
   const { colors } = useTheme();
 
-  const { copyToClipboard } = useCopyToast({
+  const { copyToClipboard } = useCopyWithFeedback({
     dataToCopy: seed,
     customCopyLabel: 'Secret Recovery Phrase',
   });

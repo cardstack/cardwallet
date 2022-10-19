@@ -37,7 +37,7 @@ export * from './SafeAreaView';
 export * from './FilterOption';
 export * from './OverlayContainer';
 export * from './LoadingOverlay';
-export * from './ToastOverlay';
+export * from './MessageOverlay';
 export * from './BalanceSection';
 export * from './AnimatedPressable';
 export * from './CardPressable';
