@@ -180,7 +180,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode getVersionCode
-        versionName "1.1.10"
+        versionName "1.1.11"
         missingDimensionStrategy 'react-native-camera', 'general'
         // react-native-iap: only connect to Google Play (skips Amazon Store)
         missingDimensionStrategy 'store', 'play'
