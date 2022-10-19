@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { memo, useCallback } from 'react';
 
 import {
@@ -9,16 +8,12 @@ import {
   PageWithStackHeaderFooter,
   Text,
 } from '@cardstack/components';
-import { Routes } from '@cardstack/navigation';
 
 import { strings } from './strings';
+import { useBackupRestoreExplanationScreen } from './useBackupRestoreExplanationScreen';
 
 const BackupRestoreExplanationScreen = () => {
-  const { navigate } = useNavigation();
-
-  const handleRestoreCloudOnPress = useCallback(() => {
-    navigate(Routes.BACKUP_RESTORE_CLOUD);
-  }, [navigate]);
+  const { handleRestoreCloudOnPress } = useBackupRestoreExplanationScreen();
 
   const handleRecoveryPhraseOnPress = useCallback(() => {
     // TBD
