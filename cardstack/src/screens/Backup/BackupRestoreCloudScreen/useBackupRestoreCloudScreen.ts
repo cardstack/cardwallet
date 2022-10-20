@@ -24,7 +24,7 @@ interface RouteParams {
 
 export const useBackupRestoreCloudScreen = () => {
   const { params } = useRoute<RouteType<RouteParams>>();
-  const { password, onChangeText } = usePasswordInput({});
+  const { password, onChangeText } = usePasswordInput();
   const { importWallet } = useWalletManager();
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();

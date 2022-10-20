@@ -4,7 +4,7 @@ interface PasswordInputProps {
   validation?: (text: string) => boolean;
 }
 
-export const usePasswordInput = ({ validation }: PasswordInputProps) => {
+export const usePasswordInput = ({ validation }: PasswordInputProps = {}) => {
   const [password, setPassword] = useState('');
 
   const isValid = useMemo(() => validation?.(password), [validation, password]);
