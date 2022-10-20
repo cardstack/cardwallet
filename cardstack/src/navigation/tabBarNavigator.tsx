@@ -237,7 +237,10 @@ export const StackNavigator = () => {
       )}
       {SharedScreens({ navigationKey: !hasWallet ? 'non-auth' : 'auth' })}
       {ProfileScreenGroup({ Stack })}
-      {BackupScreenGroup({ Stack })}
+      {BackupScreenGroup({
+        Stack,
+        navigationKey: !hasWallet ? 'non-auth' : 'auth',
+      })}
     </Stack.Navigator>
   );
 };
