@@ -20,3 +20,4 @@ export * from './profile/useProfileUpdate';
 export * from './useSelectedWallet';
 export * from './backup/useWalletCloudBackup';
 export * from './backup/useWalletManualBackup';
+export * from './backup/useWalletSeedPhraseImport';
