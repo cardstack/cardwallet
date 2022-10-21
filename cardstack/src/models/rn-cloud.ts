@@ -3,9 +3,11 @@ import RNCloudFs, { ListFilesResult } from 'react-native-cloud-fs';
 import { CARDWALLET_MASTER_KEY } from 'react-native-dotenv';
 import RNFS from 'react-native-fs';
 
+import { iCloudAlertConfig } from '@cardstack/hooks';
 import { BackupUserData, BackupSecretsData } from '@cardstack/types';
 import { Device } from '@cardstack/utils';
 
+import { Alert } from '@rainbow-me/components/alerts';
 import AesEncryptor from '@rainbow-me/handlers/aesEncryption';
 import { logger } from '@rainbow-me/utils';
 
@@ -103,6 +105,10 @@ export const getDataFromCloud = async (
     if (isAvailable) {
       logger.log('[BACKUP] syncing iCloud');
       await syncCloudIOS();
+    } else {
+      Alert(iCloudAlertConfig);
+
+      return;
     }
   }
 
