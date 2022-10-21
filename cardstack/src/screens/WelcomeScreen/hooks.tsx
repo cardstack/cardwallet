@@ -54,10 +54,9 @@ export const useWelcomeScreen = () => {
   }, [createNewWallet]);
 
   const onAddExistingWallet = useCallback(() => {
-    // navigate(Routes.RESTORE_SHEET, {
-    //   userData,
-    // });
-    navigate(Routes.BACKUP_RESTORE_PHRASE);
+    navigate(Routes.RESTORE_SHEET, {
+      userData,
+    });
   }, [navigate, userData]);
 
   return { onCreateWallet, onAddExistingWallet };
