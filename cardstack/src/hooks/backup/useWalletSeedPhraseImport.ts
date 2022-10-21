@@ -36,8 +36,6 @@ export const useWalletSeedPhraseImport = (
       checkedEns.current = await ensFromWalletAddress(
         checkedWallet.current.address
       );
-
-      return checkedEns.current;
     }
   }, [seedPhrase]);
 

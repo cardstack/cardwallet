@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-import { useWalletSeedPhraseImport } from '@cardstack/hooks';
+import { useWalletSeedPhraseImport, useBooleanState } from '@cardstack/hooks';
 
 import { isValidSeedPhrase } from '@rainbow-me/helpers/validators';
 
@@ -8,6 +8,7 @@ export const useBackupRestorePhraseScreen = () => {
   const [phrase, setPhrase] = useState('');
   const [isPhraseComplete, setIsPhraseComplete] = useState(false);
   const [isPhraseWrong, setIsPhraseWrong] = useState(false);
+  const [loading, setLoading, setLoadingDone] = useBooleanState();
 
   const {
     showWalletProfileModal,
@@ -33,6 +34,8 @@ export const useBackupRestorePhraseScreen = () => {
   }, []);
 
   const onDonePressed = useCallback(async () => {
+    setLoading();
+
     const isPhraseValid = isValidSeedPhrase(phrase);
 
     if (isPhraseValid) {
@@ -40,12 +43,17 @@ export const useBackupRestorePhraseScreen = () => {
       // Wallet derivation is separate so the hook can still be compatible with ImportSeedSheet.
       await deriveWalletAndEns();
       showWalletProfileModal();
-
-      return;
     }
 
     setIsPhraseWrong(!isPhraseValid);
-  }, [phrase, deriveWalletAndEns, showWalletProfileModal]);
+    setLoadingDone();
+  }, [
+    phrase,
+    deriveWalletAndEns,
+    showWalletProfileModal,
+    setLoading,
+    setLoadingDone,
+  ]);
 
   return {
     phrase,
@@ -54,5 +62,6 @@ export const useBackupRestorePhraseScreen = () => {
     handlePhraseTextChange,
     onResetPhrasePressed,
     onDonePressed,
+    loading,
   };
 };
