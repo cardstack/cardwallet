@@ -17,13 +17,20 @@ import {
 
 import { StackType } from '../types';
 
-export const BackupScreenGroup = ({ Stack }: { Stack: StackType }) => (
+export const BackupScreenGroup = ({
+  Stack,
+  navigationKey,
+}: {
+  Stack: StackType;
+  navigationKey: string;
+}) => (
   <Stack.Group
     screenOptions={{
       ...horizontalNonStackingInterpolator,
       detachPreviousScreen: false,
       gestureDirection: 'horizontal',
     }}
+    navigationKey={navigationKey}
   >
     <Stack.Screen
       component={BackupExplanationScreen}

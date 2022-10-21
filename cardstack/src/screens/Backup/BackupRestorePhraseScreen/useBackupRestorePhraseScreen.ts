@@ -37,10 +37,9 @@ export const useBackupRestorePhraseScreen = () => {
 
     if (isPhraseValid) {
       // Calls import wallet modal.
-      // ENS is returned on a callback instead of being an effect so we keep
-      // the api compatible with ImportSeedSheet.
-      const ens = await deriveWalletAndEns();
-      showWalletProfileModal(ens);
+      // Wallet derivation is separate so the hook can still be compatible with ImportSeedSheet.
+      await deriveWalletAndEns();
+      showWalletProfileModal();
 
       return;
     }

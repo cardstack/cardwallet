@@ -1,6 +1,6 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef } from 'react';
 
 import {
   ensFromWalletAddress,
@@ -22,22 +22,22 @@ export const useWalletSeedPhraseImport = (
 
   const { importWallet } = useWalletManager();
 
-  const [checkedWallet, setCheckedWallet] = useState<
-    EthereumWalletFromSeed | undefined
-  >(ethWallet);
+  const checkedWallet = useRef<EthereumWalletFromSeed | undefined>(ethWallet);
+  const checkedEns = useRef<string | undefined>();
 
   const deriveWalletAndEns = useCallback(async (): Promise<
     string | undefined
   > => {
     if (!isValidSeedPhrase(seedPhrase)) return;
 
-    const wallet = await deriveWalletFromSeed(seedPhrase);
-    setCheckedWallet(wallet);
+    checkedWallet.current = await deriveWalletFromSeed(seedPhrase);
 
-    if (wallet) {
-      const ens = await ensFromWalletAddress(wallet.address);
+    if (checkedWallet.current) {
+      checkedEns.current = await ensFromWalletAddress(
+        checkedWallet.current.address
+      );
 
-      return ens;
+      return checkedEns.current;
     }
   }, [seedPhrase]);
 
@@ -50,7 +50,7 @@ export const useWalletSeedPhraseImport = (
           seed,
           color,
           name: name || '',
-          checkedWallet,
+          checkedWallet: checkedWallet.current,
         });
       } catch (error) {
         logger.error('error importing seed phrase: ', error);
@@ -66,7 +66,7 @@ export const useWalletSeedPhraseImport = (
         asset: [],
         isNewProfile: true,
         onCloseModal: handleImportAccountOnCloseModal,
-        profile: { name },
+        profile: { name: name || checkedEns.current },
         type: 'wallet_profile',
         withoutStatusBar: true,
       });
