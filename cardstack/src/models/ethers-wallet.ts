@@ -69,36 +69,6 @@ export const getWeb3ProviderWithEthSigner = (params?: EthersSignerParams) =>
   Promise.all([Web3Instance.get(), getEthersWallet(params?.accountAddress)]);
 
 /**
- * ensFromWalletAddress retrieves a ENS address from a wallet address.
- * @param walletAddress : string
- * @returns string
- */
-export const ensFromWalletAddress = async (
-  walletAddress: string
-): Promise<string | undefined> => {
-  const hubConfig = new HubConfig(
-    getConstantByNetwork('hubUrl', Network.mainnet)
-  );
-
-  const hubConfigResponse = await hubConfig.getConfig();
-
-  // Just use mainnet provider for lookup
-  const mainnetProvider = new providers.JsonRpcProvider(
-    hubConfigResponse.web3.layer1RpcNodeHttpsUrl,
-    Network.mainnet
-  );
-
-  try {
-    const ens =
-      (await mainnetProvider.lookupAddress?.(walletAddress)) || undefined;
-
-    return ens;
-  } catch (error) {
-    logger.log('Error looking up ENS for imported HD type wallet', error);
-  }
-};
-
-/**
  * deriveWalletFromSeed function derive a eth account from a seed phrase input
  * @param seedPhrase : string
  * @returns Promise<EthereumWalletFromSeed | undefined>

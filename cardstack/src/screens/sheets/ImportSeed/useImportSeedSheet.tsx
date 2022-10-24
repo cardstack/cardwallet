@@ -1,17 +1,23 @@
 import { getConstantByNetwork, HubConfig } from '@cardstack/cardpay-sdk';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { providers } from 'ethers';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { TextInput } from 'react-native';
 
-import { useInvalidPaste, useWalletSeedPhraseImport } from '@cardstack/hooks';
-import { dismissKeyboardOnAndroid } from '@cardstack/navigation';
+import { useInvalidPaste } from '@cardstack/hooks';
+import { dismissKeyboardOnAndroid, Routes } from '@cardstack/navigation';
 
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import {
   isValidSeedPhrase,
   isValidWallet,
 } from '@rainbow-me/helpers/validators';
-import { useAccountSettings, useClipboard } from '@rainbow-me/hooks';
+import {
+  useAccountSettings,
+  useClipboard,
+  useWalletManager,
+} from '@rainbow-me/hooks';
 import { EthereumWalletFromSeed } from '@rainbow-me/model/wallet';
 import {
   deviceUtils,
@@ -35,7 +41,7 @@ const useImportSeedSheet = () => {
 
   const inputRef = useRef<TextInput>(null);
 
-  const { showWalletProfileModal } = useWalletSeedPhraseImport(
+  const { showWalletProfileModal } = useImportFromProfileModal(
     seedPhrase,
     checkedWallet
   );
@@ -89,8 +95,7 @@ const useImportSeedSheet = () => {
       setCheckedWallet(walletResult);
 
       const ens =
-        (await mainnetProvider.lookupAddress?.(walletResult.address)) ||
-        undefined;
+        (await mainnetProvider.lookupAddress?.(walletResult.address)) || null;
 
       setBusy(false);
 
@@ -132,3 +137,48 @@ const useImportSeedSheet = () => {
 };
 
 export { useImportSeedSheet };
+
+// Scoped helper hook
+const useImportFromProfileModal = (
+  seedPhrase: string,
+  checkedWallet?: EthereumWalletFromSeed
+) => {
+  const { navigate } = useNavigation<StackNavigationProp<ParamListBase>>();
+
+  const { importWallet } = useWalletManager();
+
+  const handleImportAccountOnCloseModal = useCallback(
+    async ({ name = null, color = null }) => {
+      const seed = sanitizeSeedPhrase(seedPhrase);
+
+      try {
+        await importWallet({
+          seed,
+          color,
+          name: name || '',
+          checkedWallet,
+        });
+      } catch (error) {
+        logger.error('error importing seed phrase: ', error);
+      }
+    },
+    [checkedWallet, importWallet, seedPhrase]
+  );
+
+  const showWalletProfileModal = useCallback(
+    name => {
+      navigate(Routes.MODAL_SCREEN, {
+        actionType: 'Import',
+        asset: [],
+        isNewProfile: true,
+        onCloseModal: handleImportAccountOnCloseModal,
+        profile: { name },
+        type: 'wallet_profile',
+        withoutStatusBar: true,
+      });
+    },
+    [handleImportAccountOnCloseModal, navigate]
+  );
+
+  return { showWalletProfileModal };
+};
