@@ -2,15 +2,15 @@ import { useState, useCallback } from 'react';
 
 import { useWalletSeedPhraseImport, useBooleanState } from '@cardstack/hooks';
 
-import { isValidSeedPhrase } from '@rainbow-me/helpers/validators';
-
 export const useBackupRestorePhraseScreen = () => {
   const [phrase, setPhrase] = useState('');
   const [isPhraseComplete, setIsPhraseComplete] = useState(false);
   const [isPhraseWrong, setIsPhraseWrong] = useState(false);
   const [loading, setLoading, setLoadingDone] = useBooleanState();
 
-  const { handleImportWallet } = useWalletSeedPhraseImport(phrase);
+  const { handleImportWallet, isSeedPhraseValid } = useWalletSeedPhraseImport(
+    phrase
+  );
 
   const onResetPhrasePressed = useCallback(() => {
     setPhrase('');
@@ -39,15 +39,13 @@ export const useBackupRestorePhraseScreen = () => {
   const onDonePressed = useCallback(async () => {
     setLoading();
 
-    const isPhraseValid = isValidSeedPhrase(phrase);
-
-    if (isPhraseValid) {
+    if (isSeedPhraseValid) {
       await handleImportWallet();
     }
 
-    setIsPhraseWrong(!isPhraseValid);
+    setIsPhraseWrong(!isSeedPhraseValid);
     setLoadingDone();
-  }, [phrase, setLoading, setLoadingDone, handleImportWallet]);
+  }, [isSeedPhraseValid, setLoading, setLoadingDone, handleImportWallet]);
 
   return {
     phrase,

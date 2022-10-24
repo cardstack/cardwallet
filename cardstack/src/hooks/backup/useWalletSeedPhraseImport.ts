@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useMemo } from 'react';
 
 import { deriveWalletFromSeed } from '@cardstack/models/ethers-wallet';
 
@@ -16,26 +16,32 @@ export const useWalletSeedPhraseImport = (
 
   const checkedWallet = useRef<EthereumWalletFromSeed | undefined>(ethWallet);
 
-  const handleImportWallet = useCallback(async () => {
-    const seed = sanitizeSeedPhrase(seedPhrase);
+  const sanitizedSeedPhrase = useMemo(() => sanitizeSeedPhrase(seedPhrase), [
+    seedPhrase,
+  ]);
 
-    if (!isValidSeedPhrase(seed)) {
-      logger.error('Error importing invalid seed phrase.');
+  const isSeedPhraseValid = useMemo(() => isValidSeedPhrase(seedPhrase), [
+    seedPhrase,
+  ]);
+
+  const handleImportWallet = useCallback(async () => {
+    if (!isSeedPhraseValid || !sanitizedSeedPhrase) {
+      logger.error('Error: Seed phrase provided is invalid.');
 
       return;
     }
 
-    checkedWallet.current = await deriveWalletFromSeed(seedPhrase);
+    checkedWallet.current = await deriveWalletFromSeed(sanitizedSeedPhrase);
 
     try {
       await importWallet({
-        seed,
+        seed: sanitizedSeedPhrase,
         checkedWallet: checkedWallet.current,
       });
     } catch (error) {
       logger.error('Error importing seed phrase: ', error);
     }
-  }, [checkedWallet, importWallet, seedPhrase]);
+  }, [checkedWallet, importWallet, isSeedPhraseValid, sanitizedSeedPhrase]);
 
-  return { handleImportWallet };
+  return { handleImportWallet, isSeedPhraseValid };
 };
