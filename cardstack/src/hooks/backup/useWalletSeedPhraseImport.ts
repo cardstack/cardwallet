@@ -5,7 +5,7 @@ import { deriveWalletFromSeed } from '@cardstack/models/ethers-wallet';
 import { isValidSeedPhrase } from '@rainbow-me/helpers/validators';
 import { useWalletManager } from '@rainbow-me/hooks';
 import { EthereumWalletFromSeed } from '@rainbow-me/model/wallet';
-import { sanitizeSeedPhrase } from '@rainbow-me/utils';
+import { sanitizeSeedPhrase } from '@rainbow-me/utils/formatters';
 import logger from 'logger';
 
 export const useWalletSeedPhraseImport = (
