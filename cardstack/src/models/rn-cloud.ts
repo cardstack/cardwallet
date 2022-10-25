@@ -80,14 +80,6 @@ const getBackupDocumentByFilename = (
     filenameMatcher.includes(file.name)
   );
 
-  if (!document) {
-    logger.sentry('[BACKUP] No backup found with that name ', filename);
-    const error = new Error(CLOUD_BACKUP_ERRORS.SPECIFIC_BACKUP_NOT_FOUND);
-
-    captureException(error);
-    throw error;
-  }
-
   return document;
 };
 
@@ -109,40 +101,47 @@ export const getDataFromCloud = async (
   });
 
   if (!backups || !backups.files || !backups.files.length) {
-    logger.log('[BACKUP] No backups found');
+    logger.sentry('[BACKUP] No backups found');
 
-    throw 'No backups found';
+    return;
   }
 
   const document = getBackupDocumentByFilename(backups, filename);
+
+  if (!document) {
+    logger.sentry('[BACKUP] No backup found with that name: ', filename);
+
+    return;
+  }
 
   const encryptedData = Device.isIOS
     ? await RNCloudFs.getIcloudDocument(document.name)
     : await RNCloudFs.getGoogleDriveDocument(document.id);
 
-  if (encryptedData) {
-    logger.sentry('[BACKUP] Got cloud document ', filename);
-
-    const backedUpDataStringified = await encryptor.decrypt(
-      backupPassword,
-      encryptedData
+  if (!encryptedData) {
+    logger.sentry(
+      `[BACKUP] We couldn't get the encrypted data for: `,
+      document
     );
 
-    if (backedUpDataStringified) {
-      const backedUpData = JSON.parse(backedUpDataStringified);
-      return backedUpData;
-    } else {
-      logger.sentry(`[BACKUP] We couldn't decrypt the data`);
-      const error = new Error(CLOUD_BACKUP_ERRORS.ERROR_DECRYPTING_DATA);
-      captureException(error);
-      throw error;
-    }
+    return;
   }
 
-  logger.sentry(`[BACKUP] We couldn't get the encrypted data`);
-  const error = new Error(CLOUD_BACKUP_ERRORS.ERROR_GETTING_ENCRYPTED_DATA);
-  captureException(error);
-  throw error;
+  logger.sentry('[BACKUP] Got cloud document ', filename);
+
+  const decryptedBackupData = await encryptor.decrypt(
+    backupPassword,
+    encryptedData
+  );
+
+  if (!decryptedBackupData) {
+    logger.sentry(`[BACKUP] We couldn't decrypt the data `, filename);
+
+    return;
+  }
+
+  const backedUpData = JSON.parse(decryptedBackupData);
+  return backedUpData;
 };
 
 /**
