@@ -243,7 +243,7 @@ export default function useWalletManager() {
           } catch (e) {
             // in case of creation error, we should redirect the user to the import via seed phrase
             // if the user goes back in the stack, they are not presented with the PIN creation
-            navigate(Routes.IMPORT_SEED_SHEET);
+            navigate(Routes.BACKUP_RESTORE_EXPLANATION);
 
             logger.sentry('Error while importing wallet', e);
 
