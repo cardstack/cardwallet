@@ -20,12 +20,12 @@ export const useBackupRestoreExplanationScreen = () => {
       logger.log('[BACKUP] fetching backup info...');
       const data = await fetchUserDataFromCloud();
 
+      dismissLoadingOverlay();
+
       if (data) {
         logger.log(`[BACKUP] Downloaded backup info`);
         navigate(Routes.BACKUP_RESTORE_CLOUD, { userData: data });
       }
-
-      dismissLoadingOverlay();
     } catch (e) {
       logger.sentry('[BACKUP] Error getting userData', e);
       Alert(strings.errorMessage);
