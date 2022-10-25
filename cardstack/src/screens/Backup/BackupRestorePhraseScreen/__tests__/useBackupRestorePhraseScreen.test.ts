@@ -25,6 +25,10 @@ jest.mock('@cardstack/models/ethers-wallet', () => ({
 }));
 
 describe('useBackupRestorePhraseScreen', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should call handle wallet import on done press', () => {
     const mockHandleImportWallet = jest.fn();
 
