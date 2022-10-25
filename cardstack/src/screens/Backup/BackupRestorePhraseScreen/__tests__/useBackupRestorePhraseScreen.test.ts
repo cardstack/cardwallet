@@ -1,5 +1,7 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
+import { useWalletSeedPhraseImport } from '@cardstack/hooks/backup/useWalletSeedPhraseImport';
+
 import { useBackupRestorePhraseScreen } from '../useBackupRestorePhraseScreen';
 
 const mockSeedPhrase =
@@ -13,6 +15,7 @@ const mockPartialSeedPhrase = 'incomplete phrase';
 const mockDerivedWallet = 'DERIVED_WALLET';
 
 const mockImportWallet = jest.fn();
+const mockHandleImportWallet = jest.fn();
 
 jest.mock('@rainbow-me/hooks', () => ({
   useWalletManager: () => ({
@@ -24,28 +27,33 @@ jest.mock('@cardstack/models/ethers-wallet', () => ({
   deriveWalletFromSeed: jest.fn().mockImplementation(() => mockDerivedWallet),
 }));
 
+jest.mock('@cardstack/hooks/backup/useWalletSeedPhraseImport', () => ({
+  useWalletSeedPhraseImport: jest.fn(),
+}));
+
 describe('useBackupRestorePhraseScreen', () => {
+  const mockUseWalletSeedPhraseImport = (isSeedPhraseValid = true) =>
+    (useWalletSeedPhraseImport as jest.Mock).mockImplementation(() => ({
+      handleImportWallet: mockHandleImportWallet,
+      isSeedPhraseValid,
+    }));
+
+  beforeEach(() => {
+    mockUseWalletSeedPhraseImport();
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should call handle wallet import on done press', () => {
-    const mockHandleImportWallet = jest.fn();
-
-    jest.mock('@cardstack/hooks', () => ({
-      useWalletSeedPhraseImport: jest.fn().mockImplementationOnce(() => ({
-        handleImportWallet: mockHandleImportWallet,
-        isSeedPhraseValid: true,
-      })),
-    }));
-
+  it('should call handle wallet import on done press', async () => {
     const { result, waitFor } = renderHook(useBackupRestorePhraseScreen);
 
     act(() => {
       result.current.onDonePressed();
     });
 
-    waitFor(() => {
+    await waitFor(() => {
       expect(mockHandleImportWallet).toBeCalled();
     });
   });
@@ -74,6 +82,8 @@ describe('useBackupRestorePhraseScreen', () => {
   });
 
   it('should set phrase as wrong after Done button press with invalid phrase input', () => {
+    mockUseWalletSeedPhraseImport(false);
+
     const { result } = renderHook(useBackupRestorePhraseScreen);
 
     act(() => {
