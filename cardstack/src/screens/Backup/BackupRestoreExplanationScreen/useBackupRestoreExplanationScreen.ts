@@ -27,7 +27,7 @@ export const useBackupRestoreExplanationScreen = () => {
 
       dismissLoadingOverlay();
     } catch (e) {
-      logger.log('[BACKUP] Error getting userData', e);
+      logger.sentry('[BACKUP] Error getting userData', e);
       Alert(strings.errorMessage);
     }
   }, [navigate, dismissLoadingOverlay, showLoadingOverlay]);
