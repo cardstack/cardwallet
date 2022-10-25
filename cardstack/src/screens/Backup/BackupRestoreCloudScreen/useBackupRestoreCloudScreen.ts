@@ -1,4 +1,5 @@
 import { useRoute } from '@react-navigation/native';
+import { captureException } from '@sentry/react-native';
 import { useCallback } from 'react';
 
 import { usePasswordInput } from '@cardstack/components';
@@ -37,23 +38,30 @@ export const useBackupRestoreCloudScreen = () => {
 
       const restoredInfo = await restoreCloudBackup(password, params.userData);
 
-      if (restoredInfo) {
-        const { restoredSeed, backedUpWallet } = restoredInfo;
+      if (!restoredInfo) {
+        dismissLoadingOverlay();
+        Alert(strings.errorMessage);
+        captureException('Error while restoring backup');
 
-        if (isValidSeed(restoredSeed)) {
-          await importWallet({
-            seed: restoredSeed,
-            backedUpWallet,
-          });
+        return;
+      }
 
-          return;
-        }
+      const { restoredSeed, backedUpWallet } = restoredInfo;
+      const isSeedPhraseValid = isValidSeed(restoredSeed);
 
+      if (!isSeedPhraseValid) {
         logger.sentry('Error while restoring backup, invalid seed');
+        throw new Error('Invalid seed');
       }
 
       dismissLoadingOverlay();
+
+      await importWallet({
+        seed: restoredSeed,
+        backedUpWallet,
+      });
     } catch (e) {
+      dismissLoadingOverlay();
       logger.sentry('Error while restoring backup', e);
       Alert(strings.errorMessage);
     }

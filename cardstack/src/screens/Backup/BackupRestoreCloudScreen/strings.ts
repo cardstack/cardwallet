@@ -9,6 +9,6 @@ export const strings = {
   primaryBtn: 'Continue',
   errorMessage: {
     title: 'Unable to retrieve your backup',
-    message: `Please check the password you entered and try again.`,
+    message: `Check the password you entered and try again. If this problem persists please reach out to support@cardstack.com`,
   },
 };
