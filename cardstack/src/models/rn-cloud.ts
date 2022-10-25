@@ -99,19 +99,6 @@ export const getDataFromCloud = async (
   backupPassword: string,
   filename: string
 ): Promise<BackupSecretsData | undefined> => {
-  if (Device.isIOS) {
-    const isAvailable = await isIOSCloudBackupAvailable();
-
-    if (isAvailable) {
-      logger.log('[BACKUP] syncing iCloud');
-      await syncCloudIOS();
-    } else {
-      Alert(iCloudAlertConfig);
-
-      return;
-    }
-  }
-
   if (Device.isAndroid) {
     await RNCloudFs.loginIfNeeded();
   }
@@ -246,5 +233,19 @@ export const backupUserDataIntoCloud = async (data: BackupUserData) =>
  * It calls `getDataFromCloud`.
  * @returns BackupUserData
  */
-export const fetchUserDataFromCloud = async () =>
-  getDataFromCloud(CARDWALLET_MASTER_KEY, USERDATA_FILE);
+export const fetchUserDataFromCloud = async () => {
+  if (Device.isIOS) {
+    const isAvailable = await isIOSCloudBackupAvailable();
+
+    if (isAvailable) {
+      logger.log('[BACKUP] syncing iCloud');
+      await syncCloudIOS();
+    } else {
+      Alert(iCloudAlertConfig);
+
+      return;
+    }
+  }
+
+  return getDataFromCloud(CARDWALLET_MASTER_KEY, USERDATA_FILE);
+};
