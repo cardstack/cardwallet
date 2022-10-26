@@ -5,7 +5,7 @@ import { providers } from 'ethers';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { TextInput } from 'react-native';
 
-import { useInvalidPaste } from '@cardstack/hooks';
+import { useMessageOverlay } from '@cardstack/components';
 import { dismissKeyboardOnAndroid, Routes } from '@cardstack/navigation';
 
 import { Network } from '@rainbow-me/helpers/networkTypes';
@@ -26,11 +26,15 @@ import {
 } from '@rainbow-me/utils';
 import logger from 'logger';
 
+const strings = {
+  invalidPaste: 'Not a valid wallet address',
+};
+
 const useImportSeedSheet = () => {
   const { accountAddress } = useAccountSettings();
 
   const { getClipboard, hasClipboardData, clipboard } = useClipboard();
-  const { onInvalidPaste, isInvalidPaste } = useInvalidPaste();
+  const { showMessage } = useMessageOverlay();
 
   const [busy, setBusy] = useState(false);
   const [seedPhrase, setSeedPhrase] = useState('');
@@ -113,14 +117,16 @@ const useImportSeedSheet = () => {
         return handleSetSeedPhrase(result);
       }
 
-      return onInvalidPaste();
+      showMessage({
+        message: strings.invalidPaste,
+      });
     });
   }, [
     accountAddress,
     getClipboard,
     handleSetSeedPhrase,
     hasClipboardData,
-    onInvalidPaste,
+    showMessage,
   ]);
 
   return {
@@ -132,7 +138,6 @@ const useImportSeedSheet = () => {
     isSecretValid,
     handlePressPasteButton,
     isClipboardValidSecret,
-    isInvalidPaste,
   };
 };
 

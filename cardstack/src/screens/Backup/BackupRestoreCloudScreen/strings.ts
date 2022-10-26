@@ -7,4 +7,8 @@ export const strings = {
   disclaimer:
     'Cardstack does not store any of you data, so we cannot recover your password for you.',
   primaryBtn: 'Continue',
+  errorMessage: {
+    title: 'Unable to retrieve your backup',
+    message: `Check the password you entered and try again. If this problem persists please reach out to support@cardstack.com`,
+  },
 };

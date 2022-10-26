@@ -60,6 +60,9 @@ export const textVariants = {
     letterSpacing: 0.13,
     ...fontFamilyVariants.semiBold,
   },
+  bold: {
+    ...fontFamilyVariants.bold,
+  },
   pageHeader: {
     color: 'white',
     fontSize: 24,

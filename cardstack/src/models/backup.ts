@@ -61,7 +61,7 @@ export function findLatestBackUp(wallets: AllRainbowWallets) {
 
 export async function restoreCloudBackup(
   password: string,
-  userData: BackupUserData | null,
+  userData?: BackupUserData,
   backupSelected?: string
 ) {
   try {
@@ -76,7 +76,7 @@ export async function restoreCloudBackup(
     const data = await getDataFromCloud(password, filename);
 
     if (!data) {
-      throw new Error('Invalid password');
+      return;
     }
 
     const { seedPhrase, secrets } = data;
@@ -99,6 +99,7 @@ export async function restoreCloudBackup(
   } catch (e) {
     logger.sentry('Error while restoring back up');
     captureException(e);
+    throw e;
   }
 }
 

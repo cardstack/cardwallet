@@ -19,6 +19,7 @@ import {
   LoadingOverlayScreen,
   ImportSeedSheet,
   SeedPhraseBackup,
+  MessageOverlayScreen,
 } from '@cardstack/screens';
 import { colors } from '@cardstack/theme';
 import { Device, useWorker } from '@cardstack/utils';
@@ -41,6 +42,7 @@ import {
   overlayPreset,
   Routes,
   sheetPreset,
+  messageOverlayPreset,
 } from '.';
 
 const Tab = createBottomTabNavigator();
@@ -127,6 +129,11 @@ const SharedScreens = ({ navigationKey }: { navigationKey: string }) => (
       options={{ ...overlayPreset, gestureEnabled: false }}
     />
     <Stack.Screen
+      component={MessageOverlayScreen}
+      name={Routes.MESSAGE_OVERLAY}
+      options={messageOverlayPreset()}
+    />
+    <Stack.Screen
       component={SeedPhraseBackup}
       name={Routes.SEED_PHRASE_BACKUP}
       options={{ ...horizontalInterpolator, gestureEnabled: false }}
@@ -197,6 +204,7 @@ export const StackNavigator = () => {
   const cardstackMainScreens = useCardstackMainScreens(Stack);
 
   const { hasWallet, isAuthorized, hasPin } = useNavigationAuth();
+  const navigationKey = !hasWallet ? 'non-auth' : 'auth';
 
   return (
     <Stack.Navigator screenOptions={stackScreenOptions}>
@@ -235,11 +243,11 @@ export const StackNavigator = () => {
           />
         </>
       )}
-      {SharedScreens({ navigationKey: !hasWallet ? 'non-auth' : 'auth' })}
+      {SharedScreens({ navigationKey })}
       {ProfileScreenGroup({ Stack })}
       {BackupScreenGroup({
         Stack,
-        navigationKey: !hasWallet ? 'non-auth' : 'auth',
+        navigationKey,
       })}
     </Stack.Navigator>
   );

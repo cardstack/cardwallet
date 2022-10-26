@@ -1,5 +1,10 @@
 import React, { memo } from 'react';
-import { KeyboardAvoidingView, StyleSheet } from 'react-native';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from 'react-native';
 
 import {
   Button,
@@ -11,7 +16,6 @@ import {
   PasswordInput,
   Text,
 } from '@cardstack/components';
-import { Device } from '@cardstack/utils';
 
 import { strings } from './strings';
 import { useBackupRestoreCloudScreen } from './useBackupRestoreCloudScreen';
@@ -33,18 +37,17 @@ const BackupRestoreCloudScreen = () => {
 
   return (
     <PageWithStackHeader showSkip={false}>
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoidView}
-        behavior="position"
-        keyboardVerticalOffset={Device.defaultKeyboardVerticalOffset}
-      >
-        <Container width="80%" marginBottom={7}>
-          <Text variant="pageHeader">{strings.title}</Text>
-          <Text color="grayText" letterSpacing={0.4} marginTop={4}>
-            {strings.description}
-          </Text>
-        </Container>
-        <Container>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView
+          style={styles.keyboardAvoidView}
+          behavior="position"
+        >
+          <Container width="80%" marginBottom={7}>
+            <Text variant="pageHeader">{strings.title}</Text>
+            <Text color="grayText" letterSpacing={0.4} marginTop={4}>
+              {strings.description}
+            </Text>
+          </Container>
           <PasswordInput
             autoFocus
             onChangeText={onChangeText}
@@ -52,8 +55,8 @@ const BackupRestoreCloudScreen = () => {
             onSubmitEditing={handleRestoreOnPress}
             placeholder={strings.inputPlaceholder}
           />
-        </Container>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
       <PageWithStackHeaderFooter>
         <Container paddingVertical={3}>
           <CenteredContainer flexDirection="row" marginBottom={2}>

@@ -10,13 +10,16 @@ import {
   SendHeader,
   SendTransactionSpeed,
 } from '.';
-import { Sheet } from '@cardstack/components';
-import { useInvalidPaste } from '@cardstack/hooks';
+import { Sheet, useMessageOverlay } from '@cardstack/components';
 import {
   useAccountSettings,
   useContacts,
   useDimensions,
 } from '@rainbow-me/hooks';
+
+const strings = {
+  invalidPaste: 'Not a valid wallet address',
+};
 
 export const useShowAssetFlags = (isValidAddress, selected) => ({
   showAssetList: isValidAddress && isEmpty(selected),
@@ -73,7 +76,7 @@ export default function SendSheet({
     isValidAddress,
     selected
   );
-  const { isInvalidPaste, onInvalidPaste } = useInvalidPaste();
+  const { showMessage } = useMessageOverlay();
 
   const showEmptyState = !isValidAddress;
 
@@ -83,6 +86,11 @@ export default function SendSheet({
       setRecipient(event);
     },
     [setRecipient]
+  );
+
+  const onInvalidPaste = useCallback(
+    () => showMessage({ message: strings.invalidPaste }),
+    [showMessage]
   );
 
   return (
@@ -103,7 +111,6 @@ export default function SendSheet({
         <SendContactList
           contacts={filteredContacts}
           currentInput={currentInput}
-          isInvalidPaste={isInvalidPaste}
           onPressContact={setRecipient}
           removeContact={onRemoveContact}
         />

@@ -9,7 +9,6 @@ import { useWalletAddressScreen } from './useWalletAddressScreen';
 const WalletAddressScreen = () => {
   const {
     onAddressPress,
-    CopyToastComponent,
     copyToClipboard,
     addressPreview,
     accountAddress,
@@ -35,7 +34,6 @@ const WalletAddressScreen = () => {
           <Button onPress={copyToClipboard}>{strings.copyAddressBtn}</Button>
         </Container>
       </Container>
-      <CopyToastComponent />
     </>
   );
 };
