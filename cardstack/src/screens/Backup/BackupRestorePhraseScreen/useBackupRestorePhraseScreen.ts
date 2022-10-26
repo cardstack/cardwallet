@@ -1,12 +1,11 @@
 import { useState, useCallback } from 'react';
 
-import { useWalletSeedPhraseImport, useBooleanState } from '@cardstack/hooks';
+import { useWalletSeedPhraseImport } from '@cardstack/hooks';
 
 export const useBackupRestorePhraseScreen = () => {
   const [phrase, setPhrase] = useState('');
   const [isPhraseComplete, setIsPhraseComplete] = useState(false);
   const [isPhraseWrong, setIsPhraseWrong] = useState(false);
-  const [loading, setLoading, setLoadingDone] = useBooleanState();
 
   const { handleImportWallet, isSeedPhraseValid } = useWalletSeedPhraseImport(
     phrase
@@ -37,15 +36,12 @@ export const useBackupRestorePhraseScreen = () => {
   );
 
   const onDonePressed = useCallback(async () => {
-    setLoading();
-
     if (isSeedPhraseValid) {
       await handleImportWallet();
     }
 
     setIsPhraseWrong(!isSeedPhraseValid);
-    setLoadingDone();
-  }, [isSeedPhraseValid, setLoading, setLoadingDone, handleImportWallet]);
+  }, [isSeedPhraseValid, handleImportWallet]);
 
   return {
     phrase,
@@ -54,6 +50,5 @@ export const useBackupRestorePhraseScreen = () => {
     handlePhraseTextChange,
     onResetPhrasePressed,
     onDonePressed,
-    loading,
   };
 };

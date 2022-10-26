@@ -1,13 +1,10 @@
 import { utils, Wallet } from 'ethers';
 
-import { isValidSeedPhrase } from '@rainbow-me/helpers/validators';
 import {
   DEFAULT_HD_PATH,
   loadPrivateKey,
   loadSeedPhrase,
-  EthereumWalletFromSeed,
 } from '@rainbow-me/model/wallet';
-import { ethereumUtils, sanitizeSeedPhrase } from '@rainbow-me/utils';
 import logger from 'logger';
 
 import Web3Instance from './web3-instance';
@@ -65,26 +62,3 @@ const getEthersWallet = async (accountAddress?: string) => {
 
 export const getWeb3ProviderWithEthSigner = (params?: EthersSignerParams) =>
   Promise.all([Web3Instance.get(), getEthersWallet(params?.accountAddress)]);
-
-/**
- * deriveWalletFromSeed function derive a eth account from a seed phrase input
- * @param seedPhrase : string
- * @returns Promise<EthereumWalletFromSeed | undefined>
- */
-export const deriveWalletFromSeed = async (
-  seedPhrase: string
-): Promise<EthereumWalletFromSeed | undefined> => {
-  if (!seedPhrase || !isValidSeedPhrase(seedPhrase)) return undefined;
-
-  const cleanSeedPhrase = sanitizeSeedPhrase(seedPhrase);
-
-  try {
-    const wallet = await ethereumUtils.deriveAccountFromWalletInput(
-      cleanSeedPhrase
-    );
-
-    return wallet;
-  } catch (error) {
-    logger.log('Error deriving account from seed phrase', error);
-  }
-};

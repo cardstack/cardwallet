@@ -21,7 +21,6 @@ const BackupRestorePhraseScreen = () => {
     handlePhraseTextChange,
     onResetPhrasePressed,
     onDonePressed,
-    loading,
   } = useBackupRestorePhraseScreen();
 
   return (
@@ -50,11 +49,7 @@ const BackupRestorePhraseScreen = () => {
               {strings.resetButton}
             </Button>
           ) : (
-            <Button
-              onPress={onDonePressed}
-              blocked={!isPhraseComplete}
-              loading={loading}
-            >
+            <Button onPress={onDonePressed} blocked={!isPhraseComplete}>
               {strings.doneButton}
             </Button>
           )}

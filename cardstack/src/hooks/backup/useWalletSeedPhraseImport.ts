@@ -1,47 +1,40 @@
-import { useCallback, useRef, useMemo } from 'react';
-
-import { deriveWalletFromSeed } from '@cardstack/models/ethers-wallet';
+import { useCallback, useMemo } from 'react';
 
 import { isValidSeedPhrase } from '@rainbow-me/helpers/validators';
 import { useWalletManager } from '@rainbow-me/hooks';
-import { EthereumWalletFromSeed } from '@rainbow-me/model/wallet';
-import { sanitizeSeedPhrase } from '@rainbow-me/utils/formatters';
+import { sanitizeSeedPhrase, ethereumUtils } from '@rainbow-me/utils';
 import logger from 'logger';
 
-export const useWalletSeedPhraseImport = (
-  seedPhrase: string,
-  ethWallet?: EthereumWalletFromSeed
-) => {
+export const useWalletSeedPhraseImport = (seedPhrase: string) => {
   const { importWallet } = useWalletManager();
-
-  const checkedWallet = useRef<EthereumWalletFromSeed | undefined>(ethWallet);
-
-  const sanitizedSeedPhrase = useMemo(() => sanitizeSeedPhrase(seedPhrase), [
-    seedPhrase,
-  ]);
 
   const isSeedPhraseValid = useMemo(() => isValidSeedPhrase(seedPhrase), [
     seedPhrase,
   ]);
 
   const handleImportWallet = useCallback(async () => {
-    if (!isSeedPhraseValid || !sanitizedSeedPhrase) {
+    // Cleans undesired white spaces.
+    const cleanSeedPhrase = sanitizeSeedPhrase(seedPhrase);
+
+    if (!isSeedPhraseValid || !cleanSeedPhrase) {
       logger.error('Error: Seed phrase provided is invalid.');
 
       return;
     }
 
-    checkedWallet.current = await deriveWalletFromSeed(sanitizedSeedPhrase);
-
     try {
+      const checkedWallet = await ethereumUtils.deriveAccountFromWalletInput(
+        seedPhrase
+      );
+
       await importWallet({
-        seed: sanitizedSeedPhrase,
-        checkedWallet: checkedWallet.current,
+        seed: cleanSeedPhrase,
+        checkedWallet,
       });
     } catch (error) {
       logger.error('Error importing seed phrase: ', error);
     }
-  }, [checkedWallet, importWallet, isSeedPhraseValid, sanitizedSeedPhrase]);
+  }, [seedPhrase, importWallet, isSeedPhraseValid]);
 
   return { handleImportWallet, isSeedPhraseValid };
 };
