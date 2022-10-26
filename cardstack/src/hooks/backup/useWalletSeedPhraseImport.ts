@@ -2,7 +2,8 @@ import { useCallback, useMemo } from 'react';
 
 import { isValidSeedPhrase } from '@rainbow-me/helpers/validators';
 import { useWalletManager } from '@rainbow-me/hooks';
-import { sanitizeSeedPhrase, ethereumUtils } from '@rainbow-me/utils';
+import ethereumUtils from '@rainbow-me/utils/ethereumUtils';
+import { sanitizeSeedPhrase } from '@rainbow-me/utils/formatters';
 import logger from 'logger';
 
 export const useWalletSeedPhraseImport = (seedPhrase: string) => {

@@ -21,7 +21,7 @@ jest.mock('@rainbow-me/hooks', () => ({
   }),
 }));
 
-jest.mock('@cardstack/models/ethers-wallet', () => ({
+jest.mock('@rainbow-me/utils/ethereumUtils', () => ({
   deriveWalletFromSeed: jest.fn().mockImplementation(() => mockDerivedWallet),
 }));
 
