@@ -58,7 +58,7 @@ export default function useWalletManager() {
 
   const { navigate } = useNavigation();
 
-  const { hasWallet, setHasWallet } = useAuthSelectorAndActions();
+  const { setHasWallet } = useAuthSelectorAndActions();
 
   const createWalletPin = useCallback(
     (overwriteParams: Partial<PinScreenNavParams> = {}) => {
@@ -190,19 +190,11 @@ export default function useWalletManager() {
     initializeAccountData,
   ]);
 
-  const initWalletResetNavState = useCallback(
-    async (isInnerNavigation: boolean = false) => {
-      await initializeWallet();
+  const initWalletResetNavState = useCallback(async () => {
+    await initializeWallet();
 
-      setHasWallet();
-
-      if (isInnerNavigation) {
-        navigate(Routes.WALLET_SCREEN, { initialized: true });
-        return;
-      }
-    },
-    [initializeWallet, navigate, setHasWallet]
-  );
+    setHasWallet();
+  }, [initializeWallet, setHasWallet]);
 
   const createNewWallet = useCallback(
     async () =>
@@ -236,38 +228,35 @@ export default function useWalletManager() {
 
   const importWallet = useCallback(
     async (params: CreateImportParams) => {
-      const walletImport = async (pin?: string) => {
-        try {
-          showLoadingOverlay({ title: walletLoadingStates.IMPORTING_WALLET });
+      createWalletPin({
+        onSuccess: async (pin?: string) => {
+          try {
+            showLoadingOverlay({ title: walletLoadingStates.IMPORTING_WALLET });
 
-          const wallet = await createOrImportWallet({ ...params, pin });
+            const wallet = await createOrImportWallet({ ...params, pin });
 
-          if (wallet) {
-            initWalletResetNavState(hasWallet);
-          } else {
-            dismissLoadingOverlay();
+            if (wallet) {
+              initWalletResetNavState();
+            } else {
+              dismissLoadingOverlay();
+            }
+          } catch (e) {
+            // in case of creation error, we should redirect the user to the import via seed phrase
+            // if the user goes back in the stack, they are not presented with the PIN creation
+            navigate(Routes.BACKUP_RESTORE_EXPLANATION);
+
+            logger.sentry('Error while importing wallet', e);
+
+            Alert.alert(
+              'Something went wrong while importing. Please try again!'
+            );
           }
-        } catch (e) {
-          navigate(Routes.IMPORT_SEED_SHEET);
-
-          logger.sentry('Error while importing wallet', e);
-
-          Alert.alert(
-            'Something went wrong while importing. Please try again!'
-          );
-        }
-      };
-
-      if (hasWallet) {
-        return walletImport();
-      }
-
-      createWalletPin({ onSuccess: walletImport });
+        },
+      });
     },
     [
       createWalletPin,
       dismissLoadingOverlay,
-      hasWallet,
       initWalletResetNavState,
       navigate,
       showLoadingOverlay,

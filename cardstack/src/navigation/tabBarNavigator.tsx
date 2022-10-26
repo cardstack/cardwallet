@@ -197,6 +197,7 @@ export const StackNavigator = () => {
   const cardstackMainScreens = useCardstackMainScreens(Stack);
 
   const { hasWallet, isAuthorized, hasPin } = useNavigationAuth();
+  const navigationKey = !hasWallet ? 'non-auth' : 'auth';
 
   return (
     <Stack.Navigator screenOptions={stackScreenOptions}>
@@ -235,9 +236,12 @@ export const StackNavigator = () => {
           />
         </>
       )}
-      {SharedScreens({ navigationKey: !hasWallet ? 'non-auth' : 'auth' })}
+      {SharedScreens({ navigationKey })}
       {ProfileScreenGroup({ Stack })}
-      {BackupScreenGroup({ Stack })}
+      {BackupScreenGroup({
+        Stack,
+        navigationKey,
+      })}
     </Stack.Navigator>
   );
 };
