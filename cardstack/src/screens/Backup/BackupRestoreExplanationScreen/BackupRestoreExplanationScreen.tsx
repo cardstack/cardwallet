@@ -16,8 +16,8 @@ const BackupRestoreExplanationScreen = () => {
   const { handleRestoreCloudOnPress } = useBackupRestoreExplanationScreen();
 
   const handleRecoveryPhraseOnPress = useCallback(() => {
-    // TBD
-  }, []);
+    navigate(Routes.BACKUP_RESTORE_PHRASE);
+  }, [navigate]);
 
   return (
     <PageWithStackHeader showSkip={false}>
