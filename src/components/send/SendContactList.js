@@ -5,7 +5,6 @@ import { FlatList } from 'react-native-gesture-handler';
 import styled from 'styled-components';
 import { FlyInAnimation } from '../animations';
 import { SwipeableContactRow } from '../contacts';
-import { InvalidPasteToast, ToastPositionContainer } from '../toasts';
 import SendEmptyState from './SendEmptyState';
 import { Routes } from '@cardstack/navigation';
 import { filterList } from '@rainbow-me/utils';
@@ -36,7 +35,6 @@ export default function SendContactList({
   currentInput,
   onPressContact,
   removeContact,
-  isInvalidPaste,
 }) {
   const { navigate } = useNavigation();
 
@@ -100,9 +98,6 @@ export default function SendContactList({
           testID="send-contact-list"
         />
       )}
-      <ToastPositionContainer>
-        <InvalidPasteToast isInvalidPaste={isInvalidPaste} />
-      </ToastPositionContainer>
     </FlyInAnimation>
   );
 }

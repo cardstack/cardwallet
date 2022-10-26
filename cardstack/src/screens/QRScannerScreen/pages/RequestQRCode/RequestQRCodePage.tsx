@@ -9,7 +9,7 @@ import {
   StyledQRCode,
   Text,
 } from '@cardstack/components';
-import { useCopyToast } from '@cardstack/hooks';
+import { useCopyWithFeedback } from '@cardstack/hooks';
 
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import { useDimensions } from '@rainbow-me/hooks';
@@ -43,7 +43,7 @@ const RequestQRCodePage = () => {
     [isSmallPhone]
   );
 
-  const { CopyToastComponent, copyToClipboard } = useCopyToast({
+  const { copyToClipboard } = useCopyWithFeedback({
     dataToCopy: paymentRequestWebLink,
     customCopyLabel: 'QRCode',
   });
@@ -136,7 +136,6 @@ const RequestQRCodePage = () => {
             </Button>
           </CenteredContainer>
         </Container>
-        <CopyToastComponent />
       </CenteredContainer>
     </>
   );

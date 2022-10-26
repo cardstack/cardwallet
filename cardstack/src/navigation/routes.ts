@@ -52,6 +52,7 @@ const NonMigratedRoutes = {
 const SharedRoutes = {
   PIN_SCREEN: 'PinScreen',
   LOADING_OVERLAY: 'LoadingOverlay',
+  MESSAGE_OVERLAY: 'MessageOverlay',
   IMPORT_SEED_SHEET: 'ImportSeedSheet',
   SEED_PHRASE_BACKUP: 'SeedPhraseBackup',
   // non-migrated

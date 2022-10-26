@@ -19,6 +19,7 @@ import {
   LoadingOverlayScreen,
   ImportSeedSheet,
   SeedPhraseBackup,
+  MessageOverlayScreen,
 } from '@cardstack/screens';
 import { colors } from '@cardstack/theme';
 import { Device, useWorker } from '@cardstack/utils';
@@ -41,6 +42,7 @@ import {
   overlayPreset,
   Routes,
   sheetPreset,
+  messageOverlayPreset,
 } from '.';
 
 const Tab = createBottomTabNavigator();
@@ -125,6 +127,11 @@ const SharedScreens = ({ navigationKey }: { navigationKey: string }) => (
       component={LoadingOverlayScreen}
       name={Routes.LOADING_OVERLAY}
       options={{ ...overlayPreset, gestureEnabled: false }}
+    />
+    <Stack.Screen
+      component={MessageOverlayScreen}
+      name={Routes.MESSAGE_OVERLAY}
+      options={messageOverlayPreset()}
     />
     <Stack.Screen
       component={SeedPhraseBackup}

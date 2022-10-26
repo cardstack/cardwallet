@@ -99,6 +99,37 @@ const sheetStyleInterpolator = (targetOpacity: number) => ({
   };
 };
 
+const messageOverlayStyleInterpolator = (targetOpacity: number) => ({
+  current: { progress },
+}: StackCardInterpolationProps) => {
+  const backgroundOpacity = progress.interpolate({
+    inputRange: [-1, 0, 0.975, 2],
+    outputRange: [0, 0, targetOpacity, targetOpacity],
+  });
+
+  const cardOpacity = progress.interpolate({
+    inputRange: [-1, 0, 0.975, 2],
+    outputRange: [0, 0, 1, 1],
+  });
+
+  const translateY = progress.interpolate({
+    extrapolate: 'clamp',
+    inputRange: [0, 1],
+    outputRange: [75, 0],
+  });
+
+  return {
+    cardStyle: {
+      transform: [{ translateY }],
+      opacity: cardOpacity,
+    },
+    overlayStyle: {
+      backgroundColor: 'black',
+      opacity: backgroundOpacity,
+    },
+  };
+};
+
 export const slideLeftToRightPreset: StackNavigationOptions = {
   cardStyleInterpolator: forSlideLeftToRight,
 };
@@ -150,6 +181,15 @@ export const sheetPreset = ({
       },
     },
   },
+});
+
+export const messageOverlayPreset = ({
+  backgroundOpacity = 'half',
+}: SheetPresetOptions = {}): StackNavigationOptions => ({
+  ...sheetPreset({ backgroundOpacity }),
+  cardStyleInterpolator: messageOverlayStyleInterpolator(
+    sheetBackgroundOpacity[backgroundOpacity]
+  ),
 });
 
 /**
