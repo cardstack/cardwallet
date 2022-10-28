@@ -72,7 +72,6 @@ export default function WalletList({
   onChangeAccount,
   onEditWallet,
   onPressAddAccount,
-  onPressImportSeedPhrase,
   scrollEnabled,
   showDividers,
 }) {
@@ -235,20 +234,6 @@ export default function WalletList({
               }}
               title="Create derived account"
             />
-            {__DEV__ && (
-              <OptionItem
-                borderIcon
-                disabled={editMode}
-                iconProps={{ name: 'download', size: 22, color: 'tealDark' }}
-                marginTop={3}
-                onPress={onPressImportSeedPhrase}
-                textProps={{
-                  color: editMode ? 'grayText' : 'black',
-                  fontSize: 14,
-                }}
-                title="Add an existing account"
-              />
-            )}
           </Container>
         </>
       ) : (

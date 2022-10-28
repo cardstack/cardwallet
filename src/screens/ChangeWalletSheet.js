@@ -368,10 +368,6 @@ export default function ChangeWalletSheet() {
     showLoadingOverlay,
   ]);
 
-  const onPressImportSeedPhrase = useCallback(() => {
-    navigate(Routes.IMPORT_SEED_SHEET);
-  }, [navigate]);
-
   return (
     <Sheet>
       <Container height={headerHeight}>
@@ -402,7 +398,6 @@ export default function ChangeWalletSheet() {
         onChangeAccount={onChangeAccount}
         onEditWallet={onEditWallet}
         onPressAddAccount={onPressAddAccount}
-        onPressImportSeedPhrase={onPressImportSeedPhrase}
         scrollEnabled={scrollEnabled}
         showDividers={showDividers}
       />
