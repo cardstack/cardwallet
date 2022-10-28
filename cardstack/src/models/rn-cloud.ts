@@ -1,4 +1,5 @@
 import { captureException } from '@sentry/react-native';
+import { OptionalUnion } from 'globals';
 import RNCloudFs, { ListFilesResult } from 'react-native-cloud-fs';
 import { CARDWALLET_MASTER_KEY } from 'react-native-dotenv';
 import RNFS from 'react-native-fs';
@@ -90,7 +91,7 @@ const getBackupDocumentByFilename = (
 export const getDataFromCloud = async (
   backupPassword: string,
   filename: string
-): Promise<BackupSecretsData | BackupUserData | undefined> => {
+): Promise<OptionalUnion<BackupSecretsData, BackupUserData> | undefined> => {
   if (Device.isAndroid) {
     await RNCloudFs.loginIfNeeded();
   }
