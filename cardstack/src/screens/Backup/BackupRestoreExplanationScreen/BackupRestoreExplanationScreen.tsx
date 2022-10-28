@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo } from 'react';
 
 import {
   Button,
@@ -13,11 +13,10 @@ import { strings } from './strings';
 import { useBackupRestoreExplanationScreen } from './useBackupRestoreExplanationScreen';
 
 const BackupRestoreExplanationScreen = () => {
-  const { handleRestoreCloudOnPress } = useBackupRestoreExplanationScreen();
-
-  const handleRecoveryPhraseOnPress = useCallback(() => {
-    navigate(Routes.BACKUP_RESTORE_PHRASE);
-  }, [navigate]);
+  const {
+    handleRestoreCloudOnPress,
+    handleRestorePhraseOnPress,
+  } = useBackupRestoreExplanationScreen();
 
   return (
     <PageWithStackHeader showSkip={false}>
@@ -31,7 +30,7 @@ const BackupRestoreExplanationScreen = () => {
       </Container>
       <PageWithStackHeaderFooter>
         <CenteredContainer>
-          <Button onPress={handleRecoveryPhraseOnPress} marginBottom={4}>
+          <Button onPress={handleRestorePhraseOnPress} marginBottom={4}>
             {strings.primaryBtn}
           </Button>
           <Button variant="linkWhite" onPress={handleRestoreCloudOnPress}>
