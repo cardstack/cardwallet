@@ -1,7 +1,5 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { useWalletSeedPhraseImport } from '@cardstack/hooks/backup/useWalletSeedPhraseImport';
-
 import { useBackupRestorePhraseScreen } from '../useBackupRestorePhraseScreen';
 
 const mockSeedPhrase =
@@ -12,10 +10,12 @@ const mockInvalidSeedPhrase =
 
 const mockPartialSeedPhrase = 'incomplete phrase';
 
+const mockDirtySeedPhrase =
+  ' loan velvet    fall cluster renew animal trophy clinic adjust fix soon enrich ';
+
 const mockDerivedWallet = 'DERIVED_WALLET';
 
 const mockImportWallet = jest.fn();
-const mockHandleImportWallet = jest.fn();
 
 jest.mock('@rainbow-me/hooks', () => ({
   useWalletManager: () => ({
@@ -23,25 +23,13 @@ jest.mock('@rainbow-me/hooks', () => ({
   }),
 }));
 
-jest.mock('@cardstack/models/ethers-wallet', () => ({
-  deriveWalletFromSeed: jest.fn().mockImplementation(() => mockDerivedWallet),
-}));
-
-jest.mock('@cardstack/hooks/backup/useWalletSeedPhraseImport', () => ({
-  useWalletSeedPhraseImport: jest.fn(),
+jest.mock('@rainbow-me/utils/ethereumUtils', () => ({
+  deriveAccountFromWalletInput: jest
+    .fn()
+    .mockImplementation(() => mockDerivedWallet),
 }));
 
 describe('useBackupRestorePhraseScreen', () => {
-  const mockUseWalletSeedPhraseImport = (isSeedPhraseValid = true) =>
-    (useWalletSeedPhraseImport as jest.Mock).mockImplementation(() => ({
-      handleImportWallet: mockHandleImportWallet,
-      isSeedPhraseValid,
-    }));
-
-  beforeEach(() => {
-    mockUseWalletSeedPhraseImport();
-  });
-
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -50,11 +38,37 @@ describe('useBackupRestorePhraseScreen', () => {
     const { result, waitFor } = renderHook(useBackupRestorePhraseScreen);
 
     act(() => {
+      result.current.handlePhraseTextChange(mockSeedPhrase);
+    });
+
+    act(() => {
       result.current.onDonePressed();
     });
 
     await waitFor(() => {
-      expect(mockHandleImportWallet).toBeCalled();
+      expect(mockImportWallet).toBeCalledWith({
+        seed: mockSeedPhrase,
+        checkedWallet: mockDerivedWallet,
+      });
+    });
+  });
+
+  it('should set phrase as valid when seed provided is valid but not well formatted', async () => {
+    const { result, waitFor } = renderHook(useBackupRestorePhraseScreen);
+
+    act(() => {
+      result.current.handlePhraseTextChange(mockDirtySeedPhrase);
+    });
+
+    act(() => {
+      result.current.onDonePressed();
+    });
+
+    await waitFor(() => {
+      expect(mockImportWallet).toBeCalledWith({
+        seed: mockSeedPhrase,
+        checkedWallet: mockDerivedWallet,
+      });
     });
   });
 
@@ -82,8 +96,6 @@ describe('useBackupRestorePhraseScreen', () => {
   });
 
   it('should set phrase as wrong after Done button press with invalid phrase input', () => {
-    mockUseWalletSeedPhraseImport(false);
-
     const { result } = renderHook(useBackupRestorePhraseScreen);
 
     act(() => {

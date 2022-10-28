@@ -1,15 +1,17 @@
 import { useState, useCallback } from 'react';
 
-import { useWalletSeedPhraseImport } from '@cardstack/hooks';
+import { isValidSeedPhrase } from '@rainbow-me/helpers/validators';
+import { useWalletManager } from '@rainbow-me/hooks';
+import ethereumUtils from '@rainbow-me/utils/ethereumUtils';
+import { sanitizeSeedPhrase } from '@rainbow-me/utils/formatters';
+import logger from 'logger';
 
 export const useBackupRestorePhraseScreen = () => {
+  const { importWallet } = useWalletManager();
+
   const [phrase, setPhrase] = useState('');
   const [isPhraseComplete, setIsPhraseComplete] = useState(false);
   const [isPhraseWrong, setIsPhraseWrong] = useState(false);
-
-  const { handleImportWallet, isSeedPhraseValid } = useWalletSeedPhraseImport(
-    phrase
-  );
 
   const onResetPhrasePressed = useCallback(() => {
     setPhrase('');
@@ -20,14 +22,10 @@ export const useBackupRestorePhraseScreen = () => {
   const handlePhraseTextChange = useCallback(
     (updatedPhrase: string) => {
       setPhrase(updatedPhrase);
-
-      const words = updatedPhrase.split(' ');
+      const words = updatedPhrase.match(/\w+/g) ?? [];
 
       // Phrase is deamed complete when it has 12 words
-      const isComplete =
-        words.length === 12 && words[words.length - 1].length > 0;
-
-      setIsPhraseComplete(isComplete);
+      setIsPhraseComplete(words.length === 12);
 
       // Reset wrong state when on edit
       if (isPhraseWrong) setIsPhraseWrong(false);
@@ -36,12 +34,37 @@ export const useBackupRestorePhraseScreen = () => {
   );
 
   const onDonePressed = useCallback(async () => {
-    if (isSeedPhraseValid) {
-      await handleImportWallet();
-    }
+    const isSeedPhraseValid = isValidSeedPhrase(phrase);
 
     setIsPhraseWrong(!isSeedPhraseValid);
-  }, [isSeedPhraseValid, handleImportWallet]);
+
+    if (!isSeedPhraseValid) {
+      logger.error('Error: Seed phrase provided is invalid.');
+
+      return;
+    }
+
+    console.log(':::1');
+
+    try {
+      const sanitizedPhrase = sanitizeSeedPhrase(phrase);
+
+      console.log(':::2');
+
+      const checkedWallet = await ethereumUtils.deriveAccountFromWalletInput(
+        sanitizedPhrase
+      );
+
+      console.log(':::3', { sanitizedPhrase, checkedWallet });
+
+      await importWallet({
+        seed: sanitizedPhrase,
+        checkedWallet,
+      });
+    } catch (error) {
+      logger.error('Error deriving and importing wallet.', error);
+    }
+  }, [phrase, importWallet]);
 
   return {
     phrase,
