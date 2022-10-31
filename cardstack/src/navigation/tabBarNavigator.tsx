@@ -17,7 +17,6 @@ import {
   UnlockScreen,
   PinScreen,
   LoadingOverlayScreen,
-  ImportSeedSheet,
   SeedPhraseBackup,
   MessageOverlayScreen,
 } from '@cardstack/screens';
@@ -29,7 +28,6 @@ import { loadAddress } from '@rainbow-me/model/wallet';
 import ChangeWalletSheet from '@rainbow-me/screens/ChangeWalletSheet';
 import ModalScreen from '@rainbow-me/screens/ModalScreen';
 import PinAuthenticationScreen from '@rainbow-me/screens/PinAuthenticationScreen';
-import RestoreSheet from '@rainbow-me/screens/RestoreSheet';
 
 import { createCustomStackNavigator } from './customNavigator';
 import { useCardstackMainScreens } from './hooks';
@@ -139,21 +137,8 @@ const SharedScreens = ({ navigationKey }: { navigationKey: string }) => (
       options={{ ...horizontalInterpolator, gestureEnabled: false }}
     />
     <Stack.Screen
-      component={ImportSeedSheet}
-      name={Routes.IMPORT_SEED_SHEET}
-      options={sheetPreset({ bounce: false })}
-      listeners={dismissAndroidKeyboardOnClose}
-    />
-
-    <Stack.Screen
       component={ModalScreen}
       name={Routes.MODAL_SCREEN}
-      options={sheetPreset({ backgroundOpacity: 'half' })}
-      listeners={dismissAndroidKeyboardOnClose}
-    />
-    <Stack.Screen
-      component={RestoreSheet}
-      name={Routes.RESTORE_SHEET}
       options={sheetPreset({ backgroundOpacity: 'half' })}
       listeners={dismissAndroidKeyboardOnClose}
     />

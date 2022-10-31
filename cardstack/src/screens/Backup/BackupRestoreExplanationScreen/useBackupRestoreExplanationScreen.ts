@@ -32,7 +32,12 @@ export const useBackupRestoreExplanationScreen = () => {
     }
   }, [navigate, dismissLoadingOverlay, showLoadingOverlay]);
 
+  const handleRestorePhraseOnPress = useCallback(() => {
+    navigate(Routes.BACKUP_RESTORE_PHRASE);
+  }, [navigate]);
+
   return {
     handleRestoreCloudOnPress,
+    handleRestorePhraseOnPress,
   };
 };
