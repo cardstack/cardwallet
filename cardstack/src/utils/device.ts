@@ -14,18 +14,14 @@ const Device = {
   screenWidth,
   cloudPlatform: isIOS ? 'iCloud' : 'Google Drive',
   keyboardBehavior: 'padding' as const,
-  supportsFiatOnRamp: isIOS,
-  supportsNativeWyreIntegration: isIOS,
   supportsHapticFeedback: isIOS,
   scrollSheetOffset: isIOS ? -(screenHeight * 0.2) : 1,
-  tabBarHeightSize: screenHeight * 0.1,
   keyboardEventWillShow: isIOS
     ? ('keyboardWillShow' as const)
     : ('keyboardDidShow' as const),
   keyboardEventWillHide: isIOS
     ? ('keyboardWillHide' as const)
     : ('keyboardDidHide' as const),
-  enableBackup: true,
   iap: {
     provider: isIOS ? IAPProviderType.apple : IAPProviderType.google,
     type: isIOS ? ('iap' as const) : ('inapp' as const),

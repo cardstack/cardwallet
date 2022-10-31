@@ -8,4 +8,5 @@ export const remoteConfigDefaults = {
   featureProfilePurchaseOnboarding: false,
   betaAccessGranted: false,
   useHttpSokolNode: true,
+  featureWyre: false,
 };

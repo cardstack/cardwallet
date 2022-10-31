@@ -7,7 +7,7 @@ import {
   Text,
 } from '@cardstack/components';
 import { PinnedHiddenSectionMenu } from '@cardstack/components/PinnedHiddenSection';
-import { Device } from '@cardstack/utils';
+import { useRemoteConfigs } from '@cardstack/hooks';
 
 import { PinnedHiddenSectionOption } from '@rainbow-me/hooks';
 
@@ -24,6 +24,10 @@ const AssetSectionHeader = ({ section, onBuyCardPress }: AssetSectionProps) => {
     header: { type, title, count, showContextMenu, total },
     data,
   } = section;
+
+  const {
+    configs: { featureWyre },
+  } = useRemoteConfigs();
 
   const isPrepaidCardSection = useMemo(
     () => type === PinnedHiddenSectionOption.PREPAID_CARDS,
@@ -68,7 +72,7 @@ const AssetSectionHeader = ({ section, onBuyCardPress }: AssetSectionProps) => {
           {showContextMenu && <PinnedHiddenSectionMenu type={type} />}
         </Container>
       </Container>
-      {isPrepaidCardSection && Device.supportsFiatOnRamp && (
+      {isPrepaidCardSection && featureWyre && (
         <Container
           paddingBottom={4}
           alignItems="center"
