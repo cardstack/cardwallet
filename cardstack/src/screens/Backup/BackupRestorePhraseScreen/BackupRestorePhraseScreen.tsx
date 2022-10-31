@@ -15,9 +15,12 @@ import { useBackupRestorePhraseScreen } from './useBackupRestorePhraseScreen';
 
 const BackupRestorePhraseScreen = () => {
   const {
-    handlePhraseTextChange,
+    phrase,
     isPhraseComplete,
     isPhraseWrong,
+    handlePhraseTextChange,
+    onResetPhrasePressed,
+    onDonePressed,
   } = useBackupRestorePhraseScreen();
 
   return (
@@ -33,6 +36,7 @@ const BackupRestorePhraseScreen = () => {
         </Container>
         <Container width="100%" paddingTop={4}>
           <PhraseInput
+            value={phrase}
             onChangeText={handlePhraseTextChange}
             showAsError={isPhraseWrong}
           />
@@ -41,9 +45,13 @@ const BackupRestorePhraseScreen = () => {
       <PageWithStackHeaderFooter>
         <CenteredContainer>
           {isPhraseWrong ? (
-            <Button variant="red">{strings.resetButton}</Button>
+            <Button onPress={onResetPhrasePressed} variant="red">
+              {strings.resetButton}
+            </Button>
           ) : (
-            <Button blocked={!isPhraseComplete}>{strings.doneButton}</Button>
+            <Button onPress={onDonePressed} blocked={!isPhraseComplete}>
+              {strings.doneButton}
+            </Button>
           )}
         </CenteredContainer>
       </PageWithStackHeaderFooter>

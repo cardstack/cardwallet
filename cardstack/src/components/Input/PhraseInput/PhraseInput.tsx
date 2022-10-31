@@ -45,12 +45,13 @@ const PhraseInput = forwardRef((props: PasswordInputProps, ref) => {
         autoCompleteType="off"
         autoCorrect={false}
         autoCapitalize="none"
-        blurOnSubmit={false}
+        blurOnSubmit={true}
         placeholderTextColor={colors.blueText}
         textAlignVertical="top"
         paddingHorizontal={5}
         paddingBottom={3}
         style={inputStyle}
+        returnKeyType="done"
         {...inputProps}
       />
     </Container>
