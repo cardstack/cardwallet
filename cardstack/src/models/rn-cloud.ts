@@ -12,8 +12,8 @@ import { Alert } from '@rainbow-me/components/alerts';
 import AesEncryptor from '@rainbow-me/handlers/aesEncryption';
 import logger from 'logger';
 
-const REMOTE_BACKUP_WALLET_DIR = 'cardstack.com/wallet-backups';
-const USERDATA_FILE = 'UserData.json';
+export const REMOTE_BACKUP_WALLET_DIR = 'cardstack.com/wallet-backups';
+export const USERDATA_FILE = 'UserData.json';
 const encryptor = new AesEncryptor();
 
 export const CLOUD_BACKUP_ERRORS = {
@@ -162,6 +162,8 @@ export const encryptAndSaveDataToCloud = async (
     );
 
     if (!encryptedData) {
+      logger.sentry(`[BACKUP] We couldn't encrypt the data`);
+
       return;
     }
 
