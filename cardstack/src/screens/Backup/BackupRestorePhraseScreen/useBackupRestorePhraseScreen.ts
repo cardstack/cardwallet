@@ -44,18 +44,12 @@ export const useBackupRestorePhraseScreen = () => {
       return;
     }
 
-    console.log(':::1');
-
     try {
       const sanitizedPhrase = sanitizeSeedPhrase(phrase);
-
-      console.log(':::2');
 
       const checkedWallet = await ethereumUtils.deriveAccountFromWalletInput(
         sanitizedPhrase
       );
-
-      console.log(':::3', { sanitizedPhrase, checkedWallet });
 
       await importWallet({
         seed: sanitizedPhrase,
