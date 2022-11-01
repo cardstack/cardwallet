@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useCallback } from 'react';
-import { Animated, StyleSheet } from 'react-native';
+import { ActivityIndicator, Animated, StyleSheet } from 'react-native';
 
 import {
   Button,
@@ -23,6 +23,7 @@ interface SeedPhraseTableProps {
   hideOnOpen?: boolean;
   allowCopy?: boolean;
   showAsError?: boolean;
+  loading?: boolean;
   onClearPressed?: () => void;
 }
 
@@ -42,6 +43,7 @@ export const SeedPhraseTable = ({
   hideOnOpen = false,
   allowCopy = false,
   showAsError = false,
+  loading = false,
   onClearPressed,
 }: SeedPhraseTableProps) => {
   const [phraseVisible, showPhrase] = useBooleanState(!hideOnOpen);
@@ -151,6 +153,12 @@ export const SeedPhraseTable = ({
             </Button>
           </CenteredContainer>
         </Animated.View>
+      )}
+
+      {loading && (
+        <CenteredContainer style={styles.blurContainer}>
+          <ActivityIndicator size={15} color="white" />
+        </CenteredContainer>
       )}
     </Container>
   );

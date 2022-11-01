@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ActivityIndicator } from 'react-native';
 
 import {
   BackupStatus,
@@ -15,7 +15,7 @@ import {
 import { Device } from '@cardstack/utils';
 
 import { strings } from './strings';
-import { useBackupRecoveryPhraseScreen } from './useBackupRecoveryPhraseScreen';
+import { useBackupSeedPhraseScreen } from './useBackupSeedPhraseScreen';
 
 const style = StyleSheet.create({
   scrollview: {
@@ -23,7 +23,7 @@ const style = StyleSheet.create({
   },
 });
 
-const BackupRecoveryPhraseScreen = () => {
+const BackupSeedPhraseScreen = () => {
   const {
     handleCloudBackupOnPress,
     handleManualBackupOnPress,
@@ -31,7 +31,7 @@ const BackupRecoveryPhraseScreen = () => {
     hasManualBackup,
     hasCloudBackup,
     seedPhrase,
-  } = useBackupRecoveryPhraseScreen();
+  } = useBackupSeedPhraseScreen();
 
   const backupStatusComponent = useMemo(
     () => <BackupStatus status={hasManualBackup ? 'success' : 'missing'} />,
@@ -86,7 +86,12 @@ const BackupRecoveryPhraseScreen = () => {
             {strings.description}
           </Text>
         </Container>
-        <SeedPhraseTable seedPhrase={seedPhrase} hideOnOpen allowCopy />
+        <SeedPhraseTable
+          seedPhrase={seedPhrase}
+          hideOnOpen
+          allowCopy
+          loading={!seedPhrase}
+        />
         <Text
           color="grayText"
           letterSpacing={0.28}
@@ -114,4 +119,4 @@ const BackupRecoveryPhraseScreen = () => {
   );
 };
 
-export default memo(BackupRecoveryPhraseScreen);
+export default memo(BackupSeedPhraseScreen);
