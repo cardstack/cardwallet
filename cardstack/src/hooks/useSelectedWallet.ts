@@ -26,8 +26,6 @@ export const useSelectedWallet = () => {
     if (walletReady && !seedPhrase) {
       getSeedPhrase();
     }
-
-    console.log(':::', { walletReady, seedPhrase });
   }, [walletReady, getSeedPhrase, seedPhrase]);
 
   return {
