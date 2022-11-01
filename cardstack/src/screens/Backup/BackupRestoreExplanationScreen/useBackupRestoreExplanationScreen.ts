@@ -5,7 +5,7 @@ import { fetchUserDataFromCloud } from '@cardstack/models/rn-cloud';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 
 import { Alert } from '@rainbow-me/components/alerts';
-import { logger } from '@rainbow-me/utils';
+import logger from 'logger';
 
 import { strings } from './strings';
 
