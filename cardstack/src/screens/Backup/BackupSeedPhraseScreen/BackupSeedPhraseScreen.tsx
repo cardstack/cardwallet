@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import { StyleSheet, ActivityIndicator } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import {
   BackupStatus,
