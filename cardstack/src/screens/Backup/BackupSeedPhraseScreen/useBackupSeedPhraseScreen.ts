@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import { useSelectedWallet, useWalletCloudBackup } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
 
-export const useBackupRecoveryPhraseScreen = () => {
+export const useBackupSeedPhraseScreen = () => {
   const { navigate } = useNavigation();
   const { seedPhrase, hasManualBackup, hasCloudBackup } = useSelectedWallet();
   const { deleteCloudBackups } = useWalletCloudBackup();

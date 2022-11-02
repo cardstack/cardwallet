@@ -7,7 +7,7 @@ import {
 import {
   BackupCloudPasswordScreen,
   BackupExplanationScreen,
-  BackupRecoveryPhraseScreen,
+  BackupSeedPhraseScreen,
   BackupSeedPhraseConfirmationScreen,
   BackupManualScreen,
   BackupRestoreExplanationScreen,
@@ -41,7 +41,7 @@ export const BackupScreenGroup = ({
       name={Routes.BACKUP_CLOUD_PASSWORD}
     />
     <Stack.Screen
-      component={BackupRecoveryPhraseScreen}
+      component={BackupSeedPhraseScreen}
       name={Routes.BACKUP_RECOVERY_PHRASE}
     />
     <Stack.Screen
