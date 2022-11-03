@@ -113,7 +113,7 @@ describe('rn-cloud', () => {
       const response = await getDataFromCloud(password, filename);
 
       expect(logger.sentry).toBeCalledWith('[BACKUP] No backups found');
-      expect(response).toBe(undefined);
+      expect(response).toBeUndefined();
     });
 
     it(`should return undefined if there's no file in the remote dir that matches the filename passed`, async () => {
@@ -126,7 +126,7 @@ describe('rn-cloud', () => {
         'foo'
       );
 
-      expect(response).toBe(undefined);
+      expect(response).toBeUndefined();
     });
 
     it(`should return undefined if encrypted backup document wasn't found`, async () => {
@@ -141,7 +141,7 @@ describe('rn-cloud', () => {
         mockedListFiles.files[1]
       );
 
-      expect(response).toBe(undefined);
+      expect(response).toBeUndefined();
     });
 
     it(`should return undefined if the document couldn't be decrypted`, async () => {
@@ -157,7 +157,7 @@ describe('rn-cloud', () => {
         filename
       );
 
-      expect(response).toBe(undefined);
+      expect(response).toBeUndefined();
     });
 
     it(`should return a parsed backup data JSON file`, async () => {
@@ -206,7 +206,7 @@ describe('rn-cloud', () => {
         `[BACKUP] We couldn't encrypt the data`
       );
 
-      expect(response).toBe(undefined);
+      expect(response).toBeUndefined();
     });
 
     it(`should call RNFS to save file locally first`, async () => {
@@ -287,7 +287,7 @@ describe('rn-cloud', () => {
       );
 
       expect(captureExceptionSpy).toBeCalled();
-      expect(response).toBe(undefined);
+      expect(response).toBeUndefined();
     });
 
     it(`should return the filename if saving to the cloud was successful`, async () => {
