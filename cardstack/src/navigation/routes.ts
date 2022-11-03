@@ -17,7 +17,6 @@ export const MainRoutes = {
   PAYMENT_CONFIRMATION_SHEET: 'PaymentConfirmationSheet',
   MERCHANT_TRANSACTION_SHEET: 'MerchantTransactionSheet',
   CHOOSE_PREPAIDCARD_SHEET: 'ChoosePrepaidCardSheet',
-  SETTINGS_MODAL: 'SettingModal',
   TRANSFER_CARD: 'TransferCardScreen',
   REWARDS_CENTER_SCREEN: 'RewardsCenterScreen',
   REWARDS_REGISTER_SHEET: 'RewardsRegisterSheet',
@@ -80,6 +79,10 @@ const BackupRoutes = {
   BACKUP_RESTORE_PHRASE: 'BackupRestorePhraseScreen',
 };
 
+const SettingsRoutes = {
+  SETTINGS_MODAL: 'SettingModal',
+};
+
 export const Routes = {
   UNLOCK_SCREEN: 'UnlockScreen',
   ...SharedRoutes,
@@ -88,4 +91,5 @@ export const Routes = {
   ...MainRoutes,
   ...ProfileRoutes,
   ...BackupRoutes,
+  ...SettingsRoutes,
 } as const;

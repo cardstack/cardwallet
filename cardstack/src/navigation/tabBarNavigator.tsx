@@ -28,6 +28,7 @@ import { loadAddress } from '@rainbow-me/model/wallet';
 import ChangeWalletSheet from '@rainbow-me/screens/ChangeWalletSheet';
 import ModalScreen from '@rainbow-me/screens/ModalScreen';
 import PinAuthenticationScreen from '@rainbow-me/screens/PinAuthenticationScreen';
+import SettingsModal from '@rainbow-me/screens/SettingsModal';
 
 import { createCustomStackNavigator } from './customNavigator';
 import { useCardstackMainScreens } from './hooks';
@@ -230,10 +231,8 @@ export const StackNavigator = () => {
       )}
       {SharedScreens({ navigationKey })}
       {ProfileScreenGroup({ Stack })}
-      {BackupScreenGroup({
-        Stack,
-        navigationKey,
-      })}
+      {BackupScreenGroup({ Stack, navigationKey })}
+      {SettingsModal({ Stack })}
     </Stack.Navigator>
   );
 };

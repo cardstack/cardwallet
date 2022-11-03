@@ -1,5 +1,4 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import React, { useCallback, useEffect } from 'react';
 import { Animated, InteractionManager } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -107,8 +106,6 @@ export const SettingsPages = {
   },
 };
 
-const Stack = createStackNavigator();
-
 const screenOptions = {
   ...slideLeftToRightPreset,
   headerStyle: {
@@ -131,7 +128,7 @@ const HeaderBackBtnLeft = props => (
   />
 );
 
-export default function SettingsModal() {
+export default function SettingsModal({ Stack }) {
   const { goBack, navigate } = useNavigation();
   const { params } = useRoute();
 
@@ -164,7 +161,7 @@ export default function SettingsModal() {
   const insets = useSafeAreaInsets();
 
   return (
-    <Stack.Navigator
+    <Stack.Group
       screenOptions={{
         ...screenOptions,
         headerStyle: {
@@ -213,6 +210,6 @@ export default function SettingsModal() {
             />
           )
       )}
-    </Stack.Navigator>
+    </Stack.Group>
   );
 }
