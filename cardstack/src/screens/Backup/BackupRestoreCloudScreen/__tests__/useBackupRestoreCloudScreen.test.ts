@@ -98,7 +98,7 @@ describe('useBackupRestoreCloudScreen', () => {
     jest.clearAllMocks();
   });
 
-  it(`isSubmitDisable should be true if password input is empty`, () => {
+  it(`should have isSubmitDisabled as true if password input is empty`, () => {
     mockUsePasswordInput({ password: undefined });
 
     const { result } = renderHook(useBackupRestoreCloudScreen);
@@ -106,7 +106,7 @@ describe('useBackupRestoreCloudScreen', () => {
     expect(result.current.isSubmitDisabled).toBe(true);
   });
 
-  it(`isSubmitDisable should be false if password input has at least one character`, () => {
+  it(`should have isSubmitDisabled as false if password input has at least one character`, () => {
     mockUsePasswordInput({ password: 'p' });
 
     const { result } = renderHook(useBackupRestoreCloudScreen);

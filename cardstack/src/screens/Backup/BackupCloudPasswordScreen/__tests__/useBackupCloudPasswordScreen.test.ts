@@ -54,7 +54,7 @@ describe('useBackupCloudPasswordScreen', () => {
     jest.clearAllMocks();
   });
 
-  it(`isSubmitDisabled should be true if checkbox isn't checked`, () => {
+  it(`should have isSubmitDisabled as true if checkbox isn't checked`, () => {
     mockUsePasswordInput({ isValid: true });
 
     const { result } = renderHook(useBackupCloudPasswordScreen);
@@ -62,7 +62,7 @@ describe('useBackupCloudPasswordScreen', () => {
     expect(result.current.isSubmitDisabled).toBe(true);
   });
 
-  it(`isSubmitDisabled should be true if both password fields are not valid`, () => {
+  it(`should have isSubmitDisabled as true if both password fields are not valid`, () => {
     mockUsePasswordInput({ isValid: false });
 
     const { result } = renderHook(useBackupCloudPasswordScreen);
@@ -74,7 +74,7 @@ describe('useBackupCloudPasswordScreen', () => {
     expect(result.current.isSubmitDisabled).toBe(true);
   });
 
-  it(`isSubmitDisabled should be false if both password fields are valid and checkbox is checked`, () => {
+  it(`should have isSubmitDisabled as false if both password fields are valid and checkbox is checked`, () => {
     mockUsePasswordInput({ isValid: true });
 
     const { result } = renderHook(useBackupCloudPasswordScreen);
