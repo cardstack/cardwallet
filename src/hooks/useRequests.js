@@ -21,5 +21,6 @@ export default function useRequests() {
   return {
     pendingRequestCount,
     requests: sortedRequests,
+    latestRequest: sortedRequests?.[0],
   };
 }
