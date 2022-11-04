@@ -1,4 +1,5 @@
 import { captureException } from '@sentry/react-native';
+import { OptionalUnion } from 'globals';
 import RNCloudFs, { ListFilesResult } from 'react-native-cloud-fs';
 import { CARDWALLET_MASTER_KEY } from 'react-native-dotenv';
 import RNFS from 'react-native-fs';
@@ -9,10 +10,10 @@ import { Device } from '@cardstack/utils';
 
 import { Alert } from '@rainbow-me/components/alerts';
 import AesEncryptor from '@rainbow-me/handlers/aesEncryption';
-import { logger } from '@rainbow-me/utils';
+import logger from 'logger';
 
-const REMOTE_BACKUP_WALLET_DIR = 'cardstack.com/wallet-backups';
-const USERDATA_FILE = 'UserData.json';
+export const REMOTE_BACKUP_WALLET_DIR = 'cardstack.com/wallet-backups';
+export const USERDATA_FILE = 'UserData.json';
 const encryptor = new AesEncryptor();
 
 export const CLOUD_BACKUP_ERRORS = {
@@ -90,7 +91,7 @@ const getBackupDocumentByFilename = (
 export const getDataFromCloud = async (
   backupPassword: string,
   filename: string
-): Promise<BackupSecretsData | undefined> => {
+): Promise<OptionalUnion<BackupSecretsData, BackupUserData> | undefined> => {
   if (Device.isAndroid) {
     await RNCloudFs.loginIfNeeded();
   }
@@ -154,7 +155,6 @@ export const encryptAndSaveDataToCloud = async (
   password: string,
   filename: string
 ) => {
-  // Encrypt the data
   try {
     const encryptedData = await encryptor.encrypt(
       password,
@@ -162,7 +162,9 @@ export const encryptAndSaveDataToCloud = async (
     );
 
     if (!encryptedData) {
-      throw new Error(`[BACKUP] Encrypted data shouldn't be null`);
+      logger.sentry(`[BACKUP] We couldn't encrypt the data`);
+
+      return;
     }
 
     // Store it on the FS first
@@ -199,10 +201,10 @@ export const encryptAndSaveDataToCloud = async (
     );
 
     if (!exists) {
-      logger.sentry(`[BACKUP] Backup doesn't exist after completion`);
       const error = new Error(CLOUD_BACKUP_ERRORS.INTEGRITY_CHECK_FAILED);
       captureException(error);
-      throw error;
+
+      return;
     }
 
     await RNFS.unlink(path);
@@ -215,7 +217,6 @@ export const encryptAndSaveDataToCloud = async (
 
     logger.sentry('[BACKUP] Error during encryptAndSaveDataToCloud', e);
     captureException(e);
-    throw new Error(CLOUD_BACKUP_ERRORS.GENERAL_ERROR);
   }
 };
 

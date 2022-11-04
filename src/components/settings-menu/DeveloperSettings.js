@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { ScrollView } from 'react-native';
 import { ListFooter, ListItem } from '../list';
-import { deleteAllBackups } from '@cardstack/models/rn-cloud';
+import { deleteAllCloudBackups } from '@cardstack/models/rn-cloud';
 import { Routes } from '@cardstack/navigation';
 import GanacheUtils, { restartApp } from '@cardstack/utils';
 import { resetWallet } from '@rainbow-me/model/wallet';
@@ -31,7 +31,7 @@ const DeveloperSettings = () => {
         testID="reset-keychain-section"
       />
       <ListItem label="🔄 Restart app" onPress={restartApp} />
-      <ListItem label="🗑️ Remove all backups" onPress={deleteAllBackups} />
+      <ListItem label="🗑️ Remove all backups" onPress={deleteAllCloudBackups} />
       <ListItem
         label="‍👾 Connect to ganache"
         onPress={connectToGanache}

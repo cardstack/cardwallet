@@ -102,6 +102,7 @@ const PinInput = ({
         blurOnSubmit={false}
         underlineColorAndroid="transparent"
         keyboardType="number-pad"
+        returnKeyType="default"
         {...inputProps}
       />
     </Container>
