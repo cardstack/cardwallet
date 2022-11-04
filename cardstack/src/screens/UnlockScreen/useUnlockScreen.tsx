@@ -8,6 +8,7 @@ import { useBooleanState } from '@cardstack/hooks';
 import { biometricAuthentication } from '@cardstack/models/biometric-auth';
 import { getPin } from '@cardstack/models/secure-storage';
 import { useAuthActions } from '@cardstack/redux/authSlice';
+import { handleWalletConnectRequests } from '@cardstack/redux/requests';
 import { addLeftZero, useWorker } from '@cardstack/utils';
 
 import {
@@ -16,6 +17,7 @@ import {
   savePinAuthAttempts,
   savePinAuthNextDateAttempt,
 } from '@rainbow-me/handlers/localstorage/globalSettings';
+import { useRequests } from '@rainbow-me/hooks';
 import { resetWallet } from '@rainbow-me/model/wallet';
 import logger from 'logger';
 
@@ -26,6 +28,7 @@ export const MAX_WRONG_ATTEMPTS = 5;
 export const useUnlockScreen = () => {
   const storedPin = useRef<string | null>(null);
   const [inputPin, setInputPin] = useState('');
+  const { latestRequest } = useRequests();
 
   const [pinInvalid, setPinInvalid, setPinValid] = useBooleanState();
 
@@ -58,12 +61,17 @@ export const useUnlockScreen = () => {
     nextAttemptDate.current = await getPinAuthNextDateAttempt();
   }, []);
 
+  const setAuthorized = useCallback(() => {
+    setPinValid();
+    setUserAuthorized();
+    handleWalletConnectRequests(latestRequest);
+  }, [setPinValid, setUserAuthorized, latestRequest]);
+
   const validatePin = useCallback(
     (input: string) => {
       if (storedPin.current === input) {
         attemptsCount.current = 0;
-        setPinValid();
-        setUserAuthorized();
+        setAuthorized();
       } else {
         attemptsCount.current++;
         setPinInvalid();
@@ -72,7 +80,7 @@ export const useUnlockScreen = () => {
 
       savePinAuthAttempts(attemptsCount.current);
     },
-    [setPinInvalid, setPinValid, setUserAuthorized]
+    [setPinInvalid, setAuthorized]
   );
 
   const authenticateBiometrically = useCallback(async () => {
@@ -84,8 +92,7 @@ export const useUnlockScreen = () => {
       const isBiometricAuthorized = await biometricAuthentication();
 
       if (isBiometricAuthorized) {
-        setPinValid();
-        setUserAuthorized();
+        setAuthorized();
       } else {
         setRetryBiometricAuth();
       }
@@ -100,9 +107,8 @@ export const useUnlockScreen = () => {
     authWithBiometricsStarted,
     resetRetryBiometricAuth,
     authWithBiometricsFinished,
-    setPinValid,
-    setUserAuthorized,
     setRetryBiometricAuth,
+    setAuthorized,
   ]);
 
   const onResetWalletPress = useCallback(() => {
