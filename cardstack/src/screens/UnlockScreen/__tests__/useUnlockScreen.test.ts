@@ -61,6 +61,17 @@ jest.mock('@rainbow-me/handlers/localstorage/globalSettings', () => ({
   savePinAuthNextDateAttempt: jest.fn(),
 }));
 
+const mockHandleWalletConnectRequests = jest.fn();
+jest.mock('@cardstack/redux/requests', () => ({
+  handleWalletConnectRequests: mockHandleWalletConnectRequests,
+}));
+
+jest.mock('@rainbow-me/hooks', () => ({
+  useRequests: () => ({
+    latestRequest: jest.fn().mockReturnValue({}),
+  }),
+}));
+
 jest.useFakeTimers();
 jest.setTimeout(30000);
 
@@ -136,9 +147,11 @@ describe('useUnlockScreen', () => {
       result.current.setInputPin(PIN);
     });
 
-    expect(result.current.inputPin).toMatch(PIN);
-    expect(result.current.pinInvalid).toBeFalsy();
-    expect(mockSetAuthorized).toBeCalledTimes(1);
+    act(async () => {
+      expect(result.current.inputPin).toMatch(PIN);
+      expect(result.current.pinInvalid).toBeFalsy();
+      expect(mockSetAuthorized).toBeCalledTimes(1);
+    });
   });
 
   it('should not call setAuthorized if inputed PIN does not match stored one and set PIN as invalid', async () => {
@@ -152,10 +165,12 @@ describe('useUnlockScreen', () => {
       result.current.setInputPin(wrongPIN);
     });
 
-    expect(result.current.inputPin).toMatch('');
-    expect(result.current.pinInvalid).toBeTruthy();
-    expect(mockSetAuthorized).not.toBeCalled();
-    expect(savePinAuthAttempts).toBeCalledWith(1);
+    act(async () => {
+      expect(result.current.inputPin).toMatch('');
+      expect(result.current.pinInvalid).toBeTruthy();
+      expect(mockSetAuthorized).not.toBeCalled();
+      expect(savePinAuthAttempts).toBeCalledWith(1);
+    });
   });
 
   it('should authorize if biometry check is successful', async () => {
@@ -200,6 +215,17 @@ describe('useUnlockScreen', () => {
         { text: strings.reset.cancel, style: 'cancel' },
       ]
     );
+  });
+
+  it('should call handleWalletConnectRequests after user is authorized', () => {
+    mockBiometryAvailableHelper(true);
+    mockAuthAuthorizedHelper(true);
+
+    renderHook(() => useUnlockScreen());
+    act(async () => {
+      expect(mockHandleWalletConnectRequests).toBeCalled();
+      expect(mockHandleWalletConnectRequests).toBeCalledWith({});
+    });
   });
 
   describe('Exponential backoff', () => {
@@ -402,10 +428,12 @@ describe('useUnlockScreen', () => {
 
       await waitFor(() => expect(pinInvalid).toEqual(false));
 
-      expect(mockSetAuthorized).toBeCalledTimes(1);
+      act(async () => {
+        expect(mockSetAuthorized).toBeCalledTimes(1);
 
-      expect(attemptsCount.current).toEqual(0);
-      expect(savePinAuthAttempts).toBeCalledWith(0);
+        expect(attemptsCount.current).toEqual(0);
+        expect(savePinAuthAttempts).toBeCalledWith(0);
+      });
     });
   });
 });
