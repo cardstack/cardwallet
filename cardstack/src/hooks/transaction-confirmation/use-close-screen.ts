@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { InteractionManager } from 'react-native';
 import { useDispatch } from 'react-redux';
 
+import { Routes } from '@cardstack/navigation';
 import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
 
 import { useGas } from '@rainbow-me/hooks';
@@ -17,7 +18,7 @@ import { useRouteParams } from './use-route-params';
 
 export const useCloseScreen = () => {
   const dispatch = useDispatch();
-  const { goBack } = useNavigation();
+  const { goBack, canGoBack, navigate } = useNavigation();
 
   const pendingRedirect = useRainbowSelector(
     ({ walletconnect }) => walletconnect.pendingRedirect
@@ -36,7 +37,11 @@ export const useCloseScreen = () => {
 
   const closeScreen = useCallback(
     canceled => {
-      goBack();
+      if (canGoBack()) {
+        goBack();
+      } else {
+        navigate(Routes.WALLET_SCREEN);
+      }
 
       if (!isMessageRequest) {
         stopPollingGasPrices();
@@ -68,6 +73,8 @@ export const useCloseScreen = () => {
       method,
       dappScheme,
       dispatch,
+      canGoBack,
+      navigate,
     ]
   );
 

@@ -10,7 +10,7 @@ import {
   pickBy,
   values,
 } from 'lodash';
-import { Alert, InteractionManager, Linking } from 'react-native';
+import { Alert, Linking } from 'react-native';
 import {
   getAllValidWalletConnectSessions,
   removeWalletConnectSessions,
@@ -23,7 +23,10 @@ import { isSigningMethod } from '../utils/signingMethods';
 import { appName } from '@cardstack/constants';
 import { getFCMToken } from '@cardstack/models/firebase';
 import { Navigation, Routes } from '@cardstack/navigation';
-import { addRequestToApprove } from '@cardstack/redux/requests';
+import {
+  addRequestToApprove,
+  handleWalletConnectRequests,
+} from '@cardstack/redux/requests';
 import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
 import { enableActionsOnReadOnlyWallet } from '@rainbow-me/config/debug';
 import logger from 'logger';
@@ -209,16 +212,7 @@ const listenOnNewMessages = walletConnector => (dispatch, getState) => {
           )
         : null;
 
-      if (request) {
-        InteractionManager.runAfterInteractions(() => {
-          setTimeout(() => {
-            Navigation.handleAction(Routes.CONFIRM_REQUEST, {
-              openAutomatically: true,
-              transactionDetails: request,
-            });
-          }, 1000);
-        });
-      }
+      handleWalletConnectRequests(request);
     }
   });
   walletConnector.on('disconnect', error => {

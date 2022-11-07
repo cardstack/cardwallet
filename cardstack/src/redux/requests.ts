@@ -1,6 +1,7 @@
 import { AnyAction } from '@reduxjs/toolkit';
 import { filter, get, omit, values } from 'lodash';
 
+import { Navigation, Routes } from '@cardstack/navigation';
 import { getRequestDisplayDetails } from '@cardstack/parsers/signing-requests';
 
 import {
@@ -23,6 +24,17 @@ const REQUESTS_CLEAR_STATE = 'requests/REQUESTS_CLEAR_STATE';
 
 // Requests expire automatically after 1 hour
 const EXPIRATION_THRESHOLD_IN_MS = 1000 * 60 * 60;
+
+export const handleWalletConnectRequests = (request?: any) => {
+  if (request) {
+    setTimeout(() => {
+      Navigation.handleAction(Routes.CONFIRM_REQUEST, {
+        openAutomatically: true,
+        transactionDetails: request,
+      });
+    }, 1000);
+  }
+};
 
 export const requestsLoadState = () => async (
   dispatch: AppDispatch,
