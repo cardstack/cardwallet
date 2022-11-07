@@ -6,12 +6,12 @@ import {
   useProfileJobPolling,
 } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
+import { SettingsPages } from '@cardstack/navigation/screenGroups/settings';
 import { RouteType } from '@cardstack/navigation/types';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 import { useGetProfileUnfulfilledJobQuery } from '@cardstack/services';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
-import { SettingsPages } from '@rainbow-me/screens/SettingsModal';
 
 type ProfileScreenParamsType = RouteType<{
   profileCreationJobID?: string;
