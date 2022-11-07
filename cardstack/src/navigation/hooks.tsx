@@ -27,23 +27,13 @@ export const useCardstackMainScreens = (Stack: StackType) =>
 
 // Once we merge the routes, we can type it better
 export const useDismissCurrentRoute = (routeName: string) => {
-  const { goBack, getParent, getState } = useNavigation();
+  const { goBack } = useNavigation();
 
   const checkAndDismissCurrentRoute = useCallback(() => {
-    const parent = getParent();
-
     if (Navigation.getActiveRouteName() === routeName) {
-      // Theres a bug in our navigator implementation where in some unknown circunstances
-      // the pushed screen has a lower stack index than it's parent, causing goBack
-      // to pop the parent and not the the active route. The validation
-      // below is a workaround the issue.
-      if (parent && parent.getState().index > getState().index) {
-        parent.goBack();
-      } else {
-        goBack();
-      }
+      goBack();
     }
-  }, [getParent, goBack, getState, routeName]);
+  }, [goBack, routeName]);
 
   return checkAndDismissCurrentRoute;
 };
