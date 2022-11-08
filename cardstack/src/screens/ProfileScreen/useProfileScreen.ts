@@ -6,7 +6,6 @@ import {
   useProfileJobPolling,
 } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
-import { SettingsPages } from '@cardstack/navigation/screenGroups/settings';
 import { RouteType } from '@cardstack/navigation/types';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 import { useGetProfileUnfulfilledJobQuery } from '@cardstack/services';
@@ -72,7 +71,7 @@ export const useProfileScreen = () => {
 
   const redirectToSwitchNetwork = useCallback(() => {
     navigate(Routes.SETTINGS_MODAL, {
-      initialRoute: SettingsPages.network.key,
+      initialRoute: Routes.NETWORK_SECTION,
     });
   }, [navigate]);
 
