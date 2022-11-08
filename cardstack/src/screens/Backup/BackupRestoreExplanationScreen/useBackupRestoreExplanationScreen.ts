@@ -27,6 +27,7 @@ export const useBackupRestoreExplanationScreen = () => {
         navigate(Routes.BACKUP_RESTORE_CLOUD, { userData: data });
       }
     } catch (e) {
+      dismissLoadingOverlay();
       logger.sentry('[BACKUP] Error getting userData', e);
       Alert(strings.errorMessage);
     }
