@@ -17,7 +17,6 @@ import { palette } from '@cardstack/theme';
 
 import {
   CurrencySection,
-  LanguageSection,
   NetworkSection,
   NotificationsSection,
   WalletConnectSessionsSection,
@@ -26,59 +25,6 @@ import DeveloperSettings from '@rainbow-me/components/settings-menu/DeveloperSet
 import SettingsModal from '@rainbow-me/screens/SettingsModal';
 
 import { StackType } from '../types';
-
-export const SettingsPages = {
-  currency: {
-    component: CurrencySection,
-    key: 'CurrencySection',
-    title: 'Currency',
-  },
-  default: {
-    component: null,
-    key: 'SettingsSection',
-    title: 'Settings',
-  },
-  dev: {
-    component: __DEV__ ? DeveloperSettings : null,
-    key: 'DevSection',
-    title: 'Dev',
-  },
-  designSystem: {
-    component: __DEV__ ? DesignSystemScreen : null,
-    key: 'DesignSystem',
-    title: 'Design System',
-  },
-  language: {
-    component: LanguageSection,
-    key: 'LanguageSection',
-    title: 'Language',
-  },
-  network: {
-    component: NetworkSection,
-    key: 'NetworkSection',
-    title: 'Network',
-  },
-  notifications: {
-    component: NotificationsSection,
-    key: 'NotificationsSection',
-    title: 'Notifications',
-  },
-  walletconnect: {
-    component: WalletConnectSessionsSection,
-    key: 'WCSessionsSection',
-    title: 'WalletConnect Sessions',
-  },
-  myWalletAddress: {
-    component: WalletAddressScreen,
-    key: 'MyWalletAddressSection',
-    title: 'My Wallet Address',
-  },
-  security: {
-    component: SecurityScreen,
-    key: 'security',
-    title: 'Security',
-  },
-};
 
 const HeaderBackBtnLeft = (props?: HeaderBackButtonProps) => (
   <Icon
@@ -139,19 +85,53 @@ export const SettingsGroup = ({ Stack }: { Stack: StackType }) => {
           headerLeft: () => null,
         }}
       />
-      {Object.values(SettingsPages).map(
-        ({ component, title, key }) =>
-          component && (
-            <Stack.Screen
-              component={component}
-              name={key}
-              options={{
-                ...horizontalNonStackingInterpolator,
-                title,
-              }}
-            />
-          )
-      )}
+      <Stack.Group screenOptions={{ ...horizontalNonStackingInterpolator }}>
+        <Stack.Screen
+          component={CurrencySection}
+          name={Routes.CURRENCY_SECTION}
+          options={{ title: 'Currency' }}
+        />
+        <Stack.Screen
+          component={NetworkSection}
+          name={Routes.NETWORK_SECTION}
+          options={{ title: 'Network' }}
+        />
+        <Stack.Screen
+          component={NotificationsSection}
+          name={Routes.NOTIFICATIONS_SECTION}
+          options={{ title: 'Notifications' }}
+        />
+        <Stack.Screen
+          component={WalletConnectSessionsSection}
+          name={Routes.WCSESSIONS_SECTION}
+          options={{ title: 'WalletConnect Sessions' }}
+        />
+        <Stack.Screen
+          component={WalletAddressScreen}
+          name={Routes.MY_WALLET_ADDRESS_SECTION}
+          options={{ title: 'My Wallet Address' }}
+        />
+        <Stack.Screen
+          component={SecurityScreen}
+          name={Routes.SECURITY_SECTION}
+          options={{ title: 'Security' }}
+        />
+
+        {__DEV__ && (
+          <Stack.Screen
+            component={DeveloperSettings}
+            name={Routes.DEV_SECTION}
+            options={{ title: 'Dev' }}
+          />
+        )}
+        {__DEV__ && (
+          <Stack.Screen
+            component={DesignSystemScreen}
+            name={Routes.DESIGN_SYSTEM}
+            options={{ title: 'Design System' }}
+          />
+        )}
+      </Stack.Group>
     </Stack.Group>
   );
 };

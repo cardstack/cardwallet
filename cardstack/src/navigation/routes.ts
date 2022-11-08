@@ -81,6 +81,14 @@ const BackupRoutes = {
 
 const SettingsRoutes = {
   SETTINGS_MODAL: 'SettingModal',
+  CURRENCY_SECTION: 'CurrencySection',
+  DEV_SECTION: 'DevSection',
+  DESIGN_SYSTEM: 'DesignSystem',
+  NETWORK_SECTION: 'NetworkSection',
+  NOTIFICATIONS_SECTION: 'NotificationsSection',
+  WCSESSIONS_SECTION: 'WCSessionsSection',
+  MY_WALLET_ADDRESS_SECTION: 'MyWalletAddressSection',
+  SECURITY_SECTION: 'SecuritySettingsSection',
 };
 
 export const Routes = {

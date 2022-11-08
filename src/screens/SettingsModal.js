@@ -3,7 +3,7 @@ import React, { useCallback } from 'react';
 
 import { SettingsSection } from '../components/settings-menu';
 
-import { SettingsPages } from '@cardstack/navigation/screenGroups/settings';
+import { Routes } from '@cardstack/navigation';
 
 export default function SettingsModal() {
   const { navigate } = useNavigation();
@@ -11,7 +11,7 @@ export default function SettingsModal() {
 
   const onPressSection = useCallback(
     section => () => {
-      navigate(section.key, params);
+      navigate(section, params);
     },
     [navigate, params]
   );
@@ -24,15 +24,14 @@ export default function SettingsModal() {
 
   return (
     <SettingsSection
-      onPressCurrency={onPressSection(SettingsPages.currency)}
-      onPressDS={onPressSection(SettingsPages.designSystem)}
-      onPressDev={onPressSection(SettingsPages.dev)}
-      onPressLanguage={onPressSection(SettingsPages.language)}
-      onPressMyWalletAddress={onPressSection(SettingsPages.myWalletAddress)}
-      onPressNetwork={onPressSection(SettingsPages.network)}
-      onPressNotifications={onPressSection(SettingsPages.notifications)}
-      onPressSecurity={onPressSection(SettingsPages.security)}
-      onPressWCSessions={onPressSection(SettingsPages.walletconnect)}
+      onPressCurrency={onPressSection(Routes.CURRENCY_SECTION)}
+      onPressDS={onPressSection(Routes.DESIGN_SYSTEM)}
+      onPressDev={onPressSection(Routes.DEV_SECTION)}
+      onPressMyWalletAddress={onPressSection(Routes.MY_WALLET_ADDRESS_SECTION)}
+      onPressNetwork={onPressSection(Routes.NETWORK_SECTION)}
+      onPressNotifications={onPressSection(Routes.NOTIFICATIONS_SECTION)}
+      onPressSecurity={onPressSection(Routes.SECURITY_SECTION)}
+      onPressWCSessions={onPressSection(Routes.WCSESSIONS_SECTION)}
     />
   );
 }
