@@ -73,7 +73,7 @@ jobs:
         run: yarn fastlane sync_sentry_properties
       - name: Run fastlane (android)
         run: cd android && bundle install && bash -c 'set -a && source ../.env && set +a && bundle exec fastlane internal'
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: Android bundle
           path: android/app/build/outputs/bundle/app-release.aab
