@@ -78,11 +78,11 @@ jobs:
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLICATION_SPECIFIC_PASSWORD }}
           MATCH_GIT_URL: ${{ env.CRYPTEX_GIT_URL }}
           MATCH_PASSWORD: ${{ env.CRYPTEX_PASSWORD }}
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: Rainbow IPA
           path: ios/Rainbow.ipa
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: Rainbow DYSM
           path: ios/Rainbow.app.dSYM.zip
