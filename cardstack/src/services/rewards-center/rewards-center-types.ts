@@ -8,6 +8,7 @@ export interface RewardsSafeQueryParams {
   accountAddress: string;
   safeAddress?: string;
   nativeCurrency: NativeCurrency;
+  rewardProgramId: string;
 }
 
 export type RewardsSafeType = Omit<RewardSafe, 'tokens'> & {
