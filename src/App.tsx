@@ -27,6 +27,7 @@ import ErrorBoundary from '@cardstack/components/ErrorBoundary/ErrorBoundary';
 import { MinimumVersion } from '@cardstack/components/MinimumVersion';
 import { apolloClient } from '@cardstack/graphql/apollo-client';
 import { AppContainer } from '@cardstack/navigation';
+import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
 import theme from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
 
@@ -57,6 +58,7 @@ if (Device.isAndroid) {
 
 const App = () => {
   const { forceUpdate, maintenance } = useAppInit();
+  const { hasWallet } = useAuthSelectorAndActions();
 
   if (maintenance.active) {
     return <MaintenanceMode message={maintenance.message} />;
@@ -71,7 +73,7 @@ const App = () => {
       <SafeAreaProvider>
         <PinnedHiddenItemOptionProvider>
           <AppContainer />
-          <OfflineToast />
+          {hasWallet && <OfflineToast />}
         </PinnedHiddenItemOptionProvider>
       </SafeAreaProvider>
     </MainThemeProvider>

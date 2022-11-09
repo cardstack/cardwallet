@@ -27,7 +27,7 @@ const WALLETCONNECT_SYNC_DELAY = 500;
 
 export const useAppInit = () => {
   const walletReady = useRainbowSelector(state => state.appState.walletReady);
-  const appRequiments = useAppRequirements();
+  const appRequirements = useAppRequirements();
 
   const { justBecameActive, movedFromBackground } = useAppState();
 
@@ -136,7 +136,7 @@ export const useAppInit = () => {
     }
   }, [justBecameActive]);
 
-  return appRequiments;
+  return appRequirements;
 };
 
 const useDevSetup = () => {
