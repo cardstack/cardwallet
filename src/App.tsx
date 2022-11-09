@@ -10,7 +10,6 @@ import { enableScreens } from 'react-native-screens';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { name as appName } from '../app.json';
-import { OfflineToast } from './components/toasts';
 import {
   reactNativeDisableYellowBox,
   showNetworkRequests,
@@ -23,6 +22,7 @@ import { PinnedHiddenItemOptionProvider } from './hooks';
 import store, { persistor } from './redux/store';
 import MaintenanceMode from './screens/MaintenanceMode';
 import { useAppInit } from './useAppInit';
+import { NetworkToast } from '@cardstack/components';
 import ErrorBoundary from '@cardstack/components/ErrorBoundary/ErrorBoundary';
 import { MinimumVersion } from '@cardstack/components/MinimumVersion';
 import { apolloClient } from '@cardstack/graphql/apollo-client';
@@ -73,7 +73,7 @@ const App = () => {
       <SafeAreaProvider>
         <PinnedHiddenItemOptionProvider>
           <AppContainer />
-          {hasWallet && <OfflineToast />}
+          {hasWallet && <NetworkToast />}
         </PinnedHiddenItemOptionProvider>
       </SafeAreaProvider>
     </MainThemeProvider>
