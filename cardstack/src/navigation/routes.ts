@@ -45,7 +45,6 @@ const TabRoutes = {
 const NonMigratedRoutes = {
   CHANGE_WALLET_SHEET: 'ChangeWalletSheet',
   PIN_AUTHENTICATION_SCREEN: 'PinAuthenticationScreen',
-  SETTINGS_MODAL: 'SettingsModal',
 } as const;
 
 const SharedRoutes = {
@@ -80,7 +79,7 @@ const BackupRoutes = {
 };
 
 const SettingsRoutes = {
-  SETTINGS_MODAL: 'SettingModal',
+  SETTINGS_SCREEN: 'SettingScreen',
   CURRENCY_SECTION: 'CurrencySection',
   DEV_SECTION: 'DevSection',
   DESIGN_SYSTEM: 'DesignSystem',

@@ -22,7 +22,7 @@ import {
   WalletConnectSessionsSection,
 } from '@rainbow-me/components/settings-menu';
 import DeveloperSettings from '@rainbow-me/components/settings-menu/DeveloperSettings';
-import SettingsModal from '@rainbow-me/screens/SettingsModal';
+import SettingsScreen from '@rainbow-me/screens/SettingsScreen';
 
 import { StackType } from '../types';
 
@@ -78,8 +78,8 @@ export const SettingsGroup = ({ Stack }: { Stack: StackType }) => {
       }}
     >
       <Stack.Screen
-        name={Routes.SETTINGS_MODAL}
-        component={SettingsModal}
+        name={Routes.SETTINGS_SCREEN}
+        component={SettingsScreen}
         options={{
           headerTitle: 'Settings',
           headerLeft: () => null,

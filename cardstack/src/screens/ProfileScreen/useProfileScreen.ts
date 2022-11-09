@@ -70,7 +70,7 @@ export const useProfileScreen = () => {
   );
 
   const redirectToSwitchNetwork = useCallback(() => {
-    navigate(Routes.SETTINGS_MODAL, {
+    navigate(Routes.SETTINGS_SCREEN, {
       initialRoute: Routes.NETWORK_SECTION,
     });
   }, [navigate]);
