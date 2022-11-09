@@ -165,11 +165,6 @@ export default function SettingsScreen() {
             label="Design System"
             onPress={onPressSection(Routes.DESIGN_SYSTEM)}
           />
-          <ListItem
-            icon={<Icon color="black" name="shopping-cart" />}
-            label="Onboarding: Profile Purchase"
-            onPress={onPressSection(Routes.PROFILE_SLUG)}
-          />
         </>
       )}
       <CenteredContainer flex={1} paddingBottom={8} paddingTop={2}>
