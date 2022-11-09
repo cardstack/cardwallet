@@ -1,34 +1,27 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import { useNavigation } from '@react-navigation/native';
-import React, { useCallback } from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import React, { useCallback, useEffect } from 'react';
 import { Linking } from 'react-native';
 
-import AppVersionStamp from '../AppVersionStamp';
-import { ColumnWithDividers } from '../layout';
+import { CenteredContainer, Icon, ScrollView } from '@cardstack/components';
+import { SettingsExternalURLs } from '@cardstack/constants';
+import { useSelectedWallet } from '@cardstack/hooks';
+import { Routes } from '@cardstack/navigation';
+import AppVersionStamp from '@rainbow-me/components/AppVersionStamp';
+import { ColumnWithDividers } from '@rainbow-me/components/layout';
 import {
   ListFooter,
   ListItem,
   ListItemArrowGroup,
   ListItemDivider,
-} from '../list';
-import { CenteredContainer, Icon, ScrollView } from '@cardstack/components';
-import { SettingsExternalURLs } from '@cardstack/constants';
-import { useSelectedWallet } from '@cardstack/hooks';
-import { Routes } from '@cardstack/navigation';
+} from '@rainbow-me/components/list';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
 import { useAccountSettings, useSendFeedback } from '@rainbow-me/hooks';
 
-export default function SettingsSection({
-  onPressDev,
-  onPressCurrency,
-  onPressNetwork,
-  onPressNotifications,
-  onPressWCSessions,
-  onPressMyWalletAddress,
-  onPressDS,
-  onPressSecurity,
-}) {
-  const { seedPhrase, hasManualBackup } = useSelectedWallet();
+export default function SettingsScreen() {
+  const { navigate } = useNavigation();
+  const { params } = useRoute();
+  const { hasManualBackup } = useSelectedWallet();
   const { nativeCurrency, network, accountAddress } = useAccountSettings();
 
   const onSendFeedback = useSendFeedback();
@@ -50,19 +43,18 @@ export default function SettingsSection({
     Linking.openURL(`${blockExplorer}/address/${accountAddress}`);
   }, [accountAddress, network]);
 
-  const { navigate } = useNavigation();
+  const onPressSection = useCallback(
+    section => () => {
+      navigate(section, params);
+    },
+    [navigate, params]
+  );
 
-  const onPressBackup = useCallback(() => {
-    navigate(Routes.BACKUP_RECOVERY_PHRASE);
-  }, [navigate]);
-
-  const onPressIAP = useCallback(() => {
-    navigate(Routes.PROFILE_SLUG);
-  }, [navigate]);
-
-  const onPressNewBackup = useCallback(() => {
-    navigate(Routes.BACKUP_EXPLANATION, { seedPhrase });
-  }, [navigate, seedPhrase]);
+  useEffect(() => {
+    if (params?.initialRoute) {
+      navigate(params?.initialRoute, params);
+    }
+  }, [navigate, params]);
 
   return (
     <ScrollView backgroundColor="white">
@@ -70,14 +62,14 @@ export default function SettingsSection({
         <ListItem
           icon={<Icon color="settingsTeal" name="camera-icon" />}
           label="My Wallet Address"
-          onPress={onPressMyWalletAddress}
+          onPress={onPressSection(Routes.MY_WALLET_ADDRESS_SECTION)}
         >
           <ListItemArrowGroup />
         </ListItem>
         <ListItem
           icon={<Icon color="settingsTeal" name="walletConnect" />}
           label="WalletConnect Sessions"
-          onPress={onPressWCSessions}
+          onPress={onPressSection(Routes.WCSESSIONS_SECTION)}
           testID="walletconnect-section"
         >
           <ListItemArrowGroup />
@@ -85,7 +77,7 @@ export default function SettingsSection({
         <ListItem
           icon={<Icon color="settingsTeal" name="cloud" />}
           label="Network"
-          onPress={onPressNetwork}
+          onPress={onPressSection(Routes.NETWORK_SECTION)}
           testID="network-section"
         >
           <ListItemArrowGroup>
@@ -95,7 +87,7 @@ export default function SettingsSection({
         <ListItem
           icon={<Icon color="settingsTeal" name="dollar-sign" />}
           label="Currency"
-          onPress={onPressCurrency}
+          onPress={onPressSection(Routes.CURRENCY_SECTION)}
           testID="currency-section"
         >
           <ListItemArrowGroup>{nativeCurrency || ''}</ListItemArrowGroup>
@@ -103,7 +95,7 @@ export default function SettingsSection({
         <ListItem
           icon={<Icon color="settingsTeal" name="bell" />}
           label="Notifications"
-          onPress={onPressNotifications}
+          onPress={onPressSection(Routes.NOTIFICATIONS_SECTION)}
           testID="notifications-section"
         >
           <ListItemArrowGroup />
@@ -111,7 +103,7 @@ export default function SettingsSection({
         <ListItem
           icon={<Icon color="settingsTeal" name="lock" />}
           label="Security"
-          onPress={onPressSecurity}
+          onPress={onPressSection(Routes.SECURITY_SECTION)}
         >
           <ListItemArrowGroup />
         </ListItem>
@@ -121,7 +113,7 @@ export default function SettingsSection({
         <ListItem
           icon={<Icon color="settingsTeal" name="refresh" />}
           label="Backup"
-          onPress={onPressBackup}
+          onPress={onPressSection(Routes.BACKUP_RECOVERY_PHRASE)}
           testID="backup-section"
         >
           <ListItemArrowGroup showArrow={false}>
@@ -164,24 +156,14 @@ export default function SettingsSection({
           <ListItem
             icon={<Icon color="red" name="smartphone" />}
             label="Developer Settings"
-            onPress={onPressDev}
+            onPress={onPressSection(Routes.DEV_SECTION)}
             testID="developer-section"
           />
           <ListFooter height={10} />
           <ListItem
             icon={<Icon color="black" name="archive" />}
             label="Design System"
-            onPress={onPressDS}
-          />
-          <ListItem
-            icon={<Icon color="black" name="shopping-cart" />}
-            label="Onboarding: Profile Purchase"
-            onPress={onPressIAP}
-          />
-          <ListItem
-            icon={<Icon color="black" name="upload-cloud" />}
-            label="Onboarding: Backup Flow"
-            onPress={onPressNewBackup}
+            onPress={onPressSection(Routes.DESIGN_SYSTEM)}
           />
         </>
       )}

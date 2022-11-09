@@ -11,7 +11,6 @@ import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 import { useGetProfileUnfulfilledJobQuery } from '@cardstack/services';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
-import { SettingsPages } from '@rainbow-me/screens/SettingsModal';
 
 type ProfileScreenParamsType = RouteType<{
   profileCreationJobID?: string;
@@ -71,8 +70,8 @@ export const useProfileScreen = () => {
   );
 
   const redirectToSwitchNetwork = useCallback(() => {
-    navigate(Routes.SETTINGS_MODAL, {
-      initialRoute: SettingsPages.network.key,
+    navigate(Routes.SETTINGS_SCREEN, {
+      initialRoute: Routes.NETWORK_SECTION,
     });
   }, [navigate]);
 

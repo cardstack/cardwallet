@@ -41,14 +41,12 @@ import {
 import { Device } from '@cardstack/utils';
 
 import SendSheetEOA from '@rainbow-me/screens/SendSheetEOA';
-import SettingsModal from '@rainbow-me/screens/SettingsModal';
 
 import {
   dismissAndroidKeyboardOnClose,
   horizontalInterpolator,
   overlayPreset,
   sheetPreset,
-  slideLeftToRightPreset,
 } from './presetOptions';
 import { MainRoutes, Routes } from './routes';
 
@@ -119,10 +117,6 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   WALLET_CONNECT_REDIRECT_SHEET: {
     component: WalletConnectRedirectSheet,
     options: sheetPreset({ bounce: false, backgroundOpacity: 'half' }),
-  },
-  SETTINGS_MODAL: {
-    component: SettingsModal,
-    options: { ...slideLeftToRightPreset, gestureEnabled: false },
   },
   TRANSFER_CARD: {
     component: TransferCardScreen,

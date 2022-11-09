@@ -31,7 +31,11 @@ import PinAuthenticationScreen from '@rainbow-me/screens/PinAuthenticationScreen
 
 import { createCustomStackNavigator } from './customNavigator';
 import { useCardstackMainScreens } from './hooks';
-import { ProfileScreenGroup, BackupScreenGroup } from './screenGroups';
+import {
+  ProfileScreenGroup,
+  BackupScreenGroup,
+  SettingsGroup,
+} from './screenGroups';
 
 import {
   dismissAndroidKeyboardOnClose,
@@ -230,10 +234,8 @@ export const StackNavigator = () => {
       )}
       {SharedScreens({ navigationKey })}
       {ProfileScreenGroup({ Stack })}
-      {BackupScreenGroup({
-        Stack,
-        navigationKey,
-      })}
+      {BackupScreenGroup({ Stack, navigationKey })}
+      {SettingsGroup({ Stack })}
     </Stack.Navigator>
   );
 };

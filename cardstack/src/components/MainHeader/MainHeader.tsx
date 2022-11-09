@@ -39,7 +39,7 @@ const MainHeader = ({
   // this should use the rewards pool length in the future as more rewards programs are added
   const rewardsQuantity = 1;
 
-  const onMenuPress = useCallback(() => navigate(Routes.SETTINGS_MODAL), [
+  const onMenuPress = useCallback(() => navigate(Routes.SETTINGS_SCREEN), [
     navigate,
   ]);
 

@@ -17,7 +17,6 @@ export const MainRoutes = {
   PAYMENT_CONFIRMATION_SHEET: 'PaymentConfirmationSheet',
   MERCHANT_TRANSACTION_SHEET: 'MerchantTransactionSheet',
   CHOOSE_PREPAIDCARD_SHEET: 'ChoosePrepaidCardSheet',
-  SETTINGS_MODAL: 'SettingModal',
   TRANSFER_CARD: 'TransferCardScreen',
   REWARDS_CENTER_SCREEN: 'RewardsCenterScreen',
   REWARDS_REGISTER_SHEET: 'RewardsRegisterSheet',
@@ -46,7 +45,6 @@ const TabRoutes = {
 const NonMigratedRoutes = {
   CHANGE_WALLET_SHEET: 'ChangeWalletSheet',
   PIN_AUTHENTICATION_SCREEN: 'PinAuthenticationScreen',
-  SETTINGS_MODAL: 'SettingsModal',
 } as const;
 
 const SharedRoutes = {
@@ -80,6 +78,18 @@ const BackupRoutes = {
   BACKUP_RESTORE_PHRASE: 'BackupRestorePhraseScreen',
 };
 
+const SettingsRoutes = {
+  SETTINGS_SCREEN: 'SettingScreen',
+  CURRENCY_SECTION: 'CurrencySection',
+  DEV_SECTION: 'DevSection',
+  DESIGN_SYSTEM: 'DesignSystem',
+  NETWORK_SECTION: 'NetworkSection',
+  NOTIFICATIONS_SECTION: 'NotificationsSection',
+  WCSESSIONS_SECTION: 'WCSessionsSection',
+  MY_WALLET_ADDRESS_SECTION: 'MyWalletAddressSection',
+  SECURITY_SECTION: 'SecuritySettingsSection',
+};
+
 export const Routes = {
   UNLOCK_SCREEN: 'UnlockScreen',
   ...SharedRoutes,
@@ -88,4 +98,5 @@ export const Routes = {
   ...MainRoutes,
   ...ProfileRoutes,
   ...BackupRoutes,
+  ...SettingsRoutes,
 } as const;
