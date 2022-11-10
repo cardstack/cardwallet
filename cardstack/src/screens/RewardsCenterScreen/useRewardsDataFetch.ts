@@ -26,13 +26,14 @@ const useRewardsDataFetch = () => {
       params: {
         accountAddress,
         nativeCurrency,
+        rewardProgramId: defaultRewardProgramId,
       },
       options: {
         skip: !accountAddress || isLayer1(network),
         refetchOnMountOrArgChange: true,
       },
     }),
-    [accountAddress, nativeCurrency, network]
+    [accountAddress, nativeCurrency, defaultRewardProgramId, network]
   );
 
   const {

@@ -63,8 +63,8 @@ const getValidProofs = async ({
 
   const proofs = await rewardPoolInstance.getProofs(
     accountAddress,
-    undefined,
     rewardProgramId,
+    undefined,
     tokenAddress,
     false
   );
@@ -108,6 +108,7 @@ export const fetchRewardsSafe = async ({
 
 export const fetchRewardPoolTokenBalances = async ({
   accountAddress,
+  rewardProgramId,
   safeAddress,
   nativeCurrency,
 }: RewardsSafeQueryParams) => {
@@ -116,18 +117,17 @@ export const fetchRewardPoolTokenBalances = async ({
   const rewardTokens = safeAddress
     ? await rewardPoolInstance.rewardTokenBalancesWithoutDust(
         accountAddress,
+        rewardProgramId,
         safeAddress
       )
-    : await rewardPoolInstance.rewardTokenBalances(accountAddress);
+    : await rewardPoolInstance.rewardTokenBalances(
+        accountAddress,
+        rewardProgramId
+      );
 
   const rewardTokensWithPrice = await Promise.all(
     rewardTokens?.map(
-      async ({
-        tokenSymbol: symbol,
-        balance,
-        tokenAddress,
-        rewardProgramId,
-      }) => {
+      async ({ tokenSymbol: symbol, balance, tokenAddress }) => {
         const tokenWithPrice = await addNativePriceToToken(
           ({
             token: { symbol },
@@ -137,7 +137,11 @@ export const fetchRewardPoolTokenBalances = async ({
           true
         );
 
-        return { ...tokenWithPrice, tokenAddress, rewardProgramId };
+        return {
+          ...tokenWithPrice,
+          tokenAddress,
+          rewardProgramId,
+        };
       }
     )
   );
