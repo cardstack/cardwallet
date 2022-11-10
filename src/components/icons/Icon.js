@@ -40,7 +40,6 @@ import InfoIcon from './svg/InfoIcon';
 import LinkIcon from './svg/LinkIcon';
 import LockIcon from './svg/LockIcon';
 import MinusCircledIcon from './svg/MinusCircledIcon';
-import OfflineIcon from './svg/OfflineIcon';
 import PasscodeIcon from './svg/PasscodeIcon';
 import PinIcon from './svg/PinIcon';
 import PlusCircledIcon from './svg/PlusCircledIcon';
@@ -104,7 +103,6 @@ const IconTypes = {
   lock: LockIcon,
   link: LinkIcon,
   minusCircled: MinusCircledIcon,
-  offline: OfflineIcon,
   passcode: PasscodeIcon,
   pin: PinIcon,
   plus: PlusIcon,

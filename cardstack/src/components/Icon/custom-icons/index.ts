@@ -41,6 +41,7 @@ export const customIcons = {
   rewards: require('./rewards').default,
   house: require('./house').default,
   'chevron-left-no-box': require('./chevron-left-no-box').default,
+  offline: require('./offline').default,
 };
 
 export type CustomIconNames = keyof typeof customIcons;
