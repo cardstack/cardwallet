@@ -27,7 +27,7 @@ describe('Merchant utils', () => {
 
     const merchantName = 'MerchantName';
     const amountWithSymbol = '$1.00 USD';
-    const paymentRequestLink = `cardwallet://pay/xdai/0xd6F3F565E207A4e4B1b2E51F1A86d26D3DBf5811?amount=100&currency=USD`;
+    const paymentRequestLink = `cardwallet://pay/gnosis/0xd6F3F565E207A4e4B1b2E51F1A86d26D3DBf5811?amount=100&currency=USD`;
 
     const title = `${merchantName} Requests ${amountWithSymbol}`;
     const message = paymentRequestLink;

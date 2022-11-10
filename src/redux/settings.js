@@ -126,7 +126,7 @@ export const INITIAL_STATE = {
   chainId: 100,
   language: 'en',
   nativeCurrency: 'USD',
-  network: networkTypes.xdai,
+  network: networkTypes.gnosis,
 };
 
 export default (state = INITIAL_STATE, action) => {

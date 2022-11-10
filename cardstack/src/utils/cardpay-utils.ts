@@ -18,11 +18,11 @@ import {
 import { Network } from '@rainbow-me/helpers/networkTypes';
 export const NATIVE_TOKEN_SYMBOLS = ['eth', 'spoa', 'xdai', 'keth'];
 
-const MAINNETS = [Network.mainnet, Network.xdai];
+const MAINNETS = [Network.mainnet, Network.gnosis];
 
 const LAYER_1_NETWORKS = [Network.mainnet, Network.kovan];
 
-const LAYER_2_NETWORKS = [Network.xdai, Network.sokol];
+const LAYER_2_NETWORKS = [Network.gnosis, Network.sokol];
 
 const CPXD_TOKEN_SUFFIX = '.CPXD';
 

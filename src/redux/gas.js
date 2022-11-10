@@ -148,7 +148,7 @@ export const gasPricesStartPolling = () => async (dispatch, getState) => {
             type: GAS_PRICES_SUCCESS,
           });
         } else {
-          const apiBaseUrl = getConstantByNetwork('apiBaseUrl', Network.xdai);
+          const apiBaseUrl = getConstantByNetwork('apiBaseUrl', Network.gnosis);
 
           const response = await fetch(`${apiBaseUrl}/v1/gas-price-oracle`);
           const data = await response.json();

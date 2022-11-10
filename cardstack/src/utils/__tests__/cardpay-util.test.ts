@@ -86,9 +86,8 @@ it('parseLinearGradient with no gradient', () => {
 });
 
 const layer2Cases = [
-  'xdai',
-  Network.xdai,
-  networkTypes.xdai,
+  Network.gnosis,
+  networkTypes.gnosis,
   Network.sokol,
   'sokol',
   networkTypes.sokol,
@@ -107,9 +106,8 @@ const mainnetCases = [
   'mainnet',
   Network.mainnet,
   networkTypes.mainnet,
-  'xdai',
-  Network.xdai,
-  networkTypes.xdai,
+  Network.gnosis,
+  networkTypes.gnosis,
 ];
 
 const testeNetCases = [

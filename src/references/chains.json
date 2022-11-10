@@ -16,7 +16,7 @@
   {
     "name": "Gnosis Chain",
     "short_name": "gnosis",
-    "network": "xdai",
+    "network": "gnosis",
     "chain_id": 100,
     "network_id": 100
   },

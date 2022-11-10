@@ -11,7 +11,7 @@ describe('BalanceCoinRow', () => {
   let item: any, props: any;
 
   beforeEach(() => {
-    (useRainbowSelector as jest.Mock).mockImplementation(() => 'xdai');
+    (useRainbowSelector as jest.Mock).mockImplementation(() => 'gnosis');
 
     item = {
       isHidden: false,

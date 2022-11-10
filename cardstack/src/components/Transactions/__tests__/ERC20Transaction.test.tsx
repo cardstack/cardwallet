@@ -60,7 +60,7 @@ describe('ERC20Transaction', () => {
     }));
 
     (useRainbowSelector as jest.Mock).mockImplementation(cb =>
-      cb({ settings: { network: 'xdai' } })
+      cb({ settings: { network: 'gnosis' } })
     );
   });
 

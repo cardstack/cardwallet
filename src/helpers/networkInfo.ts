@@ -1,14 +1,14 @@
 import { networkTypes } from './networkTypes';
 
 export const networkInfo = {
-  [networkTypes.xdai]: {
+  [networkTypes.gnosis]: {
     disabled: false,
     exchange_enabled: true,
     faucet_url: null,
     name: 'Gnosis Chain',
     shortName: 'Gnosis',
     layer: 2,
-    value: networkTypes.xdai,
+    value: networkTypes.gnosis,
     hidden: false,
   },
   [networkTypes.sokol]: {

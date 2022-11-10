@@ -3,7 +3,7 @@ export const mockRewardSafeForProgram = [
     address: '0x107c1F2e2cE594cCb60629eaf33cF703419E01fb',
     createdAt: 1627335495,
     owners: ['0x8a40AFffb53f4F953a204cAE087219A28771df9d'],
-    rewardProgramId: '0x979C9F171fb6e9BC501Aa7eEd71ca8dC27cF1185', // xdai default ID
+    rewardProgramId: '0x979C9F171fb6e9BC501Aa7eEd71ca8dC27cF1185', // gnosis default ID
     tokens: [
       {
         balance: {
