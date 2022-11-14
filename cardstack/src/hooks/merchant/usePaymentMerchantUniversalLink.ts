@@ -2,6 +2,7 @@ import {
   MerchantSafe,
   isSupportedCurrency,
   NativeCurrency,
+  getConstantByNetwork,
 } from '@cardstack/cardpay-sdk';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { orderBy } from 'lodash';
@@ -16,7 +17,6 @@ import {
 } from '@cardstack/types';
 import { isLayer1, useWorker } from '@cardstack/utils';
 
-import { networkInfo } from '@rainbow-me/helpers/networkInfo';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
@@ -43,6 +43,8 @@ export const usePaymentMerchantUniversalLink = () => {
     network: accountNetwork,
     nativeCurrency,
   } = useAccountSettings();
+
+  const networkName = getConstantByNetwork('name', accountNetwork);
 
   const { goBack } = useNavigation();
 
@@ -105,7 +107,7 @@ export const usePaymentMerchantUniversalLink = () => {
     if (qrCodeNetwork && accountNetwork && qrCodeNetwork !== accountNetwork) {
       InteractionManager.runAfterInteractions(() => {
         handleAlertError(
-          `This is a ${networkInfo[qrCodeNetwork].name} request, please confirm your device is on ${networkInfo[qrCodeNetwork].name}.`,
+          `This is a ${networkName} request, please confirm your device is on ${networkName}.`,
           'Oops!',
           [
             {
@@ -118,7 +120,7 @@ export const usePaymentMerchantUniversalLink = () => {
 
       return;
     }
-  }, [accountNetwork, qrCodeNetwork, goBack, isLoading]);
+  }, [accountNetwork, qrCodeNetwork, goBack, isLoading, networkName]);
 
   const data: PayMerchantDecodedData & { qrCodeNetwork: string } = useMemo(
     () => ({

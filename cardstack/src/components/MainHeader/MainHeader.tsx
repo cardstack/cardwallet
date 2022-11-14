@@ -1,3 +1,4 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useNavigation } from '@react-navigation/native';
 import React, { memo, ReactNode, useCallback } from 'react';
 
@@ -10,7 +11,6 @@ import {
 import { Routes } from '@cardstack/navigation';
 import useRewardsDataFetch from '@cardstack/screens/RewardsCenterScreen/useRewardsDataFetch';
 
-import { networkInfo } from '@rainbow-me/helpers/networkInfo';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
 import { ContainerProps } from '../Container';
@@ -47,6 +47,8 @@ const MainHeader = ({
     navigate(Routes.REWARDS_CENTER_SCREEN);
   }, [navigate]);
 
+  const networkName = getConstantByNetwork('name', network);
+
   return (
     <MainHeaderWrapper {...containerProps}>
       {!leftIcon ? (
@@ -69,7 +71,7 @@ const MainHeader = ({
           )}
           {showNetwork && (
             <Text color="backgroundLightGray" size="xxs">
-              {networkInfo[network].name}
+              {networkName}
             </Text>
           )}
         </Container>

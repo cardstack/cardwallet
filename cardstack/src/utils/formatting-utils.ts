@@ -83,3 +83,5 @@ export const transformObjKeysToCamelCase = <ObjType>(obj: ObjType) =>
 
 export const addLeftZero = (value: string | number | undefined) =>
   value ? ('0' + value).slice(-2) : '00';
+
+export const shortNetworkName = (value: string) => value.split(' ')[0];

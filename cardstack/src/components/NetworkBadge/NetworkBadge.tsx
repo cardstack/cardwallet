@@ -1,14 +1,19 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import React from 'react';
 
 import { Container, Text } from '@cardstack/components';
+import { shortNetworkName } from '@cardstack/utils';
 
-import { networkInfo } from '@rainbow-me/helpers/networkInfo';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 import { ContainerProps } from '../Container';
 
 export const NetworkBadge = (props: ContainerProps & { text?: string }) => {
   const networkName = useRainbowSelector(state => state.settings.network);
+
+  const displayNetworkName = shortNetworkName(
+    getConstantByNetwork('name', networkName)
+  ).toUpperCase();
 
   return (
     <Container flexDirection="row" {...props}>
@@ -19,8 +24,7 @@ export const NetworkBadge = (props: ContainerProps & { text?: string }) => {
         borderRadius={50}
       >
         <Text color="blueDarkest" fontSize={9} weight="bold">
-          {props.text ||
-            `ON ${networkInfo[networkName].shortName.toUpperCase()}`}
+          {props.text || `ON ${displayNetworkName}`}
         </Text>
       </Container>
     </Container>
