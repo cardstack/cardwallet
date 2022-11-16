@@ -38,7 +38,7 @@ jest.mock('@rainbow-me/hooks', () => ({
 }));
 
 jest.mock('@rainbow-me/redux/hooks', () => ({
-  useRainbowSelector: jest.fn().mockImplementation(() => 'xdai'),
+  useRainbowSelector: jest.fn().mockImplementation(() => 'gnosis'),
 }));
 
 // Mock useClaimAllRevenue

@@ -93,7 +93,7 @@ export const collectiblesRefreshState = () => async (
     case NetworkTypes.mainnet:
       // OpenSea API only supports Ethereum mainnet
       return dispatch(fetchNFTsViaOpenSea());
-    case NetworkTypes.xdai:
+    case NetworkTypes.gnosis:
     case NetworkTypes.sokol:
       return dispatch(fetchNFTsViaRpcNode());
     default:

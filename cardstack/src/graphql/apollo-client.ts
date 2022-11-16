@@ -8,8 +8,8 @@ import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 
 import { networkTypes } from '@rainbow-me/networkTypes';
 
-const xdaiLink = new HttpLink({
-  uri: getConstantByNetwork('subgraphURL', networkTypes.xdai),
+const gnosisLink = new HttpLink({
+  uri: getConstantByNetwork('subgraphURL', networkTypes.gnosis),
 });
 
 const sokolLink = new HttpLink({
@@ -38,8 +38,8 @@ const cache = new InMemoryCache({
 });
 
 const link = ApolloLink.split(
-  operation => operation.getContext().network === networkTypes.xdai,
-  xdaiLink,
+  operation => operation.getContext().network === networkTypes.gnosis,
+  gnosisLink,
   sokolLink
 );
 

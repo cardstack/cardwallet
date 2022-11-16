@@ -15,7 +15,6 @@ import {
   ListItemArrowGroup,
   ListItemDivider,
 } from '@rainbow-me/components/list';
-import networkInfo from '@rainbow-me/helpers/networkInfo';
 import { useAccountSettings, useSendFeedback } from '@rainbow-me/hooks';
 
 export default function SettingsScreen() {
@@ -23,7 +22,7 @@ export default function SettingsScreen() {
   const { params } = useRoute();
   const { hasManualBackup } = useSelectedWallet();
   const { nativeCurrency, network, accountAddress } = useAccountSettings();
-
+  const networkName = getConstantByNetwork('name', network);
   const onSendFeedback = useSendFeedback();
 
   const onPressDiscord = useCallback(() => {
@@ -80,9 +79,7 @@ export default function SettingsScreen() {
           onPress={onPressSection(Routes.NETWORK_SECTION)}
           testID="network-section"
         >
-          <ListItemArrowGroup>
-            {networkInfo?.[network]?.name}
-          </ListItemArrowGroup>
+          <ListItemArrowGroup>{networkName}</ListItemArrowGroup>
         </ListItem>
         <ListItem
           icon={<Icon color="settingsTeal" name="dollar-sign" />}

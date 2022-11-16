@@ -19,7 +19,7 @@ import logger from 'logger';
 const HUBTOKEN_KEY = 'hubToken';
 
 export const getHubUrl = (network: Network): string =>
-  network === Network.xdai ? HUB_URL : HUB_URL_STAGING;
+  network === Network.gnosis ? HUB_URL : HUB_URL_STAGING;
 
 const axiosConfig = (authToken: string) => {
   return {

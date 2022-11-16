@@ -1,9 +1,10 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Animated } from 'react-native';
 
 import { CenteredContainer, Icon, Text } from '@cardstack/components';
+import { shortNetworkName } from '@cardstack/utils';
 
-import { networkInfo } from '@rainbow-me/helpers/networkInfo';
 import {
   useAccountSettings,
   useDimensions,
@@ -29,7 +30,7 @@ export const NetworkToast = () => {
   const isConnected = useInternetStatus();
   const { network } = useAccountSettings();
 
-  const networkName = networkInfo[network].shortName;
+  const networkName = shortNetworkName(getConstantByNetwork('name', network));
   const { width: deviceWidth, height: deviceHeight } = useDimensions();
 
   const animation = useRef(new Animated.Value(0)).current;

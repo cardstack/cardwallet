@@ -34,7 +34,6 @@ import networkTypes from '@rainbow-me/helpers/networkTypes';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import { DEFAULT_HD_PATH, WalletLibraryType } from '@rainbow-me/model/wallet';
 import store from '@rainbow-me/redux/store';
-import { chains } from '@rainbow-me/references';
 
 import logger from 'logger';
 
@@ -117,24 +116,6 @@ const getDataString = (func, arrVals) => {
   for (let i = 0; i < arrVals.length; i++) val += padLeft(arrVals[i], 64);
   const data = func + val;
   return data;
-};
-
-/**
- * @desc get network string from chainId
- * @param  {Number} chainId
- */
-const getNetworkFromChainId = chainId => {
-  const networkData = find(chains, ['chain_id', chainId]);
-  return get(networkData, 'network', networkTypes.mainnet);
-};
-
-/**
- * @desc get chainId from network string
- * @param  {String} network
- */
-const getChainIdFromNetwork = network => {
-  const chainData = find(chains, ['network', network]);
-  return get(chainData, 'chain_id', 1);
 };
 
 /**
@@ -288,12 +269,10 @@ export default {
   deriveAccountFromWalletInput,
   getAsset,
   getBalanceAmount,
-  getChainIdFromNetwork,
   getDataString,
   getEthPriceUnit,
   getHash,
   getNativeTokenAsset,
-  getNetworkFromChainId,
   hasPreviousTransactions,
   isEthAddress,
   openTokenEtherscanURL,

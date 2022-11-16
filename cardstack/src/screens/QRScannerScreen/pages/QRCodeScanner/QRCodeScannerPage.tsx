@@ -1,3 +1,4 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useIsFocused } from '@react-navigation/native';
 import React, { memo, useMemo } from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
@@ -13,7 +14,6 @@ import {
 import { useBooleanState } from '@cardstack/hooks';
 import { colors } from '@cardstack/theme';
 
-import { networkInfo } from '@rainbow-me/helpers/networkInfo';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
 import PeopleIllustrationBackground from '../../../../assets/people-ill-bg.png';
@@ -43,6 +43,7 @@ const QRCodeScannerPage = (props: QRCodeScannerProps) => {
   const { result: isEmulator } = useIsEmulator();
 
   const { network } = useAccountSettings();
+  const networkName = getConstantByNetwork('name', network);
 
   const { onScan, isLoading } = useScanner(props);
 
@@ -108,7 +109,7 @@ const QRCodeScannerPage = (props: QRCodeScannerProps) => {
           <Container justifyContent="space-between" flex={0.8}>
             <Container flex={0.6}>
               <Text textAlign="center" fontSize={20} color="white">
-                {strings.scanQRCodeText(networkInfo[network].name)}
+                {strings.scanQRCodeText(networkName)}
               </Text>
             </Container>
             <BottomIconsSection flex={0.6} />

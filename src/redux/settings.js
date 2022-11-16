@@ -1,3 +1,4 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import {
   getNativeCurrency,
   getNetwork,
@@ -9,7 +10,7 @@ import { etherWeb3SetHttpProvider } from '../handlers/web3';
 import networkTypes from '../helpers/networkTypes';
 import { updateLanguage } from '../languages';
 
-import { ethereumUtils, promiseUtils } from '../utils';
+import { promiseUtils } from '../utils';
 import { dataResetState } from './data';
 import {
   fallbackExplorerClearState,
@@ -21,6 +22,7 @@ import { requestsResetState } from '@cardstack/redux/requests';
 import { getExchangeRatesQuery } from '@cardstack/services/hub/hub-service';
 import { restartApp } from '@cardstack/utils';
 import logger from 'logger';
+
 // -- Constants ------------------------------------------------------------- //
 
 const SETTINGS_UPDATE_SETTINGS_ADDRESS =
@@ -51,7 +53,7 @@ export const settingsLoadState = () => async dispatch => {
 export const settingsLoadNetwork = () => async dispatch => {
   try {
     const network = await getNetwork();
-    const chainId = ethereumUtils.getChainIdFromNetwork(network);
+    const chainId = getConstantByNetwork('chainId', network);
     await etherWeb3SetHttpProvider(network);
 
     // Creates tag on Sentry labeling the current network.
@@ -126,7 +128,7 @@ export const INITIAL_STATE = {
   chainId: 100,
   language: 'en',
   nativeCurrency: 'USD',
-  network: networkTypes.xdai,
+  network: networkTypes.gnosis,
 };
 
 export default (state = INITIAL_STATE, action) => {
