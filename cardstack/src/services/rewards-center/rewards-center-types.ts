@@ -1,4 +1,9 @@
-import { NativeCurrency, RewardSafe } from '@cardstack/cardpay-sdk';
+import {
+  NativeCurrency,
+  RewardSafe,
+  Proof,
+  WithSymbol,
+} from '@cardstack/cardpay-sdk';
 import { TransactionReceipt } from 'web3-core';
 
 import { EthersSignerParams } from '@cardstack/models/ethers-wallet';
@@ -75,3 +80,28 @@ export interface RewardWithdrawParams
     Omit<RewardsPoolSignedBaseParams, 'rewardProgramId'> {}
 
 export type RewardWithdrawGasEstimateParams = RewardWithdrawBaseParams;
+
+export interface RewardsValidProofsParams {
+  accountAddress: string;
+  rewardProgramId: string;
+  nativeCurrency: NativeCurrency;
+}
+
+declare type WithTokenBalance<T> = T & {
+  token: {
+    symbol: string;
+  };
+  balance: {
+    amount: string;
+    display: string;
+    wei: string;
+  };
+  native: {
+    balance: {
+      amount: number;
+      display: string;
+    };
+  };
+};
+
+export type RewardValidProofsResult = WithTokenBalance<WithSymbol<Proof>>[];

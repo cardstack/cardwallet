@@ -8,12 +8,14 @@ import {
   claimAllRewards,
   fetchRewardPoolTokenBalances,
   fetchRewardsSafe,
+  fetchValidProofsWithToken,
   getClaimRewardsGasEstimate,
   getClaimAllRewardsGasEstimate,
   getRegisterGasEstimate,
   getWithdrawGasEstimate,
   registerToRewardProgram,
   withdrawFromRewardSafe,
+  getRewardProgramInfo,
 } from './rewards-center-service';
 import {
   RegisterGasEstimateQueryParams,
@@ -27,10 +29,25 @@ import {
   RewardWithdrawGasEstimateParams,
   RewardWithdrawParams,
   SuccessfulTransactionReceipt,
+  RewardsValidProofsParams,
+  RewardValidProofsResult,
 } from './rewards-center-types';
 
 const rewardsApi = safesApi.injectEndpoints({
   endpoints: builder => ({
+    getValidRewardsForProgram: builder.query<
+      RewardValidProofsResult,
+      RewardsValidProofsParams
+    >({
+      async queryFn(params) {
+        return queryPromiseWrapper<
+          RewardValidProofsResult,
+          RewardsValidProofsParams
+        >(fetchValidProofsWithToken, params, {
+          errorLogMessage: 'Error fetching reward program proofs',
+        });
+      },
+    }),
     getRewardsSafe: builder.query<
       RewardsSafeQueryResult,
       RewardsSafeQueryParams
@@ -58,6 +75,17 @@ const rewardsApi = safesApi.injectEndpoints({
         });
       },
       providesTags: [CacheTags.REWARDS_POOL],
+    }),
+    getRewardProgramInfo: builder.query<string, string>({
+      async queryFn(params) {
+        return queryPromiseWrapper<string, string>(
+          getRewardProgramInfo,
+          params,
+          {
+            errorLogMessage: 'Error fetching reward program info',
+          }
+        );
+      },
     }),
     getRegisterRewardeeGasEstimate: builder.query<
       number,
@@ -176,10 +204,12 @@ const rewardsApi = safesApi.injectEndpoints({
 });
 
 export const {
+  useGetValidRewardsForProgramQuery,
   useGetRewardsSafeQuery,
   useGetRewardPoolTokenBalancesQuery,
   useRegisterToRewardProgramMutation,
   useClaimRewardsMutation,
+  useGetRewardProgramInfoQuery,
   useLazyGetRegisterRewardeeGasEstimateQuery,
   useWithdrawRewardBalanceMutation,
   useGetRewardWithdrawGasEstimateQuery,

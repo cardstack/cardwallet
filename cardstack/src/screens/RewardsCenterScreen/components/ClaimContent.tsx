@@ -42,7 +42,7 @@ export const ClaimContent = ({ claimList }: ClaimContentProps) => {
     navigate,
   ]);
 
-  const renderClaimList = useCallback(
+  const ClaimList = useMemo(
     () =>
       claimList?.map((item, index) => (
         <RewardRow
@@ -71,7 +71,7 @@ export const ClaimContent = ({ claimList }: ClaimContentProps) => {
           title={strings.register.gasInfoBanner.title}
           message={strings.register.gasInfoBanner.message}
         />
-        {renderClaimList()}
+        {ClaimList}
       </Container>
       <TabHeader />
       <Container padding={5}>

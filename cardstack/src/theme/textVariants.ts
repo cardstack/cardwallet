@@ -79,4 +79,11 @@ export const textVariants = {
     textTransform: 'uppercase',
     ...fontFamilyVariants.bold,
   },
+  sectionTitle: {
+    fontSize: 12,
+    letterSpacing: 1.2,
+    textTransform: 'uppercase',
+    textAlign: 'center',
+    ...fontFamilyVariants.semiBold,
+  },
 };

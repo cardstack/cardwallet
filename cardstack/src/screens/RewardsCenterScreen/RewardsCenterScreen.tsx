@@ -1,15 +1,13 @@
 import React, { useMemo } from 'react';
-import { StyleSheet } from 'react-native';
 
-import { Container, NavigationStackHeader, Image } from '@cardstack/components';
-
-import rewardBanner from '../../assets/rewards-banner.png';
+import { Container, NavigationStackHeader } from '@cardstack/components';
 
 import {
   RegisterContent,
   NoRewardContent,
   ClaimContent,
   RewardLoadingSkeleton,
+  RewardProgramHeader,
 } from './components';
 import { strings } from './strings';
 import { useRewardsCenterScreen } from './useRewardsCenterScreen';
@@ -18,49 +16,57 @@ const RewardsCenterScreen = () => {
   const {
     isRegistered,
     hasRewards,
+    rewards,
     fullBalanceToken,
     isLoading,
+    rewardProgramExplainer,
   } = useRewardsCenterScreen();
 
   const mainPoolRowProps = useMemo(
-    () => ({
-      primaryText: fullBalanceToken?.balance.display || '',
-      subText: fullBalanceToken?.native.balance.display || '',
-      coinSymbol: fullBalanceToken?.token.symbol || '',
-      isClaimable: !!fullBalanceToken?.isClaimable,
-    }),
-    [fullBalanceToken]
+    () =>
+      hasRewards
+        ? {
+            primaryText: fullBalanceToken?.balance.display || '',
+            subText: fullBalanceToken?.native.balance.display || '',
+            coinSymbol: fullBalanceToken?.token.symbol || '',
+            isClaimable: !!fullBalanceToken?.isClaimable,
+          }
+        : undefined,
+    [hasRewards, fullBalanceToken]
+  );
+
+  const rewardsRowProps = useMemo(
+    () =>
+      rewards?.map(reward => ({
+        primaryText: reward?.balance.display || '',
+        subText: reward?.native.balance.display || '',
+        coinSymbol: reward?.token.symbol || '',
+        isClaimable: true,
+      })),
+    [rewards]
   );
 
   return (
     <Container backgroundColor="white" flex={1}>
       <NavigationStackHeader title={strings.navigation.title} />
       <Container backgroundColor="white" flex={1}>
-        <Image source={rewardBanner} style={styles.headerImage} />
+        <RewardProgramHeader title={rewardProgramExplainer} />
         {isLoading ? (
           <RewardLoadingSkeleton />
         ) : (
           <Container flex={1}>
             {!isRegistered &&
-              (hasRewards ? (
+              (mainPoolRowProps ? (
                 <RegisterContent {...mainPoolRowProps} />
               ) : (
                 <NoRewardContent />
               ))}
-            {isRegistered && (
-              <ClaimContent
-                claimList={hasRewards ? [mainPoolRowProps] : undefined}
-              />
-            )}
+            {isRegistered && <ClaimContent claimList={rewardsRowProps} />}
           </Container>
         )}
       </Container>
     </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  headerImage: { width: '100%' },
-});
 
 export default RewardsCenterScreen;
