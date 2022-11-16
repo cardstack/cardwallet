@@ -52,13 +52,6 @@ const getRewardManagerInstance = async (signedParams?: EthersSignerParams) => {
 
 let cachedValidProofs: WithSymbol<Proof>[] | null = null;
 
-// TODO: func to get proofs and hidrate token info
-/**
-    const web3 = await Web3Instance.get();
-    const assets = await getSDK('Assets', web3);
-    const balance = await assets.getBalanceForToken(address, accountAddress);
- */
-
 const getValidProofs = async ({
   tokenAddress,
   rewardProgramId,
@@ -114,8 +107,6 @@ export const fetchValidProofsWithToken = async ({
     })
   );
 
-  console.log('::: proofs', JSON.stringify(proofsWithNativeCurrency, null, 2));
-
   return proofsWithNativeCurrency;
 };
 
@@ -155,10 +146,6 @@ export const fetchRewardPoolTokenBalances = async ({
 }: RewardsSafeQueryParams) => {
   const rewardPoolInstance = await getRewardsPoolInstance();
 
-  // TODO: 1 Check if this calls are already correctly filtering by rewardProgramId : they are
-  // if so, filters in useRewardsDataFetch aren't needed anymore.
-
-  // TODO: 2 Check if rewardProgram.balances can be used to replace the below
   const rewardTokens = safeAddress
     ? await rewardPoolInstance.rewardTokenBalancesWithoutDust(
         accountAddress,
@@ -299,7 +286,6 @@ export const getRewardProgramInfo = async (rewardProgramId: string) => {
   const rewardManager = await getRewardManagerInstance();
 
   const programInfo = await rewardManager.getRewardProgramInfo(rewardProgramId);
-  console.log('::: program info', JSON.stringify(programInfo));
 
   return programInfo.programExplainer;
 };
