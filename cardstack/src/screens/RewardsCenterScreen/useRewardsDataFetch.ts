@@ -11,7 +11,7 @@ import { findByRewardProgramId, isLayer1 } from '@cardstack/utils';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
 
-const rewardDefaultProgramId = {
+const rewardDefaultProgramId: { [key in NetworkType]?: string } = {
   [NetworkType.sokol]: '0x0885ce31D73b63b0Fcb1158bf37eCeaD8Ff0fC72',
   [NetworkType.gnosis]: '0x979C9F171fb6e9BC501Aa7eEd71ca8dC27cF1185',
 };
@@ -19,7 +19,7 @@ const rewardDefaultProgramId = {
 const useRewardsDataFetch = () => {
   const { accountAddress, nativeCurrency, network } = useAccountSettings();
 
-  const defaultRewardProgramId = rewardDefaultProgramId[network];
+  const defaultRewardProgramId = rewardDefaultProgramId[network] as string;
 
   const query = useMemo(
     () => ({
