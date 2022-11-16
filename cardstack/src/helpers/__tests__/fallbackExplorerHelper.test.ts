@@ -1,8 +1,7 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
 
 import { reduceAssetsWithPriceChartAndBalances } from '@cardstack/helpers/fallbackExplorerHelper';
-
-import { Network } from '@rainbow-me/helpers/networkTypes';
+import { NetworkType } from '@cardstack/types';
 
 import { fetchedData, inputData, updatedData } from '../__mocks__/dataMocks';
 
@@ -54,7 +53,7 @@ describe('Fallback Explorer Helpers', () => {
       prices,
       chartData,
       formattedNativeCurrency: 'usd',
-      network: Network.sokol,
+      network: NetworkType.sokol,
       nativeCurrency: NativeCurrency.USD,
       accountAddress: '0x000000',
     });

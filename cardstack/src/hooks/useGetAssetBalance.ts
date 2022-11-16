@@ -2,14 +2,14 @@ import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useCallback, useEffect, useState } from 'react';
 
 import { getOnChainAssetBalance } from '@cardstack/services/assets';
+import { NetworkType } from '@cardstack/types';
 
 import { Asset } from '@rainbow-me/entities';
-import { Network } from '@rainbow-me/helpers/networkTypes';
 
 interface UseGetAssetBalanceParams {
   asset: Asset;
   accountAddress: string;
-  network: Network;
+  network: NetworkType;
 }
 
 /**

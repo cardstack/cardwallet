@@ -1,10 +1,10 @@
 import { NetworkStatus } from '@apollo/client';
 
 import { useGetAccountTransactionHistoryDataQuery } from '@cardstack/graphql';
+import { NetworkType } from '@cardstack/types';
 import { isLayer1, isLayer2 } from '@cardstack/utils';
 
 import { useAccountTransactions } from '@rainbow-me/hooks';
-import { Network } from '@rainbow-me/networkTypes';
 import logger from 'logger';
 
 import { useRainbowSelector } from '../../../../src/redux/hooks';
@@ -18,7 +18,7 @@ const useLayer2Transactions = () => {
     state.settings.network,
   ]);
 
-  const isNotLayer2 = !isLayer2(network as Network);
+  const isNotLayer2 = !isLayer2(network as NetworkType);
 
   const {
     data,
@@ -75,7 +75,7 @@ const useLayer2Transactions = () => {
 export const useFullTransactionList = () => {
   const network = useRainbowSelector(
     state => state.settings.network
-  ) as Network;
+  ) as NetworkType;
 
   const layer1Data = useAccountTransactions();
   const layer2Data = useLayer2Transactions();

@@ -4,16 +4,16 @@ import Web3 from 'web3';
 import { WebsocketProvider } from 'web3-core';
 
 import { remoteFlags } from '@cardstack/services/remote-config';
+import { NetworkType } from '@cardstack/types';
 import { isLayer1 } from '@cardstack/utils';
 
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
-import { Network } from '@rainbow-me/helpers/networkTypes';
 import logger from 'logger';
 
 let provider: WebsocketProvider | null = null;
 
 const Web3WsProvider = {
-  get: async (network?: Network) => {
+  get: async (network?: NetworkType) => {
     if (provider === null || network || !provider?.connected) {
       const currentNetwork = network || (await getNetwork());
 
@@ -22,7 +22,7 @@ const Web3WsProvider = {
       );
 
       const shouldUseSokolHttpNode =
-        currentNetwork === Network.sokol && remoteFlags().useHttpSokolNode;
+        currentNetwork === NetworkType.sokol && remoteFlags().useHttpSokolNode;
 
       const hubConfigResponse = await hubConfig.getConfig();
 

@@ -2,7 +2,6 @@ import { delay, getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { toLower, uniqBy } from 'lodash';
 
 import AssetTypes from '../helpers/assetTypes';
-import networkTypes from '../helpers/networkTypes';
 import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
 import { addressAssetsReceived } from './data';
@@ -12,6 +11,7 @@ import {
   UPDATE_BALANCE_AND_PRICE_FREQUENCY,
 } from '@cardstack/constants';
 import { reduceAssetsWithPriceChartAndBalances } from '@cardstack/helpers/fallbackExplorerHelper';
+import { NetworkType } from '@cardstack/types';
 import { isLayer1, isMainnet } from '@cardstack/utils';
 import coingeckoIdsFallback from '@rainbow-me/references/coingecko/ids.json';
 import logger from 'logger';
@@ -72,7 +72,7 @@ const fetchCoingeckoIds = async (network, coingeckoCoins) => {
         idsMap[address] = id;
       }
     });
-  } else if (network === networkTypes.sokol) {
+  } else if (network === NetworkType.sokol) {
     testnetAssets['sokol'].forEach(({ asset }) => {
       idsMap[asset.asset_code] = asset.coingecko_id;
     });

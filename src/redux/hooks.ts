@@ -7,9 +7,9 @@ import {
   DepotType,
   ERC20TransactionType,
   MerchantSafeType,
+  NetworkType,
   PrepaidCardType,
 } from '@cardstack/types';
-import { Network } from '@rainbow-me/helpers/networkTypes';
 
 interface ReduxState {
   data: {
@@ -23,7 +23,7 @@ interface ReduxState {
   settings: {
     accountAddress: string;
     nativeCurrency: NativeCurrency;
-    network: Network;
+    network: NetworkType;
     chainId: ChainId;
   };
   collectibles: {

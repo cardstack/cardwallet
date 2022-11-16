@@ -8,7 +8,6 @@ import {
 
 import styled from 'styled-components';
 import { buildCoinsList } from '../../helpers/assets';
-import networkTypes from '../../helpers/networkTypes';
 import { deviceUtils } from '../../utils';
 import Divider, { DividerSize } from '../Divider';
 import { FlyInAnimation } from '../animations';
@@ -21,6 +20,7 @@ import {
 import { Centered } from '../layout';
 import { SavingsListHeader } from '../savings';
 import TokenFamilyHeader from '../token-family/TokenFamilyHeader';
+import { NetworkType } from '@cardstack/types';
 import { layoutEasingAnimation } from '@cardstack/utils';
 import { ImgixImage } from '@rainbow-me/images';
 
@@ -68,7 +68,7 @@ export default class SendAssetList extends React.Component {
 
     this.data = assetsWithBalance;
 
-    if (savings && savings.length > 0 && network === networkTypes.mainnet) {
+    if (savings && savings.length > 0 && network === NetworkType.mainnet) {
       this.data = this.data.concat([{ data: savings, name: 'Savings' }]);
     }
     if (collectibles && collectibles.length > 0) {

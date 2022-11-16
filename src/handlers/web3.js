@@ -16,11 +16,11 @@ import { get, startsWith } from 'lodash';
 import Web3 from 'web3';
 
 import AssetTypes from '../helpers/assetTypes';
-import NetworkTypes from '../helpers/networkTypes';
 import smartContractMethods from '../references/smartcontract-methods.json';
 import ethereumUtils from '../utils/ethereumUtils';
 
 import Web3WsProvider from '@cardstack/models/web3-provider';
+import { NetworkType } from '@cardstack/types';
 import { isNativeToken } from '@cardstack/utils/cardpay-utils';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { erc721ABI, ethUnits } from '@rainbow-me/references';
@@ -262,7 +262,7 @@ export const getTxDetails = async transaction => {
 
 export const resolveUnstoppableDomain = async domain => {
   const hubConfig = new HubConfig(
-    getConstantByNetwork('hubUrl', NetworkTypes.mainnet)
+    getConstantByNetwork('hubUrl', NetworkType.mainnet)
   );
 
   const hubConfigResponse = await hubConfig.getConfig();

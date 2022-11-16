@@ -1,8 +1,8 @@
 import { GANACHE_URL } from 'react-native-dotenv';
 
+import { NetworkType } from '@cardstack/types';
+
 import { etherWeb3SetHttpProvider } from '@rainbow-me/handlers/web3';
-// eslint-disable-next-line import/no-named-as-default
-import networkTypes from '@rainbow-me/networkTypes';
 
 export const GanacheUtils = {
   connect: async (callback?: () => void): Promise<void> => {
@@ -11,7 +11,7 @@ export const GanacheUtils = {
 
       await etherWeb3SetHttpProvider(network);
     } catch (e) {
-      await etherWeb3SetHttpProvider(networkTypes.mainnet);
+      await etherWeb3SetHttpProvider(NetworkType.mainnet);
     }
 
     if (callback) {

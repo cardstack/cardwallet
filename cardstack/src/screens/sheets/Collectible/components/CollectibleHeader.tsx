@@ -8,15 +8,14 @@ import {
   Icon,
   Text,
 } from '@cardstack/components';
-import { CollectibleType } from '@cardstack/types';
+import { CollectibleType, NetworkType } from '@cardstack/types';
 
 import { buildCollectibleName } from '@rainbow-me/helpers/assets';
-import NetworkTypes from '@rainbow-me/networkTypes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 import logger from 'logger';
 
 function viewMenuItemLabel(collectible: CollectibleType) {
-  if (collectible.networkName === NetworkTypes.mainnet) {
+  if (collectible.networkName === NetworkType.mainnet) {
     return 'View on OpenSea';
   }
 

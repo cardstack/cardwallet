@@ -11,10 +11,9 @@ import {
   ReservationQueryResult,
   WyrePriceQueryResult,
   OrderStatus,
+  NetworkType,
 } from '@cardstack/types';
 import { transformObjKeysToCamelCase } from '@cardstack/utils';
-
-import { Network } from '@rainbow-me/helpers/networkTypes';
 
 import { hubApi } from '../hub-api';
 import { hubBodyBuilder } from '../hub-service';
@@ -37,7 +36,7 @@ export const hubWyre = hubApi.injectEndpoints({
       transformResponse: (response: { data: CustodialWallet }) =>
         transformObjKeysToCamelCase(response?.data?.attributes),
     }),
-    getProducts: builder.query<GetProductsQueryResult, Network>({
+    getProducts: builder.query<GetProductsQueryResult, NetworkType>({
       async queryFn(network, _queryApi, _extraOptions, fetchWithBQ) {
         const prices = (await fetchWithBQ(
           routes.wyrePrices

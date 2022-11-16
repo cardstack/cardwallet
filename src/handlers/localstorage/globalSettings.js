@@ -1,5 +1,6 @@
-import networkTypes from '../../helpers/networkTypes';
 import { getGlobal, removeLocal, saveGlobal } from './common';
+
+import { NetworkType } from '@cardstack/types';
 
 const IMAGE_METADATA = 'imageMetadata';
 const LANGUAGE = 'language';
@@ -33,7 +34,7 @@ export const getLanguage = () => getGlobal(LANGUAGE, 'en');
 
 export const saveLanguage = language => saveGlobal(LANGUAGE, language);
 
-export const getNetwork = () => getGlobal(NETWORK, networkTypes.gnosis);
+export const getNetwork = () => getGlobal(NETWORK, NetworkType.gnosis);
 
 export const saveNetwork = network => saveGlobal(NETWORK, network);
 

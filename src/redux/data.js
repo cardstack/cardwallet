@@ -16,6 +16,7 @@ import {
 } from 'lodash';
 import { getTransactionReceipt } from '../handlers/web3';
 import { collectiblesRefreshState } from '@cardstack/redux/collectibles';
+import { NetworkType } from '@cardstack/types';
 import {
   getAssets,
   getDepots,
@@ -30,7 +31,6 @@ import AssetTypes from '@rainbow-me/helpers/assetTypes';
 import DirectionTypes from '@rainbow-me/helpers/transactionDirectionTypes';
 import TransactionStatusTypes from '@rainbow-me/helpers/transactionStatusTypes';
 import TransactionTypes from '@rainbow-me/helpers/transactionTypes';
-import networkTypes from '@rainbow-me/networkTypes';
 import {
   getTitle,
   getTransactionLabel,
@@ -298,7 +298,7 @@ export const dataAddNewTransaction = (
       type: DATA_ADD_NEW_TRANSACTION_SUCCESS,
     });
     saveLocalTransactions(_transactions, accountAddress, network);
-    if (!disableTxnWatcher || network !== networkTypes.mainnet) {
+    if (!disableTxnWatcher || network !== NetworkType.mainnet) {
       dispatch(watchPendingTransactions(accountAddress));
     }
     return parsedTransaction;

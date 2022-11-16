@@ -1,9 +1,10 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { buildTransactionsSectionsSelector } from '../helpers/buildTransactionsSectionsSelector';
-import NetworkTypes from '../helpers/networkTypes';
 import useContacts from './useContacts';
 import useRequests from './useRequests';
+
+import { NetworkType } from '@cardstack/types';
 
 export const NOE_PAGE = 30;
 
@@ -57,7 +58,7 @@ export default function useAccountTransactions(initialized, isFocused) {
 
   return {
     isLoadingTransactions:
-      network === NetworkTypes.mainnet ? isLoadingTransactions : false,
+      network === NetworkType.mainnet ? isLoadingTransactions : false,
     nextPage,
     remainingItemsLabel,
     sections,

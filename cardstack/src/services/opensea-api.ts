@@ -3,10 +3,9 @@ import axios, { AxiosResponse } from 'axios';
 import { isNil, pick } from 'lodash';
 import { OPENSEA_API_KEY } from 'react-native-dotenv';
 
-import { CollectibleType } from '@cardstack/types';
+import { CollectibleType, NetworkType } from '@cardstack/types';
 
 import AssetTypes from '@rainbow-me/helpers/assetTypes';
-import NetworkTypes, { Network } from '@rainbow-me/networkTypes';
 import logger from 'logger';
 
 export const OPENSEA_LIMIT_PER_PAGE = 50;
@@ -21,13 +20,13 @@ const api = axios.create({
 });
 
 export const apiFetchCollectiblesForOwner = async (
-  network: Network,
+  network: NetworkType,
   nativeCurrency: NativeCurrency,
   ownerAddress: string,
   page: number
 ): Promise<CollectibleType[]> => {
   try {
-    const networkPrefix = network === NetworkTypes.mainnet ? '' : `${network}-`;
+    const networkPrefix = network === NetworkType.mainnet ? '' : `${network}-`;
     const offset = page * OPENSEA_LIMIT_PER_PAGE;
     const url = `https://${networkPrefix}api.opensea.io/api/v1/assets?owner=${ownerAddress}&limit=${OPENSEA_LIMIT_PER_PAGE}&offset=${offset}`;
     const response = await api.get(url);
@@ -44,7 +43,7 @@ export const apiFetchCollectiblesForOwner = async (
 
 const parseCollectiblesFromOpenSeaResponse = (
   response: AxiosResponse<any>,
-  network: Network,
+  network: NetworkType,
   nativeCurrency: NativeCurrency
 ) => {
   const openSeaAssets = response.data.assets;

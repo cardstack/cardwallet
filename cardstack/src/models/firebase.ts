@@ -8,18 +8,18 @@ import {
   registerFcmToken,
   unregisterFcmToken,
 } from '@cardstack/services/hub/hub-service';
+import { NetworkType } from '@cardstack/types';
 
 import { Alert } from '@rainbow-me/components/alerts';
 import { getLocal, saveLocal } from '@rainbow-me/handlers/localstorage/common';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
-import { Network } from '@rainbow-me/helpers/networkTypes';
 import { loadAddress } from '@rainbow-me/model/wallet';
 import logger from 'logger';
 
 const DEVICE_FCM_TOKEN_KEY = 'cardwalletFcmToken';
 type FCMTokenStorageType = {
   fcmToken: string | null;
-  addressesByNetwork?: Record<Network, string[]>;
+  addressesByNetwork?: Record<NetworkType, string[]>;
 };
 
 const getPermissionStatus = (): Promise<FirebaseMessagingTypes.AuthorizationStatus> =>
@@ -45,7 +45,7 @@ export const getFCMToken = async (): Promise<FCMTokenStorageType> => {
 
 export const removeFCMToken = async (address: string) => {
   try {
-    const network: Network = await getNetwork();
+    const network: NetworkType = await getNetwork();
     const { fcmToken, addressesByNetwork } = await getFCMToken();
 
     if (
@@ -61,8 +61,8 @@ export const removeFCMToken = async (address: string) => {
 
         // remove address from AsyncStorage for all networks
         for (const networkName in addressesByNetwork) {
-          addressesByNetwork[networkName as Network] = addressesByNetwork[
-            networkName as Network
+          addressesByNetwork[networkName as NetworkType] = addressesByNetwork[
+            networkName as NetworkType
           ].filter((addr: string) => addr !== address);
         }
 
@@ -81,7 +81,7 @@ export const removeFCMToken = async (address: string) => {
 
 interface isFCMTokenStoredProps {
   isTokenStored: boolean;
-  addressesByNetwork?: Record<Network, string[]>;
+  addressesByNetwork?: Record<NetworkType, string[]>;
   fcmToken: string | null;
 }
 
@@ -90,7 +90,7 @@ export const isFCMTokenStored = async (
   walletAddress: string
 ): Promise<isFCMTokenStoredProps> => {
   const { fcmToken, addressesByNetwork } = await getFCMToken();
-  const network: Network = await getNetwork();
+  const network: NetworkType = await getNetwork();
   return {
     isTokenStored:
       !!fcmToken &&
@@ -118,7 +118,7 @@ export const saveFCMToken = async () => {
       const { error } = await registerFcmToken(newFcmToken);
 
       if (!error) {
-        const network: Network = await getNetwork();
+        const network: NetworkType = await getNetwork();
 
         // if newFcmToken is same as old stored one, then add wallet address to asyncStorage,
         // otherwise replace addresses value with [walletAddress] so can be replaced in next app load on other accounts

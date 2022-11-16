@@ -5,6 +5,7 @@ import {
 } from '@cardstack/cardpay-sdk';
 import { captureException } from '@sentry/react-native';
 import { get, isEmpty } from 'lodash';
+import { NetworkType } from '@cardstack/types';
 import { isLayer1 } from '@cardstack/utils';
 import {
   etherscanGetGasEstimates,
@@ -12,7 +13,6 @@ import {
   ethGasStationGetGasPrices,
   getEstimatedTimeForGasPrice,
 } from '@rainbow-me/handlers/gasPrices';
-import { Network } from '@rainbow-me/helpers/networkTypes';
 import {
   defaultGasPriceFormat,
   getFallbackGasPrices,
@@ -148,7 +148,10 @@ export const gasPricesStartPolling = () => async (dispatch, getState) => {
             type: GAS_PRICES_SUCCESS,
           });
         } else {
-          const apiBaseUrl = getConstantByNetwork('apiBaseUrl', Network.gnosis);
+          const apiBaseUrl = getConstantByNetwork(
+            'apiBaseUrl',
+            NetworkType.gnosis
+          );
 
           const response = await fetch(`${apiBaseUrl}/v1/gas-price-oracle`);
           const data = await response.json();
