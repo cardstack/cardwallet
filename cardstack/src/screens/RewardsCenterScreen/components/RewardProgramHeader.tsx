@@ -9,7 +9,7 @@ export const RewardProgramHeader = memo(({ title }: { title?: string }) => (
     <Image source={rewardBanner} minWidth="100%" />
     {!!title && (
       <CenteredContainer position="absolute" width="60%" height="100%">
-        <Text color="white" variant="sectionTitle">
+        <Text color="white" variant="promoBannerTitle">
           {title}
         </Text>
       </CenteredContainer>

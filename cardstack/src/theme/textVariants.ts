@@ -79,7 +79,7 @@ export const textVariants = {
     textTransform: 'uppercase',
     ...fontFamilyVariants.bold,
   },
-  sectionTitle: {
+  promoBannerTitle: {
     fontSize: 12,
     letterSpacing: 1.2,
     textTransform: 'uppercase',
