@@ -93,7 +93,7 @@ const safesDataFromSDK = [
         tokenAddress: '0xB236ca8DbAB0644ffCD32518eBF4924ba866f7Ee',
         balance: '618912488496194715454',
         token: {
-          name: 'CARD Token Kovan.CPXD',
+          name: 'CARD Token Testnet.CPXD',
           symbol: 'CARD',
           decimals: 18,
         },
@@ -123,7 +123,7 @@ const safesMappedByType = {
           tokenAddress: '0xB236ca8DbAB0644ffCD32518eBF4924ba866f7Ee',
           balance: '618912488496194715454',
           token: {
-            name: 'CARD Token Kovan.CPXD',
+            name: 'CARD Token Testnet.CPXD',
             symbol: 'CARD',
             decimals: 18,
             value: '618.912488496194715454',

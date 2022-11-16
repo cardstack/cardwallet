@@ -1,44 +1,34 @@
-import { networkTypes } from './networkTypes';
+import { NetworkType } from '@cardstack/types';
 
 export const networkInfo = {
-  [networkTypes.gnosis]: {
+  [NetworkType.gnosis]: {
     disabled: false,
     exchange_enabled: true,
     faucet_url: null,
     name: 'Gnosis Chain',
     shortName: 'Gnosis',
     layer: 2,
-    value: networkTypes.gnosis,
+    value: NetworkType.gnosis,
     hidden: false,
   },
-  [networkTypes.sokol]: {
+  [NetworkType.sokol]: {
     disabled: false,
     exchange_enabled: true,
     faucet_url: 'https://faucet.poa.network',
     name: 'Sokol',
     shortName: 'Sokol',
     layer: 2,
-    value: networkTypes.sokol,
+    value: NetworkType.sokol,
     hidden: true,
   },
-  [`${networkTypes.mainnet}`]: {
+  [`${NetworkType.mainnet}`]: {
     disabled: false,
     exchange_enabled: true,
     faucet_url: null,
     name: 'Ethereum Mainnet',
     shortName: 'Mainnet',
     layer: 1,
-    value: networkTypes.mainnet,
-    hidden: true,
-  },
-  [`${networkTypes.kovan}`]: {
-    disabled: false,
-    exchange_enabled: false,
-    faucet_url: `https://faucet.kovan.network/`,
-    name: 'Kovan',
-    shortName: 'Kovan',
-    layer: 1,
-    value: networkTypes.kovan,
+    value: NetworkType.mainnet,
     hidden: true,
   },
 };
