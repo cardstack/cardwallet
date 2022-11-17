@@ -8,9 +8,9 @@ import {
   HorizontalDivider,
   Text,
 } from '@cardstack/components';
+import { NetworkType } from '@cardstack/types';
 import { isLayer1, normalizeTxHash, ClaimStatusTypes } from '@cardstack/utils';
 
-import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
@@ -54,7 +54,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
 
   const network = useRainbowSelector(
     state => state.settings.network
-  ) as Network;
+  ) as NetworkType;
 
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
   const blockExplorerName = isLayer1(network) ? 'Etherscan' : 'Blockscout';

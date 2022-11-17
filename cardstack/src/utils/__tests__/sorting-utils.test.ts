@@ -21,7 +21,7 @@ describe('Sorting by token balance amount', () => {
       {
         tokenAddress: '0xB236ca8DbAB0644ffCD32518eBF4924ba866f7Ee',
         token: {
-          name: 'CARD Token Kovan.CPXD',
+          name: 'CARD Token Testnet.CPXD',
           symbol: 'CARD',
           decimals: 18,
           value: '100',

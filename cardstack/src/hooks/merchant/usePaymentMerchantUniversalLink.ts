@@ -12,17 +12,17 @@ import { Alert, AlertButton, InteractionManager } from 'react-native';
 import { RouteType } from '@cardstack/navigation/types';
 import { getSafeData, useGetPrepaidCardsQuery } from '@cardstack/services';
 import {
+  NetworkType,
   PayMerchantDecodedData,
   TransactionConfirmationType,
 } from '@cardstack/types';
 import { isLayer1, useWorker } from '@cardstack/utils';
 
-import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
 interface Params {
   merchantAddress: string;
-  network: Network;
+  network: NetworkType;
   amount?: string;
   currency?: string;
 }

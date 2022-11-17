@@ -15,3 +15,4 @@ export * from './safes';
 export * from './AppStateType';
 export * from './IAPProductType';
 export * from './BackupTypes';
+export * from './NetworkType';

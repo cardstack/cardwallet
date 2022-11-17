@@ -1,8 +1,9 @@
 import notifee, { AndroidImportance } from '@notifee/react-native';
 import { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
 
+import { NetworkType } from '@cardstack/types';
+
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
-import { Network } from '@rainbow-me/helpers/networkTypes';
 import { loadAddress } from '@rainbow-me/model/wallet';
 import logger from 'logger';
 
@@ -18,7 +19,7 @@ export enum NotificationType {
 interface NotificationDataType {
   notificationType: NotificationType;
   transactionInformation?: string;
-  network?: Network;
+  network?: NetworkType;
   ownerAddress?: string;
 }
 

@@ -1,8 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { MerchantSafeType } from '@cardstack/types';
+import { MerchantSafeType, NetworkType } from '@cardstack/types';
 
-import { Network } from '@rainbow-me/helpers/networkTypes';
 import { AppState } from '@rainbow-me/redux/store';
 
 interface AccountType {
@@ -11,9 +10,9 @@ interface AccountType {
   };
 }
 
-type SliceType = Record<Network, AccountType>;
+type SliceType = Record<NetworkType, AccountType>;
 
-const initialState: SliceType = Object.keys(Network).reduce(
+const initialState: SliceType = Object.keys(NetworkType).reduce(
   (arr: any, key: string) => {
     arr[key] = {};
 
@@ -32,7 +31,7 @@ const slice = createSlice({
       {
         payload,
       }: PayloadAction<{
-        network: Network;
+        network: NetworkType;
         accountAddress: string;
         primary: MerchantSafeType;
       }>
@@ -49,9 +48,10 @@ export const {
   actions: { changePrimarySafe },
 } = slice;
 
-export const selectPrimarySafe = (network: Network, accountAddress: string) => (
-  state: AppState
-): MerchantSafeType | undefined =>
+export const selectPrimarySafe = (
+  network: NetworkType,
+  accountAddress: string
+) => (state: AppState): MerchantSafeType | undefined =>
   state.primarySafe?.[network]?.[accountAddress]?.primary;
 
 export default slice.reducer;

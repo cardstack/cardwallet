@@ -15,13 +15,12 @@ import {
   OPENSEA_LIMIT_PER_PAGE,
   OPENSEA_LIMIT_TOTAL,
 } from '@cardstack/services/opensea-api';
-import { AssetType, CollectibleType } from '@cardstack/types';
+import { AssetType, CollectibleType, NetworkType } from '@cardstack/types';
 
 import {
   getCollectibles as getCollectiblesFromStorage,
   saveCollectibles as saveCollectiblesToStorage,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
-import NetworkTypes from '@rainbow-me/networkTypes';
 import { AppDispatch, AppGetState } from '@rainbow-me/redux/store';
 import { erc721ABI } from '@rainbow-me/references';
 import logger from 'logger';
@@ -90,11 +89,11 @@ export const collectiblesRefreshState = () => async (
   const { network } = getState().settings;
 
   switch (network) {
-    case NetworkTypes.mainnet:
+    case NetworkType.mainnet:
       // OpenSea API only supports Ethereum mainnet
       return dispatch(fetchNFTsViaOpenSea());
-    case NetworkTypes.gnosis:
-    case NetworkTypes.sokol:
+    case NetworkType.gnosis:
+    case NetworkType.sokol:
       return dispatch(fetchNFTsViaRpcNode());
     default:
       logger.log(

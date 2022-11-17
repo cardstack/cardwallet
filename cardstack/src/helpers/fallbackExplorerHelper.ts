@@ -10,10 +10,13 @@ import Web3 from 'web3';
 
 import { getNativeBalanceFromOracle } from '@cardstack/services';
 import { getOnChainAssetBalance } from '@cardstack/services/assets';
-import { AssetType, AssetWithNativeType, BalanceType } from '@cardstack/types';
+import {
+  AssetType,
+  AssetWithNativeType,
+  BalanceType,
+  NetworkType,
+} from '@cardstack/types';
 import { isCPXDToken } from '@cardstack/utils/cardpay-utils';
-
-import { Network } from '@rainbow-me/helpers/networkTypes';
 
 interface Prices {
   [key: string]: {
@@ -45,7 +48,7 @@ type AssetWithBalance = { asset: AssetType & BalanceObject };
 
 interface ReduceAssetsParams extends ReduceWithPriceChartBaseParams {
   assets: AssetWithBalance[];
-  network: Network;
+  network: NetworkType;
   nativeCurrency: NativeCurrency;
   accountAddress: string;
 }

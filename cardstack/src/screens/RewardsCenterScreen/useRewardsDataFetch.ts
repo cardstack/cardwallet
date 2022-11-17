@@ -6,20 +6,20 @@ import {
   useGetRewardsSafeQuery,
 } from '@cardstack/services/rewards-center/rewards-center-api';
 import { FullBalanceToken } from '@cardstack/services/rewards-center/rewards-center-types';
+import { NetworkType } from '@cardstack/types';
 import { findByRewardProgramId, isLayer1 } from '@cardstack/utils';
 
-import { networkTypes } from '@rainbow-me/helpers/networkTypes';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
-const rewardDefaultProgramId = {
-  [networkTypes.sokol]: '0x0885ce31D73b63b0Fcb1158bf37eCeaD8Ff0fC72',
-  [networkTypes.gnosis]: '0x979C9F171fb6e9BC501Aa7eEd71ca8dC27cF1185',
+const rewardDefaultProgramId: { [key in NetworkType]?: string } = {
+  [NetworkType.sokol]: '0x0885ce31D73b63b0Fcb1158bf37eCeaD8Ff0fC72',
+  [NetworkType.gnosis]: '0x979C9F171fb6e9BC501Aa7eEd71ca8dC27cF1185',
 };
 
 const useRewardsDataFetch = () => {
   const { accountAddress, nativeCurrency, network } = useAccountSettings();
 
-  const defaultRewardProgramId = rewardDefaultProgramId[network];
+  const defaultRewardProgramId = rewardDefaultProgramId[network] as string;
 
   const query = useMemo(
     () => ({

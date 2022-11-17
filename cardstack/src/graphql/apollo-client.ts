@@ -6,14 +6,14 @@ import {
 } from '@apollo/client';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 
-import { networkTypes } from '@rainbow-me/networkTypes';
+import { NetworkType } from '@cardstack/types';
 
 const gnosisLink = new HttpLink({
-  uri: getConstantByNetwork('subgraphURL', networkTypes.gnosis),
+  uri: getConstantByNetwork('subgraphURL', NetworkType.gnosis),
 });
 
 const sokolLink = new HttpLink({
-  uri: getConstantByNetwork('subgraphURL', networkTypes.sokol),
+  uri: getConstantByNetwork('subgraphURL', NetworkType.sokol),
 });
 
 const cache = new InMemoryCache({
@@ -38,7 +38,7 @@ const cache = new InMemoryCache({
 });
 
 const link = ApolloLink.split(
-  operation => operation.getContext().network === networkTypes.gnosis,
+  operation => operation.getContext().network === NetworkType.gnosis,
   gnosisLink,
   sokolLink
 );

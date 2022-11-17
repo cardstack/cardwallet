@@ -20,20 +20,20 @@ import publicIP from 'react-native-public-ip';
 
 import { Navigation, Routes } from '@cardstack/navigation';
 import { SupportedCountries } from '@cardstack/services/wyre-api';
+import { NetworkType } from '@cardstack/types';
 import { isMainnet } from '@cardstack/utils/cardpay-utils';
 
-import { Network } from '@rainbow-me/helpers/networkTypes';
 import logger from 'logger';
 
 const PAYMENT_PROCESSOR_COUNTRY_CODE = 'US';
 
-const getSecretKey = (network: Network) =>
+const getSecretKey = (network: NetworkType) =>
   isMainnet(network) ? WYRE_SECRET_KEY : WYRE_SECRET_KEY_TEST;
 
-const getApiKey = (network: Network) =>
+const getApiKey = (network: NetworkType) =>
   isMainnet(network) ? WYRE_API_KEY : WYRE_API_KEY_TEST;
 
-const getAuthHeaders = (network: Network, url: string, data: string) => {
+const getAuthHeaders = (network: NetworkType, url: string, data: string) => {
   const secret = getSecretKey(network);
   const dataToBeSigned = url + data;
 
@@ -47,7 +47,7 @@ const getAuthHeaders = (network: Network, url: string, data: string) => {
   };
 };
 
-const getBaseUrl = (network: Network) =>
+const getBaseUrl = (network: NetworkType) =>
   isMainnet(network) ? WYRE_ENDPOINT : WYRE_ENDPOINT_TEST;
 
 const wyreApi = axios.create({
@@ -82,7 +82,7 @@ export const showApplePayRequest = async (
   sourceAmountWithFees: number,
   purchaseFee: string,
   sourceAmount: string,
-  network: Network,
+  network: NetworkType,
   sourceCurrency: string,
   supportedCountries: SupportedCountries
 ) => {
@@ -147,7 +147,7 @@ export const getWalletOrderQuotation = async (
   amount: string,
   destCurrency: string,
   accountAddress: string,
-  network: Network,
+  network: NetworkType,
   sourceCurrency: string
 ) => {
   const partnerId = isMainnet(network) ? WYRE_ACCOUNT_ID : WYRE_ACCOUNT_ID_TEST;
@@ -192,7 +192,7 @@ export const reserveWyreOrder = async (
   amount: string,
   destCurrency: string,
   depositAddress: string,
-  network: Network,
+  network: NetworkType,
   paymentMethod = null,
   sourceCurrency: string
 ) => {
@@ -242,7 +242,7 @@ export const createOrder = async (
   amount: string,
   depositAddress: string,
   destCurrency: string,
-  network: Network,
+  network: NetworkType,
   reservationId: string,
   sourceCurrency: string
 ) => {
@@ -360,7 +360,7 @@ const createPayload = (
   amount: string,
   accountAddress: string,
   destCurrency: string,
-  network: Network,
+  network: NetworkType,
   reservationId: string,
   ip: string,
   sourceCurrency: string
@@ -440,7 +440,7 @@ interface CreateOrderParams {
   depositAddress: string;
   sourceCurrency: string;
   destCurrency: string;
-  network: Network;
+  network: NetworkType;
   supportedCountries: SupportedCountries;
 }
 

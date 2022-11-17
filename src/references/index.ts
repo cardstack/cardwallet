@@ -4,17 +4,11 @@ import savingAssets from './compound/saving-assets.json';
 import { Asset, SavingsAsset } from '@rainbow-me/entities';
 
 export {
-  CURATED_UNISWAP_TOKENS,
   PAIR_GET_RESERVES_CALL_DATA,
   PAIR_GET_RESERVES_FRAGMENT,
   PAIR_INTERFACE,
   RAINBOW_TOKEN_LIST,
   TOKEN_SAFE_LIST,
-  UNISWAP_TESTNET_TOKEN_LIST,
-  UNISWAP_V1_EXCHANGE_ABI,
-  UNISWAP_V2_BASES,
-  UNISWAP_V2_ROUTER_ABI,
-  UNISWAP_V2_ROUTER_ADDRESS,
 } from './uniswap';
 export { default as compoundCERC20ABI } from './compound/compound-cerc20-abi.json';
 export { default as compoundCETHABI } from './compound/compound-ceth-abi.json';

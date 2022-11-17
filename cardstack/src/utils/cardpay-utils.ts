@@ -11,18 +11,18 @@ import { Resolver } from 'did-resolver';
 
 import { getSpendValueInNativeCurrency } from '@cardstack/services';
 import {
+  NetworkType,
   PrepaidCardCustomization,
   PrepaidLinearGradientInfo,
 } from '@cardstack/types';
 
-import { Network } from '@rainbow-me/helpers/networkTypes';
 export const NATIVE_TOKEN_SYMBOLS = ['eth', 'spoa', 'xdai', 'keth'];
 
-const MAINNETS = [Network.mainnet, Network.gnosis];
+const MAINNETS = [NetworkType.mainnet, NetworkType.gnosis];
 
-const LAYER_1_NETWORKS = [Network.mainnet, Network.kovan];
+const LAYER_1_NETWORKS = [NetworkType.mainnet];
 
-const LAYER_2_NETWORKS = [Network.gnosis, Network.sokol];
+const LAYER_2_NETWORKS = [NetworkType.gnosis, NetworkType.sokol];
 
 const CPXD_TOKEN_SUFFIX = '.CPXD';
 
@@ -38,13 +38,13 @@ export const isCPXDToken = (symbol: string) =>
 export const removeCPXDTokenSuffix = (symbol: string) =>
   symbol.replace(CPXD_TOKEN_SUFFIX, '');
 
-export const isLayer1 = (network: Network) =>
+export const isLayer1 = (network: NetworkType) =>
   LAYER_1_NETWORKS.includes(network);
 
-export const isLayer2 = (network: Network) =>
+export const isLayer2 = (network: NetworkType) =>
   LAYER_2_NETWORKS.includes(network);
 
-export const isMainnet = (network: Network) => MAINNETS.includes(network);
+export const isMainnet = (network: NetworkType) => MAINNETS.includes(network);
 
 export const convertSpendForBalanceDisplay = async (
   spendValue: string | number,

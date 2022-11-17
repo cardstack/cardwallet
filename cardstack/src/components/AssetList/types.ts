@@ -6,10 +6,10 @@ import {
   CollectibleType,
   DepotType,
   MerchantSafeType,
+  NetworkType,
   PrepaidCardType,
 } from '@cardstack/types';
 
-import { Network } from '@rainbow-me/helpers/networkTypes';
 import { PinnedHiddenSectionOption } from '@rainbow-me/hooks';
 
 import { Theme } from '../../theme';
@@ -45,7 +45,7 @@ export interface AssetListProps
     ColorProps<Theme> {
   isEmpty: boolean;
   loading: boolean;
-  network: Network;
+  network: NetworkType;
   sections: Array<
     | AssetListSectionItem<PrepaidCardType>
     | AssetListSectionItem<DepotType>

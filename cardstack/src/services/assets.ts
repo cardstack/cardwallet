@@ -5,16 +5,16 @@ import {
 } from '@cardstack/cardpay-sdk';
 
 import Web3Instance from '@cardstack/models/web3-instance';
+import { NetworkType } from '@cardstack/types';
 import { isNativeToken } from '@cardstack/utils';
 
 import { Asset } from '@rainbow-me/entities';
-import { Network } from '@rainbow-me/helpers/networkTypes';
 import logger from 'logger';
 
 interface GetAssetBalanceParams {
   asset: Asset;
   accountAddress: string;
-  network: Network;
+  network: NetworkType;
 }
 
 export const getOnChainAssetBalance = async (params: GetAssetBalanceParams) =>

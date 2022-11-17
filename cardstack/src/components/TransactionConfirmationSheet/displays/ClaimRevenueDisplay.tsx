@@ -13,9 +13,8 @@ import {
   NetworkBadge,
   Text,
 } from '@cardstack/components';
-import { ClaimRevenueDecodedData } from '@cardstack/types';
+import { ClaimRevenueDecodedData, NetworkType } from '@cardstack/types';
 
-import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
 import { TransactionConfirmationDisplayProps } from '../TransactionConfirmationSheet';
@@ -39,7 +38,7 @@ export const ClaimRevenueDisplay = (props: ClaimRevenueDisplayProps) => {
   );
 };
 
-const FromSection = ({ network }: { network: Network }) => {
+const FromSection = ({ network }: { network: NetworkType }) => {
   const revenuePool = getAddressByNetwork('revenuePool', network);
 
   return (

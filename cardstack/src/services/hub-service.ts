@@ -4,7 +4,7 @@ import { HUB_URL, HUB_URL_STAGING } from 'react-native-dotenv';
 
 import { getWeb3ProviderWithEthSigner } from '@cardstack/models/ethers-wallet';
 import { getFCMToken } from '@cardstack/models/firebase';
-import { NotificationsPreferenceDataType } from '@cardstack/types';
+import { NetworkType, NotificationsPreferenceDataType } from '@cardstack/types';
 
 import {
   getLocal,
@@ -12,14 +12,13 @@ import {
   removeLocal,
 } from '@rainbow-me/handlers/localstorage/common';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
-import { Network } from '@rainbow-me/helpers/networkTypes';
 import { loadAddress } from '@rainbow-me/model/wallet';
 import logger from 'logger';
 
 const HUBTOKEN_KEY = 'hubToken';
 
-export const getHubUrl = (network: Network): string =>
-  network === Network.gnosis ? HUB_URL : HUB_URL_STAGING;
+export const getHubUrl = (network: NetworkType): string =>
+  network === NetworkType.gnosis ? HUB_URL : HUB_URL_STAGING;
 
 const axiosConfig = (authToken: string) => {
   return {
@@ -40,7 +39,7 @@ const hubTokenStorageKey = (network: string): string => {
 
 export const loadHubAuthToken = async (
   walletAddress: string,
-  network: Network
+  network: NetworkType
 ): Promise<string | null> => {
   const {
     data: { authToken },
@@ -70,11 +69,11 @@ const storeHubAuthToken = async (
   );
 };
 
-export const removeHubAuthToken = (address: string, network: Network) =>
+export const removeHubAuthToken = (address: string, network: NetworkType) =>
   removeLocal(hubTokenStorageKey(network), address);
 
 export const getHubAuthToken = async (
-  network: Network,
+  network: NetworkType,
   walletAddress?: string
 ): Promise<string | null> => {
   // load wallet address when not provided as an argument(this keychain access does not require passcode/biometric auth)
@@ -110,7 +109,7 @@ export const getNotificationsPreferences = async (
   authToken: string
 ): Promise<NotificationsPreferenceDataType[] | undefined> => {
   try {
-    const network: Network = await getNetwork();
+    const network: NetworkType = await getNetwork();
     const hubURL = getHubUrl(network);
     const { fcmToken } = await getFCMToken();
 
@@ -133,7 +132,7 @@ export const setNotificationsPreferences = async (
   update: NotificationsPreferenceDataType
 ) => {
   try {
-    const network: Network = await getNetwork();
+    const network: NetworkType = await getNetwork();
     const hubURL = getHubUrl(network);
     const { fcmToken } = await getFCMToken();
 
@@ -165,7 +164,7 @@ hubApi?.interceptors?.response?.use?.(undefined, async (error: AxiosError) => {
   // Got API error 401, auth token should be refreshed.
 
   // Remove token from local storage
-  const network: Network = await getNetwork();
+  const network: NetworkType = await getNetwork();
   await removeLocal(hubTokenStorageKey(network));
 
   // We can't refresh and re-run the request without improving

@@ -29,8 +29,8 @@ import { Linking, NativeModules } from 'react-native';
 import { ETHERSCAN_API_KEY } from 'react-native-dotenv';
 import URL from 'url-parse';
 
+import { NetworkType } from '@cardstack/types';
 import { isNativeToken, normalizeTxHash } from '@cardstack/utils';
-import networkTypes from '@rainbow-me/helpers/networkTypes';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import { DEFAULT_HD_PATH, WalletLibraryType } from '@rainbow-me/model/wallet';
 import store from '@rainbow-me/redux/store';
@@ -125,7 +125,7 @@ const getDataString = (func, arrVals) => {
 function getEtherscanHostForNetwork() {
   const { network } = store.getState().settings;
   const base_host = 'etherscan.io';
-  if (network === networkTypes.mainnet) {
+  if (network === NetworkType.mainnet) {
     return base_host;
   } else {
     return `${network}.${base_host}`;

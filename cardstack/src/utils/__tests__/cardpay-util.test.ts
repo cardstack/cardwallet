@@ -1,4 +1,5 @@
 import {
+  NetworkType,
   PrepaidCardCustomization,
   PrepaidLinearGradientInfo,
 } from '@cardstack/types';
@@ -8,8 +9,6 @@ import {
   isMainnet,
   parseLinearGradient,
 } from '@cardstack/utils/cardpay-utils';
-
-import { Network, networkTypes } from '@rainbow-me/helpers/networkTypes';
 
 it('parseLinearGradient with 2 stop linear gradient', () => {
   const cardCustomization: PrepaidCardCustomization = {
@@ -85,80 +84,60 @@ it('parseLinearGradient with no gradient', () => {
   expect(result).toEqual(parsedGradientResult);
 });
 
-const layer2Cases = [
-  Network.gnosis,
-  networkTypes.gnosis,
-  Network.sokol,
-  'sokol',
-  networkTypes.sokol,
-];
+const layer2Cases = [NetworkType.gnosis, NetworkType.sokol, 'sokol'];
 
-const layer1Cases = [
-  'mainnet',
-  Network.mainnet,
-  networkTypes.mainnet,
-  networkTypes.kovan,
-  Network.kovan,
-  'kovan',
-];
+const layer1Cases = ['mainnet', NetworkType.mainnet];
 
 const mainnetCases = [
   'mainnet',
-  Network.mainnet,
-  networkTypes.mainnet,
-  Network.gnosis,
-  networkTypes.gnosis,
+  NetworkType.mainnet,
+  NetworkType.mainnet,
+  NetworkType.gnosis,
+  NetworkType.gnosis,
 ];
 
-const testeNetCases = [
-  'sokol',
-  Network.sokol,
-  networkTypes.sokol,
-  'kovan',
-  Network.kovan,
-  networkTypes.kovan,
-];
+const testnetCases = ['sokol', NetworkType.sokol, NetworkType.sokol];
 
 describe('Network utils', () => {
   test.each(layer2Cases)(
     'given %p as network, returns true for Layer2',
     network => {
-      expect(isLayer2(network as Network)).toBeTruthy();
+      expect(isLayer2(network as NetworkType)).toBeTruthy();
     }
   );
 
   test.each(layer2Cases)(
     'given %p as network, returns false for Layer1',
     network => {
-      expect(isLayer1(network as Network)).toBeFalsy();
+      expect(isLayer1(network as NetworkType)).toBeFalsy();
     }
   );
 
   test.each(layer1Cases)(
     'given %p as network, returns true for Layer1',
     network => {
-      expect(isLayer1(network as Network)).toBeTruthy();
+      expect(isLayer1(network as NetworkType)).toBeTruthy();
     }
   );
 
   test.each(layer1Cases)(
     'given %p as network, returns false for Layer2',
     network => {
-      expect(isLayer2(network as Network)).toBeFalsy();
+      expect(isLayer2(network as NetworkType)).toBeFalsy();
     }
   );
 
   test.each(mainnetCases)(
     'given %p as network, returns true for mainnet',
     network => {
-      expect(isMainnet(network as Network)).toBeTruthy();
+      expect(isMainnet(network as NetworkType)).toBeTruthy();
     }
   );
 
-  test.each(testeNetCases)(
+  test.each(testnetCases)(
     'given %p as network, returns false for mainnet',
     network => {
-      expect(isMainnet(network as Network)).toBeFalsy();
+      expect(isMainnet(network as NetworkType)).toBeFalsy();
     }
   );
 });

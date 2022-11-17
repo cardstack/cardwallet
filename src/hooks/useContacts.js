@@ -2,8 +2,8 @@ import { sortBy, values } from 'lodash';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import networkTypes from '../helpers/networkTypes';
 import { contactsAddOrUpdate, removeContact } from '../redux/contacts';
+import { NetworkType } from '@cardstack/types';
 
 const contactsSelector = createSelector(
   ({ contacts: { contacts } }) => contacts,
@@ -31,7 +31,7 @@ export default function useContacts() {
 
   const filteredContacts = sortedContacts.filter(contact =>
     contact.network === network ||
-    (!contact.network && network === networkTypes.mainnet)
+    (!contact.network && network === NetworkType.mainnet)
       ? contact
       : false
   );

@@ -1,4 +1,7 @@
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import {
+  getConstantByNetwork,
+  supportedChainsArray,
+} from '@cardstack/cardpay-sdk';
 import {
   getNativeCurrency,
   getNetwork,
@@ -7,7 +10,6 @@ import {
   saveNetwork,
 } from '../handlers/localstorage/globalSettings';
 import { etherWeb3SetHttpProvider } from '../handlers/web3';
-import networkTypes from '../helpers/networkTypes';
 import { updateLanguage } from '../languages';
 
 import { promiseUtils } from '../utils';
@@ -20,6 +22,7 @@ import { walletConnectUpdateSessions } from './walletconnect';
 import { collectiblesResetState } from '@cardstack/redux/collectibles';
 import { requestsResetState } from '@cardstack/redux/requests';
 import { getExchangeRatesQuery } from '@cardstack/services/hub/hub-service';
+import { NetworkType } from '@cardstack/types';
 import { restartApp } from '@cardstack/utils';
 import logger from 'logger';
 
@@ -52,7 +55,22 @@ export const settingsLoadState = () => async dispatch => {
 
 export const settingsLoadNetwork = () => async dispatch => {
   try {
-    const network = await getNetwork();
+    const networkFromStorage = await getNetwork();
+
+    // necessary in case the user was using an unsupported network before updating the app
+    const isSupportedNetwork = supportedChainsArray.includes(
+      networkFromStorage
+    );
+
+    const network = isSupportedNetwork
+      ? networkFromStorage
+      : NetworkType.gnosis;
+
+    // update persisted store
+    if (!isSupportedNetwork) {
+      await saveNetwork(network);
+    }
+
     const chainId = getConstantByNetwork('chainId', network);
     await etherWeb3SetHttpProvider(network);
 
@@ -128,7 +146,7 @@ export const INITIAL_STATE = {
   chainId: 100,
   language: 'en',
   nativeCurrency: 'USD',
-  network: networkTypes.gnosis,
+  network: NetworkType.gnosis,
 };
 
 export default (state = INITIAL_STATE, action) => {

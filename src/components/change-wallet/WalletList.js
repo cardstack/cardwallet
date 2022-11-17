@@ -4,13 +4,13 @@ import { FlatList } from 'react-native-gesture-handler';
 import { Transition, Transitioning } from 'react-native-reanimated';
 import styled from 'styled-components';
 
-import networkTypes from '../../helpers/networkTypes';
 import WalletTypes from '../../helpers/walletTypes';
 import { useAccountSettings } from '../../hooks';
 import Divider from '../Divider';
 import { EmptyAssetList } from '../asset-list';
 import AddressRow from './AddressRow';
 import { Container, OptionItem } from '@cardstack/components';
+import { NetworkType } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
 import { position } from '@rainbow-me/styles';
 
@@ -107,7 +107,7 @@ export default function WalletList({
             accountAddress === account.address &&
             wallet.id === get(currentWallet, 'id'),
           label:
-            network !== networkTypes.mainnet && account.ens === account.label
+            network !== NetworkType.mainnet && account.ens === account.label
               ? getAddressPreview(account.address)
               : account.label,
           onPress: () => onChangeAccount(wallet.id, account.address),
