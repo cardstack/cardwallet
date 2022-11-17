@@ -1,5 +1,5 @@
 import { captureException } from '@sentry/react-native';
-import WalletConnectLegacy from '@walletconnect/client';
+import WalletConnectLegacy from '@walletconnect/legacy-client';
 import lang from 'i18n-js';
 import {
   forEach,

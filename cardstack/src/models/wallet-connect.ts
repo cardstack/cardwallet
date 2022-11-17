@@ -3,6 +3,7 @@ import SignClient from '@walletconnect/sign-client';
 import {
   SignClientTypes,
   EngineTypes,
+  SessionTypes,
 } from '@walletconnect/types/dist/types/sign-client'; // There's some conflict using the global import @walletconnect/types
 import { getSdkError } from '@walletconnect/utils';
 import { WALLET_CONNECT_PROJECT_ID } from 'react-native-dotenv';
@@ -77,7 +78,9 @@ const onSessionProposal = (params: SessionProposalParams) => {
         try {
           await signClient?.approve({
             id: event.id,
-            namespaces: buildNamespacesFromEvent(params),
+            namespaces: buildNamespacesFromEvent(
+              params
+            ) as SessionTypes.Namespaces,
           });
         } catch (e) {
           logger.sentry('[WC-2.0]: Pairing approval failed', e);
@@ -87,10 +90,6 @@ const onSessionProposal = (params: SessionProposalParams) => {
           await signClient?.reject({
             id: event.id,
             reason: getSdkError('USER_REJECTED'),
-          });
-
-          signClient?.disconnect({
-            topic: event.params.pairingTopic,
           });
         } catch (e) {
           logger.sentry('[WC-2.0]: Pairing rejection failed', e);

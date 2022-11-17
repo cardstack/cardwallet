@@ -4,7 +4,7 @@ import {
   convertRawAmountToDecimalFormat,
   fromWei,
 } from '@cardstack/cardpay-sdk';
-import { convertHexToUtf8 } from '@walletconnect/utils';
+import { convertHexToUtf8 } from '@walletconnect/legacy-utils';
 import BigNumber from 'bignumber.js';
 import { utils } from 'ethers';
 import { get, isNil } from 'lodash';

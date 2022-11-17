@@ -1,4 +1,4 @@
-import { IConnector } from '@walletconnect/types';
+import { IConnector } from '@walletconnect/legacy-types';
 import { groupBy, mapValues, values } from 'lodash';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
