@@ -1,6 +1,9 @@
 import { Core } from '@walletconnect/core';
 import SignClient from '@walletconnect/sign-client';
-import { SignClientTypes, EngineTypes } from '@walletconnect/types';
+import {
+  SignClientTypes,
+  EngineTypes,
+} from '@walletconnect/types/dist/types/sign-client'; // There's some conflict using the global import @walletconnect/types
 import { getSdkError } from '@walletconnect/utils';
 import { WALLET_CONNECT_PROJECT_ID } from 'react-native-dotenv';
 
@@ -34,8 +37,10 @@ const WalletConnect = {
           metadata,
         });
 
-        signClient?.on('session_proposal', (event: SignClientTypes.Event) =>
-          onSessionProposal({ event, accountAddress })
+        signClient?.on(
+          'session_proposal',
+          (event: SessionProposalParams['event']) =>
+            onSessionProposal({ event, accountAddress })
         );
 
         signClient?.on('session_request', onSessionRequest);
@@ -57,10 +62,11 @@ const WalletConnect = {
 // Listeners
 interface SessionProposalParams {
   accountAddress: string;
-  event: SignClientTypes.Event;
+  event: EventType<'session_proposal'>;
 }
 
 const onSessionProposal = (params: SessionProposalParams) => {
+  // TODO: handle timeout
   const { event } = params;
 
   const dappMeta = event.params.proposer.metadata;
@@ -99,7 +105,7 @@ const onSessionProposal = (params: SessionProposalParams) => {
   });
 };
 
-const onSessionRequest = (event: SignClientTypes.Event) => {
+const onSessionRequest = (event: EventType<'session_request'>) => {
   // TODO: handle session Request
   Alert({
     title: 'New Request',
@@ -108,24 +114,25 @@ const onSessionRequest = (event: SignClientTypes.Event) => {
 };
 
 // Helpers
-type RequiredNamespacesObj = SignClientTypes.Event['params']['requiredNamespaces'];
+
+type EventType<
+  T extends SignClientTypes.Event
+> = SignClientTypes.EventArguments[T];
 
 const buildNamespacesFromEvent = ({
   event,
   accountAddress,
 }: SessionProposalParams) =>
   Object.fromEntries(
-    Object.entries(event.params.requiredNamespaces).map(
-      ([key, namespace]: [string, RequiredNamespacesObj]) => [
-        key,
-        {
-          ...namespace,
-          accounts: namespace.chains.map(
-            (chain: string) => `${chain}:${accountAddress}`
-          ),
-        },
-      ]
-    )
+    Object.entries(event.params.requiredNamespaces).map(([key, namespace]) => [
+      key,
+      {
+        ...namespace,
+        accounts: namespace.chains.map(
+          (chain: string) => `${chain}:${accountAddress}`
+        ),
+      },
+    ])
   );
 
 export default WalletConnect;
