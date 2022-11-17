@@ -1,0 +1,131 @@
+import { Core } from '@walletconnect/core';
+import SignClient from '@walletconnect/sign-client';
+import { SignClientTypes, EngineTypes } from '@walletconnect/types';
+import { getSdkError } from '@walletconnect/utils';
+import { WALLET_CONNECT_PROJECT_ID } from 'react-native-dotenv';
+
+import { appName } from '@cardstack/constants';
+import { Navigation, Routes } from '@cardstack/navigation';
+
+import { Alert } from '@rainbow-me/components/alerts';
+import { logger } from '@rainbow-me/utils';
+
+const core = new Core({
+  projectId: WALLET_CONNECT_PROJECT_ID,
+});
+
+const metadata = {
+  name: `${appName}`,
+  description: `${appName} makes exploring xDai fun and accessible`,
+  url: 'https://app.cardstack.com',
+  icons: [
+    'https://assets.coingecko.com/coins/images/3247/small/cardstack.png?1547037769',
+  ],
+};
+
+let signClient: SignClient | null = null;
+
+const WalletConnect = {
+  init: async (accountAddress: string) => {
+    try {
+      if (!signClient) {
+        signClient = await SignClient.init({
+          core,
+          metadata,
+        });
+
+        signClient?.on('session_proposal', (event: SignClientTypes.Event) =>
+          onSessionProposal({ event, accountAddress })
+        );
+
+        signClient?.on('session_request', onSessionRequest);
+      }
+    } catch (e) {
+      logger.sentry('[WC-2.0]: Init failed', e);
+    }
+  },
+  pair: async (params: EngineTypes.PairParams) => {
+    try {
+      await signClient?.core.pairing.pair(params);
+    } catch (e) {
+      logger.sentry('[WC-2.0]: Pairing failed', e);
+    }
+  },
+  isVersion2Uri: (uri: string) => uri.includes('relay-protocol'),
+};
+
+// Listeners
+interface SessionProposalParams {
+  accountAddress: string;
+  event: SignClientTypes.Event;
+}
+
+const onSessionProposal = (params: SessionProposalParams) => {
+  const { event } = params;
+
+  const dappMeta = event.params.proposer.metadata;
+
+  Navigation.handleAction(Routes.WALLET_CONNECT_APPROVAL_SHEET, {
+    callback: async (approved: boolean) => {
+      if (approved) {
+        try {
+          await signClient?.approve({
+            id: event.id,
+            namespaces: buildNamespacesFromEvent(params),
+          });
+        } catch (e) {
+          logger.sentry('[WC-2.0]: Pairing approval failed', e);
+        }
+      } else {
+        try {
+          await signClient?.reject({
+            id: event.id,
+            reason: getSdkError('USER_REJECTED'),
+          });
+
+          signClient?.disconnect({
+            topic: event.params.pairingTopic,
+          });
+        } catch (e) {
+          logger.sentry('[WC-2.0]: Pairing rejection failed', e);
+        }
+      }
+    },
+    meta: {
+      dappName: dappMeta.name,
+      dappUrl: dappMeta.url,
+      imageUrl: dappMeta.icons[0],
+    },
+  });
+};
+
+const onSessionRequest = (event: SignClientTypes.Event) => {
+  // TODO: handle session Request
+  Alert({
+    title: 'New Request',
+    message: JSON.stringify(event),
+  });
+};
+
+// Helpers
+type RequiredNamespacesObj = SignClientTypes.Event['params']['requiredNamespaces'];
+
+const buildNamespacesFromEvent = ({
+  event,
+  accountAddress,
+}: SessionProposalParams) =>
+  Object.fromEntries(
+    Object.entries(event.params.requiredNamespaces).map(
+      ([key, namespace]: [string, RequiredNamespacesObj]) => [
+        key,
+        {
+          ...namespace,
+          accounts: namespace.chains.map(
+            (chain: string) => `${chain}:${accountAddress}`
+          ),
+        },
+      ]
+    )
+  );
+
+export default WalletConnect;
