@@ -21,4 +21,5 @@ declare module 'react-native-dotenv' {
   export const OPENSEA_API_KEY: string;
   export const SECURE_STORE_KEY: string;
   export const SENTRY_ENDPOINT: string;
+  export const WALLET_CONNECT_PROJECT_ID: string;
 }

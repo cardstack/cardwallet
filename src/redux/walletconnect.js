@@ -1,5 +1,5 @@
 import { captureException } from '@sentry/react-native';
-import WalletConnect from '@walletconnect/client';
+import WalletConnectLegacy from '@walletconnect/legacy-client';
 import lang from 'i18n-js';
 import {
   forEach,
@@ -22,6 +22,7 @@ import WalletTypes from '../helpers/walletTypes';
 import { isSigningMethod } from '../utils/signingMethods';
 import { appName } from '@cardstack/constants';
 import { getFCMToken } from '@cardstack/models/firebase';
+import WalletConnect from '@cardstack/models/wallet-connect';
 import { Navigation, Routes } from '@cardstack/navigation';
 import {
   addRequestToApprove,
@@ -109,10 +110,15 @@ export const walletConnectOnSessionRequest = (
   callback
 ) => async dispatch => {
   let walletConnector = null;
+  // Use WC 2.0
+  if (WalletConnect.isVersion2Uri(uri)) {
+    return WalletConnect.pair({ uri });
+  }
+
   try {
     const { clientMeta, push } = await getNativeOptions();
     try {
-      walletConnector = new WalletConnect({ clientMeta, uri }, push);
+      walletConnector = new WalletConnectLegacy({ clientMeta, uri }, push);
       const timeoutHandler = setTimeout(() => {
         callback && callback(WCRedirectTypes.qrcodeInvalid);
       }, WC_REQUEST_TIMEOUT);
@@ -248,7 +254,10 @@ export const walletConnectLoadState = () => async (dispatch, getState) => {
     const { clientMeta, push } = await getNativeOptions();
 
     newWalletConnectors = mapValues(allSessions, session => {
-      const walletConnector = new WalletConnect({ clientMeta, session }, push);
+      const walletConnector = new WalletConnectLegacy(
+        { clientMeta, session },
+        push
+      );
       return dispatch(listenOnNewMessages(walletConnector));
     });
   } catch (error) {

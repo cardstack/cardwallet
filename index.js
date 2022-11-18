@@ -5,6 +5,8 @@ import 'react-native-gesture-handler';
  * with react-native-url-polyfill which is full implementation of the WHATWG URL Standard
  * */
 import 'react-native-url-polyfill/auto';
+import '@walletconnect/react-native-compat';
+
 import './shim';
 
 import lang from 'i18n-js';
