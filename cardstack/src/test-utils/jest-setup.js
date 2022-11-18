@@ -97,6 +97,14 @@ jest.mock('react-native-public-ip', () => ({
   publicIP: jest.fn(),
 }));
 
+jest.mock('@walletconnect/core', () => ({
+  Core: jest.fn(),
+}));
+
+jest.mock('@walletconnect/sign-client', () => ({
+  default: jest.fn(),
+}));
+
 jest.mock('@react-native-async-storage/async-storage', () => mockAsyncStorage);
 
 jest.mock('@apollo/client', () => ({
