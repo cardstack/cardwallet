@@ -34,13 +34,8 @@ export const RadioListItem = ({
         ) : null}
         <Text weight="bold" size="body">
           {label}
-          {'   '}
-          {props.default ? (
-            <Text variant="subText" textTransform="uppercase">
-              Default
-            </Text>
-          ) : null}
         </Text>
+        {props.hasTags}
         <Container flex={1} alignItems="flex-end">
           {selected ? (
             <Icon
@@ -72,7 +67,7 @@ export interface RadioListItemProps {
   value: string;
   disabled: boolean;
   selected: boolean;
-  default?: boolean;
+  hasTags?: Element;
   emojiName?: string;
   onPress?: ({ index, value }: { index: number; value: string }) => void;
 }

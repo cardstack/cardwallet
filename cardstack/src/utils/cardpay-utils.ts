@@ -18,9 +18,14 @@ import {
 
 export const NATIVE_TOKEN_SYMBOLS = ['eth', 'spoa', 'xdai', 'keth'];
 
-const MAINNETS = [NetworkType.mainnet, NetworkType.gnosis];
+export const CARDPAY_SUPPORTED_NETWORKS = [
+  NetworkType.gnosis,
+  NetworkType.sokol,
+];
 
-const LAYER_1_NETWORKS = [NetworkType.mainnet];
+const MAINNETS = [NetworkType.mainnet, NetworkType.gnosis, NetworkType.polygon];
+
+const LAYER_1_NETWORKS = [NetworkType.mainnet, NetworkType.goerli];
 
 const LAYER_2_NETWORKS = [NetworkType.gnosis, NetworkType.sokol];
 
