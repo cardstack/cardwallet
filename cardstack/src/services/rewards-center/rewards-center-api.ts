@@ -15,7 +15,7 @@ import {
   getWithdrawGasEstimate,
   registerToRewardProgram,
   withdrawFromRewardSafe,
-  getRewardProgramInfo,
+  getRewardProgramExplainer,
 } from './rewards-center-service';
 import {
   RegisterGasEstimateQueryParams,
@@ -29,7 +29,6 @@ import {
   RewardWithdrawGasEstimateParams,
   RewardWithdrawParams,
   SuccessfulTransactionReceipt,
-  RewardsSafeQueryParams,
   RewardValidProofsResult,
 } from './rewards-center-types';
 
@@ -76,10 +75,10 @@ const rewardsApi = safesApi.injectEndpoints({
       },
       providesTags: [CacheTags.REWARDS_POOL],
     }),
-    getRewardProgramInfo: builder.query<string, string>({
+    getRewardProgramExplainer: builder.query<string, string>({
       async queryFn(params) {
         return queryPromiseWrapper<string, string>(
-          getRewardProgramInfo,
+          getRewardProgramExplainer,
           params,
           {
             errorLogMessage: 'Error fetching reward program info',
@@ -210,7 +209,7 @@ export const {
   useRegisterToRewardProgramMutation,
   useClaimRewardsMutation,
   useGetClaimRewardsGasEstimateQuery,
-  useGetRewardProgramInfoQuery,
+  useGetRewardProgramExplainerQuery,
   useLazyGetRegisterRewardeeGasEstimateQuery,
   useWithdrawRewardBalanceMutation,
   useGetRewardWithdrawGasEstimateQuery,

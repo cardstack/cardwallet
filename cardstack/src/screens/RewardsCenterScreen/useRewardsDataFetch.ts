@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { useIsFetchingDataNewAccount } from '@cardstack/hooks';
 import {
   useGetValidRewardsForProgramQuery,
-  useGetRewardProgramInfoQuery,
+  useGetRewardProgramExplainerQuery,
   useGetRewardPoolTokenBalancesQuery,
   useGetRewardsSafeQuery,
 } from '@cardstack/services/rewards-center/rewards-center-api';
@@ -52,7 +52,7 @@ const useRewardsDataFetch = () => {
     [rewardSafes, defaultRewardProgramId]
   );
 
-  const { data: rewardProgramExplainer } = useGetRewardProgramInfoQuery(
+  const { data: rewardProgramExplainer } = useGetRewardProgramExplainerQuery(
     defaultRewardProgramId
   );
 

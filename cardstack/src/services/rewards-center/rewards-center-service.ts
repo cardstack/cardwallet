@@ -30,7 +30,6 @@ import {
   RewardWithdrawGasEstimateParams,
   RewardWithdrawParams,
   ValidProofsParams,
-  RewardsSafeQueryParams,
   RewardValidProofsResult,
 } from './rewards-center-types';
 
@@ -304,7 +303,7 @@ export const getWithdrawGasEstimate = async ({
   return gasEstimate.amount;
 };
 
-export const getRewardProgramInfo = async (rewardProgramId: string) => {
+export const getRewardProgramExplainer = async (rewardProgramId: string) => {
   const rewardManager = await getRewardManagerInstance();
 
   const programInfo = await rewardManager.getRewardProgramInfo(rewardProgramId);
