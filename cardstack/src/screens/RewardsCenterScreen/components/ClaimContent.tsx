@@ -4,10 +4,7 @@ import { FlatList } from 'react-native';
 
 import { Container, useTabHeader, InfoBanner } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
-import {
-  RewardProofType,
-  FullBalanceToken,
-} from '@cardstack/services/rewards-center/rewards-center-types';
+import { RewardProofType } from '@cardstack/services/rewards-center/rewards-center-types';
 
 import { strings } from '../strings';
 
@@ -19,7 +16,6 @@ import {
 } from '.';
 
 interface ClaimContentProps {
-  mainPool?: FullBalanceToken;
   rewards?: Array<RewardProofType>;
 }
 
@@ -33,7 +29,7 @@ const tabs = [
   { title: strings.history.title, key: Tabs.HISTORY },
 ];
 
-export const ClaimContent = ({ mainPool, rewards }: ClaimContentProps) => {
+export const ClaimContent = ({ rewards }: ClaimContentProps) => {
   const { TabHeader, currentTab } = useTabHeader({ tabs });
 
   const { navigate } = useNavigation();
@@ -57,19 +53,9 @@ export const ClaimContent = ({ mainPool, rewards }: ClaimContentProps) => {
           title={strings.register.gasInfoBanner.title}
           message={strings.register.gasInfoBanner.message}
         />
-        {mainPool && (
-          <Container paddingTop={5}>
-            <RewardRow
-              coinSymbol={mainPool.token.symbol}
-              primaryText={mainPool.balance.display}
-              subText={mainPool.native.balance.display}
-              isClaimable={!!mainPool.isClaimable}
-            />
-          </Container>
-        )}
       </Container>
     ),
-    [title, mainPool]
+    [title]
   );
 
   const ListFooter = () => (
