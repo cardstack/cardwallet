@@ -83,6 +83,7 @@ const getValidProofs = async ({
 export const fetchValidProofsWithToken = async ({
   rewardProgramId,
   accountAddress,
+  safeAddress,
   nativeCurrency,
 }: RewardsValidProofsParams): Promise<RewardValidProofsResult> => {
   const rewardPoolInstance = await getRewardsPoolInstance();
@@ -91,6 +92,14 @@ export const fetchValidProofsWithToken = async ({
     accountAddress,
     rewardProgramId
   );
+
+  const claimableProofs = safeAddress
+    ? await rewardPoolInstance.getUnclaimedValidProofsWithoutDust(
+        accountAddress,
+        rewardProgramId,
+        safeAddress
+      )
+    : [];
 
   const proofsWithNativeCurrency = await Promise.all(
     proofs?.map(async proof => {
@@ -103,7 +112,17 @@ export const fetchValidProofsWithToken = async ({
         true
       );
 
-      return { ...proof, ...tokenWithPrice };
+      const claimingInfo =
+        claimableProofs.find(
+          findProof => findProof.rootHash === proof.rootHash
+        ) || {};
+
+      return {
+        ...proof,
+        ...tokenWithPrice,
+        ...claimingInfo,
+        isClaimable: !!claimingInfo,
+      };
     })
   );
 
@@ -206,14 +225,17 @@ export const getClaimRewardsGasEstimate = async ({
   tokenAddress,
   rewardProgramId,
   accountAddress,
+  rewardsToClaim,
 }: RewardsClaimGasEstimateParams) => {
   const rewardPoolInstance = await getRewardsPoolInstance();
 
-  const validProofs = await getValidProofs({
-    accountAddress,
-    rewardProgramId,
-    tokenAddress,
-  });
+  const validProofs =
+    rewardsToClaim ||
+    (await getValidProofs({
+      accountAddress,
+      rewardProgramId,
+      tokenAddress,
+    }));
 
   const estimatedAmounts = await Promise.all(
     validProofs?.map(async ({ leaf, proofArray }) => {
@@ -314,14 +336,17 @@ export const claimRewards = async ({
   tokenAddress,
   rewardProgramId,
   accountAddress,
+  rewardsToClaim,
 }: RewardsClaimMutationParams) => {
   const rewardPoolInstance = await getRewardsPoolInstance({ accountAddress });
 
-  const validProofs = await getValidProofs({
-    accountAddress,
-    rewardProgramId,
-    tokenAddress,
-  });
+  const validProofs =
+    rewardsToClaim ||
+    (await getValidProofs({
+      accountAddress,
+      rewardProgramId,
+      tokenAddress,
+    }));
 
   const receipts = [];
 

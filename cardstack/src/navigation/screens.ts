@@ -26,6 +26,7 @@ import {
   RewardsCenterScreen,
   RewardsRegisterSheet,
   RewardsClaimSheet,
+  RewardClaimSingleSheet,
   TransactionConfirmationSheet,
   ColorPickerModal,
   RequestPrepaidCardScreen,
@@ -145,6 +146,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   REWARDS_CLAIM_SHEET: {
     component: RewardsClaimSheet,
+    options: sheetPreset(),
+  },
+  REWARD_CLAIM_SINGLE_SHEET: {
+    component: RewardClaimSingleSheet,
     options: sheetPreset(),
   },
   REWARD_WITHDRAW_TO: {

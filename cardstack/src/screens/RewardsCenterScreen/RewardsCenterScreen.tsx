@@ -23,27 +23,13 @@ const RewardsCenterScreen = () => {
   } = useRewardsCenterScreen();
 
   const mainPoolRowProps = useMemo(
-    () =>
-      hasRewards
-        ? {
-            primaryText: fullBalanceToken?.balance.display || '',
-            subText: fullBalanceToken?.native.balance.display || '',
-            coinSymbol: fullBalanceToken?.token.symbol || '',
-            isClaimable: !!fullBalanceToken?.isClaimable,
-          }
-        : undefined,
-    [hasRewards, fullBalanceToken]
-  );
-
-  const rewardsRowProps = useMemo(
-    () =>
-      rewards?.map(reward => ({
-        primaryText: reward?.balance.display || '',
-        subText: reward?.native.balance.display || '',
-        coinSymbol: reward?.token.symbol || '',
-        isClaimable: true,
-      })),
-    [rewards]
+    () => ({
+      primaryText: fullBalanceToken?.balance.display || '',
+      subText: fullBalanceToken?.native.balance.display || '',
+      coinSymbol: fullBalanceToken?.token.symbol || '',
+      isClaimable: !!fullBalanceToken?.isClaimable,
+    }),
+    [fullBalanceToken]
   );
 
   return (
@@ -56,12 +42,12 @@ const RewardsCenterScreen = () => {
         ) : (
           <Container flex={1}>
             {!isRegistered &&
-              (mainPoolRowProps ? (
+              (hasRewards ? (
                 <RegisterContent {...mainPoolRowProps} />
               ) : (
                 <NoRewardContent />
               ))}
-            {isRegistered && <ClaimContent claimList={rewardsRowProps} />}
+            {isRegistered && <ClaimContent rewards={rewards} />}
           </Container>
         )}
       </Container>

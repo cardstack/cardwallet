@@ -209,11 +209,11 @@ export const {
   useGetRewardPoolTokenBalancesQuery,
   useRegisterToRewardProgramMutation,
   useClaimRewardsMutation,
+  useGetClaimRewardsGasEstimateQuery,
   useGetRewardProgramInfoQuery,
   useLazyGetRegisterRewardeeGasEstimateQuery,
   useWithdrawRewardBalanceMutation,
   useGetRewardWithdrawGasEstimateQuery,
-  useGetClaimRewardsGasEstimateQuery,
   useGetClaimAllRewardsGasEstimateQuery,
   useClaimAllRewardsMutation,
 } = rewardsApi;

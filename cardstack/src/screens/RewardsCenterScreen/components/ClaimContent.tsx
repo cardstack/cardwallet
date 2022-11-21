@@ -1,26 +1,26 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useMemo } from 'react';
+import { FlatList } from 'react-native';
 
-import {
-  ScrollView,
-  Container,
-  useTabHeader,
-  InfoBanner,
-} from '@cardstack/components';
+import { Container, useTabHeader, InfoBanner } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
+import {
+  RewardProofType,
+  FullBalanceToken,
+} from '@cardstack/services/rewards-center/rewards-center-types';
 
 import { strings } from '../strings';
 
 import {
   RewardsTitle,
   RewardRow,
-  RewardRowProps,
   RewardsBalanceList,
   RewardsHistoryList,
 } from '.';
 
 interface ClaimContentProps {
-  claimList?: Array<RewardRowProps>;
+  mainPool?: FullBalanceToken;
+  rewards?: Array<RewardProofType>;
 }
 
 enum Tabs {
@@ -33,54 +33,85 @@ const tabs = [
   { title: strings.history.title, key: Tabs.HISTORY },
 ];
 
-export const ClaimContent = ({ claimList }: ClaimContentProps) => {
+export const ClaimContent = ({ mainPool, rewards }: ClaimContentProps) => {
   const { TabHeader, currentTab } = useTabHeader({ tabs });
 
   const { navigate } = useNavigation();
 
-  const onClaimPress = useCallback(() => navigate(Routes.REWARDS_CLAIM_SHEET), [
-    navigate,
-  ]);
-
-  const ClaimList = useMemo(
-    () =>
-      claimList?.map((item, index) => (
-        <RewardRow
-          coinSymbol={item.coinSymbol}
-          primaryText={item.primaryText}
-          subText={item.subText}
-          paddingBottom={index + 1 < claimList.length ? 5 : 0}
-          onClaimPress={item.isClaimable ? onClaimPress : undefined}
-        />
-      )),
-    [claimList, onClaimPress]
+  const onClaimSingleRewardPress = useCallback(
+    (reward?: RewardProofType) =>
+      navigate(Routes.REWARD_CLAIM_SINGLE_SHEET, { reward }),
+    [navigate]
   );
 
   const title = useMemo(
-    () =>
-      claimList ? strings.register.title : strings.register.noRewards.title,
-    [claimList]
+    () => (rewards ? strings.register.title : strings.register.noRewards.title),
+    [rewards]
   );
 
-  return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+  const Header = useMemo(
+    () => (
       <Container padding={5}>
         <RewardsTitle title={title} width="100%" paddingBottom={5} />
         <InfoBanner
-          paddingBottom={5}
           title={strings.register.gasInfoBanner.title}
           message={strings.register.gasInfoBanner.message}
         />
-        {ClaimList}
-      </Container>
-      <TabHeader />
-      <Container padding={5}>
-        {currentTab.key === Tabs.BALANCE ? (
-          <RewardsBalanceList />
-        ) : (
-          <RewardsHistoryList />
+        {mainPool && (
+          <Container paddingTop={5}>
+            <RewardRow
+              coinSymbol={mainPool.token.symbol}
+              primaryText={mainPool.balance.display}
+              subText={mainPool.native.balance.display}
+              isClaimable={!!mainPool.isClaimable}
+            />
+          </Container>
         )}
       </Container>
-    </ScrollView>
+    ),
+    [title, mainPool]
+  );
+
+  const Footer = useMemo(
+    () => (
+      <Container>
+        <TabHeader />
+        <Container padding={5}>
+          {currentTab.key === Tabs.BALANCE ? (
+            <RewardsBalanceList />
+          ) : (
+            <RewardsHistoryList />
+          )}
+        </Container>
+      </Container>
+    ),
+    [currentTab]
+  );
+
+  const RewardItem = useCallback(
+    ({ item }: { item: RewardProofType }) => (
+      <Container paddingHorizontal={5} paddingBottom={2}>
+        <RewardRow
+          coinSymbol={item.token.symbol}
+          primaryText={item.balance.display}
+          subText={item.native.balance.display}
+          onClaimPress={
+            !!Number(item.native.balance.amount)
+              ? () => onClaimSingleRewardPress(item)
+              : undefined
+          }
+        />
+      </Container>
+    ),
+    [onClaimSingleRewardPress]
+  );
+
+  return (
+    <FlatList
+      data={rewards}
+      renderItem={RewardItem}
+      ListHeaderComponent={Header}
+      ListFooterComponent={Footer}
+    />
   );
 };

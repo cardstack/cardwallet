@@ -2,6 +2,7 @@ import {
   NativeCurrency,
   RewardSafe,
   Proof,
+  ClaimableProof,
   WithSymbol,
 } from '@cardstack/cardpay-sdk';
 import { TransactionReceipt } from 'web3-core';
@@ -55,6 +56,7 @@ export interface RewardsClaimMutationParams
   extends RewardsPoolSignedBaseParams,
     ValidProofsParams {
   safeAddress: string;
+  rewardsToClaim?: RewardProofType[];
 }
 
 export interface RegisterGasEstimateQueryParams {
@@ -83,25 +85,11 @@ export type RewardWithdrawGasEstimateParams = RewardWithdrawBaseParams;
 
 export interface RewardsValidProofsParams {
   accountAddress: string;
+  safeAddress?: string;
   rewardProgramId: string;
   nativeCurrency: NativeCurrency;
 }
 
-declare type WithTokenBalance<T> = T & {
-  token: {
-    symbol: string;
-  };
-  balance: {
-    amount: string;
-    display: string;
-    wei: string;
-  };
-  native: {
-    balance: {
-      amount: number;
-      display: string;
-    };
-  };
-};
+export type RewardProofType = WithSymbol<Proof | ClaimableProof> & TokenType;
 
-export type RewardValidProofsResult = WithTokenBalance<WithSymbol<Proof>>[];
+export type RewardValidProofsResult = RewardProofType[];

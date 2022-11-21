@@ -38,15 +38,6 @@ const useRewardsDataFetch = () => {
     [accountAddress, nativeCurrency, defaultRewardProgramId, network]
   );
 
-  const { data: rewardProgramExplainer } = useGetRewardProgramInfoQuery(
-    defaultRewardProgramId
-  );
-
-  const { data: rewards } = useGetValidRewardsForProgramQuery(
-    query.params,
-    query.options
-  );
-
   const {
     isLoading: isLoadingSafes,
     isFetching,
@@ -59,6 +50,15 @@ const useRewardsDataFetch = () => {
   const rewardSafeForProgram = useMemo(
     () => findByRewardProgramId(rewardSafes, defaultRewardProgramId),
     [rewardSafes, defaultRewardProgramId]
+  );
+
+  const { data: rewardProgramExplainer } = useGetRewardProgramInfoQuery(
+    defaultRewardProgramId
+  );
+
+  const { data: rewards } = useGetValidRewardsForProgramQuery(
+    { ...query.params, safeAddress: rewardSafeForProgram?.address },
+    { ...query.options, skip: query.options.skip || !rewardSafeForProgram }
   );
 
   const {
