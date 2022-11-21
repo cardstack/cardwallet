@@ -30,7 +30,7 @@ import {
   RewardWithdrawGasEstimateParams,
   RewardWithdrawParams,
   ValidProofsParams,
-  RewardsValidProofsParams,
+  RewardsSafeQueryParams,
   RewardValidProofsResult,
 } from './rewards-center-types';
 
@@ -85,7 +85,7 @@ export const fetchValidProofsWithToken = async ({
   accountAddress,
   safeAddress,
   nativeCurrency,
-}: RewardsValidProofsParams): Promise<RewardValidProofsResult> => {
+}: RewardsSafeQueryParams): Promise<RewardValidProofsResult> => {
   const rewardPoolInstance = await getRewardsPoolInstance();
 
   const proofs = await rewardPoolInstance.getUnclaimedValidProofs(

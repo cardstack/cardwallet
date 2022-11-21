@@ -83,13 +83,6 @@ export interface RewardWithdrawParams
 
 export type RewardWithdrawGasEstimateParams = RewardWithdrawBaseParams;
 
-export interface RewardsValidProofsParams {
-  accountAddress: string;
-  safeAddress?: string;
-  rewardProgramId: string;
-  nativeCurrency: NativeCurrency;
-}
-
 export type RewardProofType = WithSymbol<Proof | ClaimableProof> & TokenType;
 
 export type RewardValidProofsResult = RewardProofType[];

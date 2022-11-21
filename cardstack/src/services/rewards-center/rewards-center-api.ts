@@ -29,7 +29,7 @@ import {
   RewardWithdrawGasEstimateParams,
   RewardWithdrawParams,
   SuccessfulTransactionReceipt,
-  RewardsValidProofsParams,
+  RewardsSafeQueryParams,
   RewardValidProofsResult,
 } from './rewards-center-types';
 
@@ -37,12 +37,12 @@ const rewardsApi = safesApi.injectEndpoints({
   endpoints: builder => ({
     getValidRewardsForProgram: builder.query<
       RewardValidProofsResult,
-      RewardsValidProofsParams
+      RewardsSafeQueryParams
     >({
       async queryFn(params) {
         return queryPromiseWrapper<
           RewardValidProofsResult,
-          RewardsValidProofsParams
+          RewardsSafeQueryParams
         >(fetchValidProofsWithToken, params, {
           errorLogMessage: 'Error fetching reward program proofs',
         });
