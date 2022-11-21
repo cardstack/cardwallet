@@ -19,7 +19,7 @@ import {
   CurrencySection,
   NetworkSection,
   NotificationsSection,
-  WalletConnectSessionsSection,
+  WalletConnectLegacySessionsSection,
 } from '@rainbow-me/components/settings-menu';
 import DeveloperSettings from '@rainbow-me/components/settings-menu/DeveloperSettings';
 import SettingsScreen from '@rainbow-me/screens/SettingsScreen';
@@ -102,8 +102,8 @@ export const SettingsGroup = ({ Stack }: { Stack: StackType }) => {
           options={{ title: 'Notifications' }}
         />
         <Stack.Screen
-          component={WalletConnectSessionsSection}
-          name={Routes.WCSESSIONS_SECTION}
+          component={WalletConnectLegacySessionsSection}
+          name={Routes.WC_LEGACY_SESSIONS_SECTION}
           options={{ title: 'WalletConnect Sessions' }}
         />
         <Stack.Screen
