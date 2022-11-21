@@ -31,7 +31,6 @@ const tabs = [
 
 export const ClaimContent = ({ rewards }: ClaimContentProps) => {
   const { TabHeader, currentTab } = useTabHeader({ tabs });
-
   const { navigate } = useNavigation();
 
   const onClaimSingleRewardPress = useCallback(
@@ -94,7 +93,7 @@ export const ClaimContent = ({ rewards }: ClaimContentProps) => {
       data={rewards}
       renderItem={RewardItem}
       ListHeaderComponent={ListHeader}
-      ListFooterComponent={<ListFooter />}
+      ListFooterComponent={ListFooter()}
     />
   );
 };
