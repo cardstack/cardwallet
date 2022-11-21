@@ -11,7 +11,13 @@ export const RewardProgramHeader = memo(({ title }: { title?: string }) => (
       <>
         <Image source={bannerBackground} minWidth="100%" />
         <CenteredContainer position="absolute" width="60%" height="100%">
-          <Text color="white" variant="promoBannerTitle">
+          <Text
+            color="white"
+            variant="semibold"
+            fontSize={12}
+            textTransform="uppercase"
+            textAlign="center"
+          >
             {title}
           </Text>
         </CenteredContainer>
