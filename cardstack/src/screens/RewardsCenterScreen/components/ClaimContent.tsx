@@ -49,7 +49,7 @@ export const ClaimContent = ({ mainPool, rewards }: ClaimContentProps) => {
     [rewards]
   );
 
-  const Header = useMemo(
+  const ListHeader = useMemo(
     () => (
       <Container padding={5}>
         <RewardsTitle title={title} width="100%" paddingBottom={5} />
@@ -72,20 +72,17 @@ export const ClaimContent = ({ mainPool, rewards }: ClaimContentProps) => {
     [title, mainPool]
   );
 
-  const Footer = useMemo(
-    () => (
-      <Container>
-        <TabHeader />
-        <Container padding={5}>
-          {currentTab.key === Tabs.BALANCE ? (
-            <RewardsBalanceList />
-          ) : (
-            <RewardsHistoryList />
-          )}
-        </Container>
+  const ListFooter = () => (
+    <Container>
+      <TabHeader />
+      <Container padding={5}>
+        {currentTab.key === Tabs.BALANCE ? (
+          <RewardsBalanceList />
+        ) : (
+          <RewardsHistoryList />
+        )}
       </Container>
-    ),
-    [currentTab]
+    </Container>
   );
 
   const RewardItem = useCallback(
@@ -96,7 +93,7 @@ export const ClaimContent = ({ mainPool, rewards }: ClaimContentProps) => {
           primaryText={item.balance.display}
           subText={item.native.balance.display}
           onClaimPress={
-            !!Number(item.native.balance.amount)
+            Number(item.native.balance.amount)
               ? () => onClaimSingleRewardPress(item)
               : undefined
           }
@@ -110,8 +107,8 @@ export const ClaimContent = ({ mainPool, rewards }: ClaimContentProps) => {
     <FlatList
       data={rewards}
       renderItem={RewardItem}
-      ListHeaderComponent={Header}
-      ListFooterComponent={Footer}
+      ListHeaderComponent={ListHeader}
+      ListFooterComponent={<ListFooter />}
     />
   );
 };
