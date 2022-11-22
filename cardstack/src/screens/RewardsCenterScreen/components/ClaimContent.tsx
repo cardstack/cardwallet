@@ -57,19 +57,6 @@ export const ClaimContent = ({ rewards }: ClaimContentProps) => {
     [title]
   );
 
-  const ListFooter = () => (
-    <Container>
-      <TabHeader />
-      <Container padding={5}>
-        {currentTab.key === Tabs.BALANCE ? (
-          <RewardsBalanceList />
-        ) : (
-          <RewardsHistoryList />
-        )}
-      </Container>
-    </Container>
-  );
-
   const RewardItem = useCallback(
     ({ item }: { item: RewardProofType }) => (
       <Container paddingHorizontal={5} paddingBottom={2}>
@@ -93,7 +80,18 @@ export const ClaimContent = ({ rewards }: ClaimContentProps) => {
       data={rewards}
       renderItem={RewardItem}
       ListHeaderComponent={ListHeader}
-      ListFooterComponent={ListFooter()}
+      ListFooterComponent={
+        <Container>
+          <TabHeader />
+          <Container padding={5}>
+            {currentTab.key === Tabs.BALANCE ? (
+              <RewardsBalanceList />
+            ) : (
+              <RewardsHistoryList />
+            )}
+          </Container>
+        </Container>
+      }
     />
   );
 };
