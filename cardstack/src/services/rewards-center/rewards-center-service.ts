@@ -87,7 +87,7 @@ export const fetchValidProofsWithToken = async ({
 }: RewardsSafeQueryParams): Promise<RewardValidProofsResult> => {
   const rewardPoolInstance = await getRewardsPoolInstance();
 
-  const proofs = await rewardPoolInstance.getUnclaimedValidProofs(
+  const allProofs = await rewardPoolInstance.getUnclaimedValidProofs(
     accountAddress,
     rewardProgramId
   );
@@ -100,8 +100,8 @@ export const fetchValidProofsWithToken = async ({
       )
     : [];
 
-  const proofsWithNativeCurrency = await Promise.all(
-    proofs?.map(async proof => {
+  const allProofsWithNativeCurrency = await Promise.all(
+    allProofs?.map(async proof => {
       const tokenWithPrice = await addNativePriceToToken(
         ({
           token: { symbol: proof.tokenSymbol },
@@ -111,6 +111,8 @@ export const fetchValidProofsWithToken = async ({
         true
       );
 
+      // Adds data needed for claiming a proof to the general proofs list
+      // rootHash is used as a merging ID.
       const claimingInfo =
         claimableProofs.find(
           findProof => findProof.rootHash === proof.rootHash
@@ -125,7 +127,7 @@ export const fetchValidProofsWithToken = async ({
     })
   );
 
-  return proofsWithNativeCurrency;
+  return allProofsWithNativeCurrency;
 };
 
 export const fetchRewardsSafe = async ({
