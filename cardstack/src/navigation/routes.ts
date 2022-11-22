@@ -86,6 +86,7 @@ const SettingsRoutes = {
   NETWORK_SECTION: 'NetworkSection',
   NOTIFICATIONS_SECTION: 'NotificationsSection',
   WC_LEGACY_SESSIONS_SECTION: 'WCLegacySessionsSection',
+  WC_SESSIONS_SECTION: 'WCSessionsSection',
   MY_WALLET_ADDRESS_SECTION: 'MyWalletAddressSection',
   SECURITY_SECTION: 'SecuritySettingsSection',
 };

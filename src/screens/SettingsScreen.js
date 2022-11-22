@@ -68,8 +68,14 @@ export default function SettingsScreen() {
         <ListItem
           icon={<Icon color="settingsTeal" name="walletConnect" />}
           label="WalletConnect Sessions"
-          onPress={onPressSection(Routes.WCSESSIONS_SECTION)}
-          testID="walletconnect-section"
+          onPress={onPressSection(Routes.WC_LEGACY_SESSIONS_SECTION)}
+        >
+          <ListItemArrowGroup />
+        </ListItem>
+        <ListItem
+          icon={<Icon color="settingsTeal" name="walletConnect" />}
+          label="WalletConnect v2"
+          onPress={onPressSection(Routes.WC_SESSIONS_SECTION)}
         >
           <ListItemArrowGroup />
         </ListItem>

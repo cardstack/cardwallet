@@ -10,9 +10,12 @@ import {
   slideLeftToRightPreset,
   Routes,
 } from '@cardstack/navigation';
-import { SecurityScreen } from '@cardstack/screens';
-import DesignSystemScreen from '@cardstack/screens/Dev/DesignSystemScreen';
-import WalletAddressScreen from '@cardstack/screens/WalletAddressScreen/WalletAddressScreen';
+import {
+  SecurityScreen,
+  WalletConnectSessions,
+  WalletAddressScreen,
+  DesignSystemScreen,
+} from '@cardstack/screens';
 import { palette } from '@cardstack/theme';
 
 import {
@@ -104,7 +107,12 @@ export const SettingsGroup = ({ Stack }: { Stack: StackType }) => {
         <Stack.Screen
           component={WalletConnectLegacySessionsSection}
           name={Routes.WC_LEGACY_SESSIONS_SECTION}
-          options={{ title: 'WalletConnect Sessions' }}
+          options={{ title: 'Sessions v1' }}
+        />
+        <Stack.Screen
+          component={WalletConnectSessions}
+          name={Routes.WC_SESSIONS_SECTION}
+          options={{ title: 'Sessions v2' }}
         />
         <Stack.Screen
           component={WalletAddressScreen}
