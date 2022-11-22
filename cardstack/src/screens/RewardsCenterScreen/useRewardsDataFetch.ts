@@ -7,7 +7,7 @@ import {
 } from '@cardstack/services/rewards-center/rewards-center-api';
 import { FullBalanceToken } from '@cardstack/services/rewards-center/rewards-center-types';
 import { NetworkType } from '@cardstack/types';
-import { findByRewardProgramId, isLayer1 } from '@cardstack/utils';
+import { findByRewardProgramId, isCardPayCompatible } from '@cardstack/utils';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
 
@@ -29,7 +29,7 @@ const useRewardsDataFetch = () => {
         rewardProgramId: defaultRewardProgramId,
       },
       options: {
-        skip: !accountAddress || isLayer1(network),
+        skip: !isCardPayCompatible(network) || !accountAddress,
         refetchOnMountOrArgChange: true,
       },
     }),
@@ -117,7 +117,7 @@ const useRewardsDataFetch = () => {
       isLoadingSafes ||
       isLoadingTokens ||
       isLoadingTokensWithoutDust ||
-      (isUninitialized && !isLayer1(network)),
+      (isUninitialized && isCardPayCompatible(network)),
     [
       isLoadingSafes,
       isLoadingTokens,

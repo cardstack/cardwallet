@@ -6,7 +6,7 @@ import { Alert } from 'react-native';
 import { RouteType } from '@cardstack/navigation/types';
 import { useGetSafesDataQuery } from '@cardstack/services';
 import { PrepaidCardType } from '@cardstack/types';
-import { isLayer1 } from '@cardstack/utils';
+import { isCardPayCompatible } from '@cardstack/utils';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
 
@@ -31,7 +31,7 @@ export const useChoosePrepaidCard = () => {
     { address: accountAddress, nativeCurrency },
     {
       refetchOnMountOrArgChange: 60,
-      skip: isLayer1(network) || !accountAddress,
+      skip: !isCardPayCompatible(network) || !accountAddress,
       selectFromResult: ({
         data,
         isLoading: isLoadingCards,

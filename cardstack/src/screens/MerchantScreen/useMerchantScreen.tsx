@@ -7,7 +7,7 @@ import { RouteType } from '@cardstack/navigation/types';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 import { useGetSafesDataQuery } from '@cardstack/services';
 import { MerchantSafeType } from '@cardstack/types';
-import { isLayer1 } from '@cardstack/utils';
+import { isCardPayCompatible } from '@cardstack/utils';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
 
@@ -27,7 +27,7 @@ export const useMerchantScreen = () => {
   } = useGetSafesDataQuery(
     { address: accountAddress, nativeCurrency },
     {
-      skip: isLayer1(network) || !accountAddress,
+      skip: !isCardPayCompatible(network) || !accountAddress,
       refetchOnMountOrArgChange: 60,
       selectFromResult: ({ data, isFetching }) => ({
         updatedMerchantSafe: data?.merchantSafes?.find(

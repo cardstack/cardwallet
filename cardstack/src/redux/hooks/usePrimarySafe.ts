@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useGetSafesDataQuery } from '@cardstack/services';
 import { MerchantSafeType } from '@cardstack/types';
-import { isLayer1 } from '@cardstack/utils';
+import { isCardPayCompatible } from '@cardstack/utils';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
 
@@ -36,7 +36,7 @@ export const usePrimarySafe = () => {
         merchantSafes: data?.merchantSafes,
         ...rest,
       }),
-      skip: isLayer1(network) || !accountAddress,
+      skip: !isCardPayCompatible(network) || !accountAddress,
     }
   );
 

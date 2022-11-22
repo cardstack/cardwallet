@@ -52,7 +52,7 @@ jest.mock('@cardstack/utils', () => ({
     setIsLoading: jest.fn(),
   }),
   deviceUtils: { isIOS14: false },
-  isLayer1: () => false,
+  isCardPayCompatible: () => true,
 }));
 
 jest.mock('@cardstack/models/web3-instance', () => ({

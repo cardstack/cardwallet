@@ -9,9 +9,9 @@ import {
 import { RewardsSafeType } from '@cardstack/services/rewards-center/rewards-center-types';
 import { TokenType } from '@cardstack/types';
 import {
-  isLayer1,
   groupTransactionsByDate,
   sortByTime,
+  isCardPayCompatible,
 } from '@cardstack/utils';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
@@ -43,10 +43,10 @@ const useRewardsBalanceHistory = () => {
     data: rewardSafeWithdraws,
     refetch: refetchWithdrawHistory,
   } = useGetTransactionsFromSafesQuery({
-    skip: !rewardSafesAddresses || isLayer1(network),
+    skip: !rewardSafesAddresses || !isCardPayCompatible(network),
     variables: {
       safeAddresses: rewardSafesAddresses,
-      relayAddress: !isLayer1(network)
+      relayAddress: isCardPayCompatible(network)
         ? getAddressByNetwork('relay', network)
         : '',
     },

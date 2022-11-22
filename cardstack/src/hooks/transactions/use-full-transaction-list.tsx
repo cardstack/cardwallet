@@ -12,7 +12,7 @@ import { TRANSACTION_PAGE_SIZE } from '../../constants';
 
 import { useTransactionSections } from './use-transaction-sections';
 
-const useLayer2Transactions = () => {
+const useCardPayCompatible = () => {
   const [accountAddress, network] = useRainbowSelector(state => [
     state.settings.accountAddress,
     state.settings.network,
@@ -78,10 +78,10 @@ export const useFullTransactionList = () => {
   ) as NetworkType;
 
   const layer1Data = useAccountTransactions();
-  const layer2Data = useLayer2Transactions();
+  const cardPayCompatibledata = useCardPayCompatible();
 
   if (isCardPayCompatible(network)) {
-    return layer2Data;
+    return cardPayCompatibledata;
   }
 
   if (isLayer1(network)) {
