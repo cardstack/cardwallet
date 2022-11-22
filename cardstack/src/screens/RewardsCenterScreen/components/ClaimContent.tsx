@@ -78,7 +78,7 @@ export const ClaimContent = ({ rewards }: ClaimContentProps) => {
           primaryText={item.balance.display}
           subText={item.native.balance.display}
           onClaimPress={
-            Number(item.native.balance.amount)
+            item.isClaimable && Number(item.native.balance.amount)
               ? () => onClaimSingleRewardPress(item)
               : undefined
           }

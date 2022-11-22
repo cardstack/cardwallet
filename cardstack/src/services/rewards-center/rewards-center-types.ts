@@ -83,6 +83,9 @@ export interface RewardWithdrawParams
 
 export type RewardWithdrawGasEstimateParams = RewardWithdrawBaseParams;
 
-export type RewardProofType = WithSymbol<Proof | ClaimableProof> & TokenType;
+export type RewardProofType = WithSymbol<Proof | ClaimableProof> &
+  TokenType & {
+    isClaimable?: boolean;
+  };
 
 export type RewardValidProofsResult = RewardProofType[];
