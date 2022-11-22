@@ -2,6 +2,8 @@ import { useMemo } from 'react';
 
 import { useIsFetchingDataNewAccount } from '@cardstack/hooks';
 import {
+  useGetValidRewardsForProgramQuery,
+  useGetRewardProgramExplainerQuery,
   useGetRewardPoolTokenBalancesQuery,
   useGetRewardsSafeQuery,
 } from '@cardstack/services/rewards-center/rewards-center-api';
@@ -12,7 +14,7 @@ import { findByRewardProgramId, isLayer1 } from '@cardstack/utils';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
 const rewardDefaultProgramId: { [key in NetworkType]?: string } = {
-  [NetworkType.sokol]: '0x0885ce31D73b63b0Fcb1158bf37eCeaD8Ff0fC72',
+  [NetworkType.sokol]: '0xab20c80fcc025451a3fc73bB953aaE1b9f640949',
   [NetworkType.gnosis]: '0x979C9F171fb6e9BC501Aa7eEd71ca8dC27cF1185',
 };
 
@@ -48,6 +50,15 @@ const useRewardsDataFetch = () => {
   const rewardSafeForProgram = useMemo(
     () => findByRewardProgramId(rewardSafes, defaultRewardProgramId),
     [rewardSafes, defaultRewardProgramId]
+  );
+
+  const { data: rewardProgramExplainer } = useGetRewardProgramExplainerQuery(
+    defaultRewardProgramId
+  );
+
+  const { data: rewards } = useGetValidRewardsForProgramQuery(
+    { ...query.params, safeAddress: rewardSafeForProgram?.address },
+    { ...query.options, skip: query.options.skip || !rewardSafeForProgram }
   );
 
   const {
@@ -134,9 +145,11 @@ const useRewardsDataFetch = () => {
     fullBalanceToken,
     defaultRewardProgramId,
     hasRewards,
+    rewards,
     hasClaimableRewards,
     claimableBalanceToken,
     rewardSafeForProgram,
+    rewardProgramExplainer,
   };
 };
 

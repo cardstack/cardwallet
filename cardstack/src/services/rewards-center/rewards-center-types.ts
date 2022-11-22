@@ -1,4 +1,10 @@
-import { NativeCurrency, RewardSafe } from '@cardstack/cardpay-sdk';
+import {
+  NativeCurrency,
+  RewardSafe,
+  Proof,
+  ClaimableProof,
+  WithSymbol,
+} from '@cardstack/cardpay-sdk';
 import { TransactionReceipt } from 'web3-core';
 
 import { EthersSignerParams } from '@cardstack/models/ethers-wallet';
@@ -50,6 +56,7 @@ export interface RewardsClaimMutationParams
   extends RewardsPoolSignedBaseParams,
     ValidProofsParams {
   safeAddress: string;
+  rewardsToClaim?: RewardProofType[];
 }
 
 export interface RegisterGasEstimateQueryParams {
@@ -75,3 +82,10 @@ export interface RewardWithdrawParams
     Omit<RewardsPoolSignedBaseParams, 'rewardProgramId'> {}
 
 export type RewardWithdrawGasEstimateParams = RewardWithdrawBaseParams;
+
+export type RewardProofType = WithSymbol<Proof | ClaimableProof> &
+  TokenType & {
+    isClaimable?: boolean;
+  };
+
+export type RewardValidProofsResult = RewardProofType[];

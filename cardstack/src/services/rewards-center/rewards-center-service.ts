@@ -30,6 +30,7 @@ import {
   RewardWithdrawGasEstimateParams,
   RewardWithdrawParams,
   ValidProofsParams,
+  RewardValidProofsResult,
 } from './rewards-center-types';
 
 const getRewardsPoolInstance = async (signedParams?: EthersSignerParams) => {
@@ -77,6 +78,57 @@ const getValidProofs = async ({
 };
 
 // Queries
+
+export const fetchValidProofsWithToken = async ({
+  rewardProgramId,
+  accountAddress,
+  safeAddress,
+  nativeCurrency,
+}: RewardsSafeQueryParams): Promise<RewardValidProofsResult> => {
+  const rewardPoolInstance = await getRewardsPoolInstance();
+
+  const allProofs = await rewardPoolInstance.getUnclaimedValidProofs(
+    accountAddress,
+    rewardProgramId
+  );
+
+  const claimableProofs = safeAddress
+    ? await rewardPoolInstance.getUnclaimedValidProofsWithoutDust(
+        accountAddress,
+        rewardProgramId,
+        safeAddress
+      )
+    : [];
+
+  const allProofsWithNativeCurrency = await Promise.all(
+    allProofs?.map(async proof => {
+      const tokenWithPrice = await addNativePriceToToken(
+        ({
+          token: { symbol: proof.tokenSymbol },
+          balance: proof.amount,
+        } as unknown) as TokenInfo,
+        nativeCurrency,
+        true
+      );
+
+      // Adds data needed for claiming a proof to the general proofs list
+      // rootHash is used as a merging ID.
+      const claimingInfo =
+        claimableProofs.find(
+          findProof => findProof.rootHash === proof.rootHash
+        ) || {};
+
+      return {
+        ...proof,
+        ...tokenWithPrice,
+        ...claimingInfo,
+        isClaimable: !!claimingInfo,
+      };
+    })
+  );
+
+  return allProofsWithNativeCurrency;
+};
 
 export const fetchRewardsSafe = async ({
   accountAddress,
@@ -174,14 +226,17 @@ export const getClaimRewardsGasEstimate = async ({
   tokenAddress,
   rewardProgramId,
   accountAddress,
+  rewardsToClaim,
 }: RewardsClaimGasEstimateParams) => {
   const rewardPoolInstance = await getRewardsPoolInstance();
 
-  const validProofs = await getValidProofs({
-    accountAddress,
-    rewardProgramId,
-    tokenAddress,
-  });
+  const validProofs =
+    rewardsToClaim ||
+    (await getValidProofs({
+      accountAddress,
+      rewardProgramId,
+      tokenAddress,
+    }));
 
   const estimatedAmounts = await Promise.all(
     validProofs?.map(async ({ leaf, proofArray }) => {
@@ -250,6 +305,14 @@ export const getWithdrawGasEstimate = async ({
   return gasEstimate.amount;
 };
 
+export const getRewardProgramExplainer = async (rewardProgramId: string) => {
+  const rewardManager = await getRewardManagerInstance();
+
+  const programInfo = await rewardManager.getRewardProgramInfo(rewardProgramId);
+
+  return programInfo.programExplainer;
+};
+
 // Mutations
 
 export const registerToRewardProgram = async ({
@@ -274,14 +337,17 @@ export const claimRewards = async ({
   tokenAddress,
   rewardProgramId,
   accountAddress,
+  rewardsToClaim,
 }: RewardsClaimMutationParams) => {
   const rewardPoolInstance = await getRewardsPoolInstance({ accountAddress });
 
-  const validProofs = await getValidProofs({
-    accountAddress,
-    rewardProgramId,
-    tokenAddress,
-  });
+  const validProofs =
+    rewardsToClaim ||
+    (await getValidProofs({
+      accountAddress,
+      rewardProgramId,
+      tokenAddress,
+    }));
 
   const receipts = [];
 
