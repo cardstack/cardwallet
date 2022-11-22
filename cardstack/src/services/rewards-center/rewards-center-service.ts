@@ -19,6 +19,7 @@ import {
   addNativePriceToToken,
   updateSafeWithTokenPrices,
 } from '../gnosis-service';
+import { parseTemplateExplanation } from '../utils/reward-explanation';
 
 import {
   RegisterGasEstimateQueryParams,
@@ -31,6 +32,7 @@ import {
   RewardWithdrawParams,
   ValidProofsParams,
   RewardValidProofsResult,
+  RewardProofType,
 } from './rewards-center-types';
 
 const getRewardsPoolInstance = async (signedParams?: EthersSignerParams) => {
@@ -77,6 +79,12 @@ const getValidProofs = async ({
   return validProofs;
 };
 
+const getTokenSymbolForAddress = async (tokenAddress: string) => {
+  const rewardPoolInstance = await getRewardsPoolInstance();
+
+  return rewardPoolInstance.addTokenSymbol([{ tokenAddress }]);
+};
+
 // Queries
 
 export const fetchValidProofsWithToken = async ({
@@ -101,11 +109,11 @@ export const fetchValidProofsWithToken = async ({
     : [];
 
   const allProofsWithNativeCurrency = await Promise.all(
-    allProofs?.map(async proof => {
+    allProofs?.map(async currentProof => {
       const tokenWithPrice = await addNativePriceToToken(
         ({
-          token: { symbol: proof.tokenSymbol },
-          balance: proof.amount,
+          token: { symbol: currentProof.tokenSymbol },
+          balance: currentProof.amount,
         } as unknown) as TokenInfo,
         nativeCurrency,
         true
@@ -113,17 +121,48 @@ export const fetchValidProofsWithToken = async ({
 
       // Adds data needed for claiming a proof to the general proofs list
       // rootHash is used as a merging ID.
-      const claimingInfo =
-        claimableProofs.find(
-          findProof => findProof.rootHash === proof.rootHash
-        ) || {};
+      const claimingInfo = claimableProofs.find(
+        findProof => findProof.rootHash === currentProof.rootHash
+      );
 
-      return {
-        ...proof,
-        ...tokenWithPrice,
-        ...claimingInfo,
-        isClaimable: !!claimingInfo,
-      };
+      const proof: RewardProofType = claimingInfo
+        ? {
+            ...claimingInfo,
+            ...tokenWithPrice,
+            isClaimable: true,
+          }
+        : { ...currentProof, ...tokenWithPrice, isClaimable: false };
+
+      if (proof.explanationData?.token) {
+        const token = await getTokenSymbolForAddress(
+          proof.explanationData.token
+        );
+
+        if (token[0]?.tokenSymbol) {
+          proof.explanationData.token = token[0]?.tokenSymbol;
+        }
+      }
+
+      if (proof.explanationData?.amount) {
+        proof.explanationData.amount = parseFloat(
+          fromWei(proof.explanationData.amount)
+        ).toFixed(3);
+      }
+
+      if (proof.explanationData?.rollover_amount) {
+        proof.explanationData.rollover_amount = parseFloat(
+          fromWei(proof.explanationData.rollover_amount)
+        ).toFixed(3);
+      }
+
+      if (proof.explanationData && proof.explanationTemplate) {
+        proof.parsedExplanation = parseTemplateExplanation(
+          proof.explanationTemplate,
+          proof.explanationData
+        );
+      }
+
+      return proof;
     })
   );
 

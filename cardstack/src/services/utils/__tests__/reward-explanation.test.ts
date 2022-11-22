@@ -1,4 +1,4 @@
-import { parseTemplateExplanation } from '../utils';
+import { parseTemplateExplanation } from '../reward-explanation';
 
 describe('Rewards explanation', () => {
   it('should parse a proof template with a single value data entry', () => {

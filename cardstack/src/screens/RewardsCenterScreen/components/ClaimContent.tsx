@@ -7,7 +7,6 @@ import { Routes } from '@cardstack/navigation';
 import { RewardProofType } from '@cardstack/services/rewards-center/rewards-center-types';
 
 import { strings } from '../strings';
-import { parseTemplateExplanation } from '../utils';
 
 import {
   RewardsTitle,
@@ -65,10 +64,7 @@ export const ClaimContent = ({ rewards }: ClaimContentProps) => {
           coinSymbol={item.token.symbol}
           primaryText={item.balance.display}
           subText={item.native.balance.display}
-          extraInfoText={parseTemplateExplanation(
-            item.explanationTemplate,
-            item.explanationData
-          )}
+          extraInfoText={item.parsedExplanation}
           onClaimPress={
             item.isClaimable && Number(item.native.balance.amount)
               ? () => onClaimSingleRewardPress(item)
