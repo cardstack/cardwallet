@@ -43,3 +43,6 @@ export * from './Profile';
 export { default as WyreAuthenticationWidget } from './WyreAuthenticationWidget';
 export * from './Backup';
 export { default as MessageOverlayScreen } from './MessageOverlayScreen';
+export { default as WalletAddressScreen } from './WalletAddressScreen/WalletAddressScreen';
+export { default as WalletConnectSessions } from './WalletConnect/WalletConnectSessionsSection';
+export { default as DesignSystemScreen } from './Dev/DesignSystemScreen';

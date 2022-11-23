@@ -9,7 +9,7 @@ import {
 } from '@cardstack/components';
 import { useWalletConnectConnections } from '@rainbow-me/hooks';
 
-const WalletConnectSessionsSection = () => {
+const WalletConnectLegacySessionsSection = () => {
   const {
     walletConnectorsByDappName,
     walletConnectDisconnectAllByDappNameOrUrl,
@@ -104,4 +104,4 @@ const WalletConnectSessionsSection = () => {
   );
 };
 
-export default WalletConnectSessionsSection;
+export default WalletConnectLegacySessionsSection;

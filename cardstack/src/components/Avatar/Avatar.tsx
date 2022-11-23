@@ -13,9 +13,8 @@ export const Avatar = ({
   textValue = 'Hello',
   backgroundColor = 'black',
   textColor = 'white',
+  size = 50,
 }: AvatarProps) => {
-  const size = 50;
-
   const initials = [textValue].map(n => n[0].toUpperCase()).join('');
 
   return source ? (
@@ -52,4 +51,5 @@ export interface AvatarProps {
   textColor?: ColorTypes;
   /** backgroundColor */
   backgroundColor?: string;
+  size?: number;
 }

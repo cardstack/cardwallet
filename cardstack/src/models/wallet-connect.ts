@@ -57,7 +57,21 @@ const WalletConnect = {
       logger.sentry('[WC-2.0]: Pairing failed', e);
     }
   },
+  getActivePairings: () => {
+    const pairings = signClient?.core.pairing.getPairings();
+
+    return pairings?.filter(({ active }) => active);
+  },
+  getAcknowledgedSessions: () =>
+    signClient?.session.getAll({ acknowledged: true }),
   isVersion2Uri: (uri: string) => uri.includes('relay-protocol'),
+  disconnect: async (params: EngineTypes.DisconnectParams) => {
+    try {
+      await signClient?.disconnect(params);
+    } catch (e) {
+      logger.sentry('[WC-2.0]: Disconnect failed', e);
+    }
+  },
 };
 
 // Listeners
