@@ -14,7 +14,9 @@ export const useNetworkSection = () => {
   const { network } = useAccountSettings();
   const dispatch = useDispatch();
   const [selectedNetwork, setSelectedNetwork] = useState(network);
-  const [isShowAllNetworks, setShowAllNetworks] = useState<boolean>(false);
+  const [showAll, setShowAll] = useState<boolean>(
+    !isMainnet(selectedNetwork) ?? false
+  );
 
   const networkTags = useCallback(
     ({ isTestnet, hasCardPay }) => (
@@ -60,11 +62,11 @@ export const useNetworkSection = () => {
         }),
       }))
       .filter(network =>
-        !isShowAllNetworks ? isMainnet(network.value as NetworkType) : network
+        !showAll ? isMainnet(network.value as NetworkType) : network
       );
 
     return [{ data }];
-  }, [selectedNetwork, isShowAllNetworks, networkTags]);
+  }, [selectedNetwork, showAll, networkTags]);
 
   const onNetworkChange = useCallback(
     async selected => {
@@ -80,7 +82,7 @@ export const useNetworkSection = () => {
   }, [dispatch, selectedNetwork]);
 
   const onToggleShowAllNetworks = useCallback(
-    () => setShowAllNetworks(isShowAll => !isShowAll),
+    () => setShowAll(showAll => !showAll),
     []
   );
 
@@ -91,7 +93,7 @@ export const useNetworkSection = () => {
 
   return {
     isCurrentNetworkSelected,
-    isShowAllNetworks,
+    showAll,
     sectionListItems,
     onNetworkChange,
     onUpdateNetwork,

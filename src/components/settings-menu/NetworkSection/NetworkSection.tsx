@@ -6,7 +6,7 @@ import { Button, Checkbox, Container, RadioList } from '@cardstack/components';
 const NetworkSection = () => {
   const {
     isCurrentNetworkSelected,
-    isShowAllNetworks,
+    showAll,
     sectionListItems,
     onNetworkChange,
     onUpdateNetwork,
@@ -17,7 +17,7 @@ const NetworkSection = () => {
     <Container backgroundColor="white" paddingVertical={4} width="100%">
       <Container flexDirection="row" justifyContent="flex-end" padding={5}>
         <Checkbox
-          isSelected={isShowAllNetworks}
+          isSelected={showAll}
           label={strings.showAllNetworks}
           onPress={onToggleShowAllNetworks}
         />
