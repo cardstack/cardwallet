@@ -16,7 +16,7 @@ export default function useInitializeAccountData() {
       await Promise.all([fetchMainAssets, fetchCollectibles]);
       logger.sentry('Initialize account data and collectibles ');
     } catch (error) {
-      logger.sentry('Error initializing account data', error);
+      logger.sentry('Error initializing account data');
       captureException(error);
     }
   }, [dispatch]);
