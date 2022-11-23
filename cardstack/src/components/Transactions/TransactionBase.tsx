@@ -57,34 +57,14 @@ export const TransactionBase = (props: TransactionBaseProps) => {
   ) as NetworkType;
 
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
-
-  const getBlockExporerName = (currentNetwork: NetworkType) => {
-    switch (currentNetwork) {
-      case NetworkType.gnosis:
-      case NetworkType.sokol:
-        return 'Blockscout';
-        break;
-
-      case NetworkType.mainnet:
-      case NetworkType.goerli:
-        return 'Etherscan';
-        break;
-
-      case NetworkType.polygon:
-      case NetworkType.mumbai:
-        return 'Polygonscan';
-        break;
-    }
-  };
-
-  const blockExplorerName = getBlockExporerName(network);
+  const networkName = getConstantByNetwork('name', network);
   const normalizedHash = normalizeTxHash(transactionHash);
 
   const handleOnPressTransaction = useCallback(() => {
     const onPressBlockscout = () => {
       showActionSheetWithOptions(
         {
-          options: [`View on ${blockExplorerName}`, 'Cancel'],
+          options: [`View on ${networkName} Blockexplorer`, 'Cancel'],
           cancelButtonIndex: 1,
         },
         (buttonIndex: number) => {
@@ -96,13 +76,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
     };
 
     onPressTransaction ? onPressTransaction(props) : onPressBlockscout();
-  }, [
-    blockExplorer,
-    blockExplorerName,
-    normalizedHash,
-    onPressTransaction,
-    props,
-  ]);
+  }, [blockExplorer, networkName, normalizedHash, onPressTransaction, props]);
 
   return (
     <Container
