@@ -1,5 +1,5 @@
 import { useGetSafesDataQuery } from '@cardstack/services';
-import { isLayer1 } from '@cardstack/utils';
+import { isCardPayCompatible } from '@cardstack/utils';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
 
@@ -12,7 +12,7 @@ export const usePrepaidCard = (address: string) => {
     { address: accountAddress, nativeCurrency },
     {
       refetchOnMountOrArgChange: 60,
-      skip: isLayer1(network) || !accountAddress,
+      skip: !isCardPayCompatible(network) || !accountAddress,
       selectFromResult: ({
         data,
         isLoading: isLoadingCards,

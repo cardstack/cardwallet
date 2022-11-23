@@ -4,7 +4,7 @@ import { buildTransactionsSectionsSelector } from '../helpers/buildTransactionsS
 import useContacts from './useContacts';
 import useRequests from './useRequests';
 
-import { NetworkType } from '@cardstack/types';
+import { isCardPayCompatible } from '@cardstack/utils';
 
 export const NOE_PAGE = 30;
 
@@ -57,8 +57,9 @@ export default function useAccountTransactions(initialized, isFocused) {
   }, [slicedTransaction.length, transactions.length]);
 
   return {
-    isLoadingTransactions:
-      network === NetworkType.mainnet ? isLoadingTransactions : false,
+    isLoadingTransactions: !isCardPayCompatible(network)
+      ? isLoadingTransactions
+      : false,
     nextPage,
     remainingItemsLabel,
     sections,

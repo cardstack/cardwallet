@@ -18,11 +18,14 @@ import {
 
 export const NATIVE_TOKEN_SYMBOLS = ['eth', 'spoa', 'xdai', 'keth'];
 
-const MAINNETS = [NetworkType.mainnet, NetworkType.gnosis];
+export const CARDPAY_SUPPORTED_NETWORKS = [
+  NetworkType.gnosis,
+  NetworkType.sokol,
+];
 
-const LAYER_1_NETWORKS = [NetworkType.mainnet];
+const MAINNETS = [NetworkType.mainnet, NetworkType.gnosis, NetworkType.polygon];
 
-const LAYER_2_NETWORKS = [NetworkType.gnosis, NetworkType.sokol];
+const LAYER_1_NETWORKS = [NetworkType.mainnet, NetworkType.goerli];
 
 const CPXD_TOKEN_SUFFIX = '.CPXD';
 
@@ -41,8 +44,8 @@ export const removeCPXDTokenSuffix = (symbol: string) =>
 export const isLayer1 = (network: NetworkType) =>
   LAYER_1_NETWORKS.includes(network);
 
-export const isLayer2 = (network: NetworkType) =>
-  LAYER_2_NETWORKS.includes(network);
+export const isCardPayCompatible = (network: NetworkType) =>
+  CARDPAY_SUPPORTED_NETWORKS.includes(network);
 
 export const isMainnet = (network: NetworkType) => MAINNETS.includes(network);
 

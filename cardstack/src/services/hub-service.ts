@@ -1,6 +1,6 @@
-import { getSDK } from '@cardstack/cardpay-sdk';
+import { getConstantByNetwork, getSDK } from '@cardstack/cardpay-sdk';
 import axios, { AxiosError } from 'axios';
-import { HUB_URL, HUB_URL_STAGING } from 'react-native-dotenv';
+import { HUB_URL } from 'react-native-dotenv';
 
 import { getWeb3ProviderWithEthSigner } from '@cardstack/models/ethers-wallet';
 import { getFCMToken } from '@cardstack/models/firebase';
@@ -18,7 +18,7 @@ import logger from 'logger';
 const HUBTOKEN_KEY = 'hubToken';
 
 export const getHubUrl = (network: NetworkType): string =>
-  network === NetworkType.gnosis ? HUB_URL : HUB_URL_STAGING;
+  getConstantByNetwork('hubUrl', network);
 
 const axiosConfig = (authToken: string) => {
   return {

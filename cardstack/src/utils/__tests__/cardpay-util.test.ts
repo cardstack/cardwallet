@@ -5,7 +5,7 @@ import {
 } from '@cardstack/types';
 import {
   isLayer1,
-  isLayer2,
+  isCardPayCompatible,
   isMainnet,
   parseLinearGradient,
 } from '@cardstack/utils/cardpay-utils';
@@ -102,7 +102,7 @@ describe('Network utils', () => {
   test.each(layer2Cases)(
     'given %p as network, returns true for Layer2',
     network => {
-      expect(isLayer2(network as NetworkType)).toBeTruthy();
+      expect(isCardPayCompatible(network as NetworkType)).toBeTruthy();
     }
   );
 
@@ -123,7 +123,7 @@ describe('Network utils', () => {
   test.each(layer1Cases)(
     'given %p as network, returns false for Layer2',
     network => {
-      expect(isLayer2(network as NetworkType)).toBeFalsy();
+      expect(isCardPayCompatible(network as NetworkType)).toBeFalsy();
     }
   );
 

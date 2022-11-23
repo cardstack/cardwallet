@@ -12,7 +12,7 @@ import {
 } from '@cardstack/constants';
 import { reduceAssetsWithPriceChartAndBalances } from '@cardstack/helpers/fallbackExplorerHelper';
 import { NetworkType } from '@cardstack/types';
-import { isLayer1, isMainnet } from '@cardstack/utils';
+import { isLayer1 } from '@cardstack/utils';
 import coingeckoIdsFallback from '@rainbow-me/references/coingecko/ids.json';
 import logger from 'logger';
 
@@ -315,7 +315,8 @@ export const fetchAssetsBalancesAndPrices = async () => {
     fallbackExplorerBalancesHandle: currentBalancesTimeout,
   } = store.getState().fallbackExplorer;
 
-  const assets = isMainnet(network) ? currentAssets : testnetAssets[network];
+  const assets =
+    network !== NetworkType.sokol ? currentAssets : testnetAssets.sokol;
 
   if (!assets || !assets.length) {
     const fallbackExplorerBalancesHandle = setTimeout(
@@ -386,12 +387,11 @@ export const fetchAssetsBalancesAndPrices = async () => {
   if (skipPoller) return;
 
   let fallbackExplorerAssetsHandle = null;
-  if (isMainnet(network)) {
-    fallbackExplorerAssetsHandle = setTimeout(
-      () => store.dispatch(findNewAssetsToWatch(accountAddress)),
-      DISCOVER_NEW_ASSETS_FREQUENCY
-    );
-  }
+
+  fallbackExplorerAssetsHandle = setTimeout(
+    () => store.dispatch(findNewAssetsToWatch(accountAddress)),
+    DISCOVER_NEW_ASSETS_FREQUENCY
+  );
 
   if (!currentBalancesTimeout) {
     const fallbackExplorerBalancesHandle = setTimeout(
@@ -410,26 +410,21 @@ export const fetchAssetsBalancesAndPrices = async () => {
 };
 
 export const fallbackExplorerInit = () => async (dispatch, getState) => {
-  const { accountAddress, network } = getState().settings;
+  const { accountAddress } = getState().settings;
   const { latestTxBlockNumber, assets } = getState().fallbackExplorer;
 
-  // If mainnet, we need to get all the info
-  // 1 - All tokens list
-  // 2 - Etherscan token transfer transactions
-  if (isMainnet(network)) {
-    const newAssets = await findAssetsToWatch(
-      accountAddress,
-      latestTxBlockNumber,
-      dispatch
-    );
+  const newAssets = await findAssetsToWatch(
+    accountAddress,
+    latestTxBlockNumber,
+    dispatch
+  );
 
-    await dispatch({
-      payload: {
-        assets: [...assets, ...newAssets],
-      },
-      type: FALLBACK_EXPLORER_SET_ASSETS,
-    });
-  }
+  await dispatch({
+    payload: {
+      assets: [...assets, ...newAssets],
+    },
+    type: FALLBACK_EXPLORER_SET_ASSETS,
+  });
 
   return fetchAssetsBalancesAndPrices();
 };

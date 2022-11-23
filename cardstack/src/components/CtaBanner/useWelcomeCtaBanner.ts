@@ -9,7 +9,7 @@ import {
   useWelcomeBannerSelector,
 } from '@cardstack/redux/welcomeBanner';
 import { useGetEoaClaimedQuery } from '@cardstack/services/hub/hub-api';
-import { isLayer2 } from '@cardstack/utils';
+import { isCardPayCompatible } from '@cardstack/utils';
 
 import { useWallets, useAccountSettings } from '@rainbow-me/hooks';
 import { logger } from '@rainbow-me/utils';
@@ -47,7 +47,7 @@ export const useWelcomeCtaBanner = () => {
 
   const showBanner = useMemo(
     () =>
-      isLayer2(network) &&
+      isCardPayCompatible(network) &&
       configs.featurePrepaidCardDrop &&
       !dismissedByUser &&
       isFirstAddressForCurrentWallet &&

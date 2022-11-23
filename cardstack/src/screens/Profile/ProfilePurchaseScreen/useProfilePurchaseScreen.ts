@@ -9,7 +9,7 @@ import { RouteType } from '@cardstack/navigation/types';
 import { usePersistedFlagsActions } from '@cardstack/redux/persistedFlagsSlice';
 import { useGetSafesDataQuery } from '@cardstack/services';
 import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
-import { isLayer1 } from '@cardstack/utils';
+import { isCardPayCompatible } from '@cardstack/utils';
 
 import { Alert } from '@rainbow-me/components/alerts';
 import { useAccountSettings } from '@rainbow-me/hooks';
@@ -32,7 +32,7 @@ export const useProfilePurchaseScreen = () => {
       selectFromResult: ({ data }) => ({
         hasPrepaidCards: !!data?.prepaidCards?.length,
       }),
-      skip: isLayer1(network) || !accountAddress,
+      skip: !isCardPayCompatible(network) || !accountAddress,
     }
   );
 

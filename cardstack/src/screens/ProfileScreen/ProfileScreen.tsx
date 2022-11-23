@@ -8,7 +8,7 @@ import {
   MerchantContent,
   Text,
 } from '@cardstack/components';
-import { isLayer1 } from '@cardstack/utils';
+import { isCardPayCompatible } from '@cardstack/utils';
 
 import { useSendFeedback } from '@rainbow-me/hooks';
 
@@ -45,7 +45,7 @@ const ProfileScreen = () => {
   }, [isCreateProfileError, isConnectionError]);
 
   const renderProfileContent = useMemo(() => {
-    if (isLayer1(network)) {
+    if (!isCardPayCompatible(network)) {
       return (
         <>
           <Text color="white" fontSize={24}>
@@ -127,7 +127,7 @@ const ProfileScreen = () => {
       <Container
         justifyContent="center"
         flex={1}
-        paddingHorizontal={isLayer1(network) ? 5 : 0}
+        paddingHorizontal={!isCardPayCompatible(network) ? 5 : 0}
       >
         {renderProfileContent}
       </Container>

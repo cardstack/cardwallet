@@ -9,7 +9,7 @@ import {
   Text,
 } from '@cardstack/components';
 import { NetworkType } from '@cardstack/types';
-import { isLayer1, normalizeTxHash, ClaimStatusTypes } from '@cardstack/utils';
+import { normalizeTxHash, ClaimStatusTypes } from '@cardstack/utils';
 
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
@@ -57,14 +57,14 @@ export const TransactionBase = (props: TransactionBaseProps) => {
   ) as NetworkType;
 
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
-  const blockExplorerName = isLayer1(network) ? 'Etherscan' : 'Blockscout';
+  const networkName = getConstantByNetwork('name', network);
   const normalizedHash = normalizeTxHash(transactionHash);
 
   const handleOnPressTransaction = useCallback(() => {
     const onPressBlockscout = () => {
       showActionSheetWithOptions(
         {
-          options: [`View on ${blockExplorerName}`, 'Cancel'],
+          options: [`View on ${networkName} Blockexplorer`, 'Cancel'],
           cancelButtonIndex: 1,
         },
         (buttonIndex: number) => {
@@ -76,13 +76,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
     };
 
     onPressTransaction ? onPressTransaction(props) : onPressBlockscout();
-  }, [
-    blockExplorer,
-    blockExplorerName,
-    normalizedHash,
-    onPressTransaction,
-    props,
-  ]);
+  }, [blockExplorer, networkName, normalizedHash, onPressTransaction, props]);
 
   return (
     <Container

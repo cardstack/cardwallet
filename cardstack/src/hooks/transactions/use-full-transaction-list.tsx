@@ -2,7 +2,7 @@ import { NetworkStatus } from '@apollo/client';
 
 import { useGetAccountTransactionHistoryDataQuery } from '@cardstack/graphql';
 import { NetworkType } from '@cardstack/types';
-import { isLayer1, isLayer2 } from '@cardstack/utils';
+import { isLayer1, isCardPayCompatible } from '@cardstack/utils';
 
 import { useAccountTransactions } from '@rainbow-me/hooks';
 import logger from 'logger';
@@ -12,13 +12,13 @@ import { TRANSACTION_PAGE_SIZE } from '../../constants';
 
 import { useTransactionSections } from './use-transaction-sections';
 
-const useLayer2Transactions = () => {
+const useCardPayCompatible = () => {
   const [accountAddress, network] = useRainbowSelector(state => [
     state.settings.accountAddress,
     state.settings.network,
   ]);
 
-  const isNotLayer2 = !isLayer2(network as NetworkType);
+  const isNotLayer2 = !isCardPayCompatible(network as NetworkType);
 
   const {
     data,
@@ -78,10 +78,10 @@ export const useFullTransactionList = () => {
   ) as NetworkType;
 
   const layer1Data = useAccountTransactions();
-  const layer2Data = useLayer2Transactions();
+  const cardPayCompatibledata = useCardPayCompatible();
 
-  if (isLayer2(network)) {
-    return layer2Data;
+  if (isCardPayCompatible(network)) {
+    return cardPayCompatibledata;
   }
 
   if (isLayer1(network)) {

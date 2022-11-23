@@ -6,7 +6,7 @@ import { walletConnectLoadState } from '../redux/walletconnect';
 import { promiseUtils } from '../utils';
 import { collectiblesLoadState } from '@cardstack/redux/collectibles';
 import { requestsLoadState } from '@cardstack/redux/requests';
-import { isLayer1, isMainnet } from '@cardstack/utils';
+import { isCardPayCompatible } from '@cardstack/utils';
 import logger from 'logger';
 
 export default function useLoadAccountData() {
@@ -15,22 +15,16 @@ export default function useLoadAccountData() {
   const loadAccountData = useCallback(
     async network => {
       logger.sentry('Load wallet account data');
-      if (isLayer1(network)) {
+      if (!isCardPayCompatible(network)) {
         // Update data state on wallet initializion for layer1.
         // This is performed in layer2 when loading gnosis safes.
         await dispatch(dataLoadState());
       }
-      const promises = [];
-      if (isMainnet(network)) {
-        const p2 = dispatch(collectiblesLoadState());
-        promises.push(p2);
-      }
-      const p3 = dispatch(requestsLoadState());
-      const p4 = dispatch(walletConnectLoadState());
+      const p1 = dispatch(collectiblesLoadState());
+      const p2 = dispatch(requestsLoadState());
+      const p3 = dispatch(walletConnectLoadState());
 
-      promises.push(p3, p4);
-
-      return promiseUtils.PromiseAllWithFails(promises);
+      return promiseUtils.PromiseAllWithFails([p1, p2, p3]);
     },
     [dispatch]
   );

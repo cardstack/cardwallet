@@ -14,8 +14,10 @@ import { buildCollectibleName } from '@rainbow-me/helpers/assets';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 import logger from 'logger';
 
+const openSeaCompatible = [NetworkType.mainnet, NetworkType.polygon];
+
 function viewMenuItemLabel(collectible: CollectibleType) {
-  if (collectible.networkName === NetworkType.mainnet) {
+  if (openSeaCompatible.includes(collectible.networkName as NetworkType)) {
     return 'View on OpenSea';
   }
 

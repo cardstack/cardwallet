@@ -9,7 +9,7 @@ import { Container, Icon, Text, TruncatedAddress } from '@cardstack/components';
 import {
   getAddressPreview,
   getSymbolCharacterFromAddress,
-  isLayer2,
+  isCardPayCompatible,
   screenWidth,
 } from '@cardstack/utils';
 import { useAccountSettings } from '@rainbow-me/hooks';
@@ -39,7 +39,7 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
   const { network } = useAccountSettings();
 
   const accountSubLabel = useMemo(
-    () => (isLayer2(network) ? getAddressPreview(address) : ''),
+    () => (isCardPayCompatible(network) ? getAddressPreview(address) : ''),
     [address, network]
   );
 

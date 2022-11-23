@@ -23,7 +23,7 @@ import {
   MerchantSafeType,
   PrepaidCardType,
 } from '@cardstack/types';
-import { isLayer1 } from '@cardstack/utils';
+import { isCardPayCompatible } from '@cardstack/utils';
 import { parseAssetsNativeWithTotals } from '@rainbow-me/parsers';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
@@ -180,7 +180,7 @@ export const useAssetListData = () => {
         timestamp: data?.timestamp || '',
         ...rest,
       }),
-      skip: isLayer1(network) || !accountAddress,
+      skip: !isCardPayCompatible(network) || !accountAddress,
     }
   );
 
@@ -190,14 +190,15 @@ export const useAssetListData = () => {
   const otherTokensSection = useOtherTokensSection();
   const collectiblesSection = useCollectiblesSection();
 
-  const isUninitializedOnLayer2 = !isLayer1(network) && isUninitialized;
+  const isUninitializedOnCardPayCompatible =
+    isCardPayCompatible(network) && isUninitialized;
 
   const isLoadingRainbowAssets = useRainbowSelector(
     state => state.data.isLoadingAssets
   );
 
   const isLoadingAssets =
-    isLoadingRainbowAssets || isUninitializedOnLayer2 || isLoading;
+    isLoadingRainbowAssets || isUninitializedOnCardPayCompatible || isLoading;
 
   // order of sections in asset list
   const orderedSections = [
@@ -212,7 +213,7 @@ export const useAssetListData = () => {
     section =>
       section?.data?.length ||
       (section?.header.type === PinnedHiddenSectionOption.PREPAID_CARDS &&
-        !isLayer1(network))
+        isCardPayCompatible(network))
   );
 
   const isEmpty = !sections.length;
