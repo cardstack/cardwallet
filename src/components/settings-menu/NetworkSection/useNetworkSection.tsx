@@ -1,5 +1,6 @@
 import {
   getConstantByNetwork,
+  isCardPaySupportedNetwork,
   supportedChainsArray,
 } from '@cardstack/cardpay-sdk';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -11,7 +12,7 @@ import { NetworkType } from '@cardstack/types';
 import { isMainnet } from '@cardstack/utils';
 
 export const useNetworkSection = () => {
-  const { network, isOnCardPayNetwork } = useAccountSettings();
+  const { network } = useAccountSettings();
   const dispatch = useDispatch();
   const [selectedNetwork, setSelectedNetwork] = useState(network);
   const [showAll, setShowAll] = useState<boolean>(
@@ -56,7 +57,7 @@ export const useNetworkSection = () => {
         disabled: false,
         hasTags: networkTags({
           isTestnet: !isMainnet(network as NetworkType),
-          hasCardPay: isOnCardPayNetwork,
+          hasCardPay: isCardPaySupportedNetwork(network),
         }),
       }))
       .filter(network =>
@@ -64,7 +65,7 @@ export const useNetworkSection = () => {
       );
 
     return [{ data }];
-  }, [selectedNetwork, networkTags, isOnCardPayNetwork, showAll]);
+  }, [selectedNetwork, networkTags, showAll]);
 
   const onNetworkChange = useCallback(
     async selected => {
