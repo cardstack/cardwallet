@@ -1,7 +1,4 @@
-import {
-  getConstantByNetwork,
-  supportedChainsArray,
-} from '@cardstack/cardpay-sdk';
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import {
   getNativeCurrency,
   getNetwork,
@@ -55,21 +52,7 @@ export const settingsLoadState = () => async dispatch => {
 
 export const settingsLoadNetwork = () => async dispatch => {
   try {
-    const networkFromStorage = await getNetwork();
-
-    // necessary in case the user was using an unsupported network before updating the app
-    const isSupportedNetwork = supportedChainsArray.includes(
-      networkFromStorage
-    );
-
-    const network = isSupportedNetwork
-      ? networkFromStorage
-      : NetworkType.gnosis;
-
-    // update persisted store
-    if (!isSupportedNetwork) {
-      await saveNetwork(network);
-    }
+    const network = await getNetwork();
 
     const chainId = getConstantByNetwork('chainId', network);
     await etherWeb3SetHttpProvider(network);
