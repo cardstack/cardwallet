@@ -8,11 +8,7 @@ import {
 } from '@cardstack/graphql';
 import { RewardsSafeType } from '@cardstack/services/rewards-center/rewards-center-types';
 import { TokenType } from '@cardstack/types';
-import {
-  groupTransactionsByDate,
-  sortByTime,
-  isCardPayCompatible,
-} from '@cardstack/utils';
+import { groupTransactionsByDate, sortByTime } from '@cardstack/utils';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
 
@@ -20,7 +16,7 @@ import { ClaimOrTokenWithdraw, TokenWithSafeAddress } from './components';
 import useRewardsDataFetch from './useRewardsDataFetch';
 
 const useRewardsBalanceHistory = () => {
-  const { accountAddress, network } = useAccountSettings();
+  const { accountAddress, network, isOnCardPayNetwork } = useAccountSettings();
   const { rewardSafes, rewardPoolTokenBalances } = useRewardsDataFetch();
 
   const rewardSafesAddresses = useMemo(
@@ -43,10 +39,10 @@ const useRewardsBalanceHistory = () => {
     data: rewardSafeWithdraws,
     refetch: refetchWithdrawHistory,
   } = useGetTransactionsFromSafesQuery({
-    skip: !rewardSafesAddresses || !isCardPayCompatible(network),
+    skip: !rewardSafesAddresses || !isOnCardPayNetwork,
     variables: {
       safeAddresses: rewardSafesAddresses,
-      relayAddress: isCardPayCompatible(network)
+      relayAddress: isOnCardPayNetwork
         ? getAddressByNetwork('relay', network)
         : '',
     },

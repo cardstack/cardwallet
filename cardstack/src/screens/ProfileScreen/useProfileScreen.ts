@@ -46,7 +46,7 @@ export const useProfileScreen = () => {
     jobID: params?.profileCreationJobID || pendingJobId,
   });
 
-  const { network } = useAccountSettings();
+  const { isOnCardPayNetwork } = useAccountSettings();
 
   const isRefreshingForNewAccount = useIsFetchingDataNewAccount(isFetching);
 
@@ -80,12 +80,12 @@ export const useProfileScreen = () => {
     showLoading,
     isCreatingProfile,
     safesCount,
-    network,
     isFetching,
     refetch,
     redirectToSwitchNetwork,
     isConnectionError,
     isCreateProfileError,
     retryCurrentCreateProfile,
+    isOnCardPayNetwork,
   };
 };

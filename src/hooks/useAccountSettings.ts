@@ -1,5 +1,5 @@
-import { currencies } from '@cardstack/cardpay-sdk';
-import { useCallback } from 'react';
+import { currencies, isCardPaySupportedNetwork } from '@cardstack/cardpay-sdk';
+import { useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { settingsChangeNativeCurrency as changeNativeCurrency } from '../redux/settings';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
@@ -22,8 +22,20 @@ export default function useAccountSettings() {
     [dispatch]
   );
 
+  const isOnCardPayNetwork = useMemo(
+    () => isCardPaySupportedNetwork(settingsData.network),
+    [settingsData.network]
+  );
+
+  const noCardPayAccount = useMemo(
+    () => !settingsData.accountAddress || !isOnCardPayNetwork,
+    [isOnCardPayNetwork, settingsData.accountAddress]
+  );
+
   return {
     settingsChangeNativeCurrency,
     ...settingsData,
+    noCardPayAccount,
+    isOnCardPayNetwork,
   };
 }

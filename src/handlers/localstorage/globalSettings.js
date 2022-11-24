@@ -1,7 +1,7 @@
+import { isSupportedChain } from '@cardstack/cardpay-sdk';
 import { getGlobal, removeLocal, saveGlobal } from './common';
 
 import { NetworkType } from '@cardstack/types';
-import { isSupportedChain } from '@cardstack/cardpay-sdk';
 
 const IMAGE_METADATA = 'imageMetadata';
 const LANGUAGE = 'language';

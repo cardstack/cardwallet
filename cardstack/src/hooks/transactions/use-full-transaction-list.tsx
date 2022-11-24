@@ -1,10 +1,11 @@
 import { NetworkStatus } from '@apollo/client';
+import { isCardPaySupportedNetwork } from '@cardstack/cardpay-sdk';
 
 import { useGetAccountTransactionHistoryDataQuery } from '@cardstack/graphql';
 import { NetworkType } from '@cardstack/types';
-import { isLayer1, isCardPayCompatible } from '@cardstack/utils';
+import { isLayer1 } from '@cardstack/utils';
 
-import { useAccountTransactions } from '@rainbow-me/hooks';
+import { useAccountSettings, useAccountTransactions } from '@rainbow-me/hooks';
 import logger from 'logger';
 
 import { useRainbowSelector } from '../../../../src/redux/hooks';
@@ -13,12 +14,7 @@ import { TRANSACTION_PAGE_SIZE } from '../../constants';
 import { useTransactionSections } from './use-transaction-sections';
 
 const useCardPayCompatible = () => {
-  const [accountAddress, network] = useRainbowSelector(state => [
-    state.settings.accountAddress,
-    state.settings.network,
-  ]);
-
-  const isNotLayer2 = !isCardPayCompatible(network as NetworkType);
+  const { accountAddress, network, noCardPayAccount } = useAccountSettings();
 
   const {
     data,
@@ -28,7 +24,7 @@ const useCardPayCompatible = () => {
     error,
   } = useGetAccountTransactionHistoryDataQuery({
     notifyOnNetworkStatusChange: true,
-    skip: isNotLayer2,
+    skip: noCardPayAccount,
     variables: {
       address: accountAddress,
       pageSize: TRANSACTION_PAGE_SIZE,
@@ -41,12 +37,7 @@ const useCardPayCompatible = () => {
   const transactions = account?.transactions;
 
   if (error) {
-    logger.log(
-      'Error getting full transactions',
-      error,
-      isNotLayer2,
-      accountAddress
-    );
+    logger.log('Error getting full transactions', error, accountAddress);
   }
 
   const {
@@ -80,7 +71,7 @@ export const useFullTransactionList = () => {
   const layer1Data = useAccountTransactions();
   const cardPayCompatibledata = useCardPayCompatible();
 
-  if (isCardPayCompatible(network)) {
+  if (isCardPaySupportedNetwork(network)) {
     return cardPayCompatibledata;
   }
 

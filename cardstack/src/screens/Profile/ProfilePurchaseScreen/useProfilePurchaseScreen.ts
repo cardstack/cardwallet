@@ -9,7 +9,6 @@ import { RouteType } from '@cardstack/navigation/types';
 import { usePersistedFlagsActions } from '@cardstack/redux/persistedFlagsSlice';
 import { useGetSafesDataQuery } from '@cardstack/services';
 import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
-import { isCardPayCompatible } from '@cardstack/utils';
 
 import { Alert } from '@rainbow-me/components/alerts';
 import { useAccountSettings } from '@rainbow-me/hooks';
@@ -21,7 +20,11 @@ interface NavParams {
 export const useProfilePurchaseScreen = () => {
   const { navigate } = useNavigation();
 
-  const { network, accountAddress, nativeCurrency } = useAccountSettings();
+  const {
+    accountAddress,
+    nativeCurrency,
+    noCardPayAccount,
+  } = useAccountSettings();
 
   const { configs } = useRemoteConfigs();
 
@@ -32,7 +35,7 @@ export const useProfilePurchaseScreen = () => {
       selectFromResult: ({ data }) => ({
         hasPrepaidCards: !!data?.prepaidCards?.length,
       }),
-      skip: !isCardPayCompatible(network) || !accountAddress,
+      skip: noCardPayAccount,
     }
   );
 

@@ -8,10 +8,10 @@ import { useAccountSettings } from '../../../hooks';
 import { settingsUpdateNetwork } from '../../../redux/settings';
 import { Container, FloatingTag, RadioItemProps } from '@cardstack/components';
 import { NetworkType } from '@cardstack/types';
-import { CARDPAY_SUPPORTED_NETWORKS, isMainnet } from '@cardstack/utils';
+import { isMainnet } from '@cardstack/utils';
 
 export const useNetworkSection = () => {
-  const { network } = useAccountSettings();
+  const { network, isOnCardPayNetwork } = useAccountSettings();
   const dispatch = useDispatch();
   const [selectedNetwork, setSelectedNetwork] = useState(network);
   const [showAll, setShowAll] = useState<boolean>(
@@ -56,9 +56,7 @@ export const useNetworkSection = () => {
         disabled: false,
         hasTags: networkTags({
           isTestnet: !isMainnet(network as NetworkType),
-          hasCardPay: CARDPAY_SUPPORTED_NETWORKS.includes(
-            network as NetworkType
-          ),
+          hasCardPay: isOnCardPayNetwork,
         }),
       }))
       .filter(network =>
@@ -66,7 +64,7 @@ export const useNetworkSection = () => {
       );
 
     return [{ data }];
-  }, [selectedNetwork, showAll, networkTags]);
+  }, [selectedNetwork, networkTags, isOnCardPayNetwork, showAll]);
 
   const onNetworkChange = useCallback(
     async selected => {

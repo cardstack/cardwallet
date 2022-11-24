@@ -16,7 +16,7 @@ import {
   PayMerchantDecodedData,
   TransactionConfirmationType,
 } from '@cardstack/types';
-import { isCardPayCompatible, useWorker } from '@cardstack/utils';
+import { useWorker } from '@cardstack/utils';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
 
@@ -42,6 +42,7 @@ export const usePaymentMerchantUniversalLink = () => {
     accountAddress,
     network: accountNetwork,
     nativeCurrency,
+    noCardPayAccount,
   } = useAccountSettings();
 
   const networkName = getConstantByNetwork('name', accountNetwork);
@@ -64,7 +65,7 @@ export const usePaymentMerchantUniversalLink = () => {
     { accountAddress, nativeCurrency },
     {
       refetchOnMountOrArgChange: 60,
-      skip: !isCardPayCompatible(accountNetwork) || !accountAddress,
+      skip: noCardPayAccount,
       selectFromResult: ({
         data,
         isLoading: isLoadingCards,

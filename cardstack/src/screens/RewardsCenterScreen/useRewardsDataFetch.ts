@@ -9,7 +9,7 @@ import {
 } from '@cardstack/services/rewards-center/rewards-center-api';
 import { FullBalanceToken } from '@cardstack/services/rewards-center/rewards-center-types';
 import { NetworkType } from '@cardstack/types';
-import { findByRewardProgramId, isCardPayCompatible } from '@cardstack/utils';
+import { findByRewardProgramId } from '@cardstack/utils';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
 
@@ -19,7 +19,13 @@ const rewardDefaultProgramId: { [key in NetworkType]?: string } = {
 };
 
 const useRewardsDataFetch = () => {
-  const { accountAddress, nativeCurrency, network } = useAccountSettings();
+  const {
+    accountAddress,
+    nativeCurrency,
+    network,
+    noCardPayAccount,
+    isOnCardPayNetwork,
+  } = useAccountSettings();
 
   const defaultRewardProgramId = rewardDefaultProgramId[network] as string;
 
@@ -31,11 +37,11 @@ const useRewardsDataFetch = () => {
         rewardProgramId: defaultRewardProgramId,
       },
       options: {
-        skip: !isCardPayCompatible(network) || !accountAddress,
+        skip: noCardPayAccount,
         refetchOnMountOrArgChange: true,
       },
     }),
-    [accountAddress, nativeCurrency, defaultRewardProgramId, network]
+    [accountAddress, nativeCurrency, defaultRewardProgramId, noCardPayAccount]
   );
 
   const {
@@ -129,13 +135,13 @@ const useRewardsDataFetch = () => {
       isLoadingSafes ||
       isLoadingTokens ||
       isLoadingTokensWithoutDust ||
-      (isUninitialized && isCardPayCompatible(network)),
+      (isUninitialized && isOnCardPayNetwork),
     [
+      isOnCardPayNetwork,
       isLoadingSafes,
       isLoadingTokens,
       isLoadingTokensWithoutDust,
       isUninitialized,
-      network,
     ]
   );
 

@@ -1,10 +1,9 @@
+import { isCardPaySupportedNetwork } from '@cardstack/cardpay-sdk';
 import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { buildTransactionsSectionsSelector } from '../helpers/buildTransactionsSectionsSelector';
 import useContacts from './useContacts';
 import useRequests from './useRequests';
-
-import { isCardPayCompatible } from '@cardstack/utils';
 
 export const NOE_PAGE = 30;
 
@@ -57,7 +56,7 @@ export default function useAccountTransactions(initialized, isFocused) {
   }, [slicedTransaction.length, transactions.length]);
 
   return {
-    isLoadingTransactions: !isCardPayCompatible(network)
+    isLoadingTransactions: !isCardPaySupportedNetwork(network)
       ? isLoadingTransactions
       : false,
     nextPage,
