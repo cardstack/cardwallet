@@ -128,14 +128,14 @@ export const fetchValidProofsWithToken = async ({
       // rootHash is used as a merging ID.
       const claimingInfo =
         claimableProofs.find(
-          findProof => findProof.rootHash === proof.rootHash
+          findProof => findProof.rootHash === currentProof.rootHash
         ) || ({} as Proof);
 
       const proof: RewardProofType = {
         ...currentProof,
         ...tokenWithPrice,
         ...claimingInfo,
-        isClaimable: !!claimingInfo.rootHash,
+        isClaimable: !!claimingInfo?.rootHash,
       };
 
       if (proof.explanationData?.token) {
