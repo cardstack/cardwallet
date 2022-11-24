@@ -18,6 +18,7 @@ export interface RewardRowProps extends Omit<TouchableProps, 'children'> {
   primaryText: string;
   isClaimable?: boolean;
   subText?: string;
+  extraInfoText?: string;
   onClaimPress?: () => void;
   isLoading?: boolean;
   showWithdrawBtn?: boolean;
@@ -28,6 +29,7 @@ export const RewardRow = ({
   coinSymbol,
   primaryText,
   subText,
+  extraInfoText,
   txStatus = 'none',
   onClaimPress,
   onPress,
@@ -63,6 +65,11 @@ export const RewardRow = ({
             </Text>
           </Text>
           {subText && <Text variant="subText">{subText}</Text>}
+          {extraInfoText && (
+            <Text paddingTop={2} variant="subText">
+              {extraInfoText}
+            </Text>
+          )}
         </Container>
         {
           // Press is disabled bc whole row is clickable

@@ -19,6 +19,10 @@ import {
   addNativePriceToToken,
   updateSafeWithTokenPrices,
 } from '../gnosis-service';
+import {
+  parseTemplateExplanation,
+  parseExplanationAmount,
+} from '../utils/reward-explanation';
 
 import {
   RegisterGasEstimateQueryParams,
@@ -31,6 +35,7 @@ import {
   RewardWithdrawParams,
   ValidProofsParams,
   RewardValidProofsResult,
+  RewardProofType,
 } from './rewards-center-types';
 
 const getRewardsPoolInstance = async (signedParams?: EthersSignerParams) => {
@@ -77,6 +82,14 @@ const getValidProofs = async ({
   return validProofs;
 };
 
+const getTokenSymbolForAddress = async (tokenAddress: string) => {
+  const rewardPoolInstance = await getRewardsPoolInstance();
+
+  const token = await rewardPoolInstance.addTokenSymbol([{ tokenAddress }]);
+
+  return token?.[0]?.tokenSymbol;
+};
+
 // Queries
 
 export const fetchValidProofsWithToken = async ({
@@ -101,11 +114,11 @@ export const fetchValidProofsWithToken = async ({
     : [];
 
   const allProofsWithNativeCurrency = await Promise.all(
-    allProofs?.map(async proof => {
+    allProofs?.map(async currentProof => {
       const tokenWithPrice = await addNativePriceToToken(
         ({
-          token: { symbol: proof.tokenSymbol },
-          balance: proof.amount,
+          token: { symbol: currentProof.tokenSymbol },
+          balance: currentProof.amount,
         } as unknown) as TokenInfo,
         nativeCurrency,
         true
@@ -115,15 +128,46 @@ export const fetchValidProofsWithToken = async ({
       // rootHash is used as a merging ID.
       const claimingInfo =
         claimableProofs.find(
-          findProof => findProof.rootHash === proof.rootHash
-        ) || {};
+          findProof => findProof.rootHash === currentProof.rootHash
+        ) || ({} as Proof);
 
-      return {
-        ...proof,
+      const proof: RewardProofType = {
+        ...currentProof,
         ...tokenWithPrice,
         ...claimingInfo,
-        isClaimable: !!claimingInfo,
+        isClaimable: !!claimingInfo?.rootHash,
       };
+
+      if (proof.explanationData?.token) {
+        const tokenSymbol = await getTokenSymbolForAddress(
+          proof.explanationData.token
+        );
+
+        if (tokenSymbol) {
+          proof.explanationData.token = tokenSymbol;
+        }
+      }
+
+      if (proof.explanationData?.amount) {
+        proof.explanationData.amount = parseExplanationAmount(
+          proof.explanationData.amount
+        );
+      }
+
+      if (proof.explanationData?.rollover_amount) {
+        proof.explanationData.rollover_amount = parseExplanationAmount(
+          proof.explanationData.rollover_amount
+        );
+      }
+
+      if (proof.explanationData && proof.explanationTemplate) {
+        proof.parsedExplanation = parseTemplateExplanation(
+          proof.explanationTemplate,
+          proof.explanationData
+        );
+      }
+
+      return proof;
     })
   );
 

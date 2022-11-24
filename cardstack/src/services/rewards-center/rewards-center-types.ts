@@ -86,6 +86,7 @@ export type RewardWithdrawGasEstimateParams = RewardWithdrawBaseParams;
 export type RewardProofType = WithSymbol<Proof | ClaimableProof> &
   TokenType & {
     isClaimable?: boolean;
+    parsedExplanation?: string;
   };
 
 export type RewardValidProofsResult = RewardProofType[];
