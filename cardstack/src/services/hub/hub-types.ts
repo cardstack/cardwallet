@@ -42,10 +42,6 @@ export interface CheckHubAuthQueryParams {
   network: NetworkType;
 }
 
-export interface RegisterFCMTokenQueryParams {
-  fcmToken: string;
-}
-
 export interface GetExchangeRatesQueryParams {
   from: NativeCurrency | string;
   to: NativeCurrency | string;

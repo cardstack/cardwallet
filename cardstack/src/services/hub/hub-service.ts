@@ -205,9 +205,3 @@ export const getExchangeRatesQuery = (params?: GetExchangeRatesQueryParams) => {
 
   return query;
 };
-
-export const registerFcmToken = (fcmToken: string) =>
-  store.dispatch(hubApi.endpoints.registerFcmToken.initiate({ fcmToken }));
-
-export const unregisterFcmToken = (fcmToken: string) =>
-  store.dispatch(hubApi.endpoints.unregisterFcmToken.initiate({ fcmToken }));

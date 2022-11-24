@@ -12,14 +12,12 @@ import {
   GetEoaClaimedQueryParams,
   GetEoaClaimedQueryResult,
   CheckHubAuthQueryParams,
-  RegisterFCMTokenQueryParams,
   GetExchangeRatesQueryParams,
 } from './hub-types';
 
 const routes = {
   emailDrop: '/email-card-drop-requests',
   exchangeRates: '/exchange-rates',
-  registerFCMToken: '/push-notification-registrations',
 };
 
 enum CacheTag {
@@ -73,22 +71,6 @@ export const hubApi = createApi({
       }),
       transformResponse: ({ data }) => data.attributes.rates,
     }),
-    registerFcmToken: builder.query<string, RegisterFCMTokenQueryParams>({
-      query: ({ fcmToken }) => ({
-        url: routes.registerFCMToken,
-        method: 'POST',
-        body: hubBodyBuilder('push-notification-registration', {
-          'push-client-id': fcmToken,
-        }),
-      }),
-    }),
-    unregisterFcmToken: builder.mutation<string, RegisterFCMTokenQueryParams>({
-      query: ({ fcmToken }) => ({
-        url: `${routes.registerFCMToken}/${fcmToken}`,
-        method: 'DELETE',
-        responseHandler: response => response.text(),
-      }),
-    }),
   }),
 });
 
@@ -97,6 +79,4 @@ export const {
   useRequestEmailCardDropMutation,
   useCheckHubAuthQuery,
   useGetExchangeRatesQuery,
-  useRegisterFcmTokenQuery,
-  useUnregisterFcmTokenMutation,
 } = hubApi;
