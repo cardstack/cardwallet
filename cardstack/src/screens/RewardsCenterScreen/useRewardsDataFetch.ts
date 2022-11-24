@@ -53,7 +53,8 @@ const useRewardsDataFetch = () => {
   );
 
   const { data: rewardProgramExplainer } = useGetRewardProgramExplainerQuery(
-    defaultRewardProgramId
+    defaultRewardProgramId,
+    query.options
   );
 
   const { data: rewards } = useGetValidRewardsForProgramQuery(
