@@ -90,7 +90,8 @@ export const collectiblesRefreshState = () => async (
 
   switch (network) {
     case NetworkType.mainnet:
-      // OpenSea API only supports Ethereum mainnet
+    case NetworkType.polygon:
+      // OpenSea API only supports some networks
       return dispatch(fetchNFTsViaOpenSea());
     case NetworkType.gnosis:
     case NetworkType.sokol:
