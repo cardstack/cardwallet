@@ -19,7 +19,10 @@ import {
   addNativePriceToToken,
   updateSafeWithTokenPrices,
 } from '../gnosis-service';
-import { parseTemplateExplanation } from '../utils/reward-explanation';
+import {
+  parseTemplateExplanation,
+  parseExplanationAmount,
+} from '../utils/reward-explanation';
 
 import {
   RegisterGasEstimateQueryParams,
@@ -82,7 +85,9 @@ const getValidProofs = async ({
 const getTokenSymbolForAddress = async (tokenAddress: string) => {
   const rewardPoolInstance = await getRewardsPoolInstance();
 
-  return rewardPoolInstance.addTokenSymbol([{ tokenAddress }]);
+  const token = await rewardPoolInstance.addTokenSymbol([{ tokenAddress }]);
+
+  return token?.[0]?.tokenSymbol;
 };
 
 // Queries
@@ -121,38 +126,38 @@ export const fetchValidProofsWithToken = async ({
 
       // Adds data needed for claiming a proof to the general proofs list
       // rootHash is used as a merging ID.
-      const claimingInfo = claimableProofs.find(
-        findProof => findProof.rootHash === currentProof.rootHash
-      );
+      const claimingInfo =
+        claimableProofs.find(
+          findProof => findProof.rootHash === proof.rootHash
+        ) || ({} as Proof);
 
-      const proof: RewardProofType = claimingInfo
-        ? {
-            ...claimingInfo,
-            ...tokenWithPrice,
-            isClaimable: true,
-          }
-        : { ...currentProof, ...tokenWithPrice, isClaimable: false };
+      const proof: RewardProofType = {
+        ...currentProof,
+        ...tokenWithPrice,
+        ...claimingInfo,
+        isClaimable: !!claimingInfo.rootHash,
+      };
 
       if (proof.explanationData?.token) {
-        const token = await getTokenSymbolForAddress(
+        const tokenSymbol = await getTokenSymbolForAddress(
           proof.explanationData.token
         );
 
-        if (token[0]?.tokenSymbol) {
-          proof.explanationData.token = token[0]?.tokenSymbol;
+        if (tokenSymbol) {
+          proof.explanationData.token = tokenSymbol;
         }
       }
 
       if (proof.explanationData?.amount) {
-        proof.explanationData.amount = parseFloat(
-          fromWei(proof.explanationData.amount)
-        ).toFixed(3);
+        proof.explanationData.amount = parseExplanationAmount(
+          proof.explanationData.amount
+        );
       }
 
       if (proof.explanationData?.rollover_amount) {
-        proof.explanationData.rollover_amount = parseFloat(
-          fromWei(proof.explanationData.rollover_amount)
-        ).toFixed(3);
+        proof.explanationData.rollover_amount = parseExplanationAmount(
+          proof.explanationData.rollover_amount
+        );
       }
 
       if (proof.explanationData && proof.explanationTemplate) {
