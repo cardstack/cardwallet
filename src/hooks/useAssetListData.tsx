@@ -23,7 +23,7 @@ import {
   MerchantSafeType,
   PrepaidCardType,
 } from '@cardstack/types';
-import { isCardPayCompatible } from '@cardstack/utils';
+
 import { parseAssetsNativeWithTotals } from '@rainbow-me/parsers';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
@@ -158,7 +158,12 @@ const useCollectiblesSection = (): AssetListSectionItem<CollectibleType> => {
 };
 
 export const useAssetListData = () => {
-  const { network, accountAddress, nativeCurrency } = useAccountSettings();
+  const {
+    accountAddress,
+    nativeCurrency,
+    noCardPayAccount,
+    isOnCardPayNetwork,
+  } = useAccountSettings();
 
   const {
     isFetching: isFetchingSafes,
@@ -180,7 +185,7 @@ export const useAssetListData = () => {
         timestamp: data?.timestamp || '',
         ...rest,
       }),
-      skip: !isCardPayCompatible(network) || !accountAddress,
+      skip: noCardPayAccount,
     }
   );
 
@@ -191,7 +196,7 @@ export const useAssetListData = () => {
   const collectiblesSection = useCollectiblesSection();
 
   const isUninitializedOnCardPayCompatible =
-    isCardPayCompatible(network) && isUninitialized;
+    isOnCardPayNetwork && isUninitialized;
 
   const isLoadingRainbowAssets = useRainbowSelector(
     state => state.data.isLoadingAssets
@@ -213,7 +218,7 @@ export const useAssetListData = () => {
     section =>
       section?.data?.length ||
       (section?.header.type === PinnedHiddenSectionOption.PREPAID_CARDS &&
-        isCardPayCompatible(network))
+        isOnCardPayNetwork)
   );
 
   const isEmpty = !sections.length;

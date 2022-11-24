@@ -166,8 +166,8 @@ export default function useWalletManager() {
 
       await loadGlobalData();
       logger.sentry('loaded global data...');
-      await loadAccountData(network);
-      logger.sentry('loaded account data', network);
+      await loadAccountData();
+      logger.sentry('loaded account data');
 
       await initializeAccountData();
 
@@ -186,7 +186,6 @@ export default function useWalletManager() {
     migrateWalletIfNeeded,
     loadGlobalData,
     loadAccountData,
-    network,
     initializeAccountData,
   ]);
 

@@ -9,7 +9,6 @@ import {
   useWelcomeBannerSelector,
 } from '@cardstack/redux/welcomeBanner';
 import { useGetEoaClaimedQuery } from '@cardstack/services/hub/hub-api';
-import { isCardPayCompatible } from '@cardstack/utils';
 
 import { useWallets, useAccountSettings } from '@rainbow-me/hooks';
 import { logger } from '@rainbow-me/utils';
@@ -18,7 +17,7 @@ const EMAIL_POLLING_INTERVAL = 5000;
 
 export const useWelcomeCtaBanner = () => {
   const { selectedAccount } = useWallets();
-  const { accountAddress, network } = useAccountSettings();
+  const { accountAddress, isOnCardPayNetwork } = useAccountSettings();
   const [triggerPolling, setTriggerPolling] = useState(false);
   const { requestedCardDrop, dismissedByUser } = useWelcomeBannerSelector();
   const { configs } = useRemoteConfigs();
@@ -47,16 +46,16 @@ export const useWelcomeCtaBanner = () => {
 
   const showBanner = useMemo(
     () =>
-      isCardPayCompatible(network) &&
+      isOnCardPayNetwork &&
       configs.featurePrepaidCardDrop &&
       !dismissedByUser &&
       isFirstAddressForCurrentWallet &&
       (emailDropGetData?.showBanner ?? false),
     [
+      isOnCardPayNetwork,
       configs,
       dismissedByUser,
       isFirstAddressForCurrentWallet,
-      network,
       emailDropGetData,
     ]
   );

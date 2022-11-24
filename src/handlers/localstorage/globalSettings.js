@@ -1,3 +1,4 @@
+import { isSupportedChain } from '@cardstack/cardpay-sdk';
 import { getGlobal, removeLocal, saveGlobal } from './common';
 
 import { NetworkType } from '@cardstack/types';
@@ -34,7 +35,18 @@ export const getLanguage = () => getGlobal(LANGUAGE, 'en');
 
 export const saveLanguage = language => saveGlobal(LANGUAGE, language);
 
-export const getNetwork = () => getGlobal(NETWORK, NetworkType.gnosis);
+export const getNetwork = async () => {
+  const defaultNetwork = NetworkType.gnosis;
+
+  const network = await getGlobal(NETWORK, defaultNetwork);
+
+  if (isSupportedChain(network)) {
+    return network;
+  }
+
+  await saveNetwork(defaultNetwork);
+  return defaultNetwork;
+};
 
 export const saveNetwork = network => saveGlobal(NETWORK, network);
 

@@ -1,11 +1,12 @@
 import {
+  CardPayCapableNetworks,
   generateMerchantPaymentUrl,
   getConstantByNetwork,
 } from '@cardstack/cardpay-sdk';
 import { useCallback, useMemo } from 'react';
 
 import { MerchantInformation } from '@cardstack/types';
-import { isCardPayCompatible, shareRequestPaymentLink } from '@cardstack/utils';
+import { shareRequestPaymentLink } from '@cardstack/utils';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
 import logger from 'logger';
@@ -25,34 +26,40 @@ export const usePaymentLinks = ({
   amountWithSymbol,
   merchantInfo,
 }: usePaymentLinkParams) => {
-  const { network } = useAccountSettings();
+  const { isOnCardPayNetwork, network } = useAccountSettings();
+
+  const generatePaymentUrl = useCallback(
+    ({ isWebLink } = {}) => {
+      if (!isOnCardPayNetwork) {
+        return '';
+      }
+
+      const domain = isWebLink
+        ? getConstantByNetwork(
+            'merchantUniLinkDomain',
+            network as CardPayCapableNetworks
+          )
+        : undefined;
+
+      return generateMerchantPaymentUrl({
+        domain,
+        merchantSafeID: address,
+        amount: amountInNum,
+        network,
+        currency: paymentCurrency,
+      });
+    },
+    [address, amountInNum, isOnCardPayNetwork, network, paymentCurrency]
+  );
 
   const paymentRequestWebLink = useMemo(
-    () =>
-      isCardPayCompatible(network)
-        ? generateMerchantPaymentUrl({
-            domain: getConstantByNetwork('merchantUniLinkDomain', network),
-            merchantSafeID: address,
-            amount: amountInNum,
-            network,
-            currency: paymentCurrency,
-          })
-        : '',
-    [address, amountInNum, paymentCurrency, network]
+    () => generatePaymentUrl({ isWebLink: true }),
+    [generatePaymentUrl]
   );
 
-  const paymentRequestDeepLink = useMemo(
-    () =>
-      isCardPayCompatible(network)
-        ? generateMerchantPaymentUrl({
-            merchantSafeID: address,
-            amount: amountInNum,
-            network,
-            currency: paymentCurrency,
-          })
-        : '',
-    [address, amountInNum, paymentCurrency, network]
-  );
+  const paymentRequestDeepLink = useMemo(() => generatePaymentUrl(), [
+    generatePaymentUrl,
+  ]);
 
   const handleShareLink = useCallback(async () => {
     try {

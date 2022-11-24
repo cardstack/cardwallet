@@ -8,7 +8,6 @@ import {
   MerchantContent,
   Text,
 } from '@cardstack/components';
-import { isCardPayCompatible } from '@cardstack/utils';
 
 import { useSendFeedback } from '@rainbow-me/hooks';
 
@@ -25,7 +24,7 @@ const ProfileScreen = () => {
     isConnectionError,
     safesCount,
     isFetching,
-    network,
+    isOnCardPayNetwork,
     refetch,
     redirectToSwitchNetwork,
   } = useProfileScreen();
@@ -45,7 +44,7 @@ const ProfileScreen = () => {
   }, [isCreateProfileError, isConnectionError]);
 
   const renderProfileContent = useMemo(() => {
-    if (!isCardPayCompatible(network)) {
+    if (!isOnCardPayNetwork) {
       return (
         <>
           <Text color="white" fontSize={24}>
@@ -111,7 +110,7 @@ const ProfileScreen = () => {
     error,
     isCreatingProfile,
     isFetching,
-    network,
+    isOnCardPayNetwork,
     onSendSupport,
     primarySafe,
     redirectToSwitchNetwork,
@@ -127,7 +126,7 @@ const ProfileScreen = () => {
       <Container
         justifyContent="center"
         flex={1}
-        paddingHorizontal={!isCardPayCompatible(network) ? 5 : 0}
+        paddingHorizontal={isOnCardPayNetwork ? 0 : 5}
       >
         {renderProfileContent}
       </Container>

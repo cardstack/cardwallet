@@ -19,7 +19,7 @@ import AssetTypes from '../helpers/assetTypes';
 import { sendTransaction } from '../model/wallet';
 import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
-import { isCardPayCompatible, isNativeToken } from '@cardstack/utils';
+import { isNativeToken } from '@cardstack/utils';
 import { Alert } from '@rainbow-me/components/alerts';
 import {
   useAccountAssets,
@@ -63,7 +63,12 @@ const useSendSheetScreen = () => {
   const recipientFieldRef = useRef();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
-  const { accountAddress, nativeCurrency, network } = useAccountSettings();
+  const {
+    accountAddress,
+    nativeCurrency,
+    network,
+    isOnCardPayNetwork,
+  } = useAccountSettings();
 
   const { sendableCollectibles } = useSendableCollectibles();
   const savings = useSendSavingsAccount();
@@ -447,7 +452,7 @@ const useSendSheetScreen = () => {
     selected,
     onMaxBalancePress,
     selectedGasPrice,
-    onPressTransactionSpeed: isCardPayCompatible(network)
+    onPressTransactionSpeed: isOnCardPayNetwork
       ? undefined
       : onPressTransactionSpeed, // Temporary turn off gas price picker on layer 2
     // without price, hide fiat field, since there's no way to calculate it

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useGetSafesDataQuery } from '@cardstack/services';
 import { MerchantSafeType } from '@cardstack/types';
-import { isCardPayCompatible } from '@cardstack/utils';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
 
@@ -14,7 +13,13 @@ import {
 
 export const usePrimarySafe = () => {
   const dispatch = useDispatch();
-  const { accountAddress, network, nativeCurrency } = useAccountSettings();
+
+  const {
+    accountAddress,
+    network,
+    nativeCurrency,
+    noCardPayAccount,
+  } = useAccountSettings();
 
   const primarySafeKey = useSelector(selectPrimarySafe(network, accountAddress))
     ?.address;
@@ -36,7 +41,7 @@ export const usePrimarySafe = () => {
         merchantSafes: data?.merchantSafes,
         ...rest,
       }),
-      skip: !isCardPayCompatible(network) || !accountAddress,
+      skip: noCardPayAccount,
     }
   );
 
