@@ -35,7 +35,7 @@ const SETTINGS_UPDATE_NETWORK_SUCCESS =
   'settings/SETTINGS_UPDATE_NETWORK_SUCCESS';
 
 // -- Actions --------------------------------------------------------------- //
-export const settingsLoadState = () => async dispatch => {
+export const settingsLoadCurrency = () => async dispatch => {
   try {
     const nativeCurrency = await getNativeCurrency();
 
