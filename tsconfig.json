@@ -6,7 +6,7 @@
     "isolatedModules": false,
     "module": "es2020",
     "jsx": "react-native",
-    "lib": ["es6", "es2019", "ES2020.Intl"],
+    "lib": ["es6", "es2020", "ES2020.Intl"],
     "moduleResolution": "node",
     "noEmit": true,
     "strict": true,
