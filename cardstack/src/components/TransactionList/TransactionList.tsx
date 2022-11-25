@@ -31,7 +31,7 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
   const isLoadingFallback = useRef(true);
 
   useEffect(() => {
-    if (isLoadingTransactions) {
+    if (!isLoadingTransactions) {
       // Once tx are loading we don't need to track anymore
       isLoadingFallback.current = false;
     }
