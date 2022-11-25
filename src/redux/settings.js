@@ -9,12 +9,12 @@ import {
 import { etherWeb3SetHttpProvider } from '../handlers/web3';
 import { updateLanguage } from '../languages';
 
-import { promiseUtils } from '../utils';
 import { dataResetState } from './data';
 import {
   fallbackExplorerClearState,
   fallbackExplorerInit,
 } from './fallbackExplorer';
+import { mapDispatchToActions } from './hooks';
 import { walletConnectUpdateSessions } from './walletconnect';
 import { collectiblesResetState } from '@cardstack/redux/collectibles';
 import { requestsResetState } from '@cardstack/redux/requests';
@@ -78,10 +78,9 @@ export const settingsUpdateAccountAddress = accountAddress => async dispatch => 
 };
 
 export const resetAccountState = () => async dispatch => {
-  const p1 = dispatch(dataResetState());
-  const p2 = dispatch(collectiblesResetState());
-  const p3 = dispatch(requestsResetState());
-  await promiseUtils.PromiseAllWithFails([p1, p2, p3]);
+  const actions = [dataResetState, collectiblesResetState, requestsResetState];
+
+  await Promise.allSettled(mapDispatchToActions(dispatch, actions));
 };
 
 export const settingsUpdateNetwork = network => async () => {
