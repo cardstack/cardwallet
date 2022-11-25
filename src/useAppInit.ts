@@ -7,13 +7,12 @@ import { useDispatch } from 'react-redux';
 import handleWcDeepLink from './handlers/deeplinks';
 import { runKeychainIntegrityChecks } from './handlers/walletReadyEvents';
 
-import { useAccountSettings } from './hooks';
 import { useRainbowSelector } from './redux/hooks';
 import store from './redux/store';
 import { walletConnectLoadState } from './redux/walletconnect';
 import { useAppRequirements, useAppState } from '@cardstack/hooks';
 import { registerTokenRefreshListener } from '@cardstack/models/firebase';
-import WalletConnect from '@cardstack/models/wallet-connect';
+
 import { Navigation, Routes } from '@cardstack/navigation';
 import { navigationRef } from '@cardstack/navigation/Navigation';
 import {
@@ -32,7 +31,6 @@ export const useAppInit = () => {
   const appRequirements = useAppRequirements();
 
   const { justBecameActive, movedFromBackground } = useAppState();
-  const { accountAddress } = useAccountSettings();
 
   const {
     setUserUnauthorized,
@@ -138,13 +136,6 @@ export const useAppInit = () => {
       store.dispatch(walletConnectLoadState());
     }
   }, [justBecameActive]);
-
-  useEffect(() => {
-    if (accountAddress) {
-      WalletConnect.init(accountAddress);
-      logger.sentry('[WC-2.0]: Init start');
-    }
-  }, [accountAddress, walletReady]);
 
   return appRequirements;
 };
