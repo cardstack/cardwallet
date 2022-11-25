@@ -11,7 +11,6 @@ import {
   getAllWallets,
   getSelectedWallet,
   loadAddress,
-  saveAddress,
   saveAllWallets,
   setSelectedWallet,
 } from '../model/wallet';
@@ -79,7 +78,6 @@ export const walletsLoadState = () => async (dispatch, getState) => {
     if (!selectedAddress) {
       const account = selectedWallet.addresses[0];
       await dispatch(settingsUpdateAccountAddress(account.address));
-      await saveAddress(account.address);
       logger.sentry(
         'Selected the first address because there was not selected one'
       );
@@ -181,8 +179,6 @@ export const setWalletCloudBackup = (walletId, backupFile = '') => async (
   }
 };
 
-export const addressSetSelected = address => () => saveAddress(address);
-
 export const createAccountForWallet = (id, color, name) => async (
   dispatch,
   getState
@@ -205,8 +201,6 @@ export const createAccountForWallet = (id, color, name) => async (
 
   // Save all the wallets
   saveAllWallets(newWallets);
-  // Set the address selected (KEYCHAIN)
-  await saveAddress(account.address);
 
   await dispatch(settingsUpdateAccountAddress(account.address));
   // Set the wallet selected (KEYCHAIN)

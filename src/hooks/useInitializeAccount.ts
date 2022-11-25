@@ -11,8 +11,8 @@ import {
   collectiblesRefreshState,
 } from '@cardstack/redux/collectibles';
 import { requestsLoadState } from '@cardstack/redux/requests';
+import { mapDispatchToActions } from '@cardstack/utils';
 import { fallbackExplorerInit } from '@rainbow-me/redux/fallbackExplorer';
-import { mapDispatchToActions } from '@rainbow-me/redux/hooks';
 import { imageMetadataCacheLoadState } from '@rainbow-me/redux/imageMetadata';
 import { settingsLoadCurrency } from '@rainbow-me/redux/settings';
 import logger from 'logger';

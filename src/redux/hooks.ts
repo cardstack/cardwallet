@@ -1,5 +1,4 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
-import { Dispatch } from '@reduxjs/toolkit';
 import { ChainId } from '@uniswap/sdk';
 import { useSelector } from 'react-redux';
 import {
@@ -47,7 +46,3 @@ export const useRainbowSelector = <TSelected = unknown>(
   selector: (_state: ReduxState) => TSelected,
   equalityFn?: (_left: TSelected, _right: TSelected) => boolean
 ): TSelected => useSelector(selector, equalityFn);
-
-// Actions need to be any for now since we have .js actions
-export const mapDispatchToActions = (dispatch: Dispatch, actions: any[]) =>
-  actions.map(action => dispatch(action()));

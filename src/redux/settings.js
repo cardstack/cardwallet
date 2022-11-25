@@ -14,13 +14,13 @@ import {
   fallbackExplorerClearState,
   fallbackExplorerInit,
 } from './fallbackExplorer';
-import { mapDispatchToActions } from './hooks';
 import { walletConnectUpdateSessions } from './walletconnect';
 import { collectiblesResetState } from '@cardstack/redux/collectibles';
 import { requestsResetState } from '@cardstack/redux/requests';
 import { getExchangeRatesQuery } from '@cardstack/services/hub/hub-service';
 import { NetworkType } from '@cardstack/types';
-import { restartApp } from '@cardstack/utils';
+import { mapDispatchToActions, restartApp } from '@cardstack/utils';
+import { saveAddress } from '@rainbow-me/model/wallet';
 import logger from 'logger';
 
 // -- Constants ------------------------------------------------------------- //
@@ -70,6 +70,8 @@ export const settingsLoadNetwork = () => async dispatch => {
 };
 
 export const settingsUpdateAccountAddress = accountAddress => async dispatch => {
+  await saveAddress(accountAddress);
+
   dispatch({
     payload: accountAddress,
     type: SETTINGS_UPDATE_SETTINGS_ADDRESS,
