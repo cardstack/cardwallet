@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { OptionalUnion } from 'globals';
 import React, { useCallback } from 'react';
 
+import { useDispatch } from 'react-redux';
 import { Button, IconProps } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
 import {
@@ -11,6 +12,7 @@ import {
   CollectibleType,
   TokenType,
 } from '@cardstack/types';
+import { contactsLoadState } from '@rainbow-me/redux/contacts';
 
 const iconProps: IconProps = {
   iconSize: 'medium',
@@ -32,14 +34,18 @@ export default function SendActionButton({
   safeAddress,
   small,
 }: SendActionButtonProps) {
+  const dispatch = useDispatch();
+
   const { navigate } = useNavigation();
 
   const handlePress = useCallback(() => {
+    dispatch(contactsLoadState());
+
     const isSafe = !!asset?.tokenAddress;
     const route = isSafe ? Routes.SEND_FLOW_DEPOT : Routes.SEND_FLOW_EOA;
 
     navigate(route, { asset, safeAddress });
-  }, [asset, safeAddress, navigate]);
+  }, [dispatch, asset, navigate, safeAddress]);
 
   return (
     <Button
