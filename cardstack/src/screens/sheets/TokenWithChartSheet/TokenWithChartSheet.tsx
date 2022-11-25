@@ -1,4 +1,3 @@
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
 import React, { useRef } from 'react';
 
@@ -7,13 +6,9 @@ import { RouteType } from '@cardstack/navigation/types';
 import { AssetWithNativeType } from '@cardstack/types';
 
 import { ChartPathProvider } from '@rainbow-me/animated-charts';
-import {
-  BuyActionButton,
-  SendActionButton,
-  SheetActionButtonRow,
-} from '@rainbow-me/components/sheet';
+import { SendActionButton } from '@rainbow-me/components/sheet';
 import { Chart } from '@rainbow-me/components/value-chart';
-import { useAccountSettings, useChartThrottledPoints } from '@rainbow-me/hooks';
+import { useChartThrottledPoints } from '@rainbow-me/hooks';
 
 import AmountWithCoin from './components/AmountWithCoin';
 import NativeAmount from './components/NativeAmount';
@@ -41,16 +36,6 @@ export default function TokenWithChartSheet() {
   } = useChartThrottledPoints({
     asset,
   });
-
-  const { network } = useAccountSettings();
-
-  const nativeTokenAddress = getConstantByNetwork(
-    'nativeTokenAddress',
-    network
-  );
-
-  const needsEth =
-    asset.address === nativeTokenAddress && asset.balance?.amount === '0';
 
   const duration = useRef(0);
 
@@ -89,25 +74,19 @@ export default function TokenWithChartSheet() {
           <NativeAmount title={strings.value} asset={asset} />
         )}
       </Container>
-      {needsEth ? (
-        <SheetActionButtonRow>
-          <BuyActionButton color={color} fullWidth />
-        </SheetActionButtonRow>
-      ) : (
-        <Container
-          alignItems="center"
-          flexDirection="row"
-          justifyContent="space-around"
-          paddingTop={2}
-          width="100%"
-        >
-          <SendActionButton
-            asset={asset}
-            safeAddress={safeAddress}
-            small={false}
-          />
-        </Container>
-      )}
+      <Container
+        alignItems="center"
+        flexDirection="row"
+        justifyContent="space-around"
+        paddingTop={2}
+        width="100%"
+      >
+        <SendActionButton
+          asset={asset}
+          safeAddress={safeAddress}
+          small={false}
+        />
+      </Container>
     </Sheet>
   );
 }
