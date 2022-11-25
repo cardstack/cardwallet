@@ -1,3 +1,4 @@
+import { captureException } from '@sentry/react-native';
 import { Core } from '@walletconnect/core';
 import SignClient from '@walletconnect/sign-client';
 import {
@@ -45,9 +46,12 @@ const WalletConnect = {
         );
 
         signClient?.on('session_request', onSessionRequest);
+
+        logger.sentry('[WC-2.0]: Initialized');
       }
     } catch (e) {
       logger.sentry('[WC-2.0]: Init failed', e);
+      captureException(e);
     }
   },
   pair: async (params: EngineTypes.PairParams) => {
