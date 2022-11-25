@@ -1,9 +1,10 @@
-import React, { useCallback, createRef } from 'react';
+import React, { useCallback, createRef, useMemo } from 'react';
 import { RefreshControl, SectionList, ActivityIndicator } from 'react-native';
 
 import { Container, Text, RewardsPromoBanner } from '@cardstack/components';
 import { PinHideOptionsFooter } from '@cardstack/components/PinnedHiddenSection';
 
+import { useAccountSettings } from '@rainbow-me/hooks';
 import logger from 'logger';
 
 import { AssetListLoading } from './components/AssetListLoading';
@@ -18,6 +19,7 @@ const onScrollToIndexFailed = () => {
 
 export const AssetList = () => {
   const sectionListRef = createRef<SectionList>();
+  const { isOnCardPayNetwork } = useAccountSettings();
 
   const {
     sections,
@@ -67,6 +69,17 @@ export const AssetList = () => {
     [isFetchingSafes]
   );
 
+  const renderListHeaderComponent = useMemo(
+    () =>
+      isOnCardPayNetwork ? (
+        <RewardsPromoBanner
+          hasUnclaimedRewards={hasClaimableRewards}
+          paddingTop={2}
+        />
+      ) : null,
+    [hasClaimableRewards, isOnCardPayNetwork]
+  );
+
   if (isLoading) {
     return <AssetListLoading />;
   }
@@ -74,12 +87,7 @@ export const AssetList = () => {
   return (
     <>
       <SectionList
-        ListHeaderComponent={
-          <RewardsPromoBanner
-            hasUnclaimedRewards={hasClaimableRewards}
-            paddingTop={2}
-          />
-        }
+        ListHeaderComponent={renderListHeaderComponent}
         onScrollToIndexFailed={onScrollToIndexFailed}
         ref={sectionListRef}
         refreshControl={
