@@ -33,7 +33,7 @@ const RewardsCenterScreen = () => {
   );
 
   return (
-    <Container backgroundColor="white" flex={1}>
+    <Container backgroundColor="white" flex={1} width="100%">
       <NavigationStackHeader title={strings.navigation.title} />
       <Container backgroundColor="white" flex={1}>
         <RewardProgramHeader title={rewardProgramExplainer} />

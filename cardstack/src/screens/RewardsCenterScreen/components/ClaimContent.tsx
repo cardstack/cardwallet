@@ -5,6 +5,7 @@ import { FlatList } from 'react-native';
 import { Container, useTabHeader, InfoBanner } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
 import { RewardProofType } from '@cardstack/services/rewards-center/rewards-center-types';
+import { sectionStyle } from '@cardstack/utils';
 
 import { strings } from '../strings';
 
@@ -78,6 +79,7 @@ export const ClaimContent = ({ rewards }: ClaimContentProps) => {
 
   return (
     <FlatList
+      style={sectionStyle.sectionList}
       data={rewards}
       renderItem={RewardItem}
       ListHeaderComponent={ListHeader}
