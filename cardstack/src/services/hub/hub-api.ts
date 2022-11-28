@@ -20,14 +20,15 @@ const routes = {
   exchangeRates: '/exchange-rates',
 };
 
-enum CacheTag {
+export enum HubCacheTags {
   EOA_CLAIM = 'EOA_CLAIM',
+  NOTIFICATION_PREFERENCES = 'NOTIFICATION_PREFERENCES',
 }
 
 export const hubApi = createApi({
   reducerPath: 'hubApi',
   baseQuery: fetchHubBaseQuery,
-  tagTypes: [...Object.values(CacheTag)],
+  tagTypes: [...Object.values(HubCacheTags)],
   endpoints: builder => ({
     requestEmailCardDrop: builder.mutation<void, RequestCardDropQueryParams>({
       query: ({ email }) => ({
@@ -37,7 +38,7 @@ export const hubApi = createApi({
           email,
         }),
       }),
-      invalidatesTags: [CacheTag.EOA_CLAIM],
+      invalidatesTags: [HubCacheTags.EOA_CLAIM],
     }),
     getEoaClaimed: builder.query<
       GetEoaClaimedQueryResult,
@@ -48,7 +49,7 @@ export const hubApi = createApi({
       transformResponse: (response: {
         data: { attributes: EoaClaimedAttrsType };
       }) => transformObjKeysToCamelCase(response?.data?.attributes),
-      providesTags: [CacheTag.EOA_CLAIM],
+      providesTags: [HubCacheTags.EOA_CLAIM],
     }),
     checkHubAuth: builder.query<boolean, CheckHubAuthQueryParams>({
       async queryFn(params) {

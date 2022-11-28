@@ -7,7 +7,7 @@ import { requestNotifications } from 'react-native-permissions';
 import {
   registerFcmToken,
   unregisterFcmToken,
-} from '@cardstack/services/hub/hub-service';
+} from '@cardstack/services/hub/notifications/hub-notifications-service';
 import { NetworkType } from '@cardstack/types';
 
 import { Alert } from '@rainbow-me/components/alerts';

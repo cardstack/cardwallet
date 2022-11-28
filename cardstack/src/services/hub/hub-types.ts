@@ -16,6 +16,7 @@ export interface HubBaseResponse<Attrs> {
 // Note on baseQuery extraOptions, it works only with optional properties.
 export interface BaseQueryExtraOptions {
   authenticate?: boolean;
+  appendFCMToken?: boolean;
 }
 
 export type GetCustodialWalletQueryResult = KebabToCamelCaseKeys<CustodialWalletAttrs>;

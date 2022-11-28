@@ -6,6 +6,7 @@ import {
   FetchBaseQueryError,
 } from '@reduxjs/toolkit/query/react';
 
+import { getFCMToken } from '@cardstack/models/firebase';
 import Web3Instance from '@cardstack/models/web3-instance';
 import { MerchantSafeType } from '@cardstack/types';
 
@@ -40,6 +41,7 @@ export const fetchHubBaseQuery: BaseQueryFn<
 > = async (args, api, extraOptions) => {
   const extraOptionsOverwrite = {
     authenticate: true,
+    appendFCMToken: false,
     ...extraOptions,
   };
 
@@ -71,6 +73,17 @@ export const fetchHubBaseQuery: BaseQueryFn<
       return headers;
     },
   });
+
+  // Append FCM Token to URL.
+  if (extraOptionsOverwrite.appendFCMToken) {
+    const { fcmToken } = await getFCMToken();
+
+    if (typeof args === 'string') {
+      args += `/${fcmToken}`;
+    } else {
+      args.url += `/${fcmToken}`;
+    }
+  }
 
   let result = await baseQuery(args, api, extraOptions);
 
