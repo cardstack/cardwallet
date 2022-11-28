@@ -81,11 +81,7 @@ export default function TokenWithChartSheet() {
         paddingTop={2}
         width="100%"
       >
-        <SendActionButton
-          asset={asset}
-          safeAddress={safeAddress}
-          small={false}
-        />
+        <SendActionButton asset={asset} safeAddress={safeAddress} />
       </Container>
     </Sheet>
   );

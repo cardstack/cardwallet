@@ -26,13 +26,11 @@ type TokenOrAsset = OptionalUnion<AssetWithNativeType, TokenType>;
 interface SendActionButtonProps {
   asset: OptionalUnion<TokenOrAsset, CollectibleType>;
   safeAddress?: string;
-  small?: boolean;
 }
 
 export default function SendActionButton({
   asset,
   safeAddress,
-  small,
 }: SendActionButtonProps) {
   const dispatch = useDispatch();
 
@@ -48,11 +46,7 @@ export default function SendActionButton({
   }, [dispatch, asset, navigate, safeAddress]);
 
   return (
-    <Button
-      iconProps={iconProps}
-      onPress={handlePress}
-      variant={small ? 'small' : undefined}
-    >
+    <Button iconProps={iconProps} onPress={handlePress}>
       Send
     </Button>
   );
