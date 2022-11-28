@@ -1,43 +1,52 @@
+import { useNavigation } from '@react-navigation/native';
+//Rb side doesn't know how to handle globals
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { OptionalUnion } from 'globals';
 import React, { useCallback } from 'react';
 
-import { useExpandedStateNavigation } from '../../../hooks';
-import { Button } from '@cardstack/components';
+import { useDispatch } from 'react-redux';
+import { Button, IconProps } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
+import {
+  AssetWithNativeType,
+  CollectibleType,
+  TokenType,
+} from '@cardstack/types';
+import { contactsLoadState } from '@rainbow-me/redux/contacts';
+
+const iconProps: IconProps = {
+  iconSize: 'medium',
+  marginRight: 2,
+  name: 'send',
+  top: 2,
+};
+
+type TokenOrAsset = OptionalUnion<AssetWithNativeType, TokenType>;
 
 interface SendActionButtonProps {
-  asset?: any;
+  asset: OptionalUnion<TokenOrAsset, CollectibleType>;
   safeAddress?: string;
-  small?: boolean;
 }
 
 export default function SendActionButton({
   asset,
   safeAddress,
-  small,
 }: SendActionButtonProps) {
-  const navigate = useExpandedStateNavigation();
+  const dispatch = useDispatch();
+
+  const { navigate } = useNavigation();
 
   const handlePress = useCallback(() => {
+    dispatch(contactsLoadState());
+
     const isSafe = !!asset?.tokenAddress;
     const route = isSafe ? Routes.SEND_FLOW_DEPOT : Routes.SEND_FLOW_EOA;
 
-    navigate(route, (params: any) => ({ ...params, asset, safeAddress }));
-  }, [asset, safeAddress, navigate]);
-
-  const variantProp = small ? { variant: 'small' } : {};
+    navigate(route, { asset, safeAddress });
+  }, [dispatch, asset, navigate, safeAddress]);
 
   return (
-    // @ts-expect-error could not figure out how to type variant prop
-    <Button
-      iconProps={{
-        iconSize: 'medium',
-        marginRight: 2,
-        name: 'send',
-        top: 2,
-      }}
-      onPress={handlePress}
-      {...variantProp}
-    >
+    <Button iconProps={iconProps} onPress={handlePress}>
       Send
     </Button>
   );

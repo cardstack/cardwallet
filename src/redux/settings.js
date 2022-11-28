@@ -9,7 +9,6 @@ import {
 import { etherWeb3SetHttpProvider } from '../handlers/web3';
 import { updateLanguage } from '../languages';
 
-import { promiseUtils } from '../utils';
 import { dataResetState } from './data';
 import {
   fallbackExplorerClearState,
@@ -20,7 +19,8 @@ import { collectiblesResetState } from '@cardstack/redux/collectibles';
 import { requestsResetState } from '@cardstack/redux/requests';
 import { getExchangeRatesQuery } from '@cardstack/services/hub/hub-service';
 import { NetworkType } from '@cardstack/types';
-import { restartApp } from '@cardstack/utils';
+import { mapDispatchToActions, restartApp } from '@cardstack/utils';
+import { saveAddress } from '@rainbow-me/model/wallet';
 import logger from 'logger';
 
 // -- Constants ------------------------------------------------------------- //
@@ -35,7 +35,7 @@ const SETTINGS_UPDATE_NETWORK_SUCCESS =
   'settings/SETTINGS_UPDATE_NETWORK_SUCCESS';
 
 // -- Actions --------------------------------------------------------------- //
-export const settingsLoadState = () => async dispatch => {
+export const settingsLoadCurrency = () => async dispatch => {
   try {
     const nativeCurrency = await getNativeCurrency();
 
@@ -70,6 +70,8 @@ export const settingsLoadNetwork = () => async dispatch => {
 };
 
 export const settingsUpdateAccountAddress = accountAddress => async dispatch => {
+  await saveAddress(accountAddress);
+
   dispatch({
     payload: accountAddress,
     type: SETTINGS_UPDATE_SETTINGS_ADDRESS,
@@ -78,10 +80,9 @@ export const settingsUpdateAccountAddress = accountAddress => async dispatch => 
 };
 
 export const resetAccountState = () => async dispatch => {
-  const p1 = dispatch(dataResetState());
-  const p2 = dispatch(collectiblesResetState());
-  const p3 = dispatch(requestsResetState());
-  await promiseUtils.PromiseAllWithFails([p1, p2, p3]);
+  const actions = [dataResetState, collectiblesResetState, requestsResetState];
+
+  await Promise.allSettled(mapDispatchToActions(dispatch, actions));
 };
 
 export const settingsUpdateNetwork = network => async () => {

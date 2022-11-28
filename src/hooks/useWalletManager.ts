@@ -17,15 +17,12 @@ import {
   settingsUpdateAccountAddress,
 } from '../redux/settings';
 import {
-  addressSetSelected,
   walletsLoadState,
   walletsSetSelected,
   walletsUpdate,
 } from '../redux/wallets';
 import useAccountSettings from './useAccountSettings';
-import useInitializeAccountData from './useInitializeAccountData';
-import useLoadAccountData from './useLoadAccountData';
-import useLoadGlobalData from './useLoadGlobalData';
+import useInitializeAccount from './useInitializeAccount';
 
 import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
 import { getPin, getSeedPhrase } from '@cardstack/models/secure-storage';
@@ -35,12 +32,12 @@ import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
 import { PinFlow } from '@cardstack/screens/PinScreen/types';
 import { PinScreenNavParams } from '@cardstack/screens/PinScreen/usePinScreen';
 
+import { mapDispatchToActions } from '@cardstack/utils';
 import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/accountLocal';
 import { isValidSeed } from '@rainbow-me/helpers/validators';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 
 import logger from 'logger';
-
 interface WalletsState {
   selectedWallet: RainbowWallet;
   wallets: RainbowWallet[];
@@ -49,9 +46,7 @@ interface WalletsState {
 export default function useWalletManager() {
   const dispatch = useDispatch();
 
-  const loadAccountData = useLoadAccountData();
-  const loadGlobalData = useLoadGlobalData();
-  const initializeAccountData = useInitializeAccountData();
+  const { loadAccountData, fetchAccountAssets } = useInitializeAccount();
 
   const { network } = useAccountSettings();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
@@ -164,14 +159,13 @@ export default function useWalletManager() {
 
       await migrateWalletIfNeeded(walletsState);
 
-      await loadGlobalData();
-      logger.sentry('loaded global data...');
       await loadAccountData();
       logger.sentry('loaded account data');
 
-      await initializeAccountData();
+      await fetchAccountAssets();
 
       await checkPushPermissionAndRegisterToken();
+
       dispatch(appStateUpdate({ walletReady: true }));
     } catch (error) {
       logger.sentry('Error while initializing wallet', error);
@@ -181,13 +175,7 @@ export default function useWalletManager() {
     } finally {
       dispatch(appStateUpdate({ walletReady: true }));
     }
-  }, [
-    dispatch,
-    migrateWalletIfNeeded,
-    loadGlobalData,
-    loadAccountData,
-    initializeAccountData,
-  ]);
+  }, [dispatch, migrateWalletIfNeeded, loadAccountData, fetchAccountAssets]);
 
   const initWalletResetNavState = useCallback(async () => {
     await initializeWallet();
@@ -264,10 +252,13 @@ export default function useWalletManager() {
 
   const changeSelectedWallet = useCallback(
     async (wallet, address) => {
-      const p1 = dispatch(walletsSetSelected(wallet));
-      const p2 = dispatch(addressSetSelected(address));
-      const p3 = dispatch(settingsUpdateAccountAddress(address));
-      await Promise.all([p1, p2, p3]);
+      const promises = mapDispatchToActions(
+        dispatch,
+        [walletsSetSelected, settingsUpdateAccountAddress],
+        [wallet, address]
+      );
+
+      await Promise.all(promises);
 
       await initializeWallet();
     },
