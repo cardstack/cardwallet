@@ -19,7 +19,7 @@ import {
   removeHubAuthToken,
   loadHubAuthToken,
   getHubUrl,
-} from '../hub-service';
+} from '../hub-token-service';
 import { safesApi } from '../safes-api';
 
 import { hubApi } from './hub-api';

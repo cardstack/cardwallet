@@ -1,8 +1,5 @@
 import { useCallback } from 'react';
 
-// import { useAuthToken } from '@cardstack/hooks';
-
-// import { setNotificationsPreferences as oldSet } from '@cardstack/services/hub-service';
 import {
   useGetNotificationsPreferencesQuery,
   useSetNotificationsPreferencesMutation,
