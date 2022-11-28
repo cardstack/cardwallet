@@ -1,4 +1,4 @@
-import { BottomSheetAndroid } from '@react-navigation/stack/lib/typescript/src/TransitionConfigs/TransitionPresets';
+import Item from '@cardstack/screens/SecurityScreen/components/Item';
 import { hubApi, HubCacheTags } from '../hub-api';
 import { hubBodyBuilder } from '../hub-service';
 
@@ -31,17 +31,6 @@ export const hubNotifications = hubApi.injectEndpoints({
         responseHandler: response => response.text(),
       }),
     }),
-    getNotificationsPreferences: builder.query<
-      NotificationsPreferenceDataType[],
-      void
-    >({
-      query: () => routes.notificationsPreferences,
-      providesTags: [HubCacheTags.NOTIFICATION_PREFERENCES],
-      extraOptions: { appendFCMToken: true },
-      transformResponse: (response: {
-        data: NotificationsPreferenceDataType[];
-      }) => response?.data,
-    }),
     setNotificationsPreferences: builder.mutation<
       void,
       NotificationsPreferenceTypeStatusParam
@@ -64,19 +53,17 @@ export const hubNotifications = hubApi.injectEndpoints({
         { dispatch, queryFulfilled }
       ) {
         const patchResult = dispatch(
-          hubApi.util.updateQueryData(
+          hubNotifications.util.updateQueryData(
             'getNotificationsPreferences',
-            { notificationType, status },
-            (preferences: NotificationsPreferenceDataType[]) => {
-              const updateItem = preferences?.find(
-                (item: NotificationsPreferenceDataType) =>
-                  item.attributes['notification-type'] === notificationType
-              );
+            undefined,
+            (preferencesDraft: NotificationsPreferenceDataType[]) => {
+              preferencesDraft?.map((item: NotificationsPreferenceDataType) => {
+                if (item.attributes['notification-type'] === notificationType) {
+                  item.attributes.status = status;
+                }
 
-              if (updateItem) {
-                updateItem.attributes.status = status;
-                Object.assign(preferences, updateItem);
-              }
+                return item;
+              });
             }
           )
         );
@@ -86,12 +73,23 @@ export const hubNotifications = hubApi.injectEndpoints({
       invalidatesTags: [HubCacheTags.NOTIFICATION_PREFERENCES],
       extraOptions: { appendFCMToken: true },
     }),
+    getNotificationsPreferences: builder.query<
+      NotificationsPreferenceDataType[],
+      void
+    >({
+      query: () => routes.notificationsPreferences,
+      providesTags: [HubCacheTags.NOTIFICATION_PREFERENCES],
+      extraOptions: { appendFCMToken: true },
+      transformResponse: (response: {
+        data: NotificationsPreferenceDataType[];
+      }) => response?.data,
+    }),
   }),
 });
 
 export const {
   useRegisterFcmTokenQuery,
   useUnregisterFcmTokenMutation,
-  useGetNotificationsPreferencesQuery,
   useSetNotificationsPreferencesMutation,
+  useGetNotificationsPreferencesQuery,
 } = hubNotifications;

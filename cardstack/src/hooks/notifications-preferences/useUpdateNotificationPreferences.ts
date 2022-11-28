@@ -23,7 +23,6 @@ export const useUpdateNotificationPreferences = () => {
 
   const [
     setNotificationsPreferences,
-    { error: setError, isError },
   ] = useSetNotificationsPreferencesMutation();
 
   const onUpdateOptionStatus = useCallback(
