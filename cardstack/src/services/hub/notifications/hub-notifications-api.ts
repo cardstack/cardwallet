@@ -1,4 +1,3 @@
-import Item from '@cardstack/screens/SecurityScreen/components/Item';
 import { hubApi, HubCacheTags } from '../hub-api';
 import { hubBodyBuilder } from '../hub-service';
 
