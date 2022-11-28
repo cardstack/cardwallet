@@ -11,7 +11,10 @@ import {
 } from '@cardstack/components';
 import { useFullTransactionList } from '@cardstack/hooks';
 
+import { useAccountSettings } from '@rainbow-me/hooks';
+
 import { TransactionListLoading } from './TransactionListLoading';
+import { strings } from './strings';
 
 interface TransactionListProps {
   Header?: JSX.Element;
@@ -19,6 +22,8 @@ interface TransactionListProps {
 }
 
 export const TransactionList = memo(({ Header }: TransactionListProps) => {
+  const { isOnCardPayNetwork, network } = useAccountSettings();
+
   const {
     onEndReached,
     isLoadingTransactions,
@@ -63,20 +68,18 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
     []
   );
 
+  const title = isOnCardPayNetwork
+    ? strings.emptyComponent
+    : strings.nonCardPayNetwork(network);
+
   return (
     <SectionList
       ListEmptyComponent={
-        // Use fallback to avoid flickering empty component,
-        // when fetching hasn't started yet
         isLoadingTransactions || isLoadingFallback.current ? (
           <TransactionListLoading />
         ) : (
           <Container paddingTop={4}>
-            <ListEmptyComponent
-              text={`You don't have any\ntransactions yet`}
-              textColor="blueText"
-              hasRoundBox
-            />
+            <ListEmptyComponent text={title} textColor="blueText" hasRoundBox />
           </Container>
         )
       }
