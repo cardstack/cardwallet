@@ -27,7 +27,7 @@ export const useUpdateNotificationPreferences = () => {
 
   const onUpdateOptionStatus = useCallback(
     async (item: NotificationsPreferenceDataType, value: boolean) => {
-      return setNotificationsPreferences({
+      await setNotificationsPreferences({
         notificationType: item.attributes['notification-type'],
         status: value ? 'enabled' : 'disabled',
       });
