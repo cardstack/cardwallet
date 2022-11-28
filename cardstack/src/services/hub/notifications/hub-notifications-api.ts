@@ -1,10 +1,11 @@
+import { NotificationsPreferenceDataType } from '@cardstack/types';
+
 import { hubApi, HubCacheTags } from '../hub-api';
 import { hubBodyBuilder } from '../hub-service';
 
 import {
   RegisterFCMTokenQueryParams,
   NotificationsPreferenceTypeStatusParam,
-  NotificationsPreferenceDataType,
 } from './hub-notifications-types';
 
 const routes = {
