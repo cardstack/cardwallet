@@ -25,11 +25,18 @@ export const extractPayloadParams = (
 ): TypedData => {
   const { params } = payload;
 
-  if (typeof params[1] === 'string') {
-    return JSON.parse(params[1]);
+  const secondParam = params[1];
+
+  if (typeof secondParam === 'string') {
+    try {
+      const parsed = JSON.parse(secondParam);
+      return parsed;
+    } catch (e) {
+      return { ...payloadParamsFallback, message: { data: secondParam } };
+    }
   }
 
-  return params[1] || payloadParamsFallback;
+  return secondParam || payloadParamsFallback;
 };
 
 export const parseMessageRequestJson = (
