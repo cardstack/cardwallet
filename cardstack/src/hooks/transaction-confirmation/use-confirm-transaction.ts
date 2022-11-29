@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import { greaterThan } from 'react-native-reanimated';
 import { useDispatch } from 'react-redux';
 
+import WalletConnect from '@cardstack/models/wallet-connect';
 import { removeRequest } from '@cardstack/redux/requests';
 
 import { toHex, estimateGasWithPadding } from '@rainbow-me/handlers/web3';
@@ -24,7 +25,6 @@ import logger from 'logger';
 import {
   sendTransaction,
   signTransaction,
-  signMessage,
   signPersonalMessage,
   signTypedDataMessage,
 } from '../../../../src/model/wallet';
@@ -43,6 +43,7 @@ export const useConfirmTransaction = () => {
       payload: { method, params },
       peerId,
       requestId,
+      event,
     },
   } = useRouteParams();
 
@@ -184,10 +185,8 @@ export const useConfirmTransaction = () => {
     }
 
     switch (method) {
-      case SIGN:
-        flatFormatSignature = await signMessage(messageForSigning);
-        break;
       case PERSONAL_SIGN:
+      case SIGN:
         flatFormatSignature = await signPersonalMessage(messageForSigning);
         break;
       case SIGN_TYPED_DATA:
@@ -198,6 +197,10 @@ export const useConfirmTransaction = () => {
     }
 
     if (flatFormatSignature) {
+      if (event) {
+        WalletConnect.approveRequest(event, flatFormatSignature);
+      }
+
       if (requestId) {
         dispatch(removeRequest(requestId));
         await dispatch(
@@ -217,6 +220,7 @@ export const useConfirmTransaction = () => {
     callback,
     closeScreen,
     dispatch,
+    event,
     method,
     onCancel,
     params,

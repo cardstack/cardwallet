@@ -1,3 +1,4 @@
+import { formatJsonRpcResult } from '@json-rpc-tools/utils';
 import { captureException } from '@sentry/react-native';
 import { Core } from '@walletconnect/core';
 import SignClient from '@walletconnect/sign-client';
@@ -78,6 +79,19 @@ const WalletConnect = {
       logger.sentry('[WC-2.0]: Disconnect failed', e);
     }
   },
+  approveRequest: async (
+    request: EventType<'session_request'>,
+    signResult: string
+  ) => {
+    try {
+      await signClient?.respond({
+        topic: request.topic,
+        response: formatJsonRpcResult(request.id, signResult),
+      });
+    } catch (e) {
+      logger.sentry('[WC-2.0]: ApproveRequest failed: ', request.id, e);
+    }
+  },
 };
 
 // Listeners
@@ -134,6 +148,7 @@ const onSessionRequest = (event: EventType<'session_request'>) => {
   handleWalletConnectRequests({
     payload,
     displayDetails: getRequestDisplayDetails(payload, [], nativeCurrency),
+    event, // To keep retro compatibility for now we need to "duplicate" the data
   });
 };
 
