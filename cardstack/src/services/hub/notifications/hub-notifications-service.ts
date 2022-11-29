@@ -9,7 +9,5 @@ export const registerFcmToken = (fcmToken: string) =>
     hubNotifications.endpoints.registerFcmToken.initiate({ fcmToken })
   );
 
-export const unregisterFcmToken = (fcmToken: string) =>
-  store.dispatch(
-    hubNotifications.endpoints.unregisterFcmToken.initiate({ fcmToken })
-  );
+export const unregisterFcmToken = () =>
+  store.dispatch(hubNotifications.endpoints.unregisterFcmToken.initiate());

@@ -54,7 +54,7 @@ export const removeFCMToken = async (address: string) => {
       addressesByNetwork[network] &&
       addressesByNetwork[network].includes(address)
     ) {
-      const response = await unregisterFcmToken(fcmToken);
+      const response = await unregisterFcmToken();
 
       if ('data' in response) {
         logger.sentry('Unregistering FCM Token', response);

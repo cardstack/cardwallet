@@ -13,20 +13,17 @@ export enum NotificationsOptionsStrings {
 }
 
 export const useUpdateNotificationPreferences = () => {
-  const {
-    data: options = [],
-    error: getError,
-  } = useGetNotificationsPreferencesQuery();
+  const { data: options = [], isError } = useGetNotificationsPreferencesQuery();
 
   const [
     setNotificationsPreferences,
   ] = useSetNotificationsPreferencesMutation();
 
   const onUpdateOptionStatus = useCallback(
-    async (item: NotificationsPreferenceDataType, value: boolean) => {
+    async (item: NotificationsPreferenceDataType, isEnabled: boolean) => {
       await setNotificationsPreferences({
         notificationType: item.attributes['notification-type'],
-        status: value ? 'enabled' : 'disabled',
+        status: isEnabled ? 'enabled' : 'disabled',
       });
     },
     [setNotificationsPreferences]
@@ -35,6 +32,6 @@ export const useUpdateNotificationPreferences = () => {
   return {
     options,
     onUpdateOptionStatus,
-    error: getError && 'Failed to get notificition preferences',
+    isError,
   };
 };

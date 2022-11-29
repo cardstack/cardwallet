@@ -24,10 +24,11 @@ export const hubNotifications = hubApi.injectEndpoints({
         }),
       }),
     }),
-    unregisterFcmToken: builder.mutation<string, RegisterFCMTokenQueryParams>({
-      query: ({ fcmToken }) => ({
-        url: `${routes.registerFCMToken}/${fcmToken}`,
+    unregisterFcmToken: builder.mutation<string, void>({
+      query: () => ({
+        url: `${routes.registerFCMToken}`,
         method: 'DELETE',
+        extraOptions: { appendFCMToken: true },
         responseHandler: response => response.text(),
       }),
     }),
