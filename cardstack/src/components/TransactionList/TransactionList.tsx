@@ -1,5 +1,5 @@
 import { useFocusEffect } from '@react-navigation/native';
-import React, { memo, useCallback, useEffect, useRef } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { RefreshControl, SectionList, ActivityIndicator } from 'react-native';
 
 import {
@@ -33,15 +33,6 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
     refetchLoading,
   } = useFullTransactionList();
 
-  const isLoadingFallback = useRef(true);
-
-  useEffect(() => {
-    if (!isLoadingTransactions) {
-      // Once tx are loading we don't need to track anymore
-      isLoadingFallback.current = false;
-    }
-  }, [isLoadingTransactions]);
-
   const renderSectionHeader = useCallback(
     ({ section: { title } }: { section: { title: string } }) => (
       <Container
@@ -68,14 +59,18 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
     []
   );
 
-  const title = isOnCardPayNetwork
-    ? strings.emptyComponent
-    : strings.nonCardPayNetwork(network);
+  const title = useMemo(
+    () =>
+      isOnCardPayNetwork
+        ? strings.emptyComponent
+        : strings.nonCardPayNetwork(network),
+    [isOnCardPayNetwork, network]
+  );
 
   return (
     <SectionList
       ListEmptyComponent={
-        isLoadingTransactions || isLoadingFallback.current ? (
+        isLoadingTransactions ? (
           <TransactionListLoading />
         ) : (
           <Container paddingTop={4}>
