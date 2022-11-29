@@ -1,5 +1,5 @@
 import { useFocusEffect } from '@react-navigation/native';
-import React, { memo, useCallback, useEffect, useRef } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { RefreshControl, SectionList, ActivityIndicator } from 'react-native';
 
 import {
@@ -11,7 +11,10 @@ import {
 } from '@cardstack/components';
 import { useFullTransactionList } from '@cardstack/hooks';
 
+import { useAccountSettings } from '@rainbow-me/hooks';
+
 import { TransactionListLoading } from './TransactionListLoading';
+import { strings } from './strings';
 
 interface TransactionListProps {
   Header?: JSX.Element;
@@ -19,6 +22,8 @@ interface TransactionListProps {
 }
 
 export const TransactionList = memo(({ Header }: TransactionListProps) => {
+  const { isOnCardPayNetwork, network } = useAccountSettings();
+
   const {
     onEndReached,
     isLoadingTransactions,
@@ -27,15 +32,6 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
     refetch,
     refetchLoading,
   } = useFullTransactionList();
-
-  const isLoadingFallback = useRef(true);
-
-  useEffect(() => {
-    if (isLoadingTransactions) {
-      // Once tx are loading we don't need to track anymore
-      isLoadingFallback.current = false;
-    }
-  }, [isLoadingTransactions]);
 
   const renderSectionHeader = useCallback(
     ({ section: { title } }: { section: { title: string } }) => (
@@ -63,20 +59,22 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
     []
   );
 
+  const title = useMemo(
+    () =>
+      isOnCardPayNetwork
+        ? strings.emptyComponent
+        : strings.nonCardPayNetwork(network),
+    [isOnCardPayNetwork, network]
+  );
+
   return (
     <SectionList
       ListEmptyComponent={
-        // Use fallback to avoid flickering empty component,
-        // when fetching hasn't started yet
-        isLoadingTransactions || isLoadingFallback.current ? (
+        isLoadingTransactions ? (
           <TransactionListLoading />
         ) : (
           <Container paddingTop={4}>
-            <ListEmptyComponent
-              text={`You don't have any\ntransactions yet`}
-              textColor="blueText"
-              hasRoundBox
-            />
+            <ListEmptyComponent text={title} textColor="blueText" hasRoundBox />
           </Container>
         )
       }
