@@ -235,38 +235,11 @@ export const signTransaction = async ({
   }
 };
 
-export const signMessage = async (
-  message: ethers.utils.BytesLike | ethers.utils.Hexable | number
-): Promise<null | string> => {
-  try {
-    logger.sentry('about to sign message', message);
-    const wallet = await loadWallet();
-    try {
-      if (!wallet) return null;
-      const signingKey = new ethers.utils.SigningKey(wallet.privateKey);
-      const sigParams = await signingKey.signDigest(
-        ethers.utils.arrayify(message)
-      );
-      return ethers.utils.joinSignature(sigParams);
-    } catch (error) {
-      Alert.alert(lang.t('wallet.transaction.alert.failed_sign_message'));
-      logger.sentry('Failed to SIGN message, alerted user');
-      captureException(error);
-      return null;
-    }
-  } catch (error) {
-    Alert.alert(lang.t('wallet.transaction.alert.authentication'));
-    logger.sentry('Failed to SIGN message due to authentication, alerted user');
-    captureException(error);
-    return null;
-  }
-};
-
 export const signPersonalMessage = async (
   message: string | Uint8Array
 ): Promise<null | string> => {
   try {
-    logger.sentry('about to sign personal message', message);
+    logger.sentry('about to sign personal/eth message', message);
     const wallet = await loadWallet();
     try {
       if (!wallet) return null;
