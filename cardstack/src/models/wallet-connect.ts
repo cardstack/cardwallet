@@ -11,8 +11,10 @@ import { WALLET_CONNECT_PROJECT_ID } from 'react-native-dotenv';
 
 import { appName } from '@cardstack/constants';
 import { Navigation, Routes } from '@cardstack/navigation';
+import { getRequestDisplayDetails } from '@cardstack/parsers/signing-requests';
+import { handleWalletConnectRequests } from '@cardstack/redux/requests';
 
-import { Alert } from '@rainbow-me/components/alerts';
+import store from '@rainbow-me/redux/store';
 import { logger } from '@rainbow-me/utils';
 
 const core = new Core({
@@ -123,10 +125,15 @@ const onSessionProposal = (params: SessionProposalParams) => {
 };
 
 const onSessionRequest = (event: EventType<'session_request'>) => {
-  // TODO: handle session Request
-  Alert({
-    title: 'New Request',
-    message: JSON.stringify(event),
+  const { nativeCurrency } = store.getState().settings;
+
+  const {
+    params: { request: payload },
+  } = event;
+
+  handleWalletConnectRequests({
+    payload,
+    displayDetails: getRequestDisplayDetails(payload, [], nativeCurrency),
   });
 };
 
