@@ -1,6 +1,9 @@
 import assert from 'assert';
 
-import { getAddressByNetwork } from '@cardstack/cardpay-sdk';
+import {
+  getAddressByNetwork,
+  isCardPaySupportedNetwork,
+} from '@cardstack/cardpay-sdk';
 
 import { fetchHistoricalPrice } from '@cardstack/services';
 import {
@@ -13,9 +16,13 @@ import { decodeParameters } from './decoding-utils';
 
 export class ClaimRevenueStrategy extends BaseStrategy {
   isApplicable(): boolean {
-    const revenuePool = getAddressByNetwork('revenuePool', this.network);
+    if (isCardPaySupportedNetwork(this.network)) {
+      const revenuePool = getAddressByNetwork('revenuePool', this.network);
 
-    return !!this.verifyingContract && this.message.to === revenuePool;
+      return !!this.verifyingContract && this.message.to === revenuePool;
+    }
+
+    return false;
   }
 
   public async decodeRequest(): Promise<ClaimRevenueDecodedData> {
