@@ -302,7 +302,8 @@
     "**/@typescript-eslint/eslint-plugin": "4.31.0",
     "**/@typescript-eslint/parser": "4.31.0",
     "**/react-devtools-core": "4.19.1",
-    "**/@types/hammerjs": "^2.0.38"
+    "**/@types/hammerjs": "^2.0.38",
+    "**/promise": "8.3.0"
   },
   "detox": {
     "configurations": {

@@ -1,5 +1,5 @@
 import { captureException } from '@sentry/react-native';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { dataLoadState } from '../redux/data';
@@ -22,10 +22,12 @@ export default function useInitializeAccount() {
 
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (accountAddress) WalletConnect.init(accountAddress);
+  }, [accountAddress]);
+
   const loadAccountData = useCallback(async () => {
     logger.sentry('Load wallet account data');
-
-    await WalletConnect.init(accountAddress);
 
     const actions = [
       collectiblesLoadState,
@@ -39,7 +41,7 @@ export default function useInitializeAccount() {
     const promises = mapDispatchToActions(dispatch, actions);
 
     return Promise.allSettled(promises);
-  }, [accountAddress, dispatch, isOnCardPayNetwork]);
+  }, [dispatch, isOnCardPayNetwork]);
 
   const fetchAccountAssets = useCallback(async () => {
     try {
