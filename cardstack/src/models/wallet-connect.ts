@@ -1,4 +1,4 @@
-import { formatJsonRpcResult } from '@json-rpc-tools/utils';
+import { formatJsonRpcError, formatJsonRpcResult } from '@json-rpc-tools/utils';
 import { captureException } from '@sentry/react-native';
 import { Core } from '@walletconnect/core';
 import SignClient from '@walletconnect/sign-client';
@@ -79,17 +79,27 @@ const WalletConnect = {
       logger.sentry('[WC-2.0]: Disconnect failed', e);
     }
   },
-  approveRequest: async (
-    request: EventType<'session_request'>,
-    signResult: string
-  ) => {
+  approveRequest: async ({ topic, id }: RequestEvent, signResult: string) => {
     try {
       await signClient?.respond({
-        topic: request.topic,
-        response: formatJsonRpcResult(request.id, signResult),
+        topic,
+        response: formatJsonRpcResult(id, signResult),
       });
     } catch (e) {
-      logger.sentry('[WC-2.0]: ApproveRequest failed: ', request.id, e);
+      logger.sentry('[WC-2.0]: ApproveRequest failed: ', id, e);
+    }
+  },
+  rejectRequest: async ({ topic, id }: RequestEvent) => {
+    try {
+      await signClient?.respond({
+        topic,
+        response: formatJsonRpcError(
+          id,
+          getSdkError('USER_REJECTED_METHODS').message
+        ),
+      });
+    } catch (e) {
+      logger.sentry('[WC-2.0]: User rejected request failed: ', id, e);
     }
   },
 };
@@ -138,7 +148,7 @@ const onSessionProposal = (params: SessionProposalParams) => {
   });
 };
 
-const onSessionRequest = (event: EventType<'session_request'>) => {
+const onSessionRequest = (event: RequestEvent) => {
   const { nativeCurrency } = store.getState().settings;
 
   const {
@@ -157,6 +167,8 @@ const onSessionRequest = (event: EventType<'session_request'>) => {
 type EventType<
   T extends SignClientTypes.Event
 > = SignClientTypes.EventArguments[T];
+
+type RequestEvent = EventType<'session_request'>;
 
 const buildNamespacesFromEvent = ({
   event,

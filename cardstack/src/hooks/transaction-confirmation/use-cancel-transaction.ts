@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 
+import WalletConnect from '@cardstack/models/wallet-connect';
 import { removeRequest } from '@cardstack/redux/requests';
 
 import { walletConnectSendStatus } from '@rainbow-me/redux/walletconnect';
@@ -15,11 +16,15 @@ export const useCancelTransaction = () => {
 
   const {
     callback,
-    transactionDetails: { peerId, requestId },
+    transactionDetails: { peerId, requestId, event },
   } = useRouteParams();
 
   const onCancel = useCallback(async () => {
     try {
+      if (event) {
+        WalletConnect.rejectRequest(event);
+      }
+
       closeScreen(true);
 
       if (callback) {
@@ -36,7 +41,7 @@ export const useCancelTransaction = () => {
       logger.log('error while handling cancel request', error);
       closeScreen(true);
     }
-  }, [callback, closeScreen, dispatch, peerId, requestId]);
+  }, [callback, closeScreen, dispatch, event, peerId, requestId]);
 
   return onCancel;
 };
