@@ -21,6 +21,7 @@ const TransactionConfirmation = () => {
     onConfirm,
     methodName,
     messageRequest,
+    isAuthorizing,
   } = useTransactionConfirmation();
 
   return (
@@ -35,6 +36,7 @@ const TransactionConfirmation = () => {
         methodName={methodName}
         loading={loading}
         messageRequest={messageRequest}
+        onConfirmLoading={isAuthorizing}
       />
       <Container height={150}>
         {!isMessageRequest && (
