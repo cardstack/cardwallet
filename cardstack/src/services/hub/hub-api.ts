@@ -12,24 +12,23 @@ import {
   GetEoaClaimedQueryParams,
   GetEoaClaimedQueryResult,
   CheckHubAuthQueryParams,
-  RegisterFCMTokenQueryParams,
   GetExchangeRatesQueryParams,
 } from './hub-types';
 
 const routes = {
   emailDrop: '/email-card-drop-requests',
   exchangeRates: '/exchange-rates',
-  registerFCMToken: '/push-notification-registrations',
 };
 
-enum CacheTag {
+export enum HubCacheTags {
   EOA_CLAIM = 'EOA_CLAIM',
+  NOTIFICATION_PREFERENCES = 'NOTIFICATION_PREFERENCES',
 }
 
 export const hubApi = createApi({
   reducerPath: 'hubApi',
   baseQuery: fetchHubBaseQuery,
-  tagTypes: [...Object.values(CacheTag)],
+  tagTypes: [...Object.values(HubCacheTags)],
   endpoints: builder => ({
     requestEmailCardDrop: builder.mutation<void, RequestCardDropQueryParams>({
       query: ({ email }) => ({
@@ -39,7 +38,7 @@ export const hubApi = createApi({
           email,
         }),
       }),
-      invalidatesTags: [CacheTag.EOA_CLAIM],
+      invalidatesTags: [HubCacheTags.EOA_CLAIM],
     }),
     getEoaClaimed: builder.query<
       GetEoaClaimedQueryResult,
@@ -50,7 +49,7 @@ export const hubApi = createApi({
       transformResponse: (response: {
         data: { attributes: EoaClaimedAttrsType };
       }) => transformObjKeysToCamelCase(response?.data?.attributes),
-      providesTags: [CacheTag.EOA_CLAIM],
+      providesTags: [HubCacheTags.EOA_CLAIM],
     }),
     checkHubAuth: builder.query<boolean, CheckHubAuthQueryParams>({
       async queryFn(params) {
@@ -73,22 +72,6 @@ export const hubApi = createApi({
       }),
       transformResponse: ({ data }) => data.attributes.rates,
     }),
-    registerFcmToken: builder.query<string, RegisterFCMTokenQueryParams>({
-      query: ({ fcmToken }) => ({
-        url: routes.registerFCMToken,
-        method: 'POST',
-        body: hubBodyBuilder('push-notification-registration', {
-          'push-client-id': fcmToken,
-        }),
-      }),
-    }),
-    unregisterFcmToken: builder.mutation<string, RegisterFCMTokenQueryParams>({
-      query: ({ fcmToken }) => ({
-        url: `${routes.registerFCMToken}/${fcmToken}`,
-        method: 'DELETE',
-        responseHandler: response => response.text(),
-      }),
-    }),
   }),
 });
 
@@ -97,6 +80,4 @@ export const {
   useRequestEmailCardDropMutation,
   useCheckHubAuthQuery,
   useGetExchangeRatesQuery,
-  useRegisterFcmTokenQuery,
-  useUnregisterFcmTokenMutation,
 } = hubApi;

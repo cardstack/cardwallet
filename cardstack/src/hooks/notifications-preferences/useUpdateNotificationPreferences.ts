@@ -1,10 +1,9 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
-import { useAuthToken } from '@cardstack/hooks';
 import {
-  getNotificationsPreferences,
-  setNotificationsPreferences,
-} from '@cardstack/services/hub-service';
+  useGetNotificationsPreferencesQuery,
+  useSetNotificationsPreferencesMutation,
+} from '@cardstack/services/hub/notifications/hub-notifications-api';
 import { NotificationsPreferenceDataType } from '@cardstack/types';
 
 export enum NotificationsOptionsStrings {
@@ -14,57 +13,25 @@ export enum NotificationsOptionsStrings {
 }
 
 export const useUpdateNotificationPreferences = () => {
-  const { authToken, isLoading, error } = useAuthToken();
+  const { data: options = [], isError } = useGetNotificationsPreferencesQuery();
 
-  const [options, setOptions] = useState<
-    NotificationsPreferenceDataType[] | undefined
-  >([]);
-
-  const fetchNotificationPreferences = useCallback(async () => {
-    const result = await getNotificationsPreferences(authToken);
-
-    if (result && result.length > 0) {
-      setOptions(result);
-    }
-  }, [authToken]);
+  const [
+    setNotificationsPreferences,
+  ] = useSetNotificationsPreferencesMutation();
 
   const onUpdateOptionStatus = useCallback(
-    async (item, value) => {
-      const updateList = options?.map(
-        (option: NotificationsPreferenceDataType) => {
-          if (
-            option.attributes['notification-type'] ===
-            item.attributes['notification-type']
-          ) {
-            option.attributes.status = value ? 'enabled' : 'disabled';
-          }
-
-          return option;
-        }
-      );
-
-      setOptions(updateList);
-
-      const updateItem = updateList?.find(
-        o =>
-          o.attributes['notification-type'] ===
-          item.attributes['notification-type']
-      );
-
-      if (authToken && updateItem) {
-        await setNotificationsPreferences(authToken, updateItem);
-      }
+    async (item: NotificationsPreferenceDataType, isEnabled: boolean) => {
+      await setNotificationsPreferences({
+        notificationType: item.attributes['notification-type'],
+        status: isEnabled ? 'enabled' : 'disabled',
+      });
     },
-    [authToken, options]
+    [setNotificationsPreferences]
   );
-
-  useEffect(() => {
-    if (!isLoading && authToken) fetchNotificationPreferences();
-  }, [authToken, isLoading, fetchNotificationPreferences]);
 
   return {
     options,
     onUpdateOptionStatus,
-    error,
+    isError,
   };
 };

@@ -1,4 +1,4 @@
-type NotificationStatusType = 'disabled' | 'enabled';
+export type NotificationStatusType = 'disabled' | 'enabled';
 
 export interface NotificationsPreferenceDataType {
   type: string;

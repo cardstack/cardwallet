@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { FlatList, ListRenderItemInfo, StyleSheet, Switch } from 'react-native';
+import { strings } from './strings';
 import { Container, Skeleton, Text } from '@cardstack/components';
 import {
   NotificationsOptionsStrings,
@@ -11,7 +12,7 @@ const NotificationsSection = () => {
   const {
     options,
     onUpdateOptionStatus,
-    error,
+    isError,
   } = useUpdateNotificationPreferences();
 
   const renderItem = useCallback(
@@ -35,7 +36,7 @@ const NotificationsSection = () => {
             }
           </Text>
           <Switch
-            onValueChange={value => onUpdateOptionStatus(item, value)}
+            onValueChange={isEnabled => onUpdateOptionStatus(item, isEnabled)}
             value={item?.attributes.status === 'enabled'}
           />
         </Container>
@@ -47,10 +48,10 @@ const NotificationsSection = () => {
   const ListError = useMemo(
     () => (
       <Container alignItems="center" flex={1} justifyContent="center">
-        <Text>{error}</Text>
+        <Text>{strings.errorMessage}</Text>
       </Container>
     ),
-    [error]
+    []
   );
 
   const ListLoading = useMemo(
@@ -79,7 +80,7 @@ const NotificationsSection = () => {
 
   return (
     <FlatList
-      ListEmptyComponent={error ? ListError : ListLoading}
+      ListEmptyComponent={isError ? ListError : ListLoading}
       contentContainerStyle={styles.contentContainer}
       data={options}
       keyExtractor={keyExtractor}

@@ -16,6 +16,7 @@ export interface HubBaseResponse<Attrs> {
 // Note on baseQuery extraOptions, it works only with optional properties.
 export interface BaseQueryExtraOptions {
   authenticate?: boolean;
+  appendFCMToken?: boolean;
 }
 
 export type GetCustodialWalletQueryResult = KebabToCamelCaseKeys<CustodialWalletAttrs>;
@@ -40,10 +41,6 @@ export type GetEoaClaimedQueryResult = KebabToCamelCaseKeys<EoaClaimedAttrsType>
 export interface CheckHubAuthQueryParams {
   accountAddress: string;
   network: NetworkType;
-}
-
-export interface RegisterFCMTokenQueryParams {
-  fcmToken: string;
 }
 
 export interface GetExchangeRatesQueryParams {

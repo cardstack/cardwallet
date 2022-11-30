@@ -7,7 +7,7 @@ import { requestNotifications } from 'react-native-permissions';
 import {
   registerFcmToken,
   unregisterFcmToken,
-} from '@cardstack/services/hub/hub-service';
+} from '@cardstack/services/hub/notifications/hub-notifications-service';
 import { NetworkType } from '@cardstack/types';
 
 import { Alert } from '@rainbow-me/components/alerts';
@@ -54,7 +54,7 @@ export const removeFCMToken = async (address: string) => {
       addressesByNetwork[network] &&
       addressesByNetwork[network].includes(address)
     ) {
-      const response = await unregisterFcmToken(fcmToken);
+      const response = await unregisterFcmToken();
 
       if ('data' in response) {
         logger.sentry('Unregistering FCM Token', response);
