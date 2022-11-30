@@ -35,7 +35,6 @@ export { default as useSendFeedback } from './useSendFeedback';
 export { default as useSendSavingsAccount } from './useSendSavingsAccount';
 export { default as useShakeAnimation } from './useShakeAnimation';
 export { default as useTimeout } from './useTimeout';
-export { default as useTransactionConfirmation } from './useTransactionConfirmation';
 export { default as useTransformOrigin } from './useTransformOrigin';
 export { default as useUpdateAssetOnchainBalance } from './useUpdateAssetOnchainBalance';
 export { default as useWalletConnectConnections } from '@cardstack/hooks/wallet-connect/useWalletConnectConnections';

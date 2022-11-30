@@ -30,9 +30,9 @@ import {
   useRefreshAccountData,
   useSendableCollectibles,
   useSendSavingsAccount,
-  useTransactionConfirmation,
   useUpdateAssetOnchainBalance,
 } from '@rainbow-me/hooks';
+import { dataAddNewTransaction } from '@rainbow-me/redux/data';
 import { ETH_ADDRESS_SYMBOL } from '@rainbow-me/references/addresses';
 
 import { gasUtils } from '@rainbow-me/utils';
@@ -43,7 +43,6 @@ const useSendSheetScreen = () => {
 
   const { navigate } = useNavigation();
   const { params } = useRoute();
-  const { dataAddNewTransaction } = useTransactionConfirmation();
   const updateAssetOnchainBalanceIfNeeded = useUpdateAssetOnchainBalance();
   const { allAssets } = useAccountAssets();
 
@@ -307,18 +306,15 @@ const useSendSheetScreen = () => {
     accountAddress,
     amountDetails.assetAmount,
     amountDetails.isSufficientBalance,
-    dataAddNewTransaction,
     dispatch,
     gasLimit,
     isAuthorizing,
-
     isSufficientGas,
     isValidAddress,
     network,
     recipient,
     selected,
     selectedGasPrice,
-
     updateTxFee,
   ]);
 
