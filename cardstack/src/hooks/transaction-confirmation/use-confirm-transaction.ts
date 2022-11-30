@@ -13,11 +13,7 @@ import { dataAddNewTransaction } from '@rainbow-me/redux/data';
 import { walletConnectSendStatus } from '@rainbow-me/redux/walletconnect';
 import {
   SEND_TRANSACTION,
-  isMessageDisplayType,
   isSignFirstParamType,
-  isSignSecondParamType,
-  SIGN,
-  PERSONAL_SIGN,
   SIGN_TYPED_DATA,
 } from '@rainbow-me/utils/signingMethods';
 import logger from 'logger';
@@ -29,14 +25,11 @@ import {
   signTypedDataMessage,
 } from '../../../../src/model/wallet';
 
-import { useCancelTransaction } from './use-cancel-transaction';
 import { useCloseScreen } from './use-close-screen';
-import { useIsBalanceEnough } from './use-is-balance-enough';
 import { useRouteParams } from './use-route-params';
 
-export const useConfirmTransaction = () => {
+export const useTransactionActions = (isMessageRequest: boolean) => {
   const {
-    callback,
     transactionDetails: {
       dappName,
       displayDetails,
@@ -47,14 +40,32 @@ export const useConfirmTransaction = () => {
     },
   } = useRouteParams();
 
+  const dispatch = useDispatch();
+
   const { gasLimit, selectedGasPrice } = useGas();
 
-  const dispatch = useDispatch();
   const [isAuthorizing, setIsAuthorizing] = useState(false);
-  const isBalanceEnough = useIsBalanceEnough();
-  const isMessageRequest = isMessageDisplayType(method);
-  const closeScreen = useCloseScreen();
-  const onCancel = useCancelTransaction();
+
+  const closeScreen = useCloseScreen(isMessageRequest);
+
+  const sendResponseToWalletConnect = useCallback(
+    (signatureOrHash?: string | null) => {
+      if (event) {
+        return signatureOrHash
+          ? WalletConnect.approveRequest(event, signatureOrHash)
+          : WalletConnect.rejectRequest(event);
+      }
+
+      if (requestId) {
+        dispatch(removeRequest(requestId));
+
+        return dispatch(
+          walletConnectSendStatus(peerId, requestId, signatureOrHash)
+        );
+      }
+    },
+    [dispatch, event, peerId, requestId]
+  );
 
   const handleConfirmTransaction = useCallback(async () => {
     const sendInsteadOfSign = method === SEND_TRANSACTION;
@@ -108,152 +119,110 @@ export const useConfirmTransaction = () => {
     }
 
     txPayloadUpdated = omit(txPayloadUpdated, ['from', 'gas']);
-    let result = null;
 
     try {
       if (sendInsteadOfSign) {
-        result = await sendTransaction({
+        const result = await sendTransaction({
           transaction: txPayloadUpdated,
         });
+
+        if (result) {
+          const { hash, nonce } = result;
+
+          const txDetails = {
+            amount: get(displayDetails, 'request.value'),
+            asset: get(displayDetails, 'request.asset'),
+            dappName,
+            from: get(displayDetails, 'request.from'),
+            gasLimit,
+            gasPrice,
+            hash,
+            nonce,
+            to: get(displayDetails, 'request.to'),
+          };
+
+          dispatch(dataAddNewTransaction(txDetails));
+
+          await sendResponseToWalletConnect(hash);
+        }
       } else {
-        result = await signTransaction({
+        const signature = await signTransaction({
           transaction: txPayloadUpdated,
         });
+
+        await sendResponseToWalletConnect(signature);
       }
     } catch (e) {
-      logger.log(
+      logger.sentry(
         `Error while ${sendInsteadOfSign ? 'sending' : 'signing'} transaction`,
         e
       );
     }
 
-    if (result) {
-      const { nonce, hash } = result as { nonce: any; hash: any };
-
-      if (callback) {
-        callback({ result: hash });
-      }
-
-      if (sendInsteadOfSign) {
-        const txDetails = {
-          amount: get(displayDetails, 'request.value'),
-          asset: get(displayDetails, 'request.asset'),
-          dappName,
-          from: get(displayDetails, 'request.from'),
-          gasLimit,
-          gasPrice,
-          hash,
-          nonce,
-          to: get(displayDetails, 'request.to'),
-        };
-
-        dispatch(dataAddNewTransaction(txDetails));
-      }
-
-      if (requestId) {
-        dispatch(removeRequest(requestId));
-        await dispatch(walletConnectSendStatus(peerId, requestId, hash));
-      }
-
-      closeScreen(false);
-    } else {
-      await onCancel();
-    }
+    closeScreen();
   }, [
     method,
     params,
     selectedGasPrice,
     gasLimit,
-    callback,
-    requestId,
     closeScreen,
     displayDetails,
     dappName,
     dispatch,
-    peerId,
-    onCancel,
+    sendResponseToWalletConnect,
   ]);
 
   const handleSignMessage = useCallback(async () => {
-    let messageForSigning = null;
-    let flatFormatSignature = null;
+    const messageForSigning = get(
+      params,
+      isSignFirstParamType(method) ? '[0]' : '[1]'
+    );
 
-    if (isSignFirstParamType(method)) {
-      messageForSigning = get(params, '[0]');
-    } else if (isSignSecondParamType(method)) {
-      messageForSigning = get(params, '[1]');
+    try {
+      const sign =
+        method === SIGN_TYPED_DATA ? signTypedDataMessage : signPersonalMessage;
+
+      const flatFormatSignature = await sign(messageForSigning);
+
+      await sendResponseToWalletConnect(flatFormatSignature);
+    } catch (e) {
+      logger.sentry(`Error while signing message`, e);
     }
 
-    switch (method) {
-      case PERSONAL_SIGN:
-      case SIGN:
-        flatFormatSignature = await signPersonalMessage(messageForSigning);
-        break;
-      case SIGN_TYPED_DATA:
-        flatFormatSignature = await signTypedDataMessage(messageForSigning);
-        break;
-      default:
-        break;
-    }
-
-    if (flatFormatSignature) {
-      if (event) {
-        WalletConnect.approveRequest(event, flatFormatSignature);
-      }
-
-      if (requestId) {
-        dispatch(removeRequest(requestId));
-        await dispatch(
-          walletConnectSendStatus(peerId, requestId, flatFormatSignature)
-        );
-      }
-
-      if (callback) {
-        callback({ sig: flatFormatSignature });
-      }
-
-      closeScreen(false);
-    } else {
-      await onCancel();
-    }
-  }, [
-    callback,
-    closeScreen,
-    dispatch,
-    event,
-    method,
-    onCancel,
-    params,
-    peerId,
-    requestId,
-  ]);
-
-  const onConfirm = useCallback(async () => {
-    if (isMessageRequest) {
-      return handleSignMessage();
-    }
-
-    if (!isBalanceEnough) return;
-
-    return handleConfirmTransaction();
-  }, [
-    handleConfirmTransaction,
-    handleSignMessage,
-    isBalanceEnough,
-    isMessageRequest,
-  ]);
+    closeScreen();
+  }, [closeScreen, method, params, sendResponseToWalletConnect]);
 
   const onConfirmTransaction = useCallback(async () => {
     if (isAuthorizing) return;
     setIsAuthorizing(true);
 
+    const confirm = isMessageRequest
+      ? handleSignMessage
+      : handleConfirmTransaction;
+
     try {
-      await onConfirm();
+      await confirm();
+
       setIsAuthorizing(false);
     } catch (error) {
       setIsAuthorizing(false);
     }
-  }, [isAuthorizing, onConfirm]);
+  }, [
+    handleConfirmTransaction,
+    handleSignMessage,
+    isAuthorizing,
+    isMessageRequest,
+  ]);
 
-  return onConfirmTransaction;
+  const onCancel = useCallback(async () => {
+    try {
+      await sendResponseToWalletConnect();
+    } catch (error) {
+      logger.log('error while handling cancel request', error);
+    }
+
+    closeScreen({ canceled: true });
+  }, [closeScreen, sendResponseToWalletConnect]);
+
+  return { onConfirm: onConfirmTransaction, isAuthorizing, onCancel };
 };

@@ -9,14 +9,11 @@ import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirect
 import { useGas } from '@rainbow-me/hooks';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { walletConnectRemovePendingRedirect } from '@rainbow-me/redux/walletconnect';
-import {
-  SEND_TRANSACTION,
-  isMessageDisplayType,
-} from '@rainbow-me/utils/signingMethods';
+import { SEND_TRANSACTION } from '@rainbow-me/utils/signingMethods';
 
 import { useRouteParams } from './use-route-params';
 
-export const useCloseScreen = () => {
+export const useCloseScreen = (isMessageRequest: boolean) => {
   const dispatch = useDispatch();
   const { goBack, canGoBack, navigate } = useNavigation();
 
@@ -33,10 +30,8 @@ export const useCloseScreen = () => {
     },
   } = useRouteParams();
 
-  const isMessageRequest = isMessageDisplayType(method);
-
   const closeScreen = useCallback(
-    canceled => {
+    ({ canceled }: { canceled?: boolean } = {}) => {
       if (canGoBack()) {
         goBack();
       } else {
