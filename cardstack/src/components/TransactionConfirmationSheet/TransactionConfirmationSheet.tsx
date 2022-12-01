@@ -32,6 +32,7 @@ export interface TransactionConfirmationDisplayProps {
   onConfirm: () => void;
   onConfirmLoading?: boolean;
   disabledConfirmButton?: boolean;
+  txNetwork: string;
 }
 
 export const TransactionConfirmationSheet = (

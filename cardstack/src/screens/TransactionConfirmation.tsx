@@ -11,35 +11,14 @@ import { useTransactionConfirmation } from '@cardstack/hooks';
 import { GasSpeedButton } from '../../../src/components/gas';
 
 const TransactionConfirmation = () => {
-  const {
-    data,
-    loading,
-    isMessageRequest,
-    dappUrl,
-    message,
-    onCancel,
-    onConfirm,
-    methodName,
-    messageRequest,
-    isAuthorizing,
-  } = useTransactionConfirmation();
+  const props = useTransactionConfirmation();
 
   return (
     <SafeAreaView backgroundColor="black" flex={1} width="100%">
       <StatusBar barStyle="light-content" />
-      <TransactionConfirmationSheet
-        data={data}
-        dappUrl={dappUrl}
-        message={message}
-        onCancel={onCancel}
-        onConfirm={onConfirm}
-        methodName={methodName}
-        loading={loading}
-        messageRequest={messageRequest}
-        onConfirmLoading={isAuthorizing}
-      />
+      <TransactionConfirmationSheet {...props} />
       <Container height={150}>
-        {!isMessageRequest && (
+        {!props.isMessageRequest && (
           <Container>
             <GasSpeedButton type="transaction" />
           </Container>
