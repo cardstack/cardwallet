@@ -25,9 +25,10 @@ export const getOnChainAssetBalance = async (params: GetAssetBalanceParams) =>
 const getOnChainTokenBalance = async ({
   asset: { address, decimals, symbol },
   accountAddress,
+  network,
 }: GetAssetBalanceParams) => {
   try {
-    const web3 = await Web3Instance.get();
+    const web3 = await Web3Instance.withNetwork(network);
     const assets = await getSDK('Assets', web3);
     const balance = await assets.getBalanceForToken(address, accountAddress);
 
@@ -55,9 +56,10 @@ const getOnChainTokenBalance = async ({
 const getOnChainNativeTokenBalance = async ({
   asset: { decimals, symbol },
   accountAddress,
+  network,
 }: GetAssetBalanceParams) => {
   try {
-    const web3 = await Web3Instance.get();
+    const web3 = await Web3Instance.withNetwork(network);
     const assets = await getSDK('Assets', web3);
     const balance = await assets.getNativeTokenBalance(accountAddress);
 
