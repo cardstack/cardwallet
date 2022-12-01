@@ -48,6 +48,7 @@
     "@cardstack/cardpay-sdk": "1.0.20",
     "@cardstack/did-resolver": "1.0.20",
     "@ethersproject/shims": "^5.6.0",
+    "@json-rpc-tools/utils": "^1.7.6",
     "@lavamoat/preinstall-always-fail": "^1.0.0",
     "@notifee/react-native": "^4.0.1",
     "@rainbow-me/react-native-animated-number": "^0.0.2",

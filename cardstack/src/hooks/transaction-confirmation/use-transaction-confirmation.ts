@@ -5,15 +5,14 @@ import {
   TransactionConfirmationType,
 } from '@cardstack/types';
 
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import { useAccountSettings } from '@rainbow-me/hooks';
 import { logger } from '@rainbow-me/utils';
 import { isMessageDisplayType } from '@rainbow-me/utils/signingMethods';
 
 import { TransactionConfirmationContext } from '../../transaction-confirmation-strategies/context';
 
 import { useCalculateGas } from './use-calculate-gas';
-import { useCancelTransaction } from './use-cancel-transaction';
-import { useConfirmTransaction } from './use-confirm-transaction';
+import { useTransactionActions } from './use-confirm-transaction';
 import { useMethodName } from './use-method-name';
 import { useRouteParams } from './use-route-params';
 import { extractPayloadParams, parseMessageRequestJson } from './utils';
@@ -24,16 +23,15 @@ export const useTransactionConfirmation = () => {
     transactionDetails: { dappUrl, displayDetails, payload },
   } = useRouteParams();
 
-  const [network, nativeCurrency] = useRainbowSelector(state => [
-    state.settings.network,
-    state.settings.nativeCurrency,
-  ]);
+  const { network, nativeCurrency } = useAccountSettings();
 
   const isMessageRequest = isMessageDisplayType(payload.method);
 
   useCalculateGas(isMessageRequest, payload.params);
-  const onConfirm = useConfirmTransaction();
-  const onCancel = useCancelTransaction();
+
+  const { onConfirm, isAuthorizing, onCancel } = useTransactionActions(
+    isMessageRequest
+  );
 
   const methodName = useMethodName(
     isMessageRequest,
@@ -85,5 +83,6 @@ export const useTransactionConfirmation = () => {
     dappUrl,
     methodName,
     messageRequest: parseMessageRequestJson(displayDetails),
+    isAuthorizing,
   };
 };

@@ -1,3 +1,4 @@
+import { formatJsonRpcError, formatJsonRpcResult } from '@json-rpc-tools/utils';
 import { captureException } from '@sentry/react-native';
 import { Core } from '@walletconnect/core';
 import SignClient from '@walletconnect/sign-client';
@@ -11,8 +12,10 @@ import { WALLET_CONNECT_PROJECT_ID } from 'react-native-dotenv';
 
 import { appName } from '@cardstack/constants';
 import { Navigation, Routes } from '@cardstack/navigation';
+import { getRequestDisplayDetails } from '@cardstack/parsers/signing-requests';
+import { handleWalletConnectRequests } from '@cardstack/redux/requests';
 
-import { Alert } from '@rainbow-me/components/alerts';
+import store from '@rainbow-me/redux/store';
 import { logger } from '@rainbow-me/utils';
 
 const core = new Core({
@@ -76,6 +79,29 @@ const WalletConnect = {
       logger.sentry('[WC-2.0]: Disconnect failed', e);
     }
   },
+  approveRequest: async ({ topic, id }: RequestEvent, signResult: string) => {
+    try {
+      await signClient?.respond({
+        topic,
+        response: formatJsonRpcResult(id, signResult),
+      });
+    } catch (e) {
+      logger.sentry('[WC-2.0]: ApproveRequest failed: ', id, e);
+    }
+  },
+  rejectRequest: async ({ topic, id }: RequestEvent) => {
+    try {
+      await signClient?.respond({
+        topic,
+        response: formatJsonRpcError(
+          id,
+          getSdkError('USER_REJECTED_METHODS').message
+        ),
+      });
+    } catch (e) {
+      logger.sentry('[WC-2.0]: User rejected request failed: ', id, e);
+    }
+  },
 };
 
 // Listeners
@@ -122,11 +148,17 @@ const onSessionProposal = (params: SessionProposalParams) => {
   });
 };
 
-const onSessionRequest = (event: EventType<'session_request'>) => {
-  // TODO: handle session Request
-  Alert({
-    title: 'New Request',
-    message: JSON.stringify(event),
+const onSessionRequest = (event: RequestEvent) => {
+  const { nativeCurrency } = store.getState().settings;
+
+  const {
+    params: { request: payload },
+  } = event;
+
+  handleWalletConnectRequests({
+    payload,
+    displayDetails: getRequestDisplayDetails(payload, [], nativeCurrency),
+    event, // To keep retro compatibility for now we need to "duplicate" the data
   });
 };
 
@@ -135,6 +167,8 @@ const onSessionRequest = (event: EventType<'session_request'>) => {
 type EventType<
   T extends SignClientTypes.Event
 > = SignClientTypes.EventArguments[T];
+
+type RequestEvent = EventType<'session_request'>;
 
 const buildNamespacesFromEvent = ({
   event,
