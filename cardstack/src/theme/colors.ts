@@ -76,6 +76,7 @@ export const colors = {
   settingsTeal: palette.tealDark,
   settingsGrayDark: palette.grayMostDark,
   settingsGrayChevron: palette.grayLessDark,
+  grayBannerBackgroud: palette.grayLessDark,
   green: palette.green,
   lightGreen: palette.lightGreen,
   red: palette.red,
