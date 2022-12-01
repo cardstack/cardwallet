@@ -1,3 +1,4 @@
+import { convertChainIdToName } from '@cardstack/cardpay-sdk';
 import { formatJsonRpcError, formatJsonRpcResult } from '@json-rpc-tools/utils';
 import { captureException } from '@sentry/react-native';
 import { Core } from '@walletconnect/core';
@@ -102,6 +103,14 @@ const WalletConnect = {
       logger.sentry('[WC-2.0]: User rejected request failed: ', id, e);
     }
   },
+  getSessionInfo: (topic: string) => {
+    const session = signClient?.session.get(topic);
+
+    return {
+      ...session,
+      dappInfo: session?.peer.metadata,
+    };
+  },
 };
 
 // Listeners
@@ -152,13 +161,22 @@ const onSessionRequest = (event: RequestEvent) => {
   const { nativeCurrency } = store.getState().settings;
 
   const {
-    params: { request: payload },
+    params: { request: payload, chainId },
   } = event;
+
+  const { dappInfo } = WalletConnect.getSessionInfo(event.topic);
+
+  // chainId example -> eip155:8001
+  const networkId = Number(chainId.split(':')[1]);
+  const txNetwork = convertChainIdToName(networkId);
 
   handleWalletConnectRequests({
     payload,
     displayDetails: getRequestDisplayDetails(payload, [], nativeCurrency),
     event, // To keep retro compatibility for now we need to "duplicate" the data
+    dappName: dappInfo?.name,
+    dappUrl: dappInfo?.url,
+    txNetwork,
   });
 };
 
