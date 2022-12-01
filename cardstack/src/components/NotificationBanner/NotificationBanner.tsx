@@ -5,9 +5,14 @@ import { ContainerProps, Container, Text, Image } from '@cardstack/components';
 import cardstackLogo from '../../assets/cardstackLogo.png';
 
 interface NotificationBannerProps extends ContainerProps {
-  title?: string;
-  body?: string;
+  title: string;
+  body: string;
 }
+
+const shadowOffset = {
+  width: 0,
+  height: 15,
+};
 
 const NotificationBanner = ({
   title,
@@ -17,10 +22,7 @@ const NotificationBanner = ({
   <Container
     shadowRadius={30}
     shadowOpacity={0.5}
-    shadowOffset={{
-      width: 0,
-      height: 15,
-    }}
+    shadowOffset={shadowOffset}
     {...containerProps}
   >
     <Container
