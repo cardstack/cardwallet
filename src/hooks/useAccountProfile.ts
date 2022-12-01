@@ -9,11 +9,9 @@ import {
 export default function useAccountProfile() {
   const { selectedAccount, accountAddress } = useWallets();
 
-  const { label, color, avatar } = selectedAccount;
-
   const accountName = useMemo(
-    () => label || getAddressPreview(accountAddress),
-    [accountAddress, label]
+    () => selectedAccount?.label || getAddressPreview(accountAddress),
+    [accountAddress, selectedAccount]
   );
 
   const accountSymbol = useMemo(
@@ -25,7 +23,7 @@ export default function useAccountProfile() {
     accountAddress,
     accountName,
     accountSymbol,
-    accountColor: color,
-    accountImage: avatar,
+    accountColor: selectedAccount?.color,
+    accountImage: selectedAccount?.avatar,
   };
 }
