@@ -27,7 +27,7 @@ const WITHOUT_WATCHING_LABEL = screenWidth * 0.65;
 export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
   const {
     address,
-    color: accountColor,
+    color,
     ens,
     image: accountImage,
     isSelected,
@@ -69,7 +69,7 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
               />
             ) : (
               <ContactAvatar
-                color={accountColor}
+                color={color}
                 marginRight={10}
                 size="medium"
                 value={label || ens || getSymbolCharacterFromAddress(address)}

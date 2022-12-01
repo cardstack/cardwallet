@@ -2,7 +2,7 @@ import React from 'react';
 
 import { CoinIcon, SafeHeader } from '@cardstack/components';
 import { useNameOrPreviewFromAddress } from '@cardstack/hooks/merchant/useNameOrPreviewFromAddress';
-import { colors, avatarColor } from '@cardstack/theme';
+import { colors } from '@cardstack/theme';
 import { ERC20TransactionType } from '@cardstack/types';
 
 import { useAccountProfile } from '@rainbow-me/hooks';
@@ -28,6 +28,7 @@ export const ERC20Transaction = ({ item, ...props }: ERC20TransactionProps) => {
     : displayData;
 
   const { accountAddress, accountColor, accountName } = useAccountProfile();
+
   const isSentTransaction = item.to !== accountAddress;
 
   const calculatedProps = item.swappedFor
@@ -67,7 +68,7 @@ export const ERC20Transaction = ({ item, ...props }: ERC20TransactionProps) => {
           <SafeHeader
             address={item.to}
             accountName={accountName}
-            backgroundColor={avatarColor[accountColor]}
+            backgroundColor={accountColor}
             textColor={colors.white}
             rightText="Other Tokens"
             small

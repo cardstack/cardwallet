@@ -39,7 +39,7 @@ const FromSection = ({
   txNetwork,
 }: Pick<TransactionConfirmationDisplayProps, 'txNetwork'>) => {
   const {
-    accountColor,
+    avatarKeyColor,
     accountName,
     accountSymbol,
     accountAddress,
@@ -47,7 +47,7 @@ const FromSection = ({
 
   const nativeTokenSymbol = getConstantByNetwork(
     'nativeTokenSymbol',
-    txNetwork
+    txNetwork || NetworkType.gnosis
   );
 
   const balance = useGetAssetBalance({
@@ -67,7 +67,7 @@ const FromSection = ({
       <Container paddingHorizontal={3} marginTop={4}>
         <Container flexDirection="row">
           <ContactAvatar
-            color={accountColor}
+            color={avatarKeyColor}
             size="smaller"
             value={accountSymbol}
           />

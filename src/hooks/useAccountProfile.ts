@@ -1,6 +1,7 @@
 import { toUpper } from 'lodash';
 import { useMemo } from 'react';
 import useWallets from './useWallets';
+import { avatarColor } from '@cardstack/theme';
 import {
   getAddressPreview,
   getSymbolCharacterFromAddress,
@@ -19,11 +20,16 @@ export default function useAccountProfile() {
     [accountName]
   );
 
+  const avatarKeyColor = useMemo(() => selectedAccount?.color || 0, [
+    selectedAccount,
+  ]);
+
   return {
     accountAddress,
     accountName,
     accountSymbol,
-    accountColor: selectedAccount?.color,
+    avatarKeyColor,
+    accountColor: avatarColor[avatarKeyColor],
     accountImage: selectedAccount?.avatar,
   };
 }

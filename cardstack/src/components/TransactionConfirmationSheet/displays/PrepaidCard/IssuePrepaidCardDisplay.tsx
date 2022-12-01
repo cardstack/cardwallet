@@ -60,7 +60,7 @@ const FromSection = ({
   safeAddress?: string;
   tokenAddress: string;
 }) => {
-  const { accountColor, accountName, accountSymbol } = useAccountProfile();
+  const { avatarKeyColor, accountName, accountSymbol } = useAccountProfile();
 
   const { accountAddress, nativeCurrency } = useAccountSettings();
 
@@ -93,7 +93,7 @@ const FromSection = ({
       <Container paddingHorizontal={3} marginTop={4}>
         <Container flexDirection="row">
           <ContactAvatar
-            color={accountColor}
+            color={avatarKeyColor}
             size="smaller"
             value={accountSymbol}
           />

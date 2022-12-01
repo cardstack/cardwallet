@@ -38,7 +38,8 @@ export const WithdrawalDisplay = (props: WithdrawalDisplayProps) => {
 };
 
 const FromSection = ({ data }: { data: WithdrawalDecodedData }) => {
-  const { accountColor, accountName, accountSymbol } = useAccountProfile();
+  const { avatarKeyColor, accountName, accountSymbol } = useAccountProfile();
+
   const typeText = data.addressType === 'depot' ? 'DEPOT' : 'BUSINESS';
   const tokenDisplay = convertRawAmountToBalance(data.tokenBalance, data.token);
 
@@ -48,7 +49,7 @@ const FromSection = ({ data }: { data: WithdrawalDecodedData }) => {
       <Container paddingHorizontal={3} marginTop={4}>
         <Container flexDirection="row">
           <ContactAvatar
-            color={accountColor}
+            color={avatarKeyColor}
             size="smaller"
             value={accountSymbol}
           />
