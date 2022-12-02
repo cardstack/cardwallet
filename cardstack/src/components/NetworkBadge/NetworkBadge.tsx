@@ -8,11 +8,13 @@ import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 import { ContainerProps } from '../Container';
 
-export const NetworkBadge = (props: ContainerProps & { text?: string }) => {
-  const networkName = useRainbowSelector(state => state.settings.network);
+export const NetworkBadge = (
+  props: ContainerProps & { text?: string; network?: string }
+) => {
+  const currentNetwork = useRainbowSelector(state => state.settings.network);
 
   const displayNetworkName = shortNetworkName(
-    getConstantByNetwork('name', networkName)
+    getConstantByNetwork('name', props.network || currentNetwork)
   ).toUpperCase();
 
   return (
@@ -20,7 +22,7 @@ export const NetworkBadge = (props: ContainerProps & { text?: string }) => {
       <Container
         backgroundColor="backgroundLightGray"
         paddingHorizontal={2}
-        style={{ paddingVertical: 1 }}
+        paddingVertical={1}
         borderRadius={50}
       >
         <Text color="blueDarkest" fontSize={9} weight="bold">

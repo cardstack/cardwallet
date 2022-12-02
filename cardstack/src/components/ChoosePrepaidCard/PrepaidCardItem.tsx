@@ -86,7 +86,7 @@ const PrepaidCardItem = ({
         </Container>
         <Container flexGrow={1} paddingRight={16}>
           <Container flexDirection="row">
-            <NetworkBadge text={`ON ${networkName.toUpperCase()}`} />
+            <NetworkBadge />
             {isInsufficientFund && (
               <Text color="red" fontSize={10} weight="bold" paddingLeft={4}>
                 {strings.insufficientFunds}

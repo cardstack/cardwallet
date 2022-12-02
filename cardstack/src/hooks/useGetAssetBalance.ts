@@ -1,10 +1,10 @@
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useCallback, useEffect, useState } from 'react';
 
 import { getOnChainAssetBalance } from '@cardstack/services/assets';
 import { NetworkType } from '@cardstack/types';
 
 import { Asset } from '@rainbow-me/entities';
+import { logger } from '@rainbow-me/utils';
 
 interface UseGetAssetBalanceParams {
   asset: Asset;
@@ -20,11 +20,9 @@ export const useGetAssetBalance = ({
   accountAddress,
   network,
 }: UseGetAssetBalanceParams) => {
-  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
-
   const [balance, setBalance] = useState({
     amount: '0',
-    display: `0 ${nativeTokenSymbol}`,
+    display: `0 ${asset.symbol}`,
   });
 
   const getBalance = useCallback(async () => {
@@ -37,13 +35,17 @@ export const useGetAssetBalance = ({
 
       setBalance(tokenBalance);
     } catch (e) {
-      console.log(e);
+      logger.sentry(
+        `useGetAssetBalance for ${asset.symbol} on ${network} failed`,
+        e
+      );
     }
   }, [accountAddress, asset, network]);
 
   useEffect(() => {
     getBalance();
-  }, [getBalance]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return balance;
 };

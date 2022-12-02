@@ -1,6 +1,8 @@
 import Web3 from 'web3';
 import { WebsocketProvider } from 'web3-core';
 
+import { NetworkType } from '@cardstack/types';
+
 import logger from 'logger';
 
 import Web3WsProvider from './web3-provider';
@@ -22,6 +24,9 @@ const Web3Instance = {
 
     return web3Instance;
   },
+  // Separated instance with custom network for wc requests
+  withNetwork: async (network: NetworkType) =>
+    new Web3(await Web3WsProvider.get(network)),
 };
 
 export default Web3Instance;

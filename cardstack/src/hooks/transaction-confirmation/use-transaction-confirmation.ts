@@ -18,12 +18,17 @@ import { useRouteParams } from './use-route-params';
 import { extractPayloadParams, parseMessageRequestJson } from './utils';
 
 export const useTransactionConfirmation = () => {
+  const { network, nativeCurrency } = useAccountSettings();
+
   const {
     openAutomatically,
-    transactionDetails: { dappUrl, displayDetails, payload },
+    transactionDetails: {
+      dappUrl,
+      displayDetails,
+      payload,
+      txNetwork = network,
+    },
   } = useRouteParams();
-
-  const { network, nativeCurrency } = useAccountSettings();
 
   const isMessageRequest = isMessageDisplayType(payload.method);
 
@@ -84,5 +89,6 @@ export const useTransactionConfirmation = () => {
     methodName,
     messageRequest: parseMessageRequestJson(displayDetails),
     isAuthorizing,
+    txNetwork,
   };
 };
