@@ -12,7 +12,6 @@ import {
   Checkbox,
   HorizontalDivider,
   Skeleton,
-  Notice,
 } from '@cardstack/components';
 import { NotificationsOptionsStrings } from '@cardstack/hooks/notifications-preferences/useUpdateNotificationPreferences';
 import { NotificationsPreferenceDataType } from '@cardstack/types';
