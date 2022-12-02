@@ -28,7 +28,7 @@ import { RouteType } from '@cardstack/navigation/types';
 import { colors } from '@cardstack/theme';
 import { DepotType } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
-import { sectionStyle } from '@cardstack/utils/layouts';
+import { listStyle } from '@cardstack/utils/layouts';
 
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
@@ -187,7 +187,7 @@ const Activities = React.memo(({ depotAddress }: { depotAddress: string }) => {
         ListFooterComponent={
           isFetchingMore ? <ActivityIndicator color="white" /> : null
         }
-        contentContainerStyle={sectionStyle.contentContainerStyle}
+        contentContainerStyle={listStyle.sheetHeightPaddingBottom}
         renderItem={props => <TransactionItem {...props} includeBorder />}
         sections={sections}
         renderSectionHeader={({ section: { title } }) => (
@@ -209,7 +209,7 @@ const Activities = React.memo(({ depotAddress }: { depotAddress: string }) => {
         }
         onEndReached={onEndReached}
         onEndReachedThreshold={1}
-        style={sectionStyle.sectionList}
+        style={listStyle.fullWidth}
       />
     </Container>
   );

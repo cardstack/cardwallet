@@ -16,7 +16,7 @@ import {
 } from '@cardstack/components';
 import { usePrepaidCardTransactions } from '@cardstack/hooks';
 import { Device } from '@cardstack/utils';
-import { sectionStyle } from '@cardstack/utils/layouts';
+import { listStyle } from '@cardstack/utils/layouts';
 
 import { TransactionListLoading } from '../components/TransactionList/TransactionListLoading';
 
@@ -64,7 +64,7 @@ const PrepaidCardModal = () => {
         ) : (
           <SectionList
             ListEmptyComponent={<ListEmptyComponent text="No transactions" />}
-            contentContainerStyle={sectionStyle.contentContainerStyle}
+            contentContainerStyle={listStyle.sheetHeightPaddingBottom}
             renderItem={props => (
               <TransactionItem
                 {...props}
@@ -83,7 +83,7 @@ const PrepaidCardModal = () => {
                 <Text color="blueText">{title}</Text>
               </Container>
             )}
-            style={sectionStyle.sectionList}
+            style={listStyle.fullWidth}
           />
         )}
       </Container>

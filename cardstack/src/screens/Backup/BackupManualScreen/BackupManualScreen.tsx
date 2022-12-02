@@ -1,6 +1,5 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { memo, useCallback } from 'react';
-import { StyleSheet } from 'react-native';
 
 import {
   Button,
@@ -13,16 +12,11 @@ import {
 } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
+import { listStyle } from '@cardstack/utils';
 
 import { BackupRouteParams } from '../types';
 
 import { strings } from './strings';
-
-const style = StyleSheet.create({
-  scrollview: {
-    paddingBottom: 30,
-  },
-});
 
 const BackupManualScreen = () => {
   const { navigate } = useNavigation();
@@ -37,7 +31,7 @@ const BackupManualScreen = () => {
     <PageWithStackHeader showSkip={false}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={style.scrollview}
+        contentContainerStyle={listStyle.paddingBottom}
       >
         <Container flex={1} width="90%" marginBottom={10}>
           <Text variant="pageHeader" paddingBottom={4}>

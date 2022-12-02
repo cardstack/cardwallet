@@ -1,5 +1,4 @@
 import React, { memo, useMemo } from 'react';
-import { StyleSheet } from 'react-native';
 
 import {
   BackupStatus,
@@ -12,16 +11,10 @@ import {
   SeedPhraseTable,
   Text,
 } from '@cardstack/components';
-import { Device } from '@cardstack/utils';
+import { Device, listStyle } from '@cardstack/utils';
 
 import { strings } from './strings';
 import { useBackupSeedPhraseScreen } from './useBackupSeedPhraseScreen';
-
-const style = StyleSheet.create({
-  scrollview: {
-    paddingBottom: 30,
-  },
-});
 
 const BackupSeedPhraseScreen = () => {
   const {
@@ -76,7 +69,7 @@ const BackupSeedPhraseScreen = () => {
     >
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={style.scrollview}
+        contentContainerStyle={listStyle.paddingBottom}
       >
         <Container flex={1} width="90%" marginBottom={8}>
           <Text variant="pageHeader" paddingBottom={2}>

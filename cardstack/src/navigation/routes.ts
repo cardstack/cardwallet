@@ -53,6 +53,7 @@ const SharedRoutes = {
   LOADING_OVERLAY: 'LoadingOverlay',
   MESSAGE_OVERLAY: 'MessageOverlay',
   SEED_PHRASE_BACKUP: 'SeedPhraseBackup',
+  NOTIFICATIONS_PERMISSION: 'NotificationsPermissionScreen',
   // non-migrated
   MODAL_SCREEN: 'ModalScreen',
 } as const;

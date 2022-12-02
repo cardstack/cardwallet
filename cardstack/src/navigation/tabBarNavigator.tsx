@@ -19,6 +19,7 @@ import {
   LoadingOverlayScreen,
   SeedPhraseBackup,
   MessageOverlayScreen,
+  NotificationsPermissionScreen,
 } from '@cardstack/screens';
 import { colors } from '@cardstack/theme';
 import { Device, useWorker } from '@cardstack/utils';
@@ -123,6 +124,11 @@ const SharedScreens = ({ navigationKey }: { navigationKey: string }) => (
     <Stack.Screen
       component={PinScreen}
       name={Routes.PIN_SCREEN}
+      options={horizontalInterpolator}
+    />
+    <Stack.Screen
+      component={NotificationsPermissionScreen}
+      name={Routes.NOTIFICATIONS_PERMISSION}
       options={horizontalInterpolator}
     />
     <Stack.Screen

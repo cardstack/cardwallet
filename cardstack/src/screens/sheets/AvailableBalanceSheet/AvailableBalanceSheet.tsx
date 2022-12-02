@@ -16,7 +16,7 @@ import {
 import { useMerchantTransactions } from '@cardstack/hooks';
 import { RouteType } from '@cardstack/navigation/types';
 import { MerchantSafeType } from '@cardstack/types';
-import { sectionStyle } from '@cardstack/utils';
+import { listStyle } from '@cardstack/utils';
 
 import { strings } from './strings';
 
@@ -122,7 +122,7 @@ const Activities = ({ address }: Pick<MerchantSafeType, 'address'>) => {
           ListFooterComponent={
             isFetchingMore ? <ActivityIndicator color="white" /> : null
           }
-          contentContainerStyle={sectionStyle.contentContainerStyle}
+          contentContainerStyle={listStyle.sheetHeightPaddingBottom}
           onEndReached={onEndReached}
           onEndReachedThreshold={1}
           refreshControl={
@@ -141,7 +141,7 @@ const Activities = ({ address }: Pick<MerchantSafeType, 'address'>) => {
             </Container>
           )}
           sections={sections}
-          style={sectionStyle.sectionList}
+          style={listStyle.fullWidth}
         />
       )}
     </Container>
