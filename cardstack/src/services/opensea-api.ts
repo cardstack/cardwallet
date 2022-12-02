@@ -4,6 +4,7 @@ import { isNil, pick } from 'lodash';
 import { OPENSEA_API_KEY } from 'react-native-dotenv';
 
 import { CollectibleType, NetworkType } from '@cardstack/types';
+import { isMainnet } from '@cardstack/utils';
 
 import AssetTypes from '@rainbow-me/helpers/assetTypes';
 import logger from 'logger';
@@ -26,7 +27,7 @@ export const apiFetchCollectiblesForOwner = async (
   page: number
 ): Promise<CollectibleType[]> => {
   try {
-    const networkPrefix = network === NetworkType.mainnet ? '' : `${network}-`;
+    const networkPrefix = isMainnet(network) ? '' : `testnets-`;
     const offset = page * OPENSEA_LIMIT_PER_PAGE;
     const url = `https://${networkPrefix}api.opensea.io/api/v1/assets?owner=${ownerAddress}&limit=${OPENSEA_LIMIT_PER_PAGE}&offset=${offset}`;
     const response = await api.get(url);
