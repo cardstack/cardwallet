@@ -55,22 +55,22 @@ const Web3WsProvider = {
       });
 
       provider?.on('connect', () => {
-        logger.sentry('WS socket connected');
+        logger.sentry('[WS socket] connected');
       });
 
       //@ts-ignore it's wrongly typed bc it says it doesn't have param, but it does
       provider?.on('error', e => {
-        logger.sentry('WS socket error', e);
+        logger.sentry('[WS socket] error', e);
       });
 
       //@ts-ignore
       provider?.on('end', e => {
-        logger.sentry('WS socket ended', e);
+        logger.sentry('[WS socket] ended', e);
       });
 
       //@ts-ignore
       provider?.on('close', e => {
-        logger.sentry('WS socket close', e);
+        logger.sentry('[WS socket] close', e);
       });
     }
 

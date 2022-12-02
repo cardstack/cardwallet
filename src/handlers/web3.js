@@ -29,7 +29,7 @@ import logger from 'logger';
 /**
  * @desc web3 http instance - to be used with ethers contracts
  */
-export let web3Provider;
+let web3Provider;
 
 /**
  * @desc set a different web3 provider
@@ -45,7 +45,7 @@ export const etherWeb3SetHttpProvider = async network => {
     logger.error('provider error', error);
   }
 
-  return web3Provider.ready;
+  return web3Provider?.ready;
 };
 
 /**
@@ -54,13 +54,13 @@ export const etherWeb3SetHttpProvider = async network => {
  */
 
 export const getEtherWeb3Provider = async (network = undefined) => {
-  let wsConnected = web3Provider.provider?.connected;
+  let wsConnected = web3Provider?.provider?.connected;
 
   // check websocket state and reconnect if disconnected
   while (!wsConnected) {
     const currentNetwork = network || (await getNetwork());
     await etherWeb3SetHttpProvider(currentNetwork);
-    wsConnected = web3Provider.provider?.connected;
+    wsConnected = web3Provider?.provider?.connected;
     logger.log('ws restarted', wsConnected, currentNetwork);
   }
 
@@ -227,7 +227,7 @@ export const estimateGasWithPadding = async (
  * @param {String} hash
  * @return {Promise}
  */
-export const getTransaction = hash => web3Provider.getTransaction(hash);
+export const getTransaction = hash => web3Provider?.getTransaction(hash);
 
 /**
  * @desc get address transaction count
@@ -235,7 +235,7 @@ export const getTransaction = hash => web3Provider.getTransaction(hash);
  * @return {Promise}
  */
 export const getTransactionCount = address =>
-  web3Provider.getTransactionCount(address, 'pending');
+  web3Provider?.getTransactionCount(address, 'pending');
 
 /**
  * @desc get transaction details

@@ -55,7 +55,6 @@ export const settingsLoadNetwork = () => async dispatch => {
     const network = await getNetwork();
 
     const chainId = getConstantByNetwork('chainId', network);
-    await etherWeb3SetHttpProvider(network);
 
     // Creates tag on Sentry labeling the current network.
     logger.setTag('network', network);
@@ -64,6 +63,9 @@ export const settingsLoadNetwork = () => async dispatch => {
       payload: { chainId, network },
       type: SETTINGS_UPDATE_NETWORK_SUCCESS,
     });
+
+    // Set ethersProdiver on end to avoid locking app on gnosis state in error case
+    etherWeb3SetHttpProvider(network);
   } catch (error) {
     logger.error('Error loading network settings', error);
   }
