@@ -2484,12 +2484,12 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cardstack/cardpay-sdk@1.0.20":
-  version "1.0.20"
-  resolved "https://registry.yarnpkg.com/@cardstack/cardpay-sdk/-/cardpay-sdk-1.0.20.tgz#12710eb0483bd701b7870882e3a42730ed07c8b7"
-  integrity sha512-xgTXveaoFxsHfLdXnzToWs2pvpiHXQF13O/Rsljtxl3xkUAYy8neD/NLUKO/ppIW4O+gjuqjHRXoIrnihv4ibQ==
+"@cardstack/cardpay-sdk@1.0.21":
+  version "1.0.21"
+  resolved "https://registry.yarnpkg.com/@cardstack/cardpay-sdk/-/cardpay-sdk-1.0.21.tgz#73254bff82320e010e7807a3fe51f017efe784b7"
+  integrity sha512-i/K6RHRLAiaIz0n/AthQWro0BZBeRwOMXQkMyktnM5sPrsPqkp+8d0fuxBOhBm16m3RVB9td94n1eZX1TAU24g==
   dependencies:
-    "@cardstack/did-resolver" "1.0.20"
+    "@cardstack/did-resolver" "1.0.21"
     "@ethersproject/contracts" "^5.7.0"
     "@ethersproject/providers" "^5.7.1"
     "@ethersproject/solidity" "^5.7.0"
@@ -2523,10 +2523,10 @@
     web3-provider-engine "^16.0.1"
     web3-utils "1.5.2"
 
-"@cardstack/did-resolver@1.0.20":
-  version "1.0.20"
-  resolved "https://registry.yarnpkg.com/@cardstack/did-resolver/-/did-resolver-1.0.20.tgz#ac9fecd13d4f9ee73e7cddf4a39db3c19afe0847"
-  integrity sha512-nvWD+VV1CC0ylCjLGqA8Bhg6QP7JUpyiXmC9dt8V8446dj7XZP9EnyB0Chzw2o9VVah6qDffZEkKUFbrFJvCIQ==
+"@cardstack/did-resolver@1.0.21":
+  version "1.0.21"
+  resolved "https://registry.yarnpkg.com/@cardstack/did-resolver/-/did-resolver-1.0.21.tgz#04cf01e7917d1913a40cd2882d48b5834b9aaeb9"
+  integrity sha512-1PxX058roCjRNsAM09WHxHMziv4RouPnnf62wc+ogbdJdCn3r6InVPRRavwz5dYxL1DEtO+a1echGH4XqAS0yg==
   dependencies:
     "@types/node" "^16.0.0"
     "@types/uuid" "^8.3.0"
