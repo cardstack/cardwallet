@@ -10,9 +10,11 @@ import {
   DISCOVER_NEW_ASSETS_FREQUENCY,
   UPDATE_BALANCE_AND_PRICE_FREQUENCY,
 } from '@cardstack/constants';
-import { reduceAssetsWithPriceChartAndBalances } from '@cardstack/helpers/fallbackExplorerHelper';
+import {
+  mapTokenAddressToCoingeckoId,
+  reduceAssetsWithPriceChartAndBalances,
+} from '@cardstack/helpers/fallbackExplorerHelper';
 import { NetworkType } from '@cardstack/types';
-import { isLayer1 } from '@cardstack/utils';
 import coingeckoIdsFallback from '@rainbow-me/references/coingecko/ids.json';
 import logger from 'logger';
 
@@ -25,8 +27,6 @@ const FALLBACK_EXPLORER_SET_HANDLERS =
   'explorer/FALLBACK_EXPLORER_SET_HANDLERS';
 const FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER =
   'explorer/FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER';
-
-const HONEYSWAP_ENDPOINT = 'https://tokens.honeyswap.org';
 
 // Some contracts like SNX / SUSD use an ERC20 proxy
 // some of those tokens have been migrated to a new address
@@ -61,41 +61,6 @@ const findNewAssetsToWatch = () => async (dispatch, getState) => {
   }
 };
 
-const isValidAddress = address => address && address.substr(0, 2) === '0x';
-
-const fetchCoingeckoIds = async (network, coingeckoCoins = []) => {
-  const idsMap = {};
-  if (isLayer1(network)) {
-    coingeckoCoins?.forEach(({ id, platforms: { ethereum: tokenAddress } }) => {
-      const address = tokenAddress && toLower(tokenAddress);
-      if (address && isValidAddress(address)) {
-        idsMap[address] = id;
-      }
-    });
-  } else if (network === NetworkType.sokol) {
-    testnetAssets['sokol'].forEach(({ asset }) => {
-      idsMap[asset.asset_code] = asset.coingecko_id;
-    });
-  } else {
-    const honeyswapRequest = await fetch(HONEYSWAP_ENDPOINT);
-    const data = await honeyswapRequest.json();
-    const honeyswapTokens = data.tokens;
-
-    honeyswapTokens.forEach(({ address: tokenAddress, symbol }) => {
-      const coingeckoToken = coingeckoCoins?.find(
-        token => toLower(token.symbol) === toLower(symbol)
-      );
-      const address = tokenAddress && toLower(tokenAddress);
-
-      if (coingeckoToken && isValidAddress(address)) {
-        idsMap[address] = coingeckoToken.id;
-      }
-    });
-  }
-
-  return idsMap;
-};
-
 const coingeckoCoinsCache = { current: null };
 
 const fetchCoingeckoCoins = async () => {
@@ -117,7 +82,7 @@ const findAssetsToWatch = async (address, latestTxBlockNumber, dispatch) => {
   coingeckoCoinsCache.current =
     coingeckoCoinsCache.current || (await fetchCoingeckoCoins());
 
-  const coingeckoIds = await fetchCoingeckoIds(
+  const coingeckoIds = await mapTokenAddressToCoingeckoId(
     network,
     coingeckoCoinsCache.current
   );
