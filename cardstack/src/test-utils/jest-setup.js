@@ -183,6 +183,7 @@ jest.mock('@rainbow-me/redux/gas', () => ({
 jest.mock('@rainbow-me/utils', () => ({
   magicMemo: jest.fn(),
   neverRerender: jest.fn(),
+  gasUtils: jest.fn(),
 }));
 
 jest.mock('@rainbow-me/hooks/charts/useChartThrottledPoints', () => ({

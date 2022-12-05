@@ -6,22 +6,19 @@ import { useDispatch } from 'react-redux';
 import { Routes } from '@cardstack/navigation';
 import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
 
-import { useGas } from '@rainbow-me/hooks';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { walletConnectRemovePendingRedirect } from '@rainbow-me/redux/walletconnect';
 import { SEND_TRANSACTION } from '@rainbow-me/utils/signingMethods';
 
 import { useRouteParams } from './use-route-params';
 
-export const useCloseScreen = (isMessageRequest: boolean) => {
+export const useCloseScreen = () => {
   const dispatch = useDispatch();
   const { goBack, canGoBack, navigate } = useNavigation();
 
   const pendingRedirect = useRainbowSelector(
     ({ walletconnect }) => walletconnect.pendingRedirect
   );
-
-  const { stopPollingGasPrices } = useGas();
 
   const {
     transactionDetails: {
@@ -36,10 +33,6 @@ export const useCloseScreen = (isMessageRequest: boolean) => {
         goBack();
       } else {
         navigate(Routes.WALLET_SCREEN);
-      }
-
-      if (!isMessageRequest) {
-        stopPollingGasPrices();
       }
 
       if (pendingRedirect) {
@@ -60,17 +53,7 @@ export const useCloseScreen = (isMessageRequest: boolean) => {
         });
       }
     },
-    [
-      goBack,
-      isMessageRequest,
-      pendingRedirect,
-      stopPollingGasPrices,
-      method,
-      dappScheme,
-      dispatch,
-      canGoBack,
-      navigate,
-    ]
+    [goBack, pendingRedirect, method, dappScheme, dispatch, canGoBack, navigate]
   );
 
   return closeScreen;
