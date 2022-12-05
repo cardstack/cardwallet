@@ -1,6 +1,11 @@
 import { transformObjKeysToCamelCase } from '@cardstack/utils';
 
+import { defaultGasPriceFormat } from '@rainbow-me/parsers';
+import { gasUtils } from '@rainbow-me/utils';
+
 import { hubApi } from '../hub-api';
+
+const { CUSTOM, NORMAL, FAST, SLOW } = gasUtils;
 
 import {
   GasPricesAttrsType,
@@ -18,10 +23,21 @@ export const hubGasPrices = hubApi.injectEndpoints({
       query: ({ chainId }) => ({
         url: `${routes.gasPrices}/${chainId}`,
         method: 'GET',
-        transformResponse: (response: {
-          data: { attributes: GasPricesAttrsType };
-        }) => transformObjKeysToCamelCase(response?.data?.attributes),
       }),
+      transformResponse: (response: {
+        data: { attributes: GasPricesAttrsType };
+      }) => {
+        const attributes = transformObjKeysToCamelCase(
+          response.data.attributes
+        );
+
+        return {
+          [CUSTOM]: null,
+          [FAST]: defaultGasPriceFormat(FAST, null, attributes.fast),
+          [NORMAL]: defaultGasPriceFormat(NORMAL, null, attributes.standard),
+          [SLOW]: defaultGasPriceFormat(SLOW, null, attributes.slow),
+        };
+      },
     }),
   }),
 });

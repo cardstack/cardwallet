@@ -1,4 +1,4 @@
-import { KebabToCamelCaseKeys } from 'globals';
+import { defaultGasPriceFormat } from '@rainbow-me/parsers';
 
 export type GasPricesQueryParams = {
   chainId: number;
@@ -11,4 +11,7 @@ export type GasPricesAttrsType = {
   fast: string;
 };
 
-export type GasPricesQueryResults = KebabToCamelCaseKeys<GasPricesAttrsType>;
+export type GasPricesQueryResults = Record<
+  string,
+  ReturnType<typeof defaultGasPriceFormat> | null
+>;

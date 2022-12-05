@@ -78,7 +78,7 @@ export const parseLayer2GasPrices = data => ({
 
 export const defaultGasPriceFormat = (option, timeWait, value) => {
   const timeAmount = timeWait ? multiply(timeWait, timeUnits.ms.minute) : null;
-  const weiAmount = multiply(value, ethUnits.gwei);
+
   return {
     estimatedTime: {
       amount: timeAmount,
@@ -86,7 +86,7 @@ export const defaultGasPriceFormat = (option, timeWait, value) => {
     },
     option,
     value: {
-      amount: weiAmount,
+      amount: value,
       display: `${parseInt(value, 10)} Gwei`,
     },
   };
