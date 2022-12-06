@@ -38,8 +38,6 @@ const Web3WsProvider = {
         ? hubConfigResponse.web3.layer2RpcNodeHttpsUrl
         : rpcNodeWssUrl;
 
-      console.log('NODE', node);
-
       provider = new Web3.providers.WebsocketProvider(node, {
         timeout: 30000,
         reconnect: {
