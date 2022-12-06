@@ -39,7 +39,7 @@ export default function useGas() {
     })
   );
 
-  const { data } = useGetGasPricesQuery(
+  const { data: gasPricesData } = useGetGasPricesQuery(
     {
       chainId: getConstantByNetwork('chainId', network),
     },
@@ -49,8 +49,8 @@ export default function useGas() {
   );
 
   const startPollingGasPrices = useCallback(
-    () => dispatch(saveGasPrices(data)),
-    [dispatch, data]
+    () => dispatch(saveGasPrices(gasPricesData)),
+    [dispatch, gasPricesData]
   );
 
   const updateDefaultGasLimit = useCallback(
