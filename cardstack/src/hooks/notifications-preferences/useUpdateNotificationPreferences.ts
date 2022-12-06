@@ -4,7 +4,6 @@ import {
   useGetNotificationsPreferencesQuery,
   useSetNotificationsPreferencesMutation,
 } from '@cardstack/services/hub/notifications/hub-notifications-api';
-import { NotificationsPreferenceDataType } from '@cardstack/types';
 
 export enum NotificationsOptionsStrings {
   'merchant_claim' = 'Merchant Claim',
@@ -20,9 +19,9 @@ export const useUpdateNotificationPreferences = () => {
   ] = useSetNotificationsPreferencesMutation();
 
   const onUpdateOptionStatus = useCallback(
-    async (item: NotificationsPreferenceDataType, isEnabled: boolean) => {
+    async (notificationType: string, isEnabled: boolean) => {
       await setNotificationsPreferences({
-        notificationType: item.attributes['notification-type'],
+        notificationType,
         status: isEnabled ? 'enabled' : 'disabled',
       });
     },

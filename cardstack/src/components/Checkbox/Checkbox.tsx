@@ -7,7 +7,7 @@ type CheckboxPositionType = 'left' | 'right';
 type VerticalAlignType = 'flex-start' | 'flex-end' | 'center';
 
 interface CheckboxProps {
-  onPress?: () => void;
+  onPress?: (checked: boolean) => void;
   label?: string;
   isDisabled?: boolean;
   iconProps?: IconProps;
@@ -32,11 +32,11 @@ export const Checkbox = ({
   const [disabled] = useState(isDisabled);
 
   const handleCall = useCallback(() => {
-    setSelected(!selected);
-
     if (onPress) {
-      onPress();
+      onPress(!selected);
     }
+
+    setSelected(!selected);
   }, [onPress, selected]);
 
   useEffect(() => {

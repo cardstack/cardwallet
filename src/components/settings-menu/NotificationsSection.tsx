@@ -36,7 +36,12 @@ const NotificationsSection = () => {
             }
           </Text>
           <Switch
-            onValueChange={isEnabled => onUpdateOptionStatus(item, isEnabled)}
+            onValueChange={isEnabled =>
+              onUpdateOptionStatus(
+                item.attributes['notification-type'],
+                isEnabled
+              )
+            }
             value={item?.attributes.status === 'enabled'}
           />
         </Container>

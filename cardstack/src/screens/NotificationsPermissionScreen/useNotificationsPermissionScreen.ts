@@ -1,22 +1,37 @@
+import { useNavigation } from '@react-navigation/native';
 import { useCallback } from 'react';
 
-import { useUpdateNotificationPreferences } from '@cardstack/hooks';
+import { useUpdateNotificationPreferences } from '@cardstack/hooks/notifications-preferences/useUpdateNotificationPreferences';
+import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
+import { Routes } from '@cardstack/navigation';
+import { NotificationsPreferenceDataType } from '@cardstack/types';
 
 export const useNotificationsPermissionScreen = () => {
-  const { options, isError } = useUpdateNotificationPreferences();
+  const { navigate } = useNavigation();
 
-  const handleSkipOnPress = useCallback(() => {
-    // TBD
-  }, []);
+  const {
+    options,
+    isError,
+    onUpdateOptionStatus,
+  } = useUpdateNotificationPreferences();
 
-  const handleEnableNotificationsOnPress = useCallback(() => {
-    // TBD
-  }, []);
+  const handleOnUpdateOption = useCallback(
+    async (option: NotificationsPreferenceDataType, isEnabled: boolean) => {
+      onUpdateOptionStatus(option.type, isEnabled);
+    },
+    [onUpdateOptionStatus]
+  );
+
+  const handleEnableNotificationsOnPress = useCallback(async () => {
+    await checkPushPermissionAndRegisterToken();
+    navigate(Routes.WALLET_SCREEN);
+  }, [navigate]);
 
   return {
     options,
     isError,
-    handleSkipOnPress,
+    onUpdateOptionStatus,
+    handleOnUpdateOption,
     handleEnableNotificationsOnPress,
   };
 };

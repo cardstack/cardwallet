@@ -24,7 +24,7 @@ const NotificationsPermissionScreen = () => {
   const {
     options,
     isError,
-    handleSkipOnPress,
+    handleOnUpdateOption,
     handleEnableNotificationsOnPress,
   } = useNotificationsPermissionScreen();
 
@@ -41,7 +41,11 @@ const NotificationsPermissionScreen = () => {
         <>
           <HorizontalDivider backgroundColor="blueDarkest" />
           <Container>
-            <Checkbox checkboxPosition="left" verticalAlign="flex-start">
+            <Checkbox
+              checkboxPosition="left"
+              verticalAlign="flex-start"
+              onPress={isEnabled => handleOnUpdateOption(item, isEnabled)}
+            >
               <Container width="100%">
                 <Text color="white">{notificationType}</Text>
                 <NotificationBanner
@@ -57,7 +61,7 @@ const NotificationsPermissionScreen = () => {
         </>
       );
     },
-    []
+    [handleOnUpdateOption]
   );
 
   const PageHeader = useMemo(
@@ -106,10 +110,7 @@ const NotificationsPermissionScreen = () => {
   );
 
   return (
-    <PageWithStackHeader
-      canGoBack={false}
-      skipPressCallback={handleSkipOnPress}
-    >
+    <PageWithStackHeader canGoBack={false}>
       <FlatList
         style={listStyle.fullWidth}
         contentContainerStyle={listStyle.paddingBottom}
