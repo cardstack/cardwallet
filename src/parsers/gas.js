@@ -2,6 +2,7 @@ import {
   convertRawAmountToBalance,
   convertRawAmountToNativeDisplay,
   divide,
+  getConstantByNetwork,
   multiply,
 } from '@cardstack/cardpay-sdk';
 import { get, map, zipObject } from 'lodash';
@@ -98,18 +99,26 @@ export const defaultGasPriceFormat = (option, timeWait, value) => {
  * @param {Object} prices
  * @param {Number} gasLimit
  */
-export const parseTxFees = (gasPrices, priceUnit, gasLimit, nativeCurrency) => {
+export const parseTxFees = (
+  gasPrices,
+  priceUnit,
+  gasLimit,
+  nativeCurrency,
+  network
+) => {
   const txFees = map(GasSpeedOrder, speed => {
     const gasPrice = get(gasPrices, `${speed}.value.amount`);
     return {
-      txFee: getTxFee(gasPrice, gasLimit, priceUnit, nativeCurrency),
+      txFee: getTxFee(gasPrice, gasLimit, priceUnit, nativeCurrency, network),
     };
   });
   return zipObject(GasSpeedOrder, txFees);
 };
 
-const getTxFee = (gasPrice, gasLimit, priceUnit, nativeCurrency) => {
+const getTxFee = (gasPrice, gasLimit, priceUnit, nativeCurrency, network) => {
+  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
   const amount = multiply(gasPrice, gasLimit);
+
   return {
     native: {
       value: convertRawAmountToNativeDisplay(
@@ -119,13 +128,10 @@ const getTxFee = (gasPrice, gasLimit, priceUnit, nativeCurrency) => {
         nativeCurrency
       ),
     },
-    value: {
-      amount,
-      display: convertRawAmountToBalance(amount, {
-        decimals: 18,
-        symbol: 'ETH',
-      }),
-    },
+    value: convertRawAmountToBalance(amount, {
+      decimals: 18,
+      symbol: nativeTokenSymbol,
+    }),
   };
 };
 

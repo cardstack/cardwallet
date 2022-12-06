@@ -111,26 +111,29 @@ export const gasUpdateTxFee = (gasLimit, overrideGasOption) => (
   getState
 ) => {
   const { defaultGasLimit, gasPrices, selectedGasPriceOption } = getState().gas;
+
   const _gasLimit = gasLimit || defaultGasLimit;
   const _selectedGasPriceOption = overrideGasOption || selectedGasPriceOption;
   if (isEmpty(gasPrices)) return;
+
   const { assets } = getState().data;
-  const { nativeCurrency } = getState().settings;
+  const { nativeCurrency, network } = getState().settings;
+
   const ethPriceUnit = ethereumUtils.getEthPriceUnit();
+
   const txFees = parseTxFees(
     gasPrices,
     ethPriceUnit,
     _gasLimit,
-    nativeCurrency
+    nativeCurrency,
+    network
   );
-  const { network } = getState().settings;
 
   const results = getSelectedGasPrice(
     assets,
     gasPrices,
     txFees,
-    _selectedGasPriceOption,
-    network
+    _selectedGasPriceOption
   );
   dispatch({
     payload: {

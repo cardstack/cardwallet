@@ -1,7 +1,4 @@
-import {
-  convertAmountToBalanceDisplay,
-  getConstantByNetwork,
-} from '@cardstack/cardpay-sdk';
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { get } from 'lodash';
 import React, { useMemo } from 'react';
 import {
@@ -25,30 +22,21 @@ export default function SendTransactionSpeed({
   isSufficientGas,
 }) {
   const { network } = useAccountSettings();
+
   const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
   const isDepot = sendType === SendSheetType.SEND_FROM_DEPOT;
+
   const feeDescription = useMemo(() => {
     if (isDepot) {
-      return `${get(
-        gasPrice,
-        'nativeDisplay',
-        0
-      )} ≈ ${nativeCurrencySymbol}${get(gasPrice, 'amount', 0)}`;
-    } else {
-      const nativeValueDisplay = convertAmountToBalanceDisplay(
-        get(gasPrice, 'txFee.native.value.amount', 0),
-        {
-          decimals: 6,
-          symbol: nativeTokenSymbol,
-        }
-      );
-      return `${nativeValueDisplay} ≈ ${get(
-        gasPrice,
-        'txFee.native.value.display',
-        `${nativeCurrencySymbol}0.00`
-      )}`;
+      return `${gasPrice?.nativeDisplay} ≈ ${nativeCurrencySymbol}${gasPrice?.amount}`;
     }
-  }, [gasPrice, isDepot, nativeCurrencySymbol, nativeTokenSymbol]);
+
+    if (!gasPrice.txFee) {
+      return 'Loading gas prices';
+    }
+
+    return `${gasPrice.txFee?.value.display} ≈ ${gasPrice.txFee?.native.value.display}`;
+  }, [gasPrice, isDepot, nativeCurrencySymbol]);
 
   const hasTimeAmount = useMemo(
     () => !!(isDepot ? 0 : get(gasPrice, 'estimatedTime.amount', 0)),
