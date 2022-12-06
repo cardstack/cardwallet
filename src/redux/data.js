@@ -33,7 +33,6 @@ import {
   getTitle,
   getTransactionLabel,
   parseAccountAssets,
-  parseAsset,
   parseNewTransaction,
   parseTransactions,
 } from '@rainbow-me/parsers';
