@@ -2,7 +2,6 @@ import React from 'react';
 import { StatusBar } from 'react-native';
 
 import {
-  Container,
   TransactionConfirmationSheet,
   SafeAreaView,
 } from '@cardstack/components';
@@ -17,13 +16,7 @@ const TransactionConfirmation = () => {
     <SafeAreaView backgroundColor="black" flex={1} width="100%">
       <StatusBar barStyle="light-content" />
       <TransactionConfirmationSheet {...props} />
-      <Container height={150}>
-        {!props.isMessageRequest && (
-          <Container>
-            <GasSpeedButton type="transaction" />
-          </Container>
-        )}
-      </Container>
+      {!props.isMessageRequest && <GasSpeedButton type="transaction" />}
     </SafeAreaView>
   );
 };
