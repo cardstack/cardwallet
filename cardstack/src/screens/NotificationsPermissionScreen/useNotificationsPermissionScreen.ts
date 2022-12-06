@@ -1,13 +1,9 @@
 import { useCallback } from 'react';
 
-import { useUpdateNotificationPreferences } from '@cardstack/hooks/notifications-preferences/useUpdateNotificationPreferences';
+import { useUpdateNotificationPreferences } from '@cardstack/hooks';
 
 export const useNotificationsPermissionScreen = () => {
-  const {
-    options,
-    isError,
-    // onUpdateOptionStatus,
-  } = useUpdateNotificationPreferences();
+  const { options, isError } = useUpdateNotificationPreferences();
 
   const handleSkipOnPress = useCallback(() => {
     // TBD

@@ -41,17 +41,18 @@ const NotificationsPermissionScreen = () => {
         <>
           <HorizontalDivider backgroundColor="blueDarkest" />
           <Container>
-            <Checkbox checkboxPosition="left">
-              <Text color="white">{notificationType}</Text>
+            <Checkbox checkboxPosition="left" verticalAlign="flex-start">
+              <Container width="100%">
+                <Text color="white">{notificationType}</Text>
+                <NotificationBanner
+                  width="80%"
+                  paddingTop={6}
+                  paddingBottom={3}
+                  title="Cardstack"
+                  body={notificationType}
+                />
+              </Container>
             </Checkbox>
-            <NotificationBanner
-              paddingTop={6}
-              paddingRight={8}
-              paddingBottom={3}
-              paddingLeft={10}
-              title="Cardstack"
-              body={notificationType}
-            />
           </Container>
         </>
       );

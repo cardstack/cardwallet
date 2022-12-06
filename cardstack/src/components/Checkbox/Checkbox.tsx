@@ -4,6 +4,7 @@ import { Touchable, Container, Text, Icon } from '../.';
 import { IconProps } from '../Icon';
 
 type CheckboxPositionType = 'left' | 'right';
+type VerticalAlignType = 'flex-start' | 'flex-end' | 'center';
 
 interface CheckboxProps {
   onPress?: () => void;
@@ -12,6 +13,7 @@ interface CheckboxProps {
   iconProps?: IconProps;
   isSelected?: boolean;
   checkboxPosition?: CheckboxPositionType;
+  verticalAlign?: VerticalAlignType;
   children?: ReactNode;
 }
 
@@ -23,6 +25,7 @@ export const Checkbox = ({
   isDisabled,
   isSelected = false,
   checkboxPosition = 'right',
+  verticalAlign = 'center',
   children,
 }: CheckboxProps) => {
   const [selected, setSelected] = useState(isSelected);
@@ -45,7 +48,7 @@ export const Checkbox = ({
   return (
     <Touchable
       flexDirection={flexDirection}
-      alignItems="center"
+      alignItems={verticalAlign}
       onPress={handleCall}
       disabled={disabled}
     >

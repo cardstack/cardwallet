@@ -28,15 +28,14 @@ const getPermissionStatus = (): Promise<FirebaseMessagingTypes.AuthorizationStat
 export const needsToAskForNotificationsPermissions = async (): Promise<
   boolean | undefined
 > => {
-  let permissionStatus = null;
-
   try {
-    permissionStatus = await getPermissionStatus();
+    const { AUTHORIZED, PROVISIONAL } = messaging.AuthorizationStatus;
 
-    return (
-      permissionStatus !== messaging.AuthorizationStatus.AUTHORIZED &&
-      permissionStatus !== messaging.AuthorizationStatus.PROVISIONAL
-    );
+    const permissionStatus = await getPermissionStatus();
+
+    const isAuthorized = [AUTHORIZED, PROVISIONAL].includes(permissionStatus);
+
+    return !isAuthorized;
   } catch (error) {
     logger.sentry(
       'Error checking if a user has push notifications permission',
