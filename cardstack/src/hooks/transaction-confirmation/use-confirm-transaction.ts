@@ -46,7 +46,7 @@ export const useTransactionActions = (isMessageRequest: boolean) => {
 
   const [isAuthorizing, setIsAuthorizing] = useState(false);
 
-  const closeScreen = useCloseScreen(isMessageRequest);
+  const closeScreen = useCloseScreen();
 
   const sendResponseToWalletConnect = useCallback(
     (signatureOrHash?: string | null) => {

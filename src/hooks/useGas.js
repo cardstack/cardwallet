@@ -1,16 +1,23 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  gasPricesStartPolling,
-  gasPricesStopPolling,
   gasUpdateCustomValues,
   gasUpdateDefaultGasLimit,
   gasUpdateGasPriceOption,
   gasUpdateTxFee,
+  saveGasPrices,
 } from '../redux/gas';
+
+import useAccountSettings from './useAccountSettings';
+import { useGetGasPricesQuery } from '@cardstack/services';
+
+const GAS_PRICE_POLLING_INTERVAL = 15000; // 15s
 
 export default function useGas() {
   const dispatch = useDispatch();
+  const { network } = useAccountSettings();
 
   const gasData = useSelector(
     ({
@@ -32,13 +39,18 @@ export default function useGas() {
     })
   );
 
-  const startPollingGasPrices = useCallback(
-    () => dispatch(gasPricesStartPolling()),
-    [dispatch]
+  const { data: gasPricesData } = useGetGasPricesQuery(
+    {
+      chainId: getConstantByNetwork('chainId', network),
+    },
+    {
+      pollingInterval: GAS_PRICE_POLLING_INTERVAL,
+    }
   );
-  const stopPollingGasPrices = useCallback(
-    () => dispatch(gasPricesStopPolling()),
-    [dispatch]
+
+  const startPollingGasPrices = useCallback(
+    () => dispatch(saveGasPrices(gasPricesData)),
+    [dispatch, gasPricesData]
   );
 
   const updateDefaultGasLimit = useCallback(
@@ -63,7 +75,6 @@ export default function useGas() {
 
   return {
     startPollingGasPrices,
-    stopPollingGasPrices,
     updateCustomValues,
     updateDefaultGasLimit,
     updateGasPriceOption,

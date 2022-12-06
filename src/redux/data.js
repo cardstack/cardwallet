@@ -5,9 +5,7 @@ import {
   filter,
   get,
   isEmpty,
-  isNil,
   map,
-  mapValues,
   partition,
   remove,
   toLower,
@@ -35,7 +33,6 @@ import {
   getTitle,
   getTransactionLabel,
   parseAccountAssets,
-  parseAsset,
   parseNewTransaction,
   parseTransactions,
 } from '@rainbow-me/parsers';
@@ -243,35 +240,6 @@ export const addressAssetsReceived = (
   });
   saveAssets(parsedAssets, accountAddress, network);
   dispatch(collectiblesRefreshState());
-};
-
-export const assetPricesReceived = message => dispatch => {
-  const assets = get(message, 'payload.prices', {});
-  if (isEmpty(assets)) return;
-  const parsedAssets = mapValues(assets, asset => parseAsset(asset));
-  dispatch({
-    payload: parsedAssets,
-    type: DATA_UPDATE_GENERIC_ASSETS,
-  });
-};
-
-export const assetPricesChanged = message => (dispatch, getState) => {
-  const price = get(message, 'payload.prices[0].price');
-  const assetAddress = get(message, 'meta.asset_code');
-  if (isNil(price) || isNil(assetAddress)) return;
-  const { genericAssets } = getState().data;
-  const genericAsset = {
-    ...get(genericAssets, assetAddress),
-    price,
-  };
-  const updatedAssets = {
-    ...genericAssets,
-    [assetAddress]: genericAsset,
-  };
-  dispatch({
-    payload: updatedAssets,
-    type: DATA_UPDATE_GENERIC_ASSETS,
-  });
 };
 
 export const dataAddNewTransaction = (

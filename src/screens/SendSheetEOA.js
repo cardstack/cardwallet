@@ -52,7 +52,6 @@ const useSendSheetScreen = () => {
     isSufficientGas,
     selectedGasPrice,
     startPollingGasPrices,
-    stopPollingGasPrices,
     txFees,
     updateDefaultGasLimit,
     updateGasPriceOption,
@@ -95,10 +94,7 @@ const useSendSheetScreen = () => {
 
   useEffect(() => {
     InteractionManager.runAfterInteractions(() => startPollingGasPrices());
-    return () => {
-      InteractionManager.runAfterInteractions(() => stopPollingGasPrices());
-    };
-  }, [startPollingGasPrices, stopPollingGasPrices]);
+  }, [startPollingGasPrices]);
 
   // Recalculate balance when gas price changes
   useEffect(() => {

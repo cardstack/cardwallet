@@ -2,83 +2,21 @@ import {
   convertRawAmountToBalance,
   convertRawAmountToNativeDisplay,
   divide,
+  getConstantByNetwork,
   multiply,
 } from '@cardstack/cardpay-sdk';
+import { utils } from 'ethers';
 import { get, map, zipObject } from 'lodash';
 import { getMinimalTimeUnitStringForMs } from '../helpers/time';
 import ethUnits from '../references/ethereum-units.json';
 import timeUnits from '../references/time-units.json';
 import { gasUtils } from '../utils';
 
-const { CUSTOM, FAST, NORMAL, SLOW, GasSpeedOrder } = gasUtils;
-
-/**
- * @desc parse ether gas prices
- * @param {Object} data
- * @param {Boolean} short - use short format or not
- */
-export const getFallbackGasPrices = (short = true) => ({
-  [CUSTOM]: null,
-  [FAST]: defaultGasPriceFormat(FAST, '0.5', '200', short),
-  [NORMAL]: defaultGasPriceFormat(NORMAL, '2.5', '100', short),
-  [SLOW]: defaultGasPriceFormat(SLOW, '2.5', '100', short),
-});
-
-const parseGasPricesEtherscan = data => ({
-  [CUSTOM]: null,
-  [FAST]: defaultGasPriceFormat(FAST, data.fastWait, data.fast, true),
-  [NORMAL]: defaultGasPriceFormat(NORMAL, data.avgWait, data.average, true),
-  [SLOW]: defaultGasPriceFormat(SLOW, data.safeLowWait, data.safeLow, true),
-});
-
-const parseGasPricesEthGasStation = data => ({
-  [CUSTOM]: null,
-  [FAST]: defaultGasPriceFormat(
-    FAST,
-    data.fastestWait,
-    Number(data.fastest) / 10,
-    true
-  ),
-  [NORMAL]: defaultGasPriceFormat(
-    NORMAL,
-    data.fastWait,
-    Number(data.fast) / 10,
-    true
-  ),
-  [SLOW]: defaultGasPriceFormat(
-    SLOW,
-    data.avgWait,
-    Number(data.average) / 10,
-    true
-  ),
-});
-
-/**
- * @desc parse ether gas prices
- * @param {Object} data
- * @param {Boolean} short - use short format or not
- */
-export const parseGasPrices = (data, source = 'etherscan') =>
-  !data
-    ? getFallbackGasPrices()
-    : source === 'etherscan'
-    ? parseGasPricesEtherscan(data)
-    : parseGasPricesEthGasStation(data);
-
-export const parseLayer2GasPrices = data => ({
-  [CUSTOM]: null,
-  [FAST]: defaultGasPriceFormat(FAST, null, data.fast ? data.fast : 1),
-  [NORMAL]: defaultGasPriceFormat(
-    NORMAL,
-    null,
-    data.average ? data.average : 1
-  ),
-  [SLOW]: defaultGasPriceFormat(SLOW, null, data.slow ? data.slow : 1),
-});
+const { GasSpeedOrder } = gasUtils;
 
 export const defaultGasPriceFormat = (option, timeWait, value) => {
   const timeAmount = timeWait ? multiply(timeWait, timeUnits.ms.minute) : null;
-  const weiAmount = multiply(value, ethUnits.gwei);
+
   return {
     estimatedTime: {
       amount: timeAmount,
@@ -86,8 +24,8 @@ export const defaultGasPriceFormat = (option, timeWait, value) => {
     },
     option,
     value: {
-      amount: weiAmount,
-      display: `${parseInt(value, 10)} Gwei`,
+      amount: value,
+      display: `${utils.formatUnits(value, 'gwei')} Gwei`,
     },
   };
 };
@@ -98,18 +36,26 @@ export const defaultGasPriceFormat = (option, timeWait, value) => {
  * @param {Object} prices
  * @param {Number} gasLimit
  */
-export const parseTxFees = (gasPrices, priceUnit, gasLimit, nativeCurrency) => {
+export const parseTxFees = (
+  gasPrices,
+  priceUnit,
+  gasLimit,
+  nativeCurrency,
+  network
+) => {
   const txFees = map(GasSpeedOrder, speed => {
     const gasPrice = get(gasPrices, `${speed}.value.amount`);
     return {
-      txFee: getTxFee(gasPrice, gasLimit, priceUnit, nativeCurrency),
+      txFee: getTxFee(gasPrice, gasLimit, priceUnit, nativeCurrency, network),
     };
   });
   return zipObject(GasSpeedOrder, txFees);
 };
 
-const getTxFee = (gasPrice, gasLimit, priceUnit, nativeCurrency) => {
+const getTxFee = (gasPrice, gasLimit, priceUnit, nativeCurrency, network) => {
+  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
   const amount = multiply(gasPrice, gasLimit);
+
   return {
     native: {
       value: convertRawAmountToNativeDisplay(
@@ -119,13 +65,10 @@ const getTxFee = (gasPrice, gasLimit, priceUnit, nativeCurrency) => {
         nativeCurrency
       ),
     },
-    value: {
-      amount,
-      display: convertRawAmountToBalance(amount, {
-        decimals: 18,
-        symbol: 'ETH',
-      }),
-    },
+    value: convertRawAmountToBalance(amount, {
+      decimals: 18,
+      symbol: nativeTokenSymbol,
+    }),
   };
 };
 
