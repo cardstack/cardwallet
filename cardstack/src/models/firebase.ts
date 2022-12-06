@@ -25,6 +25,25 @@ type FCMTokenStorageType = {
 const getPermissionStatus = (): Promise<FirebaseMessagingTypes.AuthorizationStatus> =>
   messaging().hasPermission();
 
+export const needsToAskForNotificationsPermissions = async (): Promise<
+  boolean | undefined
+> => {
+  try {
+    const { AUTHORIZED, PROVISIONAL } = messaging.AuthorizationStatus;
+
+    const permissionStatus = await getPermissionStatus();
+
+    const isAuthorized = [AUTHORIZED, PROVISIONAL].includes(permissionStatus);
+
+    return !isAuthorized;
+  } catch (error) {
+    logger.sentry(
+      'Error checking if a user has push notifications permission',
+      error
+    );
+  }
+};
+
 export const getFCMToken = async (): Promise<FCMTokenStorageType> => {
   try {
     const {
@@ -166,21 +185,7 @@ export const requestPermission = () =>
 
 export const checkPushPermissionAndRegisterToken = async () => {
   return new Promise(async resolve => {
-    let permissionStatus = null;
-
-    try {
-      permissionStatus = await getPermissionStatus();
-    } catch (error) {
-      logger.sentry(
-        'Error checking if a user has push notifications permission',
-        error
-      );
-    }
-
-    if (
-      permissionStatus !== messaging.AuthorizationStatus.AUTHORIZED &&
-      permissionStatus !== messaging.AuthorizationStatus.PROVISIONAL
-    ) {
+    if (await needsToAskForNotificationsPermissions()) {
       Alert({
         buttons: [
           {

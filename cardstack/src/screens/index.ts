@@ -46,3 +46,4 @@ export { default as MessageOverlayScreen } from './MessageOverlayScreen';
 export { default as WalletAddressScreen } from './WalletAddressScreen/WalletAddressScreen';
 export { default as WalletConnectSessions } from './WalletConnect/WalletConnectSessionsSection';
 export { default as DesignSystemScreen } from './Dev/DesignSystemScreen';
+export { default as NotificationsPermissionScreen } from './NotificationsPermissionScreen/NotificationsPermissionScreen';

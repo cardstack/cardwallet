@@ -1,8 +1,9 @@
 import { LayoutAnimation, StyleSheet } from 'react-native';
 
-export const sectionStyle = StyleSheet.create({
-  contentContainerStyle: { paddingBottom: 400 },
-  sectionList: { width: '100%' },
+export const listStyle = StyleSheet.create({
+  sheetHeightPaddingBottom: { paddingBottom: 400 },
+  paddingBottom: { paddingBottom: 30 },
+  fullWidth: { width: '100%' },
 });
 
 const SMALL = 5;
