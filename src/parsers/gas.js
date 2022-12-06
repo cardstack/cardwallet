@@ -5,6 +5,7 @@ import {
   getConstantByNetwork,
   multiply,
 } from '@cardstack/cardpay-sdk';
+import { utils } from 'ethers';
 import { get, map, zipObject } from 'lodash';
 import { getMinimalTimeUnitStringForMs } from '../helpers/time';
 import ethUnits from '../references/ethereum-units.json';
@@ -88,7 +89,7 @@ export const defaultGasPriceFormat = (option, timeWait, value) => {
     option,
     value: {
       amount: value,
-      display: `${parseInt(value, 10)} Gwei`,
+      display: `${utils.formatUnits(value, 'gwei')} Gwei`,
     },
   };
 };
