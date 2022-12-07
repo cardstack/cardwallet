@@ -203,7 +203,7 @@ export const checkPushPermissionAndRegisterToken = async () => {
           },
           {
             onPress: async () => {
-              resolve(true);
+              resolve(false);
             },
             style: 'cancel',
             text: 'Dismiss',

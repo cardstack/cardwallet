@@ -54,7 +54,13 @@ export const Checkbox = ({
     >
       <Container
         alignItems="center"
-        backgroundColor={disabled ? 'underlineGray' : 'buttonPrimaryBackground'}
+        backgroundColor={
+          disabled
+            ? 'underlineGray'
+            : selected
+            ? 'checkboxSelected'
+            : 'checkboxDeselected'
+        }
         borderColor={disabled ? 'transparent' : 'black'}
         borderRadius={5}
         borderWidth={1}

@@ -7,11 +7,13 @@ import { AppState } from '@rainbow-me/redux/store';
 type SliceType = {
   hasSkippedProfileCreation: boolean;
   hasSkippedBackup: boolean;
+  hasSkippedNotificationPermission: boolean;
 };
 
 const initialState: SliceType = {
   hasSkippedProfileCreation: false,
   hasSkippedBackup: false,
+  hasSkippedNotificationPermission: false,
 };
 
 const slice = createSlice({
@@ -24,6 +26,9 @@ const slice = createSlice({
     skipBackup(state, action: PayloadAction<boolean>) {
       state.hasSkippedBackup = action.payload;
     },
+    skipNotificationPermission(state, action: PayloadAction<boolean>) {
+      state.hasSkippedNotificationPermission = action.payload;
+    },
     clearFlags() {
       return initialState;
     },
@@ -32,7 +37,12 @@ const slice = createSlice({
 
 export const {
   name: persistedFlagsName,
-  actions: { skipProfileCreation, skipBackup, clearFlags },
+  actions: {
+    skipProfileCreation,
+    skipBackup,
+    skipNotificationPermission,
+    clearFlags,
+  },
 } = slice;
 
 export const usePersistedFlagsSelector = () => {
@@ -52,9 +62,14 @@ export const usePersistedFlagsActions = () => {
     dispatch(skipBackup(true));
   }, [dispatch]);
 
+  const triggerSkipNotificationPermission = useCallback(() => {
+    dispatch(skipNotificationPermission(true));
+  }, [dispatch]);
+
   return {
     triggerSkipProfileCreation,
     triggerSkipBackup,
+    triggerSkipNotificationPermission,
   };
 };
 

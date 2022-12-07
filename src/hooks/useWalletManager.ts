@@ -24,7 +24,6 @@ import {
 import useAccountSettings from './useAccountSettings';
 import useInitializeAccount from './useInitializeAccount';
 
-import { needsToAskForNotificationsPermissions } from '@cardstack/models/firebase';
 import { getPin, getSeedPhrase } from '@cardstack/models/secure-storage';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { appStateUpdate } from '@cardstack/redux/appState';
@@ -163,9 +162,6 @@ export default function useWalletManager() {
       logger.sentry('loaded account data');
 
       await fetchAccountAssets();
-
-      if (await needsToAskForNotificationsPermissions())
-        navigate(Routes.NOTIFICATIONS_PERMISSION);
 
       dispatch(appStateUpdate({ walletReady: true }));
     } catch (error) {

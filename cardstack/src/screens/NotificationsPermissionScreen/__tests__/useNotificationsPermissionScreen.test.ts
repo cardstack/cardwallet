@@ -1,15 +1,24 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
+import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
 import { Routes } from '@cardstack/navigation';
+import { NotificationsOptionsType } from '@cardstack/types';
 
 import { useNotificationsPermissionScreen } from '../useNotificationsPermissionScreen';
 
-const mockCheckPushPermission = jest.fn();
+const mockNavigate = jest.fn();
+const mockOnUpdateOptionStatus = jest.fn();
+
+const mockOption: NotificationsOptionsType = {
+  type: 'customer_payment',
+  description: 'New Payment Received',
+  status: 'enabled',
+};
+
 jest.mock('@cardstack/models/firebase', () => ({
-  checkPushPermissionAndRegisterToken: mockCheckPushPermission,
+  checkPushPermissionAndRegisterToken: jest.fn(),
 }));
 
-const mockNavigate = jest.fn();
 jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({
     navigate: mockNavigate,
@@ -22,18 +31,13 @@ jest.mock('@cardstack/navigation', () => ({
   },
 }));
 
-const mockOption = { type: 'test', status: 'enabled' };
-const mockOnUpdateOptionStatus = jest.fn();
-jest.mock(
-  '@cardstack/hooks/notifications-preferences/useUpdateNotificationPreferences',
-  () => ({
-    useUpdateNotificationPreferences: jest.fn(() => ({
-      options: [mockOption],
-      isError: false,
-      onUpdateOptionStatus: mockOnUpdateOptionStatus,
-    })),
-  })
-);
+jest.mock('@cardstack/hooks', () => ({
+  useUpdateNotificationPreferences: jest.fn(() => ({
+    options: [mockOption],
+    isError: false,
+    onUpdateOptionStatus: mockOnUpdateOptionStatus,
+  })),
+}));
 
 describe('useNotificationsPermissionScreen', () => {
   it('should start with correct options and isError values', () => {
@@ -47,17 +51,15 @@ describe('useNotificationsPermissionScreen', () => {
     const { result } = renderHook(() => useNotificationsPermissionScreen());
     act(() => result.current.onUpdateOptionStatus(mockOption.type, false));
 
-    expect(mockOnUpdateOptionStatus).toHaveBeenCalledWith(
-      mockOption.type,
-      false
-    );
+    expect(mockOnUpdateOptionStatus).toBeCalledWith(mockOption.type, false);
   });
 
-  it('should check push permission when handleEnableNotificationsOnPress is called and navigate to the wallet screen', () => {
+  it('should check push permission when handleEnableNotificationsOnPress is called and navigate to the wallet screen', async () => {
     const { result } = renderHook(() => useNotificationsPermissionScreen());
-    act(() => result.current.handleEnableNotificationsOnPress());
 
-    expect(mockCheckPushPermission).toHaveBeenCalled();
-    expect(mockNavigate).toHaveBeenCalledWith(Routes.WALLET_SCREEN);
+    await act(() => result.current.handleEnableNotificationsOnPress());
+
+    expect(checkPushPermissionAndRegisterToken).toBeCalled();
+    expect(mockNavigate).toBeCalledWith(Routes.WALLET_SCREEN);
   });
 });

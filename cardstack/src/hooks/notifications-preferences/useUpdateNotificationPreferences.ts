@@ -5,12 +5,6 @@ import {
   useSetNotificationsPreferencesMutation,
 } from '@cardstack/services/hub/notifications/hub-notifications-api';
 
-export enum NotificationsOptionsStrings {
-  'merchant_claim' = 'Merchant Claim',
-  'customer_payment' = 'New Payment Received',
-  'prepaid_card_drop' = 'Prepaid Card Drop',
-}
-
 export const useUpdateNotificationPreferences = () => {
   const { data: options = [], isError } = useGetNotificationsPreferencesQuery();
 
