@@ -10,10 +10,7 @@ import {
   DISCOVER_NEW_ASSETS_FREQUENCY,
   UPDATE_BALANCE_AND_PRICE_FREQUENCY,
 } from '@cardstack/constants';
-import {
-  mapTokenAddressToCoingeckoId,
-  reduceAssetsWithPriceChartAndBalances,
-} from '@cardstack/helpers/fallbackExplorerHelper';
+import { reduceAssetsWithPriceChartAndBalances } from '@cardstack/helpers/fallbackExplorerHelper';
 import { NetworkType } from '@cardstack/types';
 import coingeckoIdsFallback from '@rainbow-me/references/coingecko/ids.json';
 import logger from 'logger';
@@ -82,11 +79,6 @@ const findAssetsToWatch = async (address, latestTxBlockNumber, dispatch) => {
   coingeckoCoinsCache.current =
     coingeckoCoinsCache.current || (await fetchCoingeckoCoins());
 
-  const coingeckoIds = await mapTokenAddressToCoingeckoId(
-    network,
-    coingeckoCoinsCache.current
-  );
-
   const tokensInWallet = await discoverTokens(
     { address, latestTxBlockNumber, network },
     dispatch
@@ -96,32 +88,27 @@ const findAssetsToWatch = async (address, latestTxBlockNumber, dispatch) => {
     return [];
   }
 
-  const nativeTokenAddress = getConstantByNetwork(
-    'nativeTokenAddress',
-    network
-  );
   const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
-  const nativeTokenName = getConstantByNetwork('nativeTokenName', network);
-  const nativeTokenCoingeckoId = getConstantByNetwork(
-    'nativeTokenCoingeckoId',
-    network
+
+  const nativeTokenIsMissing = !tokensInWallet.some(
+    token => token.asset.symbol === nativeTokenSymbol
   );
 
-  const nativeToken = {
-    asset: {
-      asset_code: nativeTokenAddress,
-      coingecko_id: nativeTokenCoingeckoId,
-      decimals: 18,
-      name: nativeTokenName,
-      symbol: nativeTokenSymbol,
-    },
-  };
-  const tokensHaveNativeToken = Boolean(
-    tokensInWallet.find(token => token.asset.symbol === nativeTokenSymbol)
-  );
-  const nativeTokenArray = tokensHaveNativeToken ? [] : [nativeToken];
+  if (nativeTokenIsMissing) {
+    const nativeToken = {
+      asset: {
+        asset_code: getConstantByNetwork('nativeTokenAddress', network),
+        coingecko_id: getConstantByNetwork('nativeTokenCoingeckoId', network),
+        name: getConstantByNetwork('nativeTokenName', network),
+        symbol: nativeTokenSymbol,
+        decimals: 18,
+      },
+    };
 
-  return [...tokensInWallet, ...nativeTokenArray];
+    return [...tokensInWallet, nativeToken];
+  }
+
+  return tokensInWallet;
 };
 
 const getTokenType = tx => {
@@ -162,7 +149,6 @@ const discoverTokens = async (baseParams, dispatch) => {
     token => [token.contractAddress, token.tokenID].filter(Boolean).join('-')
   );
 
-  // return uniqBy(
   return uniqueTokensTxs.map(tx => ({
     asset: {
       asset_code: getCurrentAddress(tx.contractAddress.toLowerCase()),
