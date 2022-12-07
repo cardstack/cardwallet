@@ -23,9 +23,9 @@ const NotificationsPermissionScreen = () => {
   const {
     options,
     isError,
-    handleOnUpdateOption,
+    handleUpdateOption,
     handleEnableNotificationsOnPress,
-    handleSkipOnPress,
+    handleSkipPress,
   } = useNotificationsPermissionScreen();
 
   const renderItem = useCallback(
@@ -37,7 +37,7 @@ const NotificationsPermissionScreen = () => {
             isSelected={item.status === 'enabled'}
             checkboxPosition="left"
             verticalAlign="flex-start"
-            onPress={isEnabled => handleOnUpdateOption(item, isEnabled)}
+            onPress={isEnabled => handleUpdateOption(item, isEnabled)}
           >
             <Container width="100%">
               <Text color="white">{item.description}</Text>
@@ -53,7 +53,12 @@ const NotificationsPermissionScreen = () => {
         </Container>
       </>
     ),
-    [handleOnUpdateOption]
+    [handleUpdateOption]
+  );
+
+  const keyExtractor = useCallback(
+    (item: NotificationsOptionsType) => item.type,
+    []
   );
 
   const PageHeader = useMemo(
@@ -101,13 +106,8 @@ const NotificationsPermissionScreen = () => {
     []
   );
 
-  const keyExtractor = (item: NotificationsOptionsType) => item.type;
-
   return (
-    <PageWithStackHeader
-      canGoBack={false}
-      skipPressCallback={handleSkipOnPress}
-    >
+    <PageWithStackHeader canGoBack={false} skipPressCallback={handleSkipPress}>
       <FlatList
         style={listStyle.fullWidth}
         contentContainerStyle={listStyle.paddingBottom}

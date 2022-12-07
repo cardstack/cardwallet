@@ -193,10 +193,10 @@ export const checkPushPermissionAndRegisterToken = async () => {
               try {
                 await requestPermission();
                 await saveFCMToken();
+                resolve(true);
               } catch (error) {
                 logger.sentry('User rejected push notifications permissions');
-              } finally {
-                resolve(true);
+                resolve(false);
               }
             },
             text: 'Okay',

@@ -22,21 +22,21 @@ const CHECKBOX_SIZE = 22;
 export const Checkbox = ({
   label,
   onPress,
-  isDisabled,
   isSelected = false,
   checkboxPosition = 'right',
   verticalAlign = 'center',
   children,
 }: CheckboxProps) => {
   const [selected, setSelected] = useState(isSelected);
-  const [disabled] = useState(isDisabled);
 
   const handleCall = useCallback(() => {
+    const currentSelected = selected;
+
     if (onPress) {
-      onPress(!selected);
+      onPress(!currentSelected);
     }
 
-    setSelected(!selected);
+    setSelected(!currentSelected);
   }, [onPress, selected]);
 
   useEffect(() => {
@@ -50,31 +50,18 @@ export const Checkbox = ({
       flexDirection={flexDirection}
       alignItems={verticalAlign}
       onPress={handleCall}
-      disabled={disabled}
     >
       <Container
         alignItems="center"
-        backgroundColor={
-          disabled
-            ? 'underlineGray'
-            : selected
-            ? 'checkboxSelected'
-            : 'checkboxDeselected'
-        }
-        borderColor={disabled ? 'transparent' : 'black'}
+        backgroundColor={selected ? 'checkboxSelected' : 'checkboxDeselected'}
+        borderColor="black"
         borderRadius={5}
         borderWidth={1}
         height={CHECKBOX_SIZE}
         justifyContent="center"
         width={CHECKBOX_SIZE}
       >
-        {selected && (
-          <Icon
-            color={disabled ? 'settingsGrayDark' : 'black'}
-            iconSize="small"
-            name="check"
-          />
-        )}
+        {selected && <Icon color="black" iconSize="small" name="check" />}
       </Container>
       <Container padding={2} />
       {label && <Text>{label}</Text>}

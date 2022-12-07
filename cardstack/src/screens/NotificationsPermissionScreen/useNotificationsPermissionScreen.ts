@@ -17,7 +17,7 @@ export const useNotificationsPermissionScreen = () => {
     onUpdateOptionStatus,
   } = useUpdateNotificationPreferences();
 
-  const handleOnUpdateOption = useCallback(
+  const handleUpdateOption = useCallback(
     async (option: NotificationsOptionsType, isEnabled: boolean) =>
       onUpdateOptionStatus(option.type, isEnabled),
     [onUpdateOptionStatus]
@@ -33,7 +33,7 @@ export const useNotificationsPermissionScreen = () => {
     navigateToNextOnboardingStep(Routes.BACKUP_EXPLANATION);
   }, [triggerSkipNotificationPermission, navigateToNextOnboardingStep]);
 
-  const handleSkipOnPress = useCallback(() => {
+  const handleSkipPress = useCallback(() => {
     triggerSkipNotificationPermission();
     navigateToNextOnboardingStep();
   }, [triggerSkipNotificationPermission, navigateToNextOnboardingStep]);
@@ -42,8 +42,8 @@ export const useNotificationsPermissionScreen = () => {
     options,
     isError,
     onUpdateOptionStatus,
-    handleOnUpdateOption,
+    handleUpdateOption,
     handleEnableNotificationsOnPress,
-    handleSkipOnPress,
+    handleSkipPress,
   };
 };

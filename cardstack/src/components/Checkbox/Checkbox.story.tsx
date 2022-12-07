@@ -21,7 +21,6 @@ storiesOf('Checkbox', module)
       <Checkbox
         label="Disabled"
         isSelected
-        isDisabled
         onPress={() => Alert.alert('pressed')}
       />
     </Container>
