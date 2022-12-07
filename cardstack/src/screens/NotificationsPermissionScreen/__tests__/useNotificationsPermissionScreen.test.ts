@@ -6,7 +6,7 @@ import { NotificationsOptionsType } from '@cardstack/types';
 
 import { useNotificationsPermissionScreen } from '../useNotificationsPermissionScreen';
 
-const mockNavigate = jest.fn();
+const mockNavigateToNextOnboardingStep = jest.fn();
 const mockOnUpdateOptionStatus = jest.fn();
 
 const mockOption: NotificationsOptionsType = {
@@ -15,19 +15,25 @@ const mockOption: NotificationsOptionsType = {
   status: 'enabled',
 };
 
+jest.mock('@cardstack/hooks/onboarding/useShowOnboarding', () => ({
+  useShowOnboarding: () => ({
+    navigateToNextOnboardingStep: mockNavigateToNextOnboardingStep,
+  }),
+}));
+
+jest.mock('@cardstack/redux/persistedFlagsSlice', () => ({
+  usePersistedFlagsActions: () => ({
+    triggerSkipNotificationPermission: jest.fn(),
+  }),
+}));
+
 jest.mock('@cardstack/models/firebase', () => ({
   checkPushPermissionAndRegisterToken: jest.fn(),
 }));
 
-jest.mock('@react-navigation/native', () => ({
-  useNavigation: () => ({
-    navigate: mockNavigate,
-  }),
-}));
-
 jest.mock('@cardstack/navigation', () => ({
   Routes: {
-    WALLET_SCREEN: 'WalletScreen',
+    BACKUP_EXPLANATION: 'BackupExplanation',
   },
 }));
 
@@ -55,11 +61,17 @@ describe('useNotificationsPermissionScreen', () => {
   });
 
   it('should check push permission when handleEnableNotificationsOnPress is called and navigate to the wallet screen', async () => {
-    const { result } = renderHook(() => useNotificationsPermissionScreen());
+    const { result, waitFor } = renderHook(() =>
+      useNotificationsPermissionScreen()
+    );
 
-    await act(() => result.current.handleEnableNotificationsOnPress());
+    act(() => result.current.handleEnableNotificationsOnPress());
 
     expect(checkPushPermissionAndRegisterToken).toBeCalled();
-    expect(mockNavigate).toBeCalledWith(Routes.WALLET_SCREEN);
+    await waitFor(() =>
+      expect(mockNavigateToNextOnboardingStep).toBeCalledWith(
+        Routes.BACKUP_EXPLANATION
+      )
+    );
   });
 });

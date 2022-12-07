@@ -43,7 +43,6 @@ export const useShowOnboarding = () => {
           return;
         }
 
-        console.log('::: should navigate to step:', step);
         navigate(step);
 
         return;
@@ -51,29 +50,19 @@ export const useShowOnboarding = () => {
 
       const askForNotificationsPermissions = await needsToAskForNotificationsPermissions();
 
-      console.log('::: ', {
-        askForNotificationsPermissions,
-        hasSkippedNotificationPermission,
-        shouldShowBackupFlow,
-        shouldShowProfileCreationFlow,
-      });
-
       if (askForNotificationsPermissions && !hasSkippedNotificationPermission) {
-        console.log('::: should navigate to', Routes.NOTIFICATIONS_PERMISSION);
         navigate(Routes.NOTIFICATIONS_PERMISSION);
 
         return;
       }
 
       if (shouldShowBackupFlow) {
-        console.log('::: should navigate to', Routes.BACKUP_EXPLANATION);
         navigate(Routes.BACKUP_EXPLANATION);
 
         return;
       }
 
       if (shouldShowProfileCreationFlow) {
-        console.log('::: should navigate to', Routes.PROFILE_SLUG);
         navigate(Routes.PROFILE_SLUG);
 
         return;

@@ -85,7 +85,7 @@ describe('useShowOnboarding', () => {
     jest.clearAllMocks();
   });
 
-  it('should navigate to notification permission flow when still not granted and has not skipped', () => {
+  it('should navigate to notification permission flow when still not granted and has not skipped', async () => {
     mockNeedsToAskForNotificationsPermissions(true);
 
     const { result, waitFor } = renderHook(useShowOnboarding);
@@ -94,12 +94,12 @@ describe('useShowOnboarding', () => {
       result.current.navigateToNextOnboardingStep();
     });
 
-    waitFor(() =>
+    await waitFor(() =>
       expect(mockedNavigate).toBeCalledWith(Routes.NOTIFICATIONS_PERMISSION)
     );
   });
 
-  it('should NOT navigate to notification permission when user has skipped', () => {
+  it('should NOT navigate to notification permission when user has skipped', async () => {
     mockNeedsToAskForNotificationsPermissions(true);
     mockUsePersistedFlagsSelector({
       hasSkippedNotificationPermission: true,
@@ -111,12 +111,12 @@ describe('useShowOnboarding', () => {
       result.current.navigateToNextOnboardingStep();
     });
 
-    waitFor(() =>
+    await waitFor(() =>
       expect(mockedNavigate).not.toBeCalledWith(Routes.NOTIFICATIONS_PERMISSION)
     );
   });
 
-  it('should NOT navigate to notification permission when permissions already fullfilled', () => {
+  it('should NOT navigate to notification permission when permissions already fullfilled', async () => {
     mockNeedsToAskForNotificationsPermissions(false);
 
     const { result, waitFor } = renderHook(useShowOnboarding);
@@ -125,12 +125,12 @@ describe('useShowOnboarding', () => {
       result.current.navigateToNextOnboardingStep();
     });
 
-    waitFor(() =>
+    await waitFor(() =>
       expect(mockedNavigate).not.toBeCalledWith(Routes.NOTIFICATIONS_PERMISSION)
     );
   });
 
-  it('should NOT navigate to profile flow when profile hasnt been fetched', () => {
+  it('should NOT navigate to profile flow when profile hasnt been fetched', async () => {
     mockPrimarySafeHelper({ hasProfile: false, isLoadingOnInit: true });
 
     const { result, waitFor } = renderHook(useShowOnboarding);
@@ -139,10 +139,10 @@ describe('useShowOnboarding', () => {
       result.current.navigateToNextOnboardingStep();
     });
 
-    waitFor(() => expect(mockedNavigate).not.toBeCalled());
+    await waitFor(() => expect(mockedNavigate).not.toBeCalled());
   });
 
-  it('should navigate to profile flow when safes are loaded and no profile was found', () => {
+  it('should navigate to profile flow when safes are loaded and no profile was found', async () => {
     mockPrimarySafeHelper({
       hasProfile: false,
       isLoadingOnInit: false,
@@ -158,10 +158,12 @@ describe('useShowOnboarding', () => {
       result.current.navigateToNextOnboardingStep();
     });
 
-    waitFor(() => expect(mockedNavigate).toBeCalledWith(Routes.PROFILE_SLUG));
+    await waitFor(() =>
+      expect(mockedNavigate).toBeCalledWith(Routes.PROFILE_SLUG)
+    );
   });
 
-  it('should NOT navigate to profile flow when safes are loading', () => {
+  it('should NOT navigate to profile flow when safes are loading', async () => {
     mockPrimarySafeHelper({
       hasProfile: false,
       isLoadingOnInit: true,
@@ -173,10 +175,10 @@ describe('useShowOnboarding', () => {
       result.current.navigateToNextOnboardingStep();
     });
 
-    waitFor(() => expect(mockedNavigate).not.toBeCalled());
+    await waitFor(() => expect(mockedNavigate).not.toBeCalled());
   });
 
-  it('should NOT navigate to profile flow when profile has been fetched and it exists', () => {
+  it('should NOT navigate to profile flow when profile has been fetched and it exists', async () => {
     mockPrimarySafeHelper({
       hasProfile: true,
       isLoadingOnInit: false,
@@ -188,10 +190,10 @@ describe('useShowOnboarding', () => {
       result.current.navigateToNextOnboardingStep();
     });
 
-    waitFor(() => expect(mockedNavigate).not.toBeCalled());
+    await waitFor(() => expect(mockedNavigate).not.toBeCalled());
   });
 
-  it('should NOT navigate to profile flow if no wallet', () => {
+  it('should NOT navigate to profile flow if no wallet', async () => {
     (useAuthSelector as jest.Mock).mockReturnValueOnce({
       hasWallet: false,
     });
@@ -207,10 +209,10 @@ describe('useShowOnboarding', () => {
       result.current.navigateToNextOnboardingStep();
     });
 
-    waitFor(() => expect(mockedNavigate).not.toBeCalled());
+    await waitFor(() => expect(mockedNavigate).not.toBeCalled());
   });
 
-  it('should NOT navigate to profile creation flow if "Skip" was pressed', () => {
+  it('should NOT navigate to profile creation flow if "Skip" was pressed', async () => {
     mockUsePersistedFlagsSelector({
       hasSkippedProfileCreation: true,
     });
@@ -221,10 +223,10 @@ describe('useShowOnboarding', () => {
       result.current.navigateToNextOnboardingStep();
     });
 
-    waitFor(() => expect(mockedNavigate).not.toBeCalled());
+    await waitFor(() => expect(mockedNavigate).not.toBeCalled());
   });
 
-  it('should navigate to backup flow if not backedup', () => {
+  it('should navigate to backup flow if not backedup', async () => {
     mockUseWallets({ selectedWallet: { manuallyBackedUp: false } });
 
     mockPrimarySafeHelper({
@@ -238,12 +240,12 @@ describe('useShowOnboarding', () => {
       result.current.navigateToNextOnboardingStep();
     });
 
-    waitFor(() =>
+    await waitFor(() =>
       expect(mockedNavigate).toBeCalledWith(Routes.BACKUP_EXPLANATION)
     );
   });
 
-  it('should not navigate to backup flow if user already skipped backup', () => {
+  it('should not navigate to backup flow if user already skipped backup', async () => {
     mockUseWallets({ selectedWallet: { manuallyBackedUp: false } });
     mockUsePersistedFlagsSelector({
       hasSkippedBackup: true,
@@ -255,7 +257,7 @@ describe('useShowOnboarding', () => {
       result.current.navigateToNextOnboardingStep();
     });
 
-    waitFor(() =>
+    await waitFor(() =>
       expect(mockedNavigate).not.toBeCalledWith(Routes.BACKUP_EXPLANATION)
     );
   });
