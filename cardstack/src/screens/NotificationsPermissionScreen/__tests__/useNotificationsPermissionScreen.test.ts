@@ -68,6 +68,7 @@ describe('useNotificationsPermissionScreen', () => {
     act(() => result.current.handleEnableNotificationsOnPress());
 
     expect(checkPushPermissionAndRegisterToken).toBeCalled();
+
     await waitFor(() =>
       expect(mockNavigateToNextOnboardingStep).toBeCalledWith(
         Routes.BACKUP_EXPLANATION
