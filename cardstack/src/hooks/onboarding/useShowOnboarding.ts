@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { useMemo, useCallback } from 'react';
 
-import { needsToAskForNotificationsPermissions } from '@cardstack/models/firebase';
+import { needsNotificationPermission } from '@cardstack/models/firebase';
 import { Routes } from '@cardstack/navigation/routes';
 import { useAuthSelector } from '@cardstack/redux/authSlice';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
@@ -35,48 +35,53 @@ export const useShowOnboarding = () => {
     return hasWallet && noProfile && !hasSkippedProfileCreation;
   }, [hasProfile, hasSkippedProfileCreation, hasWallet, isLoadingSafes]);
 
-  const navigateToNextOnboardingStep = useCallback(
-    async (step?: string) => {
-      if (step) {
-        // Avoid showing profile flow when not wanted.
-        if (step === Routes.PROFILE_SLUG && !shouldShowProfileCreationFlow) {
-          return;
-        }
+  // Will check next possible onboarding step to navigate and call `navigateOnboardingTo`.
+  // Calling this right after updating a store value will not have the dependencies updated,
+  // so in some cases is necessary to call `navigateOnboardingTo` directly.
+  const getNextOnboardingStep = useCallback(async () => {
+    const askForNotificationsPermissions = await needsNotificationPermission();
 
-        navigate(step);
+    if (askForNotificationsPermissions && !hasSkippedNotificationPermission) {
+      return Routes.NOTIFICATIONS_PERMISSION;
+    }
 
+    if (shouldShowBackupFlow) {
+      return Routes.BACKUP_EXPLANATION;
+    }
+
+    if (shouldShowProfileCreationFlow) {
+      return Routes.PROFILE_SLUG;
+    }
+  }, [
+    shouldShowBackupFlow,
+    shouldShowProfileCreationFlow,
+    hasSkippedNotificationPermission,
+  ]);
+
+  // Will navigate imperactively to provided route.
+  const navigateOnboardingTo = useCallback(
+    (route: string) => {
+      // Avoid showing profile flow when not wanted.
+      if (route === Routes.PROFILE_SLUG && !shouldShowProfileCreationFlow) {
         return;
       }
 
-      const askForNotificationsPermissions = await needsToAskForNotificationsPermissions();
-
-      if (askForNotificationsPermissions && !hasSkippedNotificationPermission) {
-        navigate(Routes.NOTIFICATIONS_PERMISSION);
-
-        return;
-      }
-
-      if (shouldShowBackupFlow) {
-        navigate(Routes.BACKUP_EXPLANATION);
-
-        return;
-      }
-
-      if (shouldShowProfileCreationFlow) {
-        navigate(Routes.PROFILE_SLUG);
-
-        return;
-      }
+      navigate(route);
     },
-    [
-      navigate,
-      shouldShowBackupFlow,
-      shouldShowProfileCreationFlow,
-      hasSkippedNotificationPermission,
-    ]
+    [navigate, shouldShowProfileCreationFlow]
   );
 
+  // Gets next onboarding step and tries to navigate.
+  const navigateToNextOnboardingStep = useCallback(async () => {
+    const nextStep = await getNextOnboardingStep();
+
+    if (nextStep) {
+      navigateOnboardingTo(nextStep);
+    }
+  }, [getNextOnboardingStep, navigateOnboardingTo]);
+
   return {
+    navigateOnboardingTo,
     navigateToNextOnboardingStep,
     shouldShowBackupFlow,
     shouldShowProfileCreationFlow,

@@ -8,7 +8,11 @@ import { usePersistedFlagsActions } from '@cardstack/redux/persistedFlagsSlice';
 import { NotificationsOptionsType } from '@cardstack/types';
 
 export const useNotificationsPermissionScreen = () => {
-  const { navigateToNextOnboardingStep } = useShowOnboarding();
+  const {
+    navigateOnboardingTo,
+    navigateToNextOnboardingStep,
+  } = useShowOnboarding();
+
   const { triggerSkipNotificationPermission } = usePersistedFlagsActions();
 
   const {
@@ -30,8 +34,8 @@ export const useNotificationsPermissionScreen = () => {
       triggerSkipNotificationPermission();
     }
 
-    navigateToNextOnboardingStep(Routes.BACKUP_EXPLANATION);
-  }, [triggerSkipNotificationPermission, navigateToNextOnboardingStep]);
+    navigateOnboardingTo(Routes.BACKUP_EXPLANATION);
+  }, [triggerSkipNotificationPermission, navigateOnboardingTo]);
 
   const handleSkipPress = useCallback(() => {
     triggerSkipNotificationPermission();

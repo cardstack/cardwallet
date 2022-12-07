@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react-hooks';
 
 import { useShowOnboarding } from '@cardstack/hooks/onboarding/useShowOnboarding';
-import { needsToAskForNotificationsPermissions } from '@cardstack/models/firebase';
+import { needsNotificationPermission } from '@cardstack/models/firebase';
 import { Routes } from '@cardstack/navigation/routes';
 import { useAuthSelector } from '@cardstack/redux/authSlice';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
@@ -35,7 +35,7 @@ jest.mock('@cardstack/redux/persistedFlagsSlice', () => ({
 }));
 
 jest.mock('@cardstack/models/firebase', () => ({
-  needsToAskForNotificationsPermissions: jest.fn(),
+  needsNotificationPermission: jest.fn(),
 }));
 
 describe('useShowOnboarding', () => {
@@ -58,10 +58,8 @@ describe('useShowOnboarding', () => {
       ...overwriteParams,
     }));
 
-  const mockNeedsToAskForNotificationsPermissions = (needsAsk = false) =>
-    (needsToAskForNotificationsPermissions as jest.Mock).mockResolvedValue(
-      needsAsk
-    );
+  const mockNeedsNotificationPermission = (needsAsk = false) =>
+    (needsNotificationPermission as jest.Mock).mockResolvedValue(needsAsk);
 
   const mockUsePersistedFlagsSelector = (
     overwriteParams: Partial<ReturnType<typeof usePersistedFlagsSelector>> = {}
@@ -76,7 +74,7 @@ describe('useShowOnboarding', () => {
 
   beforeEach(() => {
     mockUseWallets();
-    mockNeedsToAskForNotificationsPermissions();
+    mockNeedsNotificationPermission();
     mockUsePersistedFlagsSelector();
     mockPrimarySafeHelper();
   });
@@ -86,7 +84,7 @@ describe('useShowOnboarding', () => {
   });
 
   it('should navigate to notification permission flow when still not granted and has not skipped', async () => {
-    mockNeedsToAskForNotificationsPermissions(true);
+    mockNeedsNotificationPermission(true);
 
     const { result, waitFor } = renderHook(useShowOnboarding);
 
@@ -100,7 +98,7 @@ describe('useShowOnboarding', () => {
   });
 
   it('should NOT navigate to notification permission when user has skipped', async () => {
-    mockNeedsToAskForNotificationsPermissions(true);
+    mockNeedsNotificationPermission(true);
     mockUsePersistedFlagsSelector({
       hasSkippedNotificationPermission: true,
     });
@@ -117,7 +115,7 @@ describe('useShowOnboarding', () => {
   });
 
   it('should NOT navigate to notification permission when permissions already fullfilled', async () => {
-    mockNeedsToAskForNotificationsPermissions(false);
+    mockNeedsNotificationPermission(false);
 
     const { result, waitFor } = renderHook(useShowOnboarding);
 

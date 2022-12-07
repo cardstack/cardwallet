@@ -26,7 +26,10 @@ export const useBackupSeedPhraseConfirmationScreen = () => {
 
   const { confirmBackup } = useWalletManualBackup();
 
-  const { navigateToNextOnboardingStep } = useShowOnboarding();
+  const {
+    navigateOnboardingTo,
+    navigateToNextOnboardingStep,
+  } = useShowOnboarding();
 
   const selectedWordsIndexes = useRef<number[]>([]).current;
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
@@ -79,8 +82,8 @@ export const useBackupSeedPhraseConfirmationScreen = () => {
 
   const handleBackupToCloudPress = useCallback(() => {
     confirmBackup();
-    navigateToNextOnboardingStep(Routes.BACKUP_CLOUD_PASSWORD);
-  }, [navigateToNextOnboardingStep, confirmBackup]);
+    navigateOnboardingTo(Routes.BACKUP_CLOUD_PASSWORD);
+  }, [navigateOnboardingTo, confirmBackup]);
 
   return {
     handleWordPressed,
