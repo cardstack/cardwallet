@@ -25,7 +25,7 @@ type FCMTokenStorageType = {
 const getPermissionStatus = (): Promise<FirebaseMessagingTypes.AuthorizationStatus> =>
   messaging().hasPermission();
 
-export const needsToAskForNotificationsPermissions = async (): Promise<
+export const needsNotificationPermission = async (): Promise<
   boolean | undefined
 > => {
   try {
@@ -185,7 +185,7 @@ export const requestPermission = () =>
 
 export const checkPushPermissionAndRegisterToken = async () => {
   return new Promise(async resolve => {
-    if (await needsToAskForNotificationsPermissions()) {
+    if (await needsNotificationPermission()) {
       Alert({
         buttons: [
           {
