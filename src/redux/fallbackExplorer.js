@@ -88,10 +88,7 @@ const findAssetsToWatch = async (address, latestTxBlockNumber, dispatch) => {
   );
 
   const tokensInWallet = await discoverTokens(
-    coingeckoIds,
-    address,
-    latestTxBlockNumber,
-    network,
+    { address, latestTxBlockNumber, network },
     dispatch
   );
 
@@ -109,6 +106,7 @@ const findAssetsToWatch = async (address, latestTxBlockNumber, dispatch) => {
     'nativeTokenCoingeckoId',
     network
   );
+
   const nativeToken = {
     asset: {
       asset_code: nativeTokenAddress,
@@ -137,94 +135,77 @@ const getTokenType = tx => {
   return undefined;
 };
 
-const discoverTokens = async (
-  coingeckoIds,
-  address,
-  latestTxBlockNumber,
-  network,
-  dispatch
-) => {
-  let page = 1;
-  const offset = 1000;
-  let allTxs = [];
-  let poll = true;
-  while (poll) {
-    const txs = await getTokenTxData(
-      address,
-      page,
-      offset,
-      latestTxBlockNumber,
-      network
-    );
-    if (txs && txs.length > 0) {
-      allTxs = allTxs.concat(txs);
-      if (txs.length < offset) {
-        // Last page
-        poll = false;
-      } else {
-        // Keep polling
-        page++;
-        await delay(260);
-      }
-    } else {
-      // No txs
-      poll = false;
-    }
-  }
+/**
+ *  Based on all tx information it maps
+ *  all tokens an account has interacted with
+ */
+const discoverTokens = async (baseParams, dispatch) => {
+  const allTxs = await getTxsTokenData(baseParams);
 
-  // Filter txs by contract address
-  if (allTxs.length > 0) {
-    const nextlatestTxBlockNumber = Number(allTxs[0].blockNumber) + 1;
-    dispatch({
-      payload: {
-        latestTxBlockNumber: nextlatestTxBlockNumber,
-      },
-      type: FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER,
-    });
+  if (!allTxs.length) return [];
 
-    return uniqBy(
-      allTxs.map(tx => {
-        const type = getTokenType(tx);
-        const coingeckoId = coingeckoIds[tx.contractAddress.toLowerCase()];
+  const nextlatestTxBlockNumber = Number(allTxs[0].blockNumber) + 1;
 
-        return {
-          asset: {
-            asset_code: getCurrentAddress(tx.contractAddress.toLowerCase()),
-            token_id: tx.tokenID,
-            coingecko_id: coingeckoId || null,
-            decimals: Number(tx.tokenDecimal),
-            name: tx.tokenName,
-            symbol: tx.tokenSymbol,
-            type,
-          },
-        };
-      }),
-      token =>
-        [token.asset.asset_code, token.asset.token_id].filter(Boolean).join('-') // unique key takes token_id into account so that we retain all instances of NFTs
-    );
-  }
-  return [];
+  dispatch({
+    payload: {
+      latestTxBlockNumber: nextlatestTxBlockNumber,
+    },
+    type: FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER,
+  });
+
+  // It can exist multiple txs with the same token, so we filter to get unique assets
+  const uniqueTokensTxs = uniqBy(
+    allTxs,
+    // unique key takes tokenID into account so that we retain all instances of NFTs
+    // since NFTS can have the same contractAddress but a diff tokenID
+    // while tokens don't have this field it enough to filter by contract address
+    token => [token.contractAddress, token.tokenID].filter(Boolean).join('-')
+  );
+
+  // return uniqBy(
+  return uniqueTokensTxs.map(tx => ({
+    asset: {
+      asset_code: getCurrentAddress(tx.contractAddress.toLowerCase()),
+      token_id: tx.tokenID,
+      decimals: Number(tx.tokenDecimal),
+      name: tx.tokenName,
+      symbol: tx.tokenSymbol,
+      type: getTokenType(tx),
+    },
+  }));
 };
 
-const getTokenTxData = async (
-  address,
-  page,
-  offset,
-  latestTxBlockNumber,
-  network
-) => {
-  const baseUrl = getConstantByNetwork('apiBaseUrl', network);
-  let url = `${baseUrl}?module=account&action=tokentx&address=${address}&page=${page}&offset=${offset}&sort=desc`;
-  if (latestTxBlockNumber) {
-    url += `&startBlock=${latestTxBlockNumber}`;
-  }
-  const request = await fetch(url);
-  const { status, result } = await request.json();
+/**
+ * Fetches all tokens transactions information
+ * It's recursive so it fetches all available pages
+ */
+const getTxsTokenData = async (params, page = 1, previousTx = []) => {
+  const { address, latestTxBlockNumber, network } = params;
 
-  if (status === '1' && result?.length > 0) {
-    return result;
+  const offset = 1000;
+
+  const baseUrl = getConstantByNetwork('apiBaseUrl', network);
+
+  const url = `${baseUrl}?module=account&action=tokentx&address=${address}&page=${page}&offset=${offset}&sort=desc`;
+
+  const request = await fetch(
+    `${url}${latestTxBlockNumber ? `&startBlock=${latestTxBlockNumber}` : ''}`
+  );
+
+  const { status, result: newTxs, message } = await request.json();
+
+  const allTxs = [...previousTx, ...newTxs];
+
+  if (status === '1' && newTxs.length === offset) {
+    if (message.contains('rate limit')) {
+      await delay(5000);
+    }
+
+    page++;
+    return getTxsTokenData(params, page, allTxs);
   }
-  return null;
+
+  return allTxs;
 };
 
 const fetchAssetPrices = async (coingeckoIds, nativeCurrency) => {
@@ -267,7 +248,9 @@ const fetchAssetCharts = async (coingeckoIds, nativeCurrency) => {
     logger.log(`Error trying to fetch ${coingeckoIds} charts`, e);
   }
 };
+
 const skipPoller = true;
+
 export const fetchAssetsBalancesAndPrices = async () => {
   logger.log('😬 FallbackExplorer fetchAssetsBalancesAndPrices');
 
