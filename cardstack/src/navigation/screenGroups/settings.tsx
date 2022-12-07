@@ -64,7 +64,7 @@ export const SettingsGroup = ({ Stack }: { Stack: StackType }) => {
     <Stack.Group
       screenOptions={{
         ...slideLeftToRightPreset,
-        detachPreviousScreen: false,
+        detachPreviousScreen: true,
         gestureDirection: 'horizontal',
         headerStyle: {
           backgroundColor: palette.blueDark,
