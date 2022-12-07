@@ -6,7 +6,7 @@ import { NotificationsOptionsType } from '@cardstack/types';
 
 import { useNotificationsPermissionScreen } from '../useNotificationsPermissionScreen';
 
-const mockNavigateToNextOnboardingStep = jest.fn();
+const mockNavigateOnboardingTo = jest.fn();
 const mockOnUpdateOptionStatus = jest.fn();
 
 const mockOption: NotificationsOptionsType = {
@@ -17,7 +17,7 @@ const mockOption: NotificationsOptionsType = {
 
 jest.mock('@cardstack/hooks/onboarding/useShowOnboarding', () => ({
   useShowOnboarding: () => ({
-    navigateToNextOnboardingStep: mockNavigateToNextOnboardingStep,
+    navigateOnboardingTo: mockNavigateOnboardingTo,
   }),
 }));
 
@@ -70,9 +70,7 @@ describe('useNotificationsPermissionScreen', () => {
     expect(checkPushPermissionAndRegisterToken).toBeCalled();
 
     await waitFor(() =>
-      expect(mockNavigateToNextOnboardingStep).toBeCalledWith(
-        Routes.BACKUP_EXPLANATION
-      )
+      expect(mockNavigateOnboardingTo).toBeCalledWith(Routes.BACKUP_EXPLANATION)
     );
   });
 });
