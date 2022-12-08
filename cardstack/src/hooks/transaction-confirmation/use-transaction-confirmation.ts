@@ -11,7 +11,6 @@ import { isMessageDisplayType } from '@rainbow-me/utils/signingMethods';
 
 import { TransactionConfirmationContext } from '../../transaction-confirmation-strategies/context';
 
-import { useCalculateGas } from './use-calculate-gas';
 import { useTransactionActions } from './use-confirm-transaction';
 import { useMethodName } from './use-method-name';
 import { useRouteParams } from './use-route-params';
@@ -31,8 +30,6 @@ export const useTransactionConfirmation = () => {
   } = useRouteParams();
 
   const isMessageRequest = isMessageDisplayType(payload.method);
-
-  useCalculateGas(isMessageRequest, payload.params);
 
   const { onConfirm, isAuthorizing, onCancel } = useTransactionActions(
     isMessageRequest
