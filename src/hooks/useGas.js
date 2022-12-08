@@ -1,6 +1,7 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 
-import { useCallback } from 'react';
+import { isEqual } from 'lodash';
+import { useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   gasUpdateCustomValues,
@@ -11,9 +12,10 @@ import {
 } from '../redux/gas';
 
 import useAccountSettings from './useAccountSettings';
+import { usePrevious } from '.';
 import { useGetGasPricesQuery } from '@cardstack/services';
 
-const GAS_PRICE_POLLING_INTERVAL = 15000; // 15s
+const GAS_PRICE_POLLING_INTERVAL = 10000; // 10s
 
 export default function useGas() {
   const dispatch = useDispatch();
@@ -39,6 +41,9 @@ export default function useGas() {
     })
   );
 
+  const hasTriggeredPollingOnce = useRef(false);
+  const [shouldUpdateTxFee, setShouldUpdateTxFee] = useState(false);
+
   const { data: gasPricesData } = useGetGasPricesQuery(
     {
       chainId: getConstantByNetwork('chainId', network),
@@ -48,10 +53,23 @@ export default function useGas() {
     }
   );
 
-  const startPollingGasPrices = useCallback(
-    () => dispatch(saveGasPrices(gasPricesData)),
-    [dispatch, gasPricesData]
-  );
+  const previousGas = usePrevious(gasPricesData);
+
+  const startPollingGasPrices = useCallback(async () => {
+    hasTriggeredPollingOnce.current = true;
+
+    await dispatch(saveGasPrices(gasPricesData));
+    setShouldUpdateTxFee(true);
+  }, [dispatch, gasPricesData]);
+
+  useEffect(() => {
+    if (
+      !isEqual(previousGas, gasPricesData) &&
+      hasTriggeredPollingOnce.current
+    ) {
+      startPollingGasPrices();
+    }
+  }, [gasPricesData, previousGas, shouldUpdateTxFee, startPollingGasPrices]);
 
   const updateDefaultGasLimit = useCallback(
     data => dispatch(gasUpdateDefaultGasLimit(data)),
@@ -64,8 +82,10 @@ export default function useGas() {
   );
 
   const updateTxFee = useCallback(
-    (data, overrideGasOption) =>
-      dispatch(gasUpdateTxFee(data, overrideGasOption)),
+    (data, overrideGasOption) => {
+      setShouldUpdateTxFee(false);
+      return dispatch(gasUpdateTxFee(data, overrideGasOption));
+    },
     [dispatch]
   );
   const updateCustomValues = useCallback(
@@ -79,6 +99,7 @@ export default function useGas() {
     updateDefaultGasLimit,
     updateGasPriceOption,
     updateTxFee,
+    shouldUpdateTxFee,
     ...gasData,
   };
 }

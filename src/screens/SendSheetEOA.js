@@ -56,6 +56,7 @@ const useSendSheetScreen = () => {
     updateDefaultGasLimit,
     updateGasPriceOption,
     updateTxFee,
+    shouldUpdateTxFee,
   } = useGas();
 
   const recipientFieldRef = useRef();
@@ -419,6 +420,7 @@ const useSendSheetScreen = () => {
     network,
     recipient,
     selected,
+    shouldUpdateTxFee, // Flag to rerender screen with new gasEstimations
     updateTxFee,
   ]);
 
