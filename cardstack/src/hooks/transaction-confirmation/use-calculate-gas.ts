@@ -11,7 +11,7 @@ export const useCalculateGas = (
   isMessageRequest: boolean,
   rawPayloadParams: any
 ) => {
-  const { gasLimit, gasPrices, updateTxFee } = useGas();
+  const { gasLimit, gasPrices, updateTxFee, shouldUpdateTxFee } = useGas();
 
   const calculatingGasLimit = useRef(false);
 
@@ -57,6 +57,7 @@ export const useCalculateGas = (
     gasPrices,
     isMessageRequest,
     rawPayloadParams,
+    shouldUpdateTxFee,
     updateTxFee,
   ]);
 };
