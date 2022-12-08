@@ -40,7 +40,8 @@ export const getNetwork = async () => {
 
   const network = await getGlobal(NETWORK, defaultNetwork);
 
-  if (isSupportedChain(network)) {
+  // TODO: Remove this filter once Polygon gas estimation is ready.
+  if (isSupportedChain(network) && network !== NetworkType.polygon) {
     return network;
   }
 

@@ -48,6 +48,8 @@ export const useNetworkSection = () => {
   // transform data for sectionList
   const sectionListItems: RadioItemProps[] = useMemo(() => {
     const data = supportedChainsArray
+      // TODO: Remove this filter once Polygon gas estimation is ready.
+      .filter(network => (network as NetworkType) !== NetworkType.polygon)
       .map((network, index) => ({
         key: index,
         index: index,
