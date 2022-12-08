@@ -1,4 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
+import { RouteNames } from 'globals';
 import { useMemo, useCallback } from 'react';
 
 import { needsNotificationPermission } from '@cardstack/models/firebase';
@@ -35,7 +36,7 @@ export const useShowOnboarding = () => {
     return hasWallet && noProfile && !hasSkippedProfileCreation;
   }, [hasProfile, hasSkippedProfileCreation, hasWallet, isLoadingSafes]);
 
-  // Will check next possible onboarding step to navigate and call `navigateOnboardingTo`.
+  // Will check next possible onboarding step.
   // Calling this right after updating a store value will not have the dependencies updated,
   // so in some cases is necessary to call `navigateOnboardingTo` directly.
   const getNextOnboardingStep = useCallback(async () => {
@@ -60,7 +61,7 @@ export const useShowOnboarding = () => {
 
   // Will navigate imperactively to provided route.
   const navigateOnboardingTo = useCallback(
-    (route: string) => {
+    (route: RouteNames) => {
       // Avoid showing profile flow when not wanted.
       if (route === Routes.PROFILE_SLUG && !shouldShowProfileCreationFlow) {
         return;
