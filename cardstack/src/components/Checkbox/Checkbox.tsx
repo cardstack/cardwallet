@@ -30,13 +30,13 @@ export const Checkbox = ({
   const [selected, setSelected] = useState(isSelected);
 
   const handleCall = useCallback(() => {
-    const currentSelected = selected;
+    const toggledCheck = !selected;
 
     if (onPress) {
-      onPress(!currentSelected);
+      onPress(toggledCheck);
     }
 
-    setSelected(!currentSelected);
+    setSelected(toggledCheck);
   }, [onPress, selected]);
 
   useEffect(() => {

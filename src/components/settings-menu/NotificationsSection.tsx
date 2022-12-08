@@ -1,10 +1,57 @@
+import messaging, {
+  FirebaseMessagingTypes,
+} from '@react-native-firebase/messaging';
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { FlatList, ListRenderItemInfo, StyleSheet, Switch } from 'react-native';
+import {
+  FlatList,
+  Linking,
+  ListRenderItemInfo,
+  StyleSheet,
+  Switch,
+} from 'react-native';
+
 import { strings } from './strings';
 import { Container, Skeleton, Text } from '@cardstack/components';
 import { useUpdateNotificationPreferences } from '@cardstack/hooks';
-import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
+import {
+  checkPushPermissionAndRegisterToken,
+  getPermissionStatus,
+} from '@cardstack/models/firebase';
 import { NotificationsOptionsType } from '@cardstack/types';
+
+import { Alert } from '@rainbow-me/components/alerts';
+
+const askPermissionAlertConfig = {
+  buttons: [
+    {
+      onPress: async () => {
+        checkPushPermissionAndRegisterToken();
+      },
+      text: 'Okay',
+    },
+    {
+      style: 'cancel',
+      text: 'Dismiss',
+    },
+  ],
+  ...strings.permissionAlert,
+};
+
+const permissionsDeniedAlertConfig = {
+  buttons: [
+    {
+      onPress: async () => {
+        Linking.openSettings();
+      },
+      text: 'Open Settings',
+    },
+    {
+      style: 'cancel',
+      text: 'Dismiss',
+    },
+  ],
+  ...strings.permissionDeniedAlert,
+};
 
 const NotificationsSection = () => {
   const {
@@ -15,9 +62,31 @@ const NotificationsSection = () => {
 
   // In case user has skipped this check during Notifications Permissions onboarding step
   // we need to present them again to opt-in notifications.
-  useEffect(() => {
-    checkPushPermissionAndRegisterToken();
+  const pushPermissionCheck = useCallback(async () => {
+    const { NOT_DETERMINED, DENIED } = messaging.AuthorizationStatus;
+
+    try {
+      const permissionStatus = await getPermissionStatus();
+
+      switch (permissionStatus) {
+        case NOT_DETERMINED:
+          Alert(askPermissionAlertConfig);
+          break;
+        case DENIED:
+          Alert(permissionsDeniedAlertConfig);
+          break;
+      }
+    } catch (error) {
+      console.log(
+        'Error checking if a user has push notifications permission',
+        error
+      );
+    }
   }, []);
+
+  useEffect(() => {
+    pushPermissionCheck();
+  }, [pushPermissionCheck]);
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<NotificationsOptionsType>) => {
