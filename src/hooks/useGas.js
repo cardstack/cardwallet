@@ -12,7 +12,7 @@ import {
 } from '../redux/gas';
 
 import useAccountSettings from './useAccountSettings';
-import { usePrevious } from '.';
+import usePrevious from './usePrevious';
 import { useGetGasPricesQuery } from '@cardstack/services';
 
 const GAS_PRICE_POLLING_INTERVAL = 10000; // 10s
