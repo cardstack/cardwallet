@@ -23,7 +23,7 @@ const NotificationsPermissionScreen = () => {
   const {
     options,
     isError,
-    handleUpdateOption,
+    onUpdateOptionStatus,
     handleEnableNotificationsOnPress,
     handleSkipPress,
   } = useNotificationsPermissionScreen();
@@ -37,7 +37,7 @@ const NotificationsPermissionScreen = () => {
             isSelected={item.status === 'enabled'}
             checkboxPosition="left"
             verticalAlign="flex-start"
-            onPress={isEnabled => handleUpdateOption(item, isEnabled)}
+            onPress={isEnabled => onUpdateOptionStatus(item.type, isEnabled)}
           >
             <Container width="100%">
               <Text color="white">{item.description}</Text>
@@ -53,7 +53,7 @@ const NotificationsPermissionScreen = () => {
         </Container>
       </>
     ),
-    [handleUpdateOption]
+    [onUpdateOptionStatus]
   );
 
   const keyExtractor = useCallback(

@@ -184,21 +184,15 @@ export const requestPermission = () =>
   });
 
 export const checkPushPermissionAndRegisterToken = async () => {
-  return new Promise(async resolve => {
-    if (await needsNotificationPermission()) {
-      try {
-        await requestPermission();
-      } catch (error) {
-        logger.sentry('User rejected push notifications permissions');
-        resolve(false);
-
-        return;
-      }
+  if (await needsNotificationPermission()) {
+    try {
+      await requestPermission();
+    } catch (error) {
+      logger.sentry('User rejected push notifications permissions');
     }
+  }
 
-    await saveFCMToken();
-    resolve(true);
-  });
+  await saveFCMToken();
 };
 
 export const registerTokenRefreshListener = () =>

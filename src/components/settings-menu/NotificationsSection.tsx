@@ -19,37 +19,24 @@ import { NotificationsOptionsType } from '@cardstack/types';
 
 import { Alert } from '@rainbow-me/components/alerts';
 
-const askPermissionAlertConfig = {
-  buttons: [
-    {
-      onPress: async () => {
-        checkPushPermissionAndRegisterToken();
+const buildAlert = (
+  alertType: 'askPermission' | 'handleDeniedPermission',
+  onSuccessCallback: () => void
+) =>
+  Alert({
+    buttons: [
+      {
+        onPress: onSuccessCallback,
+        text: strings.alert[alertType].actionButton,
       },
-      text: 'Okay',
-    },
-    {
-      style: 'cancel',
-      text: 'Dismiss',
-    },
-  ],
-  ...strings.permissionAlert,
-};
-
-const permissionsDeniedAlertConfig = {
-  buttons: [
-    {
-      onPress: async () => {
-        Linking.openSettings();
+      {
+        style: 'cancel',
+        text: strings.alert.dismissButton,
       },
-      text: 'Open Settings',
-    },
-    {
-      style: 'cancel',
-      text: 'Dismiss',
-    },
-  ],
-  ...strings.permissionDeniedAlert,
-};
+    ],
+    title: strings.alert[alertType].title,
+    message: strings.alert.message,
+  });
 
 const NotificationsSection = () => {
   const {
@@ -68,10 +55,10 @@ const NotificationsSection = () => {
 
       switch (permissionStatus) {
         case NOT_DETERMINED:
-          Alert(askPermissionAlertConfig);
+          buildAlert('askPermission', checkPushPermissionAndRegisterToken);
           break;
         case DENIED:
-          Alert(permissionsDeniedAlertConfig);
+          buildAlert('handleDeniedPermission', Linking.openSettings);
           break;
       }
     } catch (error) {
