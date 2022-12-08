@@ -1,6 +1,4 @@
-import messaging, {
-  FirebaseMessagingTypes,
-} from '@react-native-firebase/messaging';
+import messaging from '@react-native-firebase/messaging';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import {
   FlatList,
