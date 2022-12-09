@@ -111,8 +111,6 @@ export const getPriceAndBalanceInfo = async ({
     network,
   });
 
-  console.log({ balance, symbol: asset.symbol });
-
   const price = {
     value: priceData?.[formattedNativeCurrency] || 0,
     changed_at: priceData?.last_updated_at,
