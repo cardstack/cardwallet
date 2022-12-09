@@ -19,7 +19,7 @@ import { NotificationsOptionsType } from '@cardstack/types';
 
 import { Alert } from '@rainbow-me/components/alerts';
 
-const buildAlert = (
+const showAlert = (
   alertType: 'askPermission' | 'handleDeniedPermission',
   onSuccessCallback: () => void
 ) =>
@@ -55,10 +55,10 @@ const NotificationsSection = () => {
 
       switch (permissionStatus) {
         case NOT_DETERMINED:
-          buildAlert('askPermission', checkPushPermissionAndRegisterToken);
+          showAlert('askPermission', checkPushPermissionAndRegisterToken);
           break;
         case DENIED:
-          buildAlert('handleDeniedPermission', Linking.openSettings);
+          showAlert('handleDeniedPermission', Linking.openSettings);
           break;
       }
     } catch (error) {
