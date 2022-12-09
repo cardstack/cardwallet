@@ -3,7 +3,6 @@ import { toLower, uniqBy } from 'lodash';
 
 import AssetTypes from '../helpers/assetTypes';
 import migratedTokens from '../references/migratedTokens.json';
-import testnetAssets from '../references/testnet-assets.json';
 import { addressAssetsReceived } from './data';
 import store from './store';
 import {
@@ -12,7 +11,10 @@ import {
 } from '@cardstack/constants';
 import { getPriceAndBalanceInfo } from '@cardstack/helpers/fallbackExplorerHelper';
 
-import { NetworkType } from '@cardstack/types';
+import {
+  fetchPricesByCoingeckoId,
+  fetchPricesByContractAddress,
+} from '@cardstack/services/eoa-assets/eoa-assets-services';
 import logger from 'logger';
 
 // -- Constants --------------------------------------- //
@@ -117,7 +119,6 @@ const getAccountAssets = async (address, latestTxBlockNumber, dispatch) => {
 
     return [...tokensInWallet, nativeToken];
   }
-
   return tokensInWallet;
 };
 
@@ -231,7 +232,7 @@ const getTxsTokenData = async (params, page = 1, previousTx = []) => {
 
   const { status, result: newTxs, message } = await request.json();
 
-  const allTxs = [...previousTx, ...newTxs];
+  const allTxs = [...previousTx, ...(newTxs || [])];
 
   if (status === '1' && newTxs.length === offset) {
     if (message.contains('rate limit')) {
@@ -241,44 +242,7 @@ const getTxsTokenData = async (params, page = 1, previousTx = []) => {
     page++;
     return getTxsTokenData(params, page, allTxs);
   }
-
   return allTxs;
-};
-
-const fetchPricesByCoingeckoId = async (id, nativeCurrency) => {
-  try {
-    const url = `https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=${nativeCurrency}&include_24hr_change=true&include_last_updated_at=true`;
-    const priceRequest = await fetch(url);
-    return priceRequest.json();
-  } catch (e) {
-    logger.log(`Error trying to fetch ${id} prices`, e);
-  }
-};
-
-const coingekoPlatform = {
-  polygon: 'polygon-pos',
-  mumbai: 'polygon-pos',
-  mainnet: 'ethereum',
-  goerli: 'ethereum',
-  gnosis: 'xdai',
-  sokol: 'xdai',
-};
-
-const fetchPricesByContractAddress = async (
-  addresses,
-  network,
-  nativeCurrency
-) => {
-  const platform = coingekoPlatform[network];
-  const contratAddressQuery = addresses.filter(Boolean).join(',');
-
-  try {
-    const url = `https://api.coingecko.com/api/v3/simple/token_price/${platform}?contract_addresses=${contratAddressQuery}&vs_currencies=${nativeCurrency}&include_24hr_change=true&include_last_updated_at=true`;
-    const priceRequest = await fetch(url);
-    return priceRequest.json();
-  } catch (e) {
-    logger.log(`Error trying to fetch  prices`, e);
-  }
 };
 
 const skipPoller = true;
@@ -289,12 +253,9 @@ export const fetchAssetsBalancesAndPrices = async () => {
   const { accountAddress, nativeCurrency, network } = store.getState().settings;
 
   const {
-    assets: currentAssets,
+    assets,
     fallbackExplorerBalancesHandle: currentBalancesTimeout,
   } = store.getState().fallbackExplorer;
-
-  const assets =
-    network !== NetworkType.sokol ? currentAssets : testnetAssets.sokol;
 
   if (!assets || !assets.length) {
     const fallbackExplorerBalancesHandle = setTimeout(
@@ -321,7 +282,7 @@ export const fetchAssetsBalancesAndPrices = async () => {
           network,
         },
         payload: {
-          assets: currentAssets,
+          assets,
         },
       })
     );
