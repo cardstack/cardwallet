@@ -1,14 +1,10 @@
 import { convertHexToString } from '@cardstack/cardpay-sdk';
-import { get, isNil, omit } from 'lodash';
 import { useState, useCallback } from 'react';
-import { greaterThan } from 'react-native-reanimated';
 import { useDispatch } from 'react-redux';
 
 import WalletConnect from '@cardstack/models/wallet-connect';
 import { removeRequest } from '@cardstack/redux/requests';
 
-import { toHex, estimateGasWithPadding } from '@rainbow-me/handlers/web3';
-import { useGas } from '@rainbow-me/hooks';
 import { dataAddNewTransaction } from '@rainbow-me/redux/data';
 import { walletConnectSendStatus } from '@rainbow-me/redux/walletconnect';
 import {
@@ -42,8 +38,6 @@ export const useTransactionActions = (isMessageRequest: boolean) => {
 
   const dispatch = useDispatch();
 
-  const { gasLimit, selectedGasPrice } = useGas();
-
   const [isAuthorizing, setIsAuthorizing] = useState(false);
 
   const closeScreen = useCloseScreen();
@@ -69,56 +63,27 @@ export const useTransactionActions = (isMessageRequest: boolean) => {
 
   const handleConfirmTransaction = useCallback(async () => {
     const sendInsteadOfSign = method === SEND_TRANSACTION;
-    const txPayload = get(params, '[0]');
-    // eslint-disable-next-line prefer-const
-    let { gas, gasLimit: gasLimitFromPayload, gasPrice } = txPayload;
+    const txPayload = params?.[0];
 
-    const rawGasPrice = get(selectedGasPrice, 'value.amount');
-
-    if (rawGasPrice) {
-      gasPrice = toHex(rawGasPrice);
-    }
-
-    try {
-      logger.log('⛽ gas suggested by dapp', {
-        gas: convertHexToString(gas),
-        gasLimitFromPayload: convertHexToString(gasLimitFromPayload),
-      });
-
-      // Estimate the tx with gas limit padding before sending
-      const rawGasLimit = (await estimateGasWithPadding(txPayload)) as any;
-
-      // If the estimation with padding is higher or gas limit was missing,
-      // let's use the higher value
-      if (
-        (isNil(gas) && isNil(gasLimitFromPayload)) ||
-        (!isNil(gas) &&
-          greaterThan(rawGasLimit, convertHexToString(gas) as any)) ||
-        (!isNil(gasLimitFromPayload) &&
-          greaterThan(
-            rawGasLimit,
-            convertHexToString(gasLimitFromPayload) as any
-          ))
-      ) {
-        logger.log('⛽ using padded estimation!', rawGasLimit.toString());
-        gas = toHex(rawGasLimit);
-      }
-    } catch (error) {
-      logger.log('⛽ error estimating gas', error);
-    }
-
-    const calculatedGasLimit = gas || gasLimitFromPayload || gasLimit;
-
-    let txPayloadUpdated = {
-      ...txPayload,
+    const {
+      gas,
+      gasLimit: gasLimitFromPayload,
       gasPrice,
+      ...txPayloadWithoutGas
+    } = txPayload;
+
+    logger.log('⛽ gas suggested by dapp', {
+      gas: convertHexToString(gas),
+      gasLimitFromPayload: convertHexToString(gasLimitFromPayload),
+    });
+
+    const gasLimit = gas || gasLimitFromPayload;
+
+    const txPayloadUpdated = {
+      ...txPayloadWithoutGas,
+      gasPrice,
+      gasLimit,
     };
-
-    if (calculatedGasLimit) {
-      txPayloadUpdated.gasLimit = calculatedGasLimit;
-    }
-
-    txPayloadUpdated = omit(txPayloadUpdated, ['from', 'gas']);
 
     try {
       if (sendInsteadOfSign) {
@@ -128,17 +93,18 @@ export const useTransactionActions = (isMessageRequest: boolean) => {
 
         if (result) {
           const { hash, nonce } = result;
+          const { value: amount, asset, from, to } = displayDetails?.request;
 
           const txDetails = {
-            amount: get(displayDetails, 'request.value'),
-            asset: get(displayDetails, 'request.asset'),
+            amount,
+            asset,
             dappName,
-            from: get(displayDetails, 'request.from'),
+            from,
             gasLimit,
             gasPrice,
             hash,
             nonce,
-            to: get(displayDetails, 'request.to'),
+            to,
           };
 
           dispatch(dataAddNewTransaction(txDetails));
@@ -163,8 +129,6 @@ export const useTransactionActions = (isMessageRequest: boolean) => {
   }, [
     method,
     params,
-    selectedGasPrice,
-    gasLimit,
     closeScreen,
     displayDetails,
     dappName,
@@ -173,10 +137,7 @@ export const useTransactionActions = (isMessageRequest: boolean) => {
   ]);
 
   const handleSignMessage = useCallback(async () => {
-    const messageForSigning = get(
-      params,
-      isSignFirstParamType(method) ? '[0]' : '[1]'
-    );
+    const messageForSigning = params?.[isSignFirstParamType(method) ? 0 : 1];
 
     try {
       const sign =
