@@ -280,10 +280,6 @@
         "please": "Please authenticate",
         "please_seed_phrase": "Please authenticate to view private key"
       },
-      "push_notifications": {
-        "please_enable_title": "Cardstack Wallet would like to send you push notifications",
-        "please_enable_body": "Please enable push notifications to be notified of transactions"
-      },
       "assets": {
         "no_price": "Small Balances"
       },

@@ -13,8 +13,7 @@ import {
   HorizontalDivider,
   Skeleton,
 } from '@cardstack/components';
-import { NotificationsOptionsStrings } from '@cardstack/hooks/notifications-preferences/useUpdateNotificationPreferences';
-import { NotificationsPreferenceDataType } from '@cardstack/types';
+import { NotificationsOptionsType } from '@cardstack/types';
 import { listStyle } from '@cardstack/utils';
 
 import { strings } from './strings';
@@ -24,39 +23,41 @@ const NotificationsPermissionScreen = () => {
   const {
     options,
     isError,
-    handleSkipOnPress,
+    onUpdateOptionStatus,
     handleEnableNotificationsOnPress,
+    handleSkipPress,
   } = useNotificationsPermissionScreen();
 
   const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<NotificationsPreferenceDataType>) => {
-      const notificationType =
-        NotificationsOptionsStrings[
-          item?.attributes[
-            'notification-type'
-          ] as keyof typeof NotificationsOptionsStrings
-        ];
+    ({ item }: ListRenderItemInfo<NotificationsOptionsType>) => (
+      <>
+        <HorizontalDivider backgroundColor="blueDarkest" />
+        <Container>
+          <Checkbox
+            isSelected={item.status === 'enabled'}
+            checkboxPosition="left"
+            verticalAlign="flex-start"
+            onPress={isEnabled => onUpdateOptionStatus(item.type, isEnabled)}
+          >
+            <Container width="100%">
+              <Text color="white">{item.description}</Text>
+              <NotificationBanner
+                width="80%"
+                paddingTop={6}
+                paddingBottom={3}
+                title="Cardstack"
+                body={item.description}
+              />
+            </Container>
+          </Checkbox>
+        </Container>
+      </>
+    ),
+    [onUpdateOptionStatus]
+  );
 
-      return (
-        <>
-          <HorizontalDivider backgroundColor="blueDarkest" />
-          <Container>
-            <Checkbox checkboxPosition="left" verticalAlign="flex-start">
-              <Container width="100%">
-                <Text color="white">{notificationType}</Text>
-                <NotificationBanner
-                  width="80%"
-                  paddingTop={6}
-                  paddingBottom={3}
-                  title="Cardstack"
-                  body={notificationType}
-                />
-              </Container>
-            </Checkbox>
-          </Container>
-        </>
-      );
-    },
+  const keyExtractor = useCallback(
+    (item: NotificationsOptionsType) => item.type,
     []
   );
 
@@ -106,16 +107,14 @@ const NotificationsPermissionScreen = () => {
   );
 
   return (
-    <PageWithStackHeader
-      canGoBack={false}
-      skipPressCallback={handleSkipOnPress}
-    >
+    <PageWithStackHeader canGoBack={false} skipPressCallback={handleSkipPress}>
       <FlatList
         style={listStyle.fullWidth}
         contentContainerStyle={listStyle.paddingBottom}
         showsVerticalScrollIndicator={false}
         data={options}
         renderItem={renderItem}
+        keyExtractor={keyExtractor}
         ListHeaderComponent={PageHeader}
         ListEmptyComponent={isError ? ListError : ListLoading}
       />

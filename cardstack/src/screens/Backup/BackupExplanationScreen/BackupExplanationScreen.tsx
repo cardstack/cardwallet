@@ -20,7 +20,7 @@ const BackupExplanationScreen = () => {
   const { navigate } = useNavigation();
   const { seedPhrase } = useSelectedWallet();
 
-  const { navigateToNextOnboardingStep } = useShowOnboarding();
+  const { navigateOnboardingTo } = useShowOnboarding();
 
   const { triggerSkipBackup } = usePersistedFlagsActions();
 
@@ -30,8 +30,8 @@ const BackupExplanationScreen = () => {
 
   const handleLaterOnPress = useCallback(() => {
     triggerSkipBackup();
-    navigateToNextOnboardingStep(Routes.PROFILE_SLUG);
-  }, [triggerSkipBackup, navigateToNextOnboardingStep]);
+    navigateOnboardingTo(Routes.PROFILE_SLUG);
+  }, [triggerSkipBackup, navigateOnboardingTo]);
 
   return (
     <PageWithStackHeader

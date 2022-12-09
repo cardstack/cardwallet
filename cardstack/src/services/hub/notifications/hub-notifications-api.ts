@@ -1,4 +1,8 @@
-import { NotificationsPreferenceDataType } from '@cardstack/types';
+import {
+  NotificationsOptionsType,
+  NotificationsOptionsStrings,
+  NotificationsPreferenceRawDataType,
+} from '@cardstack/types';
 
 import { hubApi, HubCacheTags } from '../hub-api';
 import { hubBodyBuilder } from '../hub-service';
@@ -57,10 +61,10 @@ export const hubNotifications = hubApi.injectEndpoints({
           hubNotifications.util.updateQueryData(
             'getNotificationsPreferences',
             undefined,
-            (preferencesDraft: NotificationsPreferenceDataType[]) => {
-              preferencesDraft?.map((item: NotificationsPreferenceDataType) => {
-                if (item.attributes['notification-type'] === notificationType) {
-                  item.attributes.status = status;
+            (preferencesDraft: NotificationsOptionsType[]) => {
+              preferencesDraft?.map((item: NotificationsOptionsType) => {
+                if (item.type === notificationType) {
+                  item.status = status;
                 }
 
                 return item;
@@ -75,15 +79,28 @@ export const hubNotifications = hubApi.injectEndpoints({
       extraOptions: { appendFCMToken: true },
     }),
     getNotificationsPreferences: builder.query<
-      NotificationsPreferenceDataType[],
+      NotificationsOptionsType[],
       void
     >({
       query: () => routes.notificationsPreferences,
       providesTags: [HubCacheTags.NOTIFICATION_PREFERENCES],
       extraOptions: { appendFCMToken: true },
       transformResponse: (response: {
-        data: NotificationsPreferenceDataType[];
-      }) => response?.data,
+        data: NotificationsPreferenceRawDataType[];
+      }) =>
+        response?.data.map(
+          item =>
+            ({
+              type: item.attributes['notification-type'],
+              description:
+                NotificationsOptionsStrings[
+                  item.attributes[
+                    'notification-type'
+                  ] as keyof typeof NotificationsOptionsStrings
+                ],
+              status: item.attributes.status,
+            } as NotificationsOptionsType)
+        ),
     }),
   }),
 });

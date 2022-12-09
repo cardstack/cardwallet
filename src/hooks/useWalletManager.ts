@@ -24,7 +24,6 @@ import {
 import useAccountSettings from './useAccountSettings';
 import useInitializeAccount from './useInitializeAccount';
 
-import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
 import { getPin, getSeedPhrase } from '@cardstack/models/secure-storage';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { appStateUpdate } from '@cardstack/redux/appState';
@@ -163,8 +162,6 @@ export default function useWalletManager() {
       logger.sentry('loaded account data');
 
       await fetchAccountAssets();
-
-      await checkPushPermissionAndRegisterToken();
 
       dispatch(appStateUpdate({ walletReady: true }));
     } catch (error) {

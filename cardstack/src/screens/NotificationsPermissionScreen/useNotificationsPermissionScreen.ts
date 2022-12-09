@@ -1,22 +1,38 @@
 import { useCallback } from 'react';
 
 import { useUpdateNotificationPreferences } from '@cardstack/hooks';
+import { useShowOnboarding } from '@cardstack/hooks/onboarding/useShowOnboarding';
+import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
+import { Routes } from '@cardstack/navigation';
+import { usePersistedFlagsActions } from '@cardstack/redux/persistedFlagsSlice';
 
 export const useNotificationsPermissionScreen = () => {
-  const { options, isError } = useUpdateNotificationPreferences();
+  const { navigateOnboardingTo } = useShowOnboarding();
 
-  const handleSkipOnPress = useCallback(() => {
-    // TBD
-  }, []);
+  const { triggerSkipNotificationPermission } = usePersistedFlagsActions();
 
-  const handleEnableNotificationsOnPress = useCallback(() => {
-    // TBD
-  }, []);
+  const {
+    options,
+    isError,
+    onUpdateOptionStatus,
+  } = useUpdateNotificationPreferences();
+
+  const handleEnableNotificationsOnPress = useCallback(async () => {
+    await checkPushPermissionAndRegisterToken();
+
+    navigateOnboardingTo(Routes.BACKUP_EXPLANATION);
+  }, [navigateOnboardingTo]);
+
+  const handleSkipPress = useCallback(() => {
+    triggerSkipNotificationPermission();
+    navigateOnboardingTo(Routes.BACKUP_EXPLANATION);
+  }, [triggerSkipNotificationPermission, navigateOnboardingTo]);
 
   return {
     options,
     isError,
-    handleSkipOnPress,
+    onUpdateOptionStatus,
     handleEnableNotificationsOnPress,
+    handleSkipPress,
   };
 };

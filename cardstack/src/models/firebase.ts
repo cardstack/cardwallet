@@ -1,7 +1,6 @@
 import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
-import lang from 'i18n-js';
 import { requestNotifications } from 'react-native-permissions';
 
 import {
@@ -10,7 +9,6 @@ import {
 } from '@cardstack/services/hub/notifications/hub-notifications-service';
 import { NetworkType } from '@cardstack/types';
 
-import { Alert } from '@rainbow-me/components/alerts';
 import { getLocal, saveLocal } from '@rainbow-me/handlers/localstorage/common';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { loadAddress } from '@rainbow-me/model/wallet';
@@ -22,20 +20,22 @@ type FCMTokenStorageType = {
   addressesByNetwork?: Record<NetworkType, string[]>;
 };
 
-const getPermissionStatus = (): Promise<FirebaseMessagingTypes.AuthorizationStatus> =>
+export const getPermissionStatus = (): Promise<FirebaseMessagingTypes.AuthorizationStatus> =>
   messaging().hasPermission();
 
-export const needsToAskForNotificationsPermissions = async (): Promise<
+export const needsNotificationPermission = async (): Promise<
   boolean | undefined
 > => {
   try {
-    const { AUTHORIZED, PROVISIONAL } = messaging.AuthorizationStatus;
+    const { DENIED, AUTHORIZED, PROVISIONAL } = messaging.AuthorizationStatus;
 
     const permissionStatus = await getPermissionStatus();
 
-    const isAuthorized = [AUTHORIZED, PROVISIONAL].includes(permissionStatus);
+    const permissionStatusDefined = [DENIED, AUTHORIZED, PROVISIONAL].includes(
+      permissionStatus
+    );
 
-    return !isAuthorized;
+    return !permissionStatusDefined;
   } catch (error) {
     logger.sentry(
       'Error checking if a user has push notifications permission',
@@ -184,39 +184,15 @@ export const requestPermission = () =>
   });
 
 export const checkPushPermissionAndRegisterToken = async () => {
-  return new Promise(async resolve => {
-    if (await needsToAskForNotificationsPermissions()) {
-      Alert({
-        buttons: [
-          {
-            onPress: async () => {
-              try {
-                await requestPermission();
-                await saveFCMToken();
-              } catch (error) {
-                logger.sentry('User rejected push notifications permissions');
-              } finally {
-                resolve(true);
-              }
-            },
-            text: 'Okay',
-          },
-          {
-            onPress: async () => {
-              resolve(true);
-            },
-            style: 'cancel',
-            text: 'Dismiss',
-          },
-        ],
-        message: lang.t('wallet.push_notifications.please_enable_body'),
-        title: lang.t('wallet.push_notifications.please_enable_title'),
-      });
-    } else {
-      await saveFCMToken();
-      resolve(true);
+  if (await needsNotificationPermission()) {
+    try {
+      await requestPermission();
+    } catch (error) {
+      logger.sentry('User rejected push notifications permissions');
     }
-  });
+  }
+
+  await saveFCMToken();
 };
 
 export const registerTokenRefreshListener = () =>

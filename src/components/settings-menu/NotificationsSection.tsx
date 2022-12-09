@@ -1,12 +1,42 @@
-import React, { useCallback, useMemo } from 'react';
-import { FlatList, ListRenderItemInfo, StyleSheet, Switch } from 'react-native';
+import messaging from '@react-native-firebase/messaging';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import {
+  FlatList,
+  Linking,
+  ListRenderItemInfo,
+  StyleSheet,
+  Switch,
+} from 'react-native';
+
 import { strings } from './strings';
 import { Container, Skeleton, Text } from '@cardstack/components';
+import { useUpdateNotificationPreferences } from '@cardstack/hooks';
 import {
-  NotificationsOptionsStrings,
-  useUpdateNotificationPreferences,
-} from '@cardstack/hooks';
-import { NotificationsPreferenceDataType } from '@cardstack/types';
+  checkPushPermissionAndRegisterToken,
+  getPermissionStatus,
+} from '@cardstack/models/firebase';
+import { NotificationsOptionsType } from '@cardstack/types';
+
+import { Alert } from '@rainbow-me/components/alerts';
+
+const showAlert = (
+  alertType: 'askPermission' | 'handleDeniedPermission',
+  onSuccessCallback: () => void
+) =>
+  Alert({
+    buttons: [
+      {
+        onPress: onSuccessCallback,
+        text: strings.alert[alertType].actionButton,
+      },
+      {
+        style: 'cancel',
+        text: strings.alert.dismissButton,
+      },
+    ],
+    title: strings.alert[alertType].title,
+    message: strings.alert.message,
+  });
 
 const NotificationsSection = () => {
   const {
@@ -15,8 +45,36 @@ const NotificationsSection = () => {
     isError,
   } = useUpdateNotificationPreferences();
 
+  // In case user has skipped this check during Notifications Permissions onboarding step
+  // we need to present them again to opt-in notifications.
+  const pushPermissionCheck = useCallback(async () => {
+    const { NOT_DETERMINED, DENIED } = messaging.AuthorizationStatus;
+
+    try {
+      const permissionStatus = await getPermissionStatus();
+
+      switch (permissionStatus) {
+        case NOT_DETERMINED:
+          showAlert('askPermission', checkPushPermissionAndRegisterToken);
+          break;
+        case DENIED:
+          showAlert('handleDeniedPermission', Linking.openSettings);
+          break;
+      }
+    } catch (error) {
+      console.log(
+        'Error checking if a user has push notifications permission',
+        error
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    pushPermissionCheck();
+  }, [pushPermissionCheck]);
+
   const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<NotificationsPreferenceDataType>) => {
+    ({ item }: ListRenderItemInfo<NotificationsOptionsType>) => {
       return (
         <Container
           alignItems="center"
@@ -26,18 +84,12 @@ const NotificationsSection = () => {
           paddingVertical={2}
           testID="option-item"
         >
-          <Text>
-            {
-              NotificationsOptionsStrings[
-                item?.attributes[
-                  'notification-type'
-                ] as keyof typeof NotificationsOptionsStrings
-              ]
-            }
-          </Text>
+          <Text>{item?.description}</Text>
           <Switch
-            onValueChange={isEnabled => onUpdateOptionStatus(item, isEnabled)}
-            value={item?.attributes.status === 'enabled'}
+            onValueChange={isEnabled =>
+              onUpdateOptionStatus(item.type, isEnabled)
+            }
+            value={item?.status === 'enabled'}
           />
         </Container>
       );
@@ -75,8 +127,7 @@ const NotificationsSection = () => {
     []
   );
 
-  const keyExtractor = (item: NotificationsPreferenceDataType) =>
-    item.attributes['notification-type'];
+  const keyExtractor = (item: NotificationsOptionsType) => item.type;
 
   return (
     <FlatList
