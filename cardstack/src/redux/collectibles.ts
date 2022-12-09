@@ -188,7 +188,7 @@ const fetchNFTsViaRpcNode = () => async (
   const assets: AssetType[] = getState().data.assets;
 
   // Find the assets that are NFTs.
-  const assetsWithTokenIds = assets.filter(asset => asset.token_id);
+  const assetsWithTokenIds = assets.filter(asset => asset.tokenID);
 
   const existingNFTs: CollectibleType[] = (getState().collectibles as any)
     .collectibles;
@@ -203,12 +203,12 @@ const fetchNFTsViaRpcNode = () => async (
       await Promise.all(
         assetsWithTokenIds.map(async asset => {
           assert(asset.address);
-          assert(asset.token_id);
+          assert(asset.tokenID);
 
           const existingNFT = existingNFTs.find(
             nft =>
               nft.asset_contract.address === asset.address &&
-              nft.id === asset.token_id &&
+              nft.id === asset.tokenID &&
               // We were not considering NFTs to be sendable before so all
               // previously saved tokens need to be updated.
               nft.isInterfaceValidated
@@ -241,18 +241,18 @@ const fetchNFTsViaRpcNode = () => async (
               schema_name = nftSchemas.erc721.name;
             }
 
-            const tokenURI = await nftContract.tokenURI(asset.token_id);
+            const tokenURI = await nftContract.tokenURI(asset.tokenID);
             const tokenURIJSON = await fetchJsonFromTokenUri(tokenURI);
 
             const imageURL = tokenURIJSON.image_url || tokenURIJSON.image;
 
             logger.log(
-              `Reloaded NFT ${asset.name} [${asset.token_id}]`,
+              `Reloaded NFT ${asset.name} [${asset.tokenID}]`,
               `with interface: ${schema_name}`
             );
 
             const collectible: CollectibleType = {
-              id: asset.token_id,
+              id: asset.tokenID,
               name: tokenURIJSON.name || asset.name,
               description: tokenURIJSON.description,
               external_link: tokenURIJSON.external_url,
@@ -282,7 +282,7 @@ const fetchNFTsViaRpcNode = () => async (
               networkName: network,
               lastPrice: null,
               type: AssetTypes.nft,
-              uniqueId: `${asset.address}_${asset.token_id}`,
+              uniqueId: `${asset.address}_${asset.tokenID}`,
             };
 
             return collectible;

@@ -51,9 +51,7 @@ const parseCollectiblesFromOpenSeaResponse = (
   if (isNil(openSeaAssets)) throw new Error('Invalid data from OpenSea');
 
   return openSeaAssets.map((openSeaAsset: any) => {
-    const asset_contract: any = openSeaAsset.asset_contract;
-    const background_color: any = openSeaAsset.background_color;
-    const token_id: string = openSeaAsset.token_id;
+    const { tokenID, asset_contract, background_color } = openSeaAsset;
 
     const collectible: CollectibleType = {
       ...pick(openSeaAsset, [
@@ -86,7 +84,7 @@ const parseCollectiblesFromOpenSeaResponse = (
       ]),
       background: background_color ? `#${background_color}` : null,
       familyImage: asset_contract.image_url,
-      id: token_id,
+      id: tokenID,
       isSendable:
         asset_contract.nft_version === '1.0' ||
         asset_contract.nft_version === '3.0' ||
@@ -97,7 +95,7 @@ const parseCollectiblesFromOpenSeaResponse = (
       type: AssetTypes.nft,
       nativeCurrency,
       networkName: network,
-      uniqueId: `${asset_contract.address}_${token_id}`,
+      uniqueId: `${asset_contract.address}_${tokenID}`,
     };
 
     return collectible;
