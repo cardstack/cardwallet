@@ -5,10 +5,13 @@ import AesEncryptor from '@rainbow-me/handlers/aesEncryption';
 import { AllRainbowWallets } from '@rainbow-me/model/wallet';
 import logger from 'logger';
 
+import { NetworkType } from '../types/NetworkType';
+
 const keys = {
   AUTH_PIN: `${SECURE_STORE_KEY}_AUTH_PIN`,
   SEED: `${SECURE_STORE_KEY}_SEED`,
   PKEY: `${SECURE_STORE_KEY}_PKEY`,
+  HUB_TOKEN: `${SECURE_STORE_KEY}_HUB_TOKEN`,
 } as const;
 
 type KeysType = typeof keys;
@@ -75,7 +78,8 @@ const setEncryptedItem = async (item: string, key: Keys, pin: string) => {
   }
 };
 
-const buildKeyWithId = (key: Keys, id: string) => `${key}_${id}`;
+const buildKeyWithId = (key: Keys, id: string, network?: NetworkType) =>
+  `${key}_${id}` + network ? `_${network}` : '';
 
 // PIN
 const savePin = async (pin: string) =>
@@ -147,6 +151,29 @@ const deletePrivateKey = async (walletAddress: string) => {
   logger.log('Deleted private key');
 };
 
+// HUB API TOKEN
+
+const saveHubToken = (
+  token: string,
+  walletAddress: string,
+  network: NetworkType
+) => {
+  const key = buildKeyWithId(keys.HUB_TOKEN, walletAddress, network);
+  return SecureStore.setItemAsync(key, token);
+};
+
+const getHubToken = (walletAddress: string, network: NetworkType) => {
+  const key = buildKeyWithId(keys.HUB_TOKEN, walletAddress, network);
+  return SecureStore.getItemAsync(key);
+};
+
+const deleteHubToken = async (walletAddress: string, network: NetworkType) => {
+  const key = buildKeyWithId(keys.HUB_TOKEN, walletAddress, network);
+  await SecureStore.deleteItemAsync(key);
+
+  logger.log('Deleted Hub Token');
+};
+
 const wipeSecureStorage = async (wallets: AllRainbowWallets) => {
   // these deletions need to be sequential, otherwise they break
   try {
@@ -199,6 +226,9 @@ export {
   savePrivateKey,
   getPrivateKey,
   deletePrivateKey,
+  saveHubToken,
+  getHubToken,
+  deleteHubToken,
   wipeSecureStorage,
   updateSecureStorePin,
 };
