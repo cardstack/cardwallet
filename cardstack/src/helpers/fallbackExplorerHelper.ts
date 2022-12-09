@@ -19,6 +19,7 @@ import {
 } from '@cardstack/types';
 import { isCPXDToken, isLayer1 } from '@cardstack/utils/cardpay-utils';
 
+import { Asset } from '@rainbow-me/entities';
 import testnetAssets from '@rainbow-me/references/testnet-assets.json';
 
 interface Prices {
@@ -76,6 +77,75 @@ const buildNativeBalance = ({
     nativeCurrency
   ),
 });
+
+interface GetPriceAndBalanceInfoParams {
+  prices: Prices;
+  asset: Asset & { tokenID?: string };
+  network: NetworkType;
+  nativeCurrency: NativeCurrency;
+  accountAddress: string;
+  coingeckoId?: string;
+}
+
+/**
+ * Maps coingecko's response to price and balance structures
+ * if coingeckoId is provided, it takes preference over contract address
+ **/
+export const getPriceAndBalanceInfo = async ({
+  prices,
+  asset,
+  network,
+  coingeckoId,
+  nativeCurrency,
+  accountAddress,
+}: GetPriceAndBalanceInfoParams) => {
+  const formattedNativeCurrency = toLower(nativeCurrency);
+
+  // If prices were fetched using id we need to map with id, otherwise we can use contract address
+  // Basically native tokens will use coingeckoId
+  const priceData = prices?.[coingeckoId || asset.address];
+
+  const balance = await getOnChainAssetBalance({
+    asset,
+    accountAddress,
+    network,
+  });
+
+  console.log({ balance, symbol: asset.symbol });
+
+  const price = {
+    value: priceData?.[formattedNativeCurrency] || 0,
+    changed_at: priceData?.last_updated_at,
+    relative_change_24h:
+      priceData?.[`${formattedNativeCurrency}_24h_change`] || 0,
+  };
+
+  // Custom oracle for .cpxd and other cardpay tokens
+  // since coingecko doesn't have it listed
+  if (!priceData && isCardPaySupportedNetwork(network) && !asset.tokenID) {
+    // only nfts have tokenID and we don't have oracle for that
+
+    const priceUnitFromOracle = await getNativeBalanceFromOracle({
+      nativeCurrency,
+      symbol: asset.symbol,
+      balance: Web3.utils.toWei('1'),
+    });
+
+    price.value = priceUnitFromOracle;
+  }
+
+  const native = buildNativeBalance({
+    nativeCurrency,
+    priceUnit: price.value,
+    balance,
+  });
+
+  return {
+    balance,
+    native,
+    price,
+  };
+};
 
 export const addPriceByCoingeckoIdOrOracle = async ({
   coingeckoId,

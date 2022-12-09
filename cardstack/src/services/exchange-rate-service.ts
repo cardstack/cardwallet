@@ -59,7 +59,7 @@ export const getNativeBalanceFromOracle = async (props: {
     nativeCurrency
   );
 
-  return currencyBalance;
+  return currencyBalance || 0;
 };
 
 export const getUsdConverter = async (symbol: string) => {
