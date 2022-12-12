@@ -1,4 +1,3 @@
-import { act } from '@testing-library/react-hooks';
 import * as SecureStore from 'expo-secure-store';
 
 import { NetworkType } from '@cardstack/types';

@@ -7,7 +7,7 @@ import logger from 'logger';
 
 import { NetworkType } from '../types/NetworkType';
 
-const HUB_TOKEN_EXPIRATION_SECONDS = 30; // 3600 * 24;
+const HUB_TOKEN_EXPIRATION_SECONDS = 3600 * 24;
 
 const keys = {
   AUTH_PIN: `${SECURE_STORE_KEY}_AUTH_PIN`,
