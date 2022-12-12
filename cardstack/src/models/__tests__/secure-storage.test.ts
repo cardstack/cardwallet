@@ -20,6 +20,7 @@ const pinKey = `${mockKey}_AUTH_PIN`;
 const mockHubToken = '$TOKEN';
 const mockNetwork = NetworkType.sokol;
 const mockAccountAddress = '0xAddress';
+const mockTimestamp = 1466424490000;
 
 const hubKey = `${mockKey}_HUB_TOKEN`;
 const mockBuiltHubKey = `${hubKey}_${mockAccountAddress}_${mockNetwork}`;
@@ -67,12 +68,10 @@ describe('secure-storage', () => {
           return Promise.resolve();
         }
       );
-
-    jest.useFakeTimers();
   });
 
   afterEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('Pin storage', () => {
@@ -110,11 +109,15 @@ describe('secure-storage', () => {
 
   describe('Hub token storage', () => {
     it('should save hub token', async () => {
+      jest.spyOn<any, any>(global, 'Date').mockImplementation(() => ({
+        getTime: () => mockTimestamp,
+      }));
+
       await saveHubToken(mockHubToken, mockAccountAddress, mockNetwork);
 
       expect(mockSetItemAsync).toBeCalledWith(
         mockBuiltHubKey,
-        JSON.stringify({ token: mockHubToken, timestamp: new Date().getTime() })
+        JSON.stringify({ token: mockHubToken, timestamp: mockTimestamp })
       );
     });
 
