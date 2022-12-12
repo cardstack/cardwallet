@@ -183,10 +183,10 @@ const getHubToken = async (
     if (data) {
       const { token, timestamp } = JSON.parse(data);
 
-      if (
-        timestamp &&
-        new Date().getTime() - timestamp < HUB_TOKEN_EXPIRATION_SECONDS
-      ) {
+      const isValid =
+        new Date().getTime() - timestamp < HUB_TOKEN_EXPIRATION_SECONDS;
+
+      if (isValid) {
         return token;
       } else {
         await deleteHubToken(walletAddress, network);
