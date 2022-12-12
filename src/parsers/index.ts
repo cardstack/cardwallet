@@ -1,8 +1,6 @@
 export {
-  parseAccountAssets,
   parseAssetName,
   parseAssetSymbol,
-  parseAsset,
   parseAssetsNativeWithTotals,
   parseAssetsNative,
 } from './accounts';

@@ -13,14 +13,14 @@ import { getNativeBalanceFromOracle } from '@cardstack/services';
 import { getOnChainAssetBalance } from '@cardstack/services/assets';
 import {
   AssetType,
+  AssetTypes,
   AssetWithNativeType,
   BalanceType,
   NetworkType,
 } from '@cardstack/types';
-import { isCPXDToken, isLayer1 } from '@cardstack/utils/cardpay-utils';
+import { isCPXDToken } from '@cardstack/utils/cardpay-utils';
 
 import { Asset } from '@rainbow-me/entities';
-import testnetAssets from '@rainbow-me/references/testnet-assets.json';
 
 interface Prices {
   [key: string]: {
@@ -80,7 +80,7 @@ const buildNativeBalance = ({
 
 interface GetPriceAndBalanceInfoParams {
   prices: Prices;
-  asset: Asset & { tokenID?: string };
+  asset: Omit<Asset, 'name'> & { type?: AssetTypes };
   network: NetworkType;
   nativeCurrency: NativeCurrency;
   accountAddress: string;
@@ -93,7 +93,7 @@ interface GetPriceAndBalanceInfoParams {
  **/
 export const getPriceAndBalanceInfo = async ({
   prices,
-  asset,
+  asset: { type, ...asset },
   network,
   coingeckoId,
   nativeCurrency,
@@ -120,7 +120,11 @@ export const getPriceAndBalanceInfo = async ({
 
   // Custom oracle for .cpxd and other cardpay tokens
   // since coingecko doesn't have it listed
-  if (!priceData && isCardPaySupportedNetwork(network) && !asset.tokenID) {
+  if (
+    !priceData &&
+    isCardPaySupportedNetwork(network) &&
+    type !== AssetTypes.nft
+  ) {
     // only nfts have tokenID and we don't have oracle for that
 
     const priceUnitFromOracle = await getNativeBalanceFromOracle({
@@ -283,88 +287,3 @@ export const reduceAssetsWithPriceChartAndBalances = async ({
       },
     ];
   }, Promise.resolve([] as AssetWithBalance[]));
-
-type CoingeckoCoins = Array<{
-  id: string;
-  symbol: string;
-  name: string;
-  platforms: {
-    ethereum?: string;
-    'polygon-pos'?: string;
-  };
-}>;
-
-type HoneySwapTokens = Array<{
-  address: string;
-  symbol: string;
-  name: string;
-  chainId: string;
-}>;
-
-const HONEYSWAP_ENDPOINT = 'https://tokens.honeyswap.org';
-
-const isValidAddress = (address?: string) =>
-  address && toLower(address).substring(0, 2) === '0x';
-
-export const mapTokenAddressToCoingeckoId = async (
-  network: NetworkType,
-  coingeckoCoins: CoingeckoCoins = []
-) => {
-  if (network === NetworkType.sokol) {
-    return testnetAssets.sokol.reduce(
-      // any since it's testnetwork
-      (ids: any, { asset: currentAsset }: any) => ({
-        ...ids,
-        [currentAsset.asset_code]: currentAsset.coingecko_id,
-      }),
-      {}
-    );
-  }
-
-  // Coingecko doesn't support gnosis tokenAddresses, so address is fetched from honeySwap
-  // and matched by symbol with coingecko coins
-  if (isCardPaySupportedNetwork(network)) {
-    const honeyswapRequest = await fetch(HONEYSWAP_ENDPOINT);
-    const data = await honeyswapRequest.json();
-    const honeyswapTokens = data.tokens as HoneySwapTokens;
-
-    return honeyswapTokens.reduce((ids, { address: tokenAddress, symbol }) => {
-      const coingeckoToken = coingeckoCoins?.find(
-        token => toLower(token.symbol) === toLower(symbol)
-      );
-
-      if (!coingeckoToken || !isValidAddress(tokenAddress)) {
-        return ids;
-      }
-
-      return {
-        ...ids,
-        [tokenAddress]: coingeckoToken.id,
-      };
-    }, {});
-  }
-
-  // Tokens can have different addresses based on the network, so we need to map based on that
-  return coingeckoCoins?.reduce((ids, coinsinfo) => {
-    const {
-      id,
-      symbol,
-      platforms: {
-        ethereum: ethTokenAddress,
-        'polygon-pos': polygonTokenAddress,
-      },
-    } = coinsinfo;
-
-    const address =
-      (isLayer1(network) ? ethTokenAddress : polygonTokenAddress) || '';
-
-    if (!isValidAddress(address)) {
-      return ids;
-    }
-
-    return {
-      ...ids,
-      [symbol]: id,
-    };
-  }, {});
-};

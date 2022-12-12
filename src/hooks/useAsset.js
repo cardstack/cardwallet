@@ -1,7 +1,7 @@
 import { find, matchesProperty } from 'lodash';
 import { useMemo } from 'react';
 import useAccountAssets from './useAccountAssets';
-import AssetTypes from '@rainbow-me/helpers/assetTypes';
+import { AssetTypes } from '@cardstack/types';
 
 export default function useAsset(asset) {
   const { allAssets, collectibles } = useAccountAssets();

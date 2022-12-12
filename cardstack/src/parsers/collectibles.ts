@@ -1,20 +1,16 @@
 import { filter, find, get, map, uniq } from 'lodash';
 
-import { AssetType, CollectibleType } from '@cardstack/types';
+import { AssetType, CollectibleType, AssetTypes } from '@cardstack/types';
 
 export const getNFTFamilies = (nfts: CollectibleType[]): string[] =>
   uniq(map(nfts, c => c.asset_contract.address ?? ''));
 
-export const assetsWithoutNFTs = (
-  assets: AssetType[],
-  nfts: CollectibleType[]
-) => {
+export const assetsWithoutNFTs = (assets: AssetType[]) => {
   if (!assets.length) {
     return assets;
   }
 
-  const nftFamilies = getNFTFamilies(nfts);
-  return assetsWithoutNFTsByFamily(assets, nftFamilies);
+  return assets.filter(({ type }) => type !== AssetTypes.nft);
 };
 
 export const assetsWithoutNFTsByFamily = (

@@ -7,14 +7,17 @@ import {
 import { toLower, uniqBy } from 'lodash';
 
 import { getPriceAndBalanceInfo } from '@cardstack/helpers';
-import { NetworkType } from '@cardstack/types';
+import { AssetTypes, NetworkType } from '@cardstack/types';
 
-import assetTypes from '@rainbow-me/helpers/assetTypes';
+import { parseAssetName, parseAssetSymbol } from '@rainbow-me/parsers';
+import { shitcoins } from '@rainbow-me/references';
 import migratedTokens from '@rainbow-me/references/migratedTokens.json';
+import { getTokenMetadata } from '@rainbow-me/utils';
 import logger from 'logger';
 
 import { EOABaseParams, EOATxListResponse } from './eoa-assets-types';
 
+// TODO: store lastestTXBlock on storage with assets
 let latestTxBlockNumber: number | null = null;
 
 // Some contracts like SNX / SUSD use an ERC20 proxy
@@ -26,17 +29,20 @@ const getCurrentAddress = (contractAddress: string) => {
   return migratedTokens[address] || address;
 };
 
-export const fetchAssets = () => {};
-
-const getTokenType = (tokenSymbol: string, tokenName: string) => {
-  if (tokenSymbol === 'UNI-V1') return assetTypes.uniswap;
-  if (tokenSymbol === 'UNI-V2') return assetTypes.uniswapV2;
+const getTokenType = (
+  tokenSymbol: string,
+  tokenName: string,
+  tokenID?: string
+) => {
+  if (tokenSymbol === 'UNI-V1') return AssetTypes.uniswap;
+  if (tokenSymbol === 'UNI-V2') return AssetTypes.uniswapV2;
+  if (tokenID) return AssetTypes.nft;
 
   if (toLower(tokenName).indexOf('compound') !== -1 && tokenSymbol !== 'COMP') {
-    return assetTypes.compound;
+    return AssetTypes.compound;
   }
 
-  return undefined;
+  return AssetTypes.token;
 };
 
 /**
@@ -44,16 +50,17 @@ const getTokenType = (tokenSymbol: string, tokenName: string) => {
  *  all tokens an account has interacted with
  *  usually it doesn't include the native token
  */
-export const discoverTokens = async (baseParams: EOABaseParams) => {
+const discoverTokens = async (baseParams: EOABaseParams) => {
   const { network, nativeCurrency, accountAddress } = baseParams;
 
   const allTxs = await getTxsTokenData(baseParams);
 
   if (!allTxs.length) return [];
 
-  const nextlatestTxBlockNumber = Number(allTxs[0].blockNumber) + 1;
+  // Handle latestBlock
+  // const nextlatestTxBlockNumber = Number(allTxs[0].blockNumber) + 1;
 
-  latestTxBlockNumber = nextlatestTxBlockNumber;
+  // latestTxBlockNumber = nextlatestTxBlockNumber;
 
   // It can exist multiple txs with the same token, so we filter to get unique assets
   const uniqueTokensTxs = uniqBy(
@@ -74,7 +81,7 @@ export const discoverTokens = async (baseParams: EOABaseParams) => {
     nativeCurrency,
   });
 
-  const tokensInWalletWithPriceAndBalance = await Promise.all(
+  const tokensWithBalance = await Promise.all(
     uniqueTokensTxs.map(
       async ({
         contractAddress,
@@ -83,39 +90,55 @@ export const discoverTokens = async (baseParams: EOABaseParams) => {
         tokenSymbol: symbol,
         tokenName: name,
       }) => {
-        const address = getCurrentAddress(contractAddress);
-        const decimals = Number(tokenDecimal);
+        const asset = {
+          address: getCurrentAddress(contractAddress),
+          decimals: Number(tokenDecimal),
+          type: getTokenType(symbol, name, tokenID),
+          symbol,
+        };
 
-        const priceAndBalance = await getPriceAndBalanceInfo({
+        // Remove spammy tokens
+        if (
+          shitcoins.includes(asset.address) ||
+          asset.type === AssetTypes.compound
+        ) {
+          return;
+        }
+
+        const { balance, ...priceAndNative } = await getPriceAndBalanceInfo({
           prices,
           nativeCurrency,
           accountAddress,
           network,
-          asset: {
-            name,
-            address,
-            decimals,
-            symbol,
-            tokenID,
-          },
+          asset,
         });
 
+        // No balance means the user doesn't own the asset anymore.
+        if (!balance.amount) {
+          return;
+        }
+
+        // TODO: verify if we should continue to use rainbow token list
+        const metadata = getTokenMetadata(asset.address);
+        const nameFromList = parseAssetName(metadata, name);
+        const symbolFromList = parseAssetSymbol(metadata, symbol);
+
         return {
-          asset: {
-            asset_code: address,
-            name,
-            tokenID,
-            decimals,
-            symbol,
-            type: getTokenType(symbol, name),
-            ...priceAndBalance,
-          },
+          ...metadata,
+          ...asset,
+          asset_code: asset.address,
+          name: nameFromList,
+          symbol: symbolFromList,
+          tokenID,
+          balance,
+          uniqueId: tokenID || asset.address || name,
+          ...priceAndNative,
         };
       }
     )
   );
 
-  return tokensInWalletWithPriceAndBalance;
+  return tokensWithBalance.filter(Boolean);
 };
 
 /**
@@ -175,7 +198,7 @@ const getCoingeckoPlatformName = (network: NetworkType) => {
 
 const COINGECKO_BASE_URL = 'https://api.coingecko.com/api/v3/simple';
 
-export const fetchPricesByContractAddress = async (
+const fetchPricesByContractAddress = async (
   addresses: string[],
   { network, nativeCurrency }: Omit<EOABaseParams, 'accountAddress'>
 ) => {
@@ -187,11 +210,67 @@ export const fetchPricesByContractAddress = async (
   return fetchHelper(url);
 };
 
-export const fetchPricesByCoingeckoId = async (
+const fetchPricesByCoingeckoId = async (
   id: string,
   nativeCurrency: NativeCurrency
 ) => {
   const url = `${COINGECKO_BASE_URL}/price?ids=${id}&vs_currencies=${nativeCurrency}&include_24hr_change=true&include_last_updated_at=true`;
 
   return fetchHelper(url);
+};
+
+export const getAccountAssets = async ({
+  network,
+  nativeCurrency,
+  accountAddress,
+}: EOABaseParams) => {
+  // Discover the list of tokens for the address
+  const tokensInWallet = await discoverTokens({
+    network,
+    nativeCurrency,
+    accountAddress,
+  });
+
+  // discoverTokens might not include the native token, so we add it manually
+  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
+
+  const nativeTokenIsMissing = !tokensInWallet.some(
+    token => token?.symbol === nativeTokenSymbol
+  );
+
+  if (nativeTokenIsMissing) {
+    const coingeckoId = getConstantByNetwork('nativeTokenCoingeckoId', network);
+
+    const nativeTokenPrices = await fetchPricesByCoingeckoId(
+      coingeckoId,
+      nativeCurrency
+    );
+
+    const nativeTokenInfo = {
+      asset_code: getConstantByNetwork('nativeTokenAddress', network),
+      name: getConstantByNetwork('nativeTokenName', network),
+      symbol: nativeTokenSymbol,
+      decimals: 18, // TODO: use decimals from sdk on next sdk release
+    };
+
+    const { asset_code: address, ...tokenInfo } = nativeTokenInfo;
+
+    const balanceInfo = await getPriceAndBalanceInfo({
+      prices: nativeTokenPrices,
+      nativeCurrency,
+      accountAddress,
+      network,
+      coingeckoId,
+      asset: { address, ...tokenInfo },
+    });
+
+    const nativeToken = {
+      ...nativeTokenInfo,
+      ...balanceInfo,
+    };
+
+    return [...tokensInWallet, nativeToken];
+  }
+
+  return tokensInWallet;
 };

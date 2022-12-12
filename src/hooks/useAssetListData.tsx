@@ -1,5 +1,9 @@
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import { orderBy } from 'lodash';
+import {
+  convertAmountToNativeDisplay,
+  getConstantByNetwork,
+} from '@cardstack/cardpay-sdk';
+import { BN } from 'ethereumjs-util';
+import { add, orderBy } from 'lodash';
 import { BalanceCoinRowWrapper } from '../components/coin-row';
 import useAccountSettings from './useAccountSettings';
 import {
@@ -24,7 +28,6 @@ import {
   PrepaidCardType,
 } from '@cardstack/types';
 
-import { parseAssetsNativeWithTotals } from '@rainbow-me/parsers';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 const usePrepaidCardSection = (
@@ -83,32 +86,33 @@ const useMerchantSafeSection = (
 });
 
 const useOtherTokensSection = (): AssetListSectionItem<AssetWithNativeType> => {
-  const [
-    stateAssets,
-    collectibles,
-    nativeCurrency,
-    network,
-  ] = useRainbowSelector<[AssetType[], any[], string, string]>(state => [
+  const [stateAssets, nativeCurrency, network] = useRainbowSelector<
+    [AssetType[], string, string]
+  >(state => [
     state.data.assets,
-    state.collectibles.collectibles,
     state.settings.nativeCurrency,
     state.settings.network,
   ]);
+
   const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
 
-  const assetsToInclude = assetsWithoutNFTs(stateAssets, collectibles);
-  const assetsWithNative = parseAssetsNativeWithTotals(
-    assetsToInclude,
+  const assetsToInclude = assetsWithoutNFTs(
+    stateAssets
+  ) as AssetWithNativeType[];
+
+  const total = convertAmountToNativeDisplay(
+    assetsToInclude.reduce(
+      (total, { native }) => add(total, parseInt(native.balance.amount)),
+      0
+    ),
     nativeCurrency
   );
 
-  let assetBalances = assetsWithNative.assetsNativePrices;
-
   const { hidden, pinned } = usePinnedAndHiddenItemOptions();
-  const count = assetBalances.filter(a => !hidden.includes(a.address)).length;
+  const count = assetsToInclude.filter(a => !hidden.includes(a.address)).length;
 
   let assets = orderBy(
-    assetBalances,
+    assetsToInclude,
     [
       function (p) {
         return pinned.includes(p.address);
@@ -133,7 +137,7 @@ const useOtherTokensSection = (): AssetListSectionItem<AssetWithNativeType> => {
     header: {
       title: 'Other Tokens',
       count,
-      total: assetsWithNative.total.display,
+      total,
       type: PinnedHiddenSectionOption.BALANCES,
       showContextMenu: true,
     },

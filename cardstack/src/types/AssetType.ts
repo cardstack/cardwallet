@@ -5,6 +5,16 @@ export interface BalanceType {
   wei?: string;
 }
 
+export enum AssetTypes {
+  compound = 'compound',
+  eth = 'eth',
+  nft = 'nft',
+  token = 'token',
+  trash = 'trash',
+  uniswap = 'uniswap',
+  uniswapV2 = 'uniswap-v2',
+}
+
 export interface AssetType {
   asset_code?: string;
   address?: string;
@@ -20,7 +30,7 @@ export interface AssetType {
     value: number;
   };
   symbol: string;
-  type?: string;
+  type?: AssetTypes;
   uniqueId?: string;
 }
 

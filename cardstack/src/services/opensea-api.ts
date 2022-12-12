@@ -3,10 +3,9 @@ import axios, { AxiosResponse } from 'axios';
 import { isNil, pick } from 'lodash';
 import { OPENSEA_API_KEY } from 'react-native-dotenv';
 
-import { CollectibleType, NetworkType } from '@cardstack/types';
+import { CollectibleType, NetworkType, AssetTypes } from '@cardstack/types';
 import { isMainnet } from '@cardstack/utils';
 
-import AssetTypes from '@rainbow-me/helpers/assetTypes';
 import logger from 'logger';
 
 export const OPENSEA_LIMIT_PER_PAGE = 50;

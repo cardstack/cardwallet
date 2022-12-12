@@ -15,7 +15,12 @@ import {
   OPENSEA_LIMIT_PER_PAGE,
   OPENSEA_LIMIT_TOTAL,
 } from '@cardstack/services/opensea-api';
-import { AssetType, CollectibleType, NetworkType } from '@cardstack/types';
+import {
+  AssetType,
+  AssetTypes,
+  CollectibleType,
+  NetworkType,
+} from '@cardstack/types';
 
 import {
   getCollectibles as getCollectiblesFromStorage,
@@ -26,7 +31,6 @@ import { erc721ABI } from '@rainbow-me/references';
 import logger from 'logger';
 
 import { getEtherWeb3Provider } from '../../../src/handlers/web3';
-import AssetTypes from '../../../src/helpers/assetTypes';
 import { dataUpdateAssets } from '../../../src/redux/data';
 
 // -- Constants ------------------------------------------------------------- //

@@ -1,4 +1,4 @@
-import { DepotAsset, DepotType, TokenType } from '@cardstack/types';
+import { AssetTypes, DepotAsset, DepotType, TokenType } from '@cardstack/types';
 
 export const reshapeSingleDepotTokenToAsset = ({
   tokenAddress,
@@ -8,7 +8,7 @@ export const reshapeSingleDepotTokenToAsset = ({
   ...rest,
   address: tokenAddress,
   uniqueId: tokenAddress,
-  type: 'token',
+  type: AssetTypes.token,
   ...token,
 });
 

@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query';
 
 import { queryPromiseWrapper } from '../utils';
 
-import { fetchAssets } from './eoa-assets-services';
+import { getAccountAssets } from './eoa-assets-services';
 
 const eoaAssetsApi = createApi({
   reducerPath: 'eoaAssets',
@@ -10,7 +10,7 @@ const eoaAssetsApi = createApi({
   endpoints: builder => ({
     getEOAAssets: builder.query<any, any>({
       async queryFn(params) {
-        return queryPromiseWrapper<any, any>(fetchAssets, params, {
+        return queryPromiseWrapper<any, any>(getAccountAssets, params, {
           errorLogMessage: 'Error fetching eoa assets',
         });
       },

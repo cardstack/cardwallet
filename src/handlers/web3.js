@@ -15,12 +15,11 @@ import { BigNumber, Contract, utils as ethersUtils, providers } from 'ethers';
 import { get, startsWith } from 'lodash';
 import Web3 from 'web3';
 
-import AssetTypes from '../helpers/assetTypes';
 import smartContractMethods from '../references/smartcontract-methods.json';
 import ethereumUtils from '../utils/ethereumUtils';
 
 import Web3WsProvider from '@cardstack/models/web3-provider';
-import { NetworkType } from '@cardstack/types';
+import { AssetTypes, NetworkType } from '@cardstack/types';
 import { isNativeToken } from '@cardstack/utils/cardpay-utils';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { erc721ABI, ethUnits } from '@rainbow-me/references';

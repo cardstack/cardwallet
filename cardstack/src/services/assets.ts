@@ -12,7 +12,7 @@ import { Asset } from '@rainbow-me/entities';
 import logger from 'logger';
 
 interface GetAssetBalanceParams {
-  asset: Asset;
+  asset: Omit<Asset, 'name'>;
   accountAddress: string;
   network: NetworkType;
 }
