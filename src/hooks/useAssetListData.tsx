@@ -2,7 +2,6 @@ import {
   convertAmountToNativeDisplay,
   getConstantByNetwork,
 } from '@cardstack/cardpay-sdk';
-import { BN } from 'ethereumjs-util';
 import { add, orderBy } from 'lodash';
 import { BalanceCoinRowWrapper } from '../components/coin-row';
 import useAccountSettings from './useAccountSettings';

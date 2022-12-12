@@ -115,13 +115,10 @@ const transformTradeRefund = internalTransactions => {
   if (!isSuccessfulSwap) return internalTransactions;
 
   const txnOut = txnsOut[0];
-  const txnIn = find(
-    txnsIn,
-    txn => txn.asset.asset_code !== txnOut.asset.asset_code
-  );
+  const txnIn = find(txnsIn, txn => txn.asset.address !== txnOut.asset.address);
   const refund = find(
     txnsIn,
-    txn => txn.asset.asset_code === txnOut.asset.asset_code
+    txn => txn.asset.address === txnOut.asset.address
   );
   let updatedOut = txnOut;
   if (refund && txnOut) {
@@ -163,10 +160,7 @@ const parseTransaction = (txn, nativeCurrency, network) => {
     const assetInternalTransaction = {
       address_from: transaction.from,
       address_to: transaction.to,
-      asset: {
-        asset_code: asset.address,
-        ...asset,
-      },
+      asset,
       value: transaction.value,
     };
     internalTransactions = [assetInternalTransaction];
@@ -182,7 +176,7 @@ const parseTransaction = (txn, nativeCurrency, network) => {
       address_from: transaction.from,
       address_to: transaction.to,
       asset: {
-        asset_code: 'eth',
+        address: 'eth',
         decimals: 18,
         name: 'Ethereum',
         symbol: 'ETH',
@@ -211,7 +205,7 @@ const parseTransaction = (txn, nativeCurrency, network) => {
       address_from: transaction.from,
       address_to: transaction.to,
       asset: {
-        asset_code: 'eth',
+        address: 'eth',
         decimals: 18,
         name: 'Ethereum',
         symbol: 'ETH',
@@ -225,7 +219,7 @@ const parseTransaction = (txn, nativeCurrency, network) => {
     internalTransactions = transformTradeRefund(internalTransactions);
   }
   internalTransactions = internalTransactions.map((internalTxn, index) => {
-    const address = toLower(get(internalTxn, 'asset.asset_code'));
+    const address = toLower(get(internalTxn, 'asset.address'));
     const metadata = getTokenMetadata(address);
     const updatedAsset = {
       address,

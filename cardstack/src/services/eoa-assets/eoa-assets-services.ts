@@ -18,7 +18,7 @@ import logger from 'logger';
 import { EOABaseParams, EOATxListResponse } from './eoa-assets-types';
 
 // TODO: store lastestTXBlock on storage with assets
-let latestTxBlockNumber: number | null = null;
+const latestTxBlockNumber: number | null = null;
 
 // Some contracts like SNX / SUSD use an ERC20 proxy
 // some of those tokens have been migrated to a new address
@@ -126,7 +126,6 @@ const discoverTokens = async (baseParams: EOABaseParams) => {
         return {
           ...metadata,
           ...asset,
-          asset_code: asset.address,
           name: nameFromList,
           symbol: symbolFromList,
           tokenID,
@@ -247,13 +246,11 @@ export const getAccountAssets = async ({
     );
 
     const nativeTokenInfo = {
-      asset_code: getConstantByNetwork('nativeTokenAddress', network),
+      address: getConstantByNetwork('nativeTokenAddress', network),
       name: getConstantByNetwork('nativeTokenName', network),
       symbol: nativeTokenSymbol,
       decimals: 18, // TODO: use decimals from sdk on next sdk release
     };
-
-    const { asset_code: address, ...tokenInfo } = nativeTokenInfo;
 
     const balanceInfo = await getPriceAndBalanceInfo({
       prices: nativeTokenPrices,
@@ -261,7 +258,7 @@ export const getAccountAssets = async ({
       accountAddress,
       network,
       coingeckoId,
-      asset: { address, ...tokenInfo },
+      asset: nativeTokenInfo,
     });
 
     const nativeToken = {

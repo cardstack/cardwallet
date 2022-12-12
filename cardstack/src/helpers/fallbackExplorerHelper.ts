@@ -125,8 +125,6 @@ export const getPriceAndBalanceInfo = async ({
     isCardPaySupportedNetwork(network) &&
     type !== AssetTypes.nft
   ) {
-    // only nfts have tokenID and we don't have oracle for that
-
     const priceUnitFromOracle = await getNativeBalanceFromOracle({
       nativeCurrency,
       symbol: asset.symbol,
@@ -256,7 +254,7 @@ export const reduceAssetsWithPriceChartAndBalances = async ({
     const coingeckoId = asset.coingecko_id || '';
 
     const balance = await getOnChainAssetBalance({
-      asset: { address: asset.asset_code || '', ...asset },
+      asset,
       accountAddress,
       network,
     });

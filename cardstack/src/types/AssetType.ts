@@ -16,8 +16,7 @@ export enum AssetTypes {
 }
 
 export interface AssetType {
-  asset_code?: string;
-  address?: string;
+  address: string;
   balance?: BalanceType;
   coingecko_id: string | null;
   decimals: number;
