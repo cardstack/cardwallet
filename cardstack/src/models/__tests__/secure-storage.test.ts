@@ -1,12 +1,29 @@
+import { act } from '@testing-library/react-hooks';
 import * as SecureStore from 'expo-secure-store';
+
+import { NetworkType } from '@cardstack/types';
 
 import logger from 'logger';
 
-import { deletePin, getPin, savePin } from '../secure-storage';
+import {
+  deletePin,
+  getPin,
+  savePin,
+  saveHubToken,
+  getHubToken,
+  deleteHubToken,
+} from '../secure-storage';
 
 const mockKey = `mock-key`;
 const mockPin = '123456';
 const pinKey = `${mockKey}_AUTH_PIN`;
+
+const mockHubToken = '$TOKEN';
+const mockNetwork = NetworkType.sokol;
+const mockAccountAddress = '0xAddress';
+
+const hubKey = `${mockKey}_HUB_TOKEN`;
+const mockBuiltHubKey = `${hubKey}_${mockAccountAddress}_${mockNetwork}`;
 
 const localSecureStorage: any = {};
 
@@ -51,6 +68,8 @@ describe('secure-storage', () => {
           return Promise.resolve();
         }
       );
+
+    jest.useFakeTimers();
   });
 
   afterEach(() => {
@@ -71,7 +90,7 @@ describe('secure-storage', () => {
       expect(storedPin).toEqual(mockPin);
     });
 
-    it('delete stored pin', async () => {
+    it('should delete stored pin', async () => {
       await deletePin();
 
       expect(mockDeleteItemAsync).toBeCalledWith(pinKey);
@@ -87,6 +106,30 @@ describe('secure-storage', () => {
         'No value for key: AUTH_PIN',
         new Error('Invalid key')
       );
+    });
+  });
+
+  describe('Hub token storage', () => {
+    it('should save hub token', async () => {
+      await saveHubToken(mockHubToken, mockAccountAddress, mockNetwork);
+
+      expect(mockSetItemAsync).toBeCalledWith(
+        mockBuiltHubKey,
+        JSON.stringify({ token: mockHubToken, timestamp: new Date().getTime() })
+      );
+    });
+
+    it('should get hub token', async () => {
+      const hubToken = await getHubToken(mockAccountAddress, mockNetwork);
+
+      expect(hubToken).toBe(mockHubToken);
+    });
+
+    it('shoould delete stored hub token', async () => {
+      await deleteHubToken(mockAccountAddress, mockNetwork);
+
+      expect(mockDeleteItemAsync).toBeCalledWith(mockBuiltHubKey);
+      expect(localSecureStorage[mockBuiltHubKey]).toBeUndefined();
     });
   });
 });

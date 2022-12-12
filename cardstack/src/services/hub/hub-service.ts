@@ -1,4 +1,4 @@
-import { getSDK } from '@cardstack/cardpay-sdk';
+import { getConstantByNetwork, getSDK } from '@cardstack/cardpay-sdk';
 import {
   BaseQueryFn,
   FetchArgs,
@@ -6,20 +6,20 @@ import {
   FetchBaseQueryError,
 } from '@reduxjs/toolkit/query/react';
 
+import { getWeb3ProviderWithEthSigner } from '@cardstack/models/ethers-wallet';
 import { getFCMToken } from '@cardstack/models/firebase';
+import {
+  saveHubToken,
+  getHubToken,
+  deleteHubToken,
+} from '@cardstack/models/secure-storage';
 import Web3Instance from '@cardstack/models/web3-instance';
-import { MerchantSafeType } from '@cardstack/types';
+import { MerchantSafeType, NetworkType } from '@cardstack/types';
 
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import store, { AppState } from '@rainbow-me/redux/store';
 import logger from 'logger';
 
-import {
-  getHubAuthToken,
-  removeHubAuthToken,
-  loadHubAuthToken,
-  getHubUrl,
-} from '../hub-token-service';
 import { safesApi } from '../safes-api';
 
 import { hubApi } from './hub-api';
@@ -46,7 +46,7 @@ export const fetchHubBaseQuery: BaseQueryFn<
   };
 
   const network = await getNetwork();
-  const hubUrl = getHubUrl(network);
+  const hubUrl = getConstantByNetwork('hubUrl', network);
 
   const baseQuery = fetchBaseQuery({
     baseUrl: `${hubUrl}/api`,
@@ -59,7 +59,7 @@ export const fetchHubBaseQuery: BaseQueryFn<
 
         if (walletAddress && network) {
           try {
-            const token = await getHubAuthToken(network, walletAddress);
+            const token = await getHubAuthToken(walletAddress, network);
 
             if (token) {
               headers.set('Authorization', `Bearer ${token}`);
@@ -95,7 +95,7 @@ export const fetchHubBaseQuery: BaseQueryFn<
     if (error?.status === 401 || error?.status === 403) {
       const walletAddress = store.getState().settings.accountAddress;
 
-      removeHubAuthToken(walletAddress, network);
+      deleteHubToken(walletAddress, network);
 
       // Retry query, it will try to pull new token.
       result = await baseQuery(args, api, extraOptions);
@@ -184,18 +184,50 @@ export const patchProfileInfo = (newInfo: UpdateProfileInfoParams) => {
 
 // Queries
 
+export const getHubAuthToken = async (
+  accountAddress: string,
+  network: NetworkType
+): Promise<string | null> => {
+  // Restores authToken from secure store if it's there.
+  const savedAuthToken = await getHubToken(accountAddress, network);
+
+  if (savedAuthToken) {
+    return savedAuthToken;
+  }
+
+  // If no auth token is available, we provision a new one and store it securely.
+  try {
+    const [web3, signer] = await getWeb3ProviderWithEthSigner({
+      accountAddress: accountAddress,
+    });
+
+    const authAPI = await getSDK('HubAuth', web3, undefined, signer);
+
+    const authToken = await authAPI.authenticate({ from: accountAddress });
+
+    // Save Hub's Token in Secure Store.
+    await saveHubToken(authToken, accountAddress, network);
+
+    return authToken;
+  } catch (e) {
+    logger.sentry('Hub authenticate failed', e);
+
+    return null;
+  }
+};
+
 export const checkHubAuth = async ({
   accountAddress,
   network,
 }: CheckHubAuthQueryParams) => {
-  const authToken = await loadHubAuthToken(accountAddress, network);
+  const authToken = await getHubAuthToken(accountAddress, network);
 
   if (!authToken) {
     return false;
   }
 
   const web3 = Web3Instance.get();
-  const hubUrl = getHubUrl(network);
+  const hubUrl = getConstantByNetwork('hubUrl', network);
 
   const hubAuthInstance = await getSDK('HubAuth', web3, hubUrl);
   const isAuthenticated = await hubAuthInstance.checkValidAuth(authToken);

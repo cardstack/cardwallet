@@ -2,7 +2,6 @@ export * from './gnosis-service';
 export * from './historical-pricing-service';
 export * from './exchange-rate-service';
 export * from './hub/hub-api';
-export * from './hub-token-service';
 export * from './safes-api';
 export * from './service-status-api';
 export * from './merchant/merchant-api';
