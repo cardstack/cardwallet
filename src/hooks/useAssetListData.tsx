@@ -2,7 +2,7 @@ import {
   convertAmountToNativeDisplay,
   getConstantByNetwork,
 } from '@cardstack/cardpay-sdk';
-import { add, orderBy } from 'lodash';
+import { orderBy } from 'lodash';
 import { BalanceCoinRowWrapper } from '../components/coin-row';
 import useAccountSettings from './useAccountSettings';
 import {
@@ -27,6 +27,7 @@ import {
   PrepaidCardType,
 } from '@cardstack/types';
 
+import { getTotalAssetsBalance } from '@rainbow-me/helpers/assets';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 const usePrepaidCardSection = (
@@ -100,10 +101,7 @@ const useOtherTokensSection = (): AssetListSectionItem<AssetWithNativeType> => {
   ) as AssetWithNativeType[];
 
   const total = convertAmountToNativeDisplay(
-    assetsToInclude.reduce(
-      (total, { native }) => add(total, parseInt(native.balance.amount)),
-      0
-    ),
+    getTotalAssetsBalance(assetsToInclude),
     nativeCurrency
   );
 

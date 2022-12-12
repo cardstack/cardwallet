@@ -1,18 +1,12 @@
 import { useSelector } from 'react-redux';
-import { sortAssetsByNativeAmountSelector } from '@rainbow-me/helpers/assetSelectors';
 
 export default function useAccountAssets() {
-  const assets = useSelector(sortAssetsByNativeAmountSelector);
-  const { collectibles, depots, prepaidCards } = useSelector(state => ({
-    collectibles: state.data.collectibles,
-    depots: state.data.depots || [],
-    prepaidCards: state.data.prepaidCards,
+  const data = useSelector(({ data }) => ({
+    collectibles: data.collectibles,
+    depots: data.depots || [],
+    prepaidCards: data.prepaidCards,
+    assets: data.assets,
   }));
 
-  return {
-    ...assets,
-    collectibles,
-    depots,
-    prepaidCards,
-  };
+  return { ...data, allAssets: data.assets };
 }
