@@ -268,7 +268,6 @@
     "eslint-config-satya164": "3.1.10",
     "eslint-import-resolver-babel-module": "^5.1.2",
     "eslint-plugin-echobind": "^0.2.0",
-    "ganache-cli": "6.12.2",
     "graphql": "^15.3.0",
     "husky": "^8.0.0",
     "jest": "^26.6.3",

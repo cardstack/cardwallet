@@ -1,5 +1,5 @@
 import React from 'react';
-import AssetTypes from '../../helpers/assetTypes';
+
 import { useAsset } from '../../hooks';
 import { SendCoinRow } from '../coin-row';
 import CollectiblesSendRow from '../coin-row/CollectiblesSendRow';
@@ -8,6 +8,7 @@ import { Icon } from '../icons';
 import SendAssetFormCollectible from './SendAssetFormCollectible';
 import SendAssetFormToken from './SendAssetFormToken';
 import { CenteredContainer, Container } from '@cardstack/components';
+import { AssetTypes } from '@cardstack/types';
 
 export default function SendAssetForm({
   assetAmount,

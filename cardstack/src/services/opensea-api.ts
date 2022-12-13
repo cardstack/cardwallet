@@ -3,10 +3,9 @@ import axios, { AxiosResponse } from 'axios';
 import { isNil, pick } from 'lodash';
 import { OPENSEA_API_KEY } from 'react-native-dotenv';
 
-import { CollectibleType, NetworkType } from '@cardstack/types';
+import { CollectibleType, NetworkType, AssetTypes } from '@cardstack/types';
 import { isMainnet } from '@cardstack/utils';
 
-import AssetTypes from '@rainbow-me/helpers/assetTypes';
 import logger from 'logger';
 
 export const OPENSEA_LIMIT_PER_PAGE = 50;
@@ -51,9 +50,7 @@ const parseCollectiblesFromOpenSeaResponse = (
   if (isNil(openSeaAssets)) throw new Error('Invalid data from OpenSea');
 
   return openSeaAssets.map((openSeaAsset: any) => {
-    const asset_contract: any = openSeaAsset.asset_contract;
-    const background_color: any = openSeaAsset.background_color;
-    const token_id: string = openSeaAsset.token_id;
+    const { tokenID, asset_contract, background_color } = openSeaAsset;
 
     const collectible: CollectibleType = {
       ...pick(openSeaAsset, [
@@ -86,7 +83,7 @@ const parseCollectiblesFromOpenSeaResponse = (
       ]),
       background: background_color ? `#${background_color}` : null,
       familyImage: asset_contract.image_url,
-      id: token_id,
+      id: tokenID,
       isSendable:
         asset_contract.nft_version === '1.0' ||
         asset_contract.nft_version === '3.0' ||
@@ -97,7 +94,7 @@ const parseCollectiblesFromOpenSeaResponse = (
       type: AssetTypes.nft,
       nativeCurrency,
       networkName: network,
-      uniqueId: `${asset_contract.address}_${token_id}`,
+      uniqueId: `${asset_contract.address}_${tokenID}`,
     };
 
     return collectible;

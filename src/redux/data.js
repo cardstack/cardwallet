@@ -1,17 +1,6 @@
 import { isZero } from '@cardstack/cardpay-sdk';
 import produce from 'immer';
-import {
-  concat,
-  filter,
-  get,
-  isEmpty,
-  map,
-  partition,
-  remove,
-  toLower,
-  uniqBy,
-  values,
-} from 'lodash';
+import { concat, get, isEmpty, partition, toLower, values } from 'lodash';
 import { getTransactionReceipt } from '../handlers/web3';
 import { collectiblesRefreshState } from '@cardstack/redux/collectibles';
 import { NetworkType } from '@cardstack/types';
@@ -25,18 +14,15 @@ import {
   saveAssets,
   saveLocalTransactions,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
-import AssetTypes from '@rainbow-me/helpers/assetTypes';
 import DirectionTypes from '@rainbow-me/helpers/transactionDirectionTypes';
 import TransactionStatusTypes from '@rainbow-me/helpers/transactionStatusTypes';
 import TransactionTypes from '@rainbow-me/helpers/transactionTypes';
 import {
   getTitle,
   getTransactionLabel,
-  parseAccountAssets,
   parseNewTransaction,
   parseTransactions,
 } from '@rainbow-me/parsers';
-import { shitcoins } from '@rainbow-me/references';
 import { ethereumUtils, isLowerCaseMatch } from '@rainbow-me/utils';
 import logger from 'logger';
 
@@ -182,63 +168,24 @@ export const transactionsReceived = (message, appended = false) => async (
   saveLocalTransactions(parsedTransactions, accountAddress, network);
 };
 
-export const addressAssetsReceived = (
-  message,
-  append = false,
-  change = false,
-  removed = false
-) => async (dispatch, getState) => {
+export const addressAssetsReceived = message => async (dispatch, getState) => {
   const isValidMeta = dispatch(checkMeta(message));
   if (!isValidMeta) return;
 
   const { accountAddress, network } = getState().settings;
 
   const payload = values(get(message, 'payload.assets', {}));
-  let assets = filter(
-    payload,
-    asset =>
-      asset?.asset?.type !== AssetTypes.compound &&
-      asset?.asset?.type !== AssetTypes.trash
-  );
 
-  if (removed) {
-    assets = map(payload, asset => {
-      return {
-        ...asset,
-        quantity: 0,
-      };
-    });
-  }
-
-  // Remove spammy tokens
-  remove(assets, asset =>
-    shitcoins.includes(toLower(asset?.asset?.asset_code))
-  );
-
-  let parsedAssets = parseAccountAssets(assets);
-
-  if (append || change || removed) {
-    const { assets: existingAssets } = getState().data;
-    parsedAssets = uniqBy(
-      concat(parsedAssets, existingAssets),
-      item => item.uniqueId
-    );
-  }
-
-  parsedAssets = parsedAssets.filter(
-    asset => !!Number(get(asset, 'balance.amount'))
-  );
-
-  if (parsedAssets.length > 0) {
+  if (payload.length > 0) {
     // Change the state since the account isn't empty anymore
     saveAccountEmptyState(false, accountAddress, network);
   }
 
   dispatch({
-    payload: parsedAssets,
+    payload,
     type: DATA_UPDATE_ASSETS,
   });
-  saveAssets(parsedAssets, accountAddress, network);
+  saveAssets(payload, accountAddress, network);
   dispatch(collectiblesRefreshState());
 };
 

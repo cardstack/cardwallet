@@ -75,12 +75,12 @@ const addNativeTokenPlaceholder = (
   return assets;
 };
 
-const getTotal = assets =>
+export const getTotalAssetsBalance = assets =>
   reduce(
     assets,
     (acc, asset) => {
       const balance = asset?.native?.balance?.amount ?? 0;
-      return add(acc, balance);
+      return add(acc, parseFloat(balance));
     },
     0
   );
@@ -102,7 +102,7 @@ export const buildCoinsList = (
     ...asset,
   }));
 
-  const totalBalancesValue = getTotal(allAssets);
+  const totalBalancesValue = getTotalAssetsBalance(allAssets);
 
   return { assets: allAssets, totalBalancesValue };
 };

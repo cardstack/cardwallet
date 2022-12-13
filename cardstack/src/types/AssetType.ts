@@ -5,22 +5,31 @@ export interface BalanceType {
   wei?: string;
 }
 
+export enum AssetTypes {
+  compound = 'compound',
+  eth = 'eth',
+  nft = 'nft',
+  token = 'token',
+  trash = 'trash',
+  uniswap = 'uniswap',
+  uniswapV2 = 'uniswap-v2',
+}
+
 export interface AssetType {
-  asset_code?: string;
-  address?: string;
+  address: string;
   balance?: BalanceType;
   coingecko_id: string | null;
   decimals: number;
   icon_url: string;
   name: string;
-  token_id?: string;
+  tokenID?: string;
   price: {
     changed_at: number | null;
     relative_change_24h: number;
     value: number;
   };
   symbol: string;
-  type?: string;
+  type?: AssetTypes;
   uniqueId?: string;
 }
 

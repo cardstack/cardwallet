@@ -15,10 +15,10 @@ import SendSheet, {
   useShowAssetFlags,
 } from '../components/send/SendSheet';
 import { createSignableTransaction, estimateGasLimit } from '../handlers/web3';
-import AssetTypes from '../helpers/assetTypes';
 import { sendTransaction } from '../model/wallet';
 import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
+import { AssetTypes } from '@cardstack/types';
 import { isNativeToken } from '@cardstack/utils';
 import { Alert } from '@rainbow-me/components/alerts';
 import {
@@ -29,7 +29,6 @@ import {
   usePrevious,
   useRefreshAccountData,
   useSendableCollectibles,
-  useSendSavingsAccount,
   useUpdateAssetOnchainBalance,
 } from '@rainbow-me/hooks';
 import { dataAddNewTransaction } from '@rainbow-me/redux/data';
@@ -70,7 +69,6 @@ const useSendSheetScreen = () => {
   } = useAccountSettings();
 
   const { sendableCollectibles } = useSendableCollectibles();
-  const savings = useSendSavingsAccount();
   const fetchData = useRefreshAccountData();
 
   const [amountDetails, setAmountDetails] = useState({
@@ -434,7 +432,7 @@ const useSendSheetScreen = () => {
     nativeCurrency,
     network,
     onSelectAsset,
-    savings,
+    savings: [], // TODO: remove saving references on coin list
     sendableCollectibles,
     amountDetails,
     isAuthorizing,

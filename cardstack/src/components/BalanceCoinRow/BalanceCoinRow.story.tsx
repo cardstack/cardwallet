@@ -3,6 +3,7 @@ import { storiesOf } from '@storybook/react-native';
 import React from 'react';
 
 import { BalanceCoinRow, Container } from '@cardstack/components';
+import { AssetTypes } from '@cardstack/types';
 
 const exampleCoinItem = {
   address: 'eth',
@@ -30,7 +31,7 @@ const exampleCoinItem = {
   },
   formattedSymbol: 'eth',
   symbol: 'ETH',
-  type: 'token',
+  type: AssetTypes.token,
   uniqueId: 'eth',
 };
 
@@ -60,7 +61,7 @@ const exampleCoinItem2 = {
   },
   formattedSymbol: 'dai',
   symbol: 'DAI',
-  type: 'token',
+  type: AssetTypes.token,
   uniqueId: 'dai',
 };
 
