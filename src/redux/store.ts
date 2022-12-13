@@ -8,6 +8,7 @@ import { biometryToggleSliceName } from '@cardstack/redux/biometryToggleSlice';
 import { persistedFlagsName } from '@cardstack/redux/persistedFlagsSlice';
 import { primarySafeSliceName } from '@cardstack/redux/primarySafeSlice';
 import { welcomeBannerSliceName } from '@cardstack/redux/welcomeBanner';
+import { eoaAssetsApi } from '@cardstack/services/eoa-assets/eoa-assets-api';
 import { hubApi } from '@cardstack/services/hub/hub-api';
 import { safesApi } from '@cardstack/services/safes-api';
 import { serviceStatusApi } from '@cardstack/services/service-status-api';
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
   [safesApi.reducerPath]: safesApi.reducer,
   [hubApi.reducerPath]: hubApi.reducer,
   [serviceStatusApi.reducerPath]: serviceStatusApi.reducer,
+  [eoaAssetsApi.reducerPath]: eoaAssetsApi.reducer,
   [wyreApi.reducerPath]: wyreApi.reducer,
   [authSlice.name]: authSlice.reducer,
 });
@@ -50,7 +52,13 @@ const store = configureStore({
       immutableCheck: false, // without disabling this, we get a max call stack exceeded when switching from mainnet to xdai. It is likely due to storing an object in redux that has a circular reference to itself.
     });
     middlewares.push(
-      ...[safesApi.middleware, serviceStatusApi.middleware, hubApi.middleware]
+      ...[
+        safesApi.middleware,
+        serviceStatusApi.middleware,
+        hubApi.middleware,
+        wyreApi.middleware,
+        eoaAssetsApi.middleware,
+      ]
     );
 
     if (__DEV__) {
