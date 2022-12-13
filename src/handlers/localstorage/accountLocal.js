@@ -1,6 +1,6 @@
 import { getAccountLocal, saveAccountLocal } from './common';
 
-const assetsVersion = '0.2.1';
+const legacyAssetsVersion = '0.2.1';
 const prepaidCardsVersion = '0.2.0';
 const depotVersion = '0.2.0';
 const merchantSafeVersion = '0.2.0';
@@ -88,17 +88,24 @@ export const saveAccountEmptyState = (isEmpty, accountAddress, network) =>
  * @param  {String}   [network]
  * @return {Object}
  */
-export const getAssets = (accountAddress, network) =>
-  getAccountLocal(ASSETS, accountAddress, network, [], assetsVersion);
+export const getAssets = (
+  accountAddress,
+  network,
+  version = legacyAssetsVersion
+) => getAccountLocal(ASSETS, accountAddress, network, [], version);
 
 /**
  * @desc save assets
- * @param  {Array}    [assets]
+ * @param  {Array | Object}    [assets]
  * @param  {String}   [address]
  * @param  {String}   [network]
  */
-export const saveAssets = (assets, accountAddress, network) =>
-  saveAccountLocal(ASSETS, assets, accountAddress, network, assetsVersion);
+export const saveAssets = (
+  assets,
+  accountAddress,
+  network,
+  version = legacyAssetsVersion
+) => saveAccountLocal(ASSETS, assets, accountAddress, network, version);
 
 /**
  * @desc get prepaid cards
