@@ -1,5 +1,3 @@
-import { defaultGasPriceFormat } from '@rainbow-me/parsers';
-
 export type GasPricesQueryParams = {
   chainId: number;
 };
@@ -11,7 +9,4 @@ export type GasPricesAttrsType = {
   fast: string;
 };
 
-export type GasPricesQueryResults = Record<
-  string,
-  ReturnType<typeof defaultGasPriceFormat> | null
->;
+export type GasPricesQueryResults = Omit<GasPricesAttrsType, 'chain-id'>;
