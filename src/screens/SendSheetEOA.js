@@ -328,13 +328,11 @@ const useSendSheetScreen = () => {
 
   const onPressTransactionSpeed = useCallback(
     onSuccess => {
-      const hideCustom = true;
       gasUtils.showTransactionSpeedOptions(
         gasPrices,
         txFees,
         gasPriceOption => updateGasPriceOption(gasPriceOption),
-        onSuccess,
-        hideCustom
+        onSuccess
       );
     },
     [txFees, gasPrices, updateGasPriceOption]

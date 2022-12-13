@@ -1,12 +1,11 @@
 import { fromWei, greaterThanOrEqualTo } from '@cardstack/cardpay-sdk';
 import { get, isEmpty } from 'lodash';
-import { getEstimatedTimeForGasPrice } from '@rainbow-me/handlers/gasPrices';
-import { defaultGasPriceFormat, parseTxFees } from '@rainbow-me/parsers';
+import { parseTxFees } from '@rainbow-me/parsers';
 import { ethUnits } from '@rainbow-me/references';
 
 import { ethereumUtils, gasUtils } from '@rainbow-me/utils';
 
-const { CUSTOM, NORMAL } = gasUtils;
+const { NORMAL } = gasUtils;
 
 // -- Constants ------------------------------------------------------------- //
 const GAS_UPDATE_DEFAULT_GAS_LIMIT = 'gas/GAS_UPDATE_DEFAULT_GAS_LIMIT';
@@ -52,28 +51,6 @@ export const gasUpdateGasPriceOption = newGasPriceOption => (
     },
     type: GAS_UPDATE_GAS_PRICE_OPTION,
   });
-};
-
-export const gasUpdateCustomValues = price => async (dispatch, getState) => {
-  const { gasPrices, gasLimit } = getState().gas;
-
-  const estimateInMinutes = await getEstimatedTimeForGasPrice(price);
-  const newGasPrices = { ...gasPrices };
-  newGasPrices[CUSTOM] = defaultGasPriceFormat(
-    CUSTOM,
-    estimateInMinutes,
-    price,
-    true
-  );
-
-  await dispatch({
-    payload: {
-      gasPrices: newGasPrices,
-    },
-    type: GAS_PRICES_SUCCESS,
-  });
-
-  dispatch(gasUpdateTxFee(gasLimit));
 };
 
 export const gasUpdateDefaultGasLimit = (
@@ -133,10 +110,7 @@ const getSelectedGasPrice = (
 ) => {
   let txFee = txFees[selectedGasPriceOption];
   // If no custom price is set we default to FAST
-  if (
-    selectedGasPriceOption === gasUtils.CUSTOM &&
-    get(txFee, 'txFee.value.amount') === 'NaN'
-  ) {
+  if (get(txFee, 'txFee.value.amount') === 'NaN') {
     txFee = txFees[gasUtils.FAST];
   }
   const nativeTokenAsset = ethereumUtils.getNativeTokenAsset(assets);

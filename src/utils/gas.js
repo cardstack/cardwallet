@@ -9,22 +9,20 @@ import {
 } from 'lodash';
 import showActionSheetWithOptions from './actionsheet';
 
-const CUSTOM = 'custom';
 const FAST = 'fast';
 const NORMAL = 'normal';
 const SLOW = 'slow';
 
-const GasSpeedOrder = [SLOW, NORMAL, FAST, CUSTOM];
+const GasSpeedOrder = [SLOW, NORMAL, FAST];
 
 const showTransactionSpeedOptions = (
   gasPrices,
   txFees,
   updateGasOption,
-  onSuccess,
-  hideCustom = false
+  onSuccess
 ) => {
   const options = [
-    ...formatGasSpeedItems(gasPrices, txFees, hideCustom),
+    ...formatGasSpeedItems(gasPrices, txFees),
     { label: 'Cancel' },
   ];
   const cancelButtonIndex = options.length - 1;
@@ -47,11 +45,8 @@ const showTransactionSpeedOptions = (
   );
 };
 
-const formatGasSpeedItems = (gasPrices, txFees, hideCustom = false) => {
+const formatGasSpeedItems = (gasPrices, txFees) => {
   let allSpeeds = GasSpeedOrder;
-  if (hideCustom) {
-    allSpeeds = allSpeeds.filter(speed => speed !== CUSTOM);
-  }
   const gasItems = map(allSpeeds, speed => {
     const cost = get(txFees, `[${speed}].txFee.native.value.display`);
     const gwei = get(gasPrices, `[${speed}].value.display`);
@@ -68,7 +63,6 @@ const formatGasSpeedItems = (gasPrices, txFees, hideCustom = false) => {
 };
 
 export default {
-  CUSTOM,
   FAST,
   GasSpeedOrder,
   NORMAL,
