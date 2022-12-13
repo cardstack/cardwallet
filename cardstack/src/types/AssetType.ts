@@ -30,7 +30,7 @@ export interface AssetType {
   };
   symbol: string;
   type?: AssetTypes;
-  uniqueId?: string;
+  id: string;
 }
 
 export interface AssetWithNativeType extends AssetType {

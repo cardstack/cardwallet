@@ -13,7 +13,7 @@ export default function useAsset(asset) {
     if (asset.type === AssetTypes.token) {
       matched = find(allAssets, matchesProperty('address', asset.address));
     } else if (asset.type === AssetTypes.nft) {
-      matched = find(collectibles, matchesProperty('uniqueId', asset.uniqueId));
+      matched = find(collectibles, matchesProperty('id', asset.id));
     }
 
     return matched || asset;

@@ -94,7 +94,6 @@ const parseCollectiblesFromOpenSeaResponse = (
       type: AssetTypes.nft,
       nativeCurrency,
       networkName: network,
-      uniqueId: `${asset_contract.address}_${tokenID}`,
     };
 
     return collectible;

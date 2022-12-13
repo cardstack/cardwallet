@@ -1,7 +1,7 @@
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json';
 
 import { utils as ethersUtils } from 'ethers';
-import { filter, flatMap, keyBy, map, toLower } from 'lodash';
+import { keyBy, map, toLower } from 'lodash';
 
 import RAINBOW_TOKEN_LIST_DATA from './rainbow-token-list.json';
 
@@ -15,7 +15,7 @@ const tokenList: RainbowToken[] = map(RAINBOW_TOKEN_LIST_DATA.tokens, token => {
     decimals,
     name,
     symbol,
-    uniqueId: address,
+    id: address,
     ...extensions,
   };
 });
@@ -27,7 +27,7 @@ const ethWithAddress: RainbowToken = {
   isVerified: true,
   name: 'Ethereum',
   symbol: 'ETH',
-  uniqueId: 'eth',
+  id: 'eth',
 };
 
 const daiWithAddress: RainbowToken = {
@@ -35,7 +35,7 @@ const daiWithAddress: RainbowToken = {
   address: 'dai',
   name: 'Dai',
   symbol: 'DAI',
-  uniqueId: 'dai',
+  id: 'dai',
 };
 
 const tokenListWithEth: RainbowToken[] = [
@@ -49,16 +49,6 @@ const RAINBOW_TOKEN_LIST: Record<string, RainbowToken> = keyBy(
   'address'
 );
 
-const curatedRainbowTokenList: RainbowToken[] = filter(
-  tokenListWithEth,
-  'isRainbowCurated'
-);
-
-const TOKEN_SAFE_LIST: Record<string, string> = keyBy(
-  flatMap(curatedRainbowTokenList, ({ name, symbol }) => [name, symbol]),
-  id => toLower(id)
-);
-
 const PAIR_INTERFACE = new ethersUtils.Interface(IUniswapV2PairABI);
 const PAIR_GET_RESERVES_FRAGMENT = PAIR_INTERFACE.getFunction('getReserves');
 const PAIR_GET_RESERVES_CALL_DATA: string = PAIR_INTERFACE.encodeFunctionData(
@@ -70,5 +60,4 @@ export {
   PAIR_GET_RESERVES_FRAGMENT,
   PAIR_INTERFACE,
   RAINBOW_TOKEN_LIST,
-  TOKEN_SAFE_LIST,
 };

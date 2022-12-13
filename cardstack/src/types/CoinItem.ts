@@ -43,5 +43,5 @@ export interface CoinItem {
   /** ex: token */
   type: string;
   /** ex: eth */
-  uniqueId: string;
+  id: string;
 }

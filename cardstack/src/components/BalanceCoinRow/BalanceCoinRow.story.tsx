@@ -32,7 +32,7 @@ const exampleCoinItem = {
   formattedSymbol: 'eth',
   symbol: 'ETH',
   type: AssetTypes.token,
-  uniqueId: 'eth',
+  id: 'eth',
 };
 
 const exampleCoinItem2 = {
@@ -62,7 +62,7 @@ const exampleCoinItem2 = {
   formattedSymbol: 'dai',
   symbol: 'DAI',
   type: AssetTypes.token,
-  uniqueId: 'dai',
+  id: 'dai',
 };
 
 storiesOf('Balance Coin Row', module).add('Default', () => {

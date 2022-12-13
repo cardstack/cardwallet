@@ -10,9 +10,9 @@ import { ETH_ICON_URL } from '@rainbow-me/references';
 export const buildAssetUniqueIdentifier = item => {
   const balance = get(item, 'balance.amount', '');
   const nativePrice = get(item, 'native.price.display', '');
-  const uniqueId = get(item, 'uniqueId');
+  const id = get(item, 'id');
 
-  return compact([balance, nativePrice, uniqueId]).join('_');
+  return compact([balance, nativePrice, id]).join('_');
 };
 
 const addNativeTokenPlaceholder = (
@@ -67,7 +67,7 @@ const addNativeTokenPlaceholder = (
       price: value,
       symbol: nativeTokenSymbol,
       type: 'token',
-      uniqueId: nativeTokenAddress,
+      id: nativeTokenAddress,
     };
 
     return concat([zeroToken], assets);

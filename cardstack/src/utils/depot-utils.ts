@@ -7,7 +7,7 @@ export const reshapeSingleDepotTokenToAsset = ({
 }: TokenType) => ({
   ...rest,
   address: tokenAddress,
-  uniqueId: tokenAddress,
+  id: tokenAddress,
   type: AssetTypes.token,
   ...token,
 });

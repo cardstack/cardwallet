@@ -27,7 +27,7 @@ export interface ParsedAddressAsset {
   };
   symbol: string;
   type?: string;
-  uniqueId: string;
+  id: string;
 }
 
 export interface UniswapCurrency extends Asset {
@@ -44,7 +44,7 @@ export interface RainbowToken extends Asset {
   isRainbowCurated?: boolean;
   isVerified?: boolean;
   shadowColor?: string;
-  uniqueId: string;
+  id: string;
 }
 
 export interface UniswapSubgraphAsset extends RainbowToken {

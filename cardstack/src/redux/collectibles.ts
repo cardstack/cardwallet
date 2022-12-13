@@ -286,7 +286,6 @@ const fetchNFTsViaRpcNode = () => async (
               networkName: network,
               lastPrice: null,
               type: AssetTypes.nft,
-              uniqueId: `${asset.address}_${asset.tokenID}`,
             };
 
             return collectible;
