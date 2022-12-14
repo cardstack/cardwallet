@@ -1,3 +1,5 @@
+import { BigNumberish } from 'ethers';
+
 export type GasPricesQueryParams = {
   chainId: number;
 };
@@ -9,4 +11,10 @@ export type GasPricesAttrsType = {
   fast: string;
 };
 
-export type GasPricesQueryResults = Omit<GasPricesAttrsType, 'chain-id'>;
+export type GasPricesQueryResults = Record<
+  keyof Omit<GasPricesAttrsType, 'chain-id'>,
+  {
+    amount: BigNumberish;
+    display: string;
+  }
+>;
