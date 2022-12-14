@@ -53,36 +53,6 @@ export const saveSavings = (savings, accountAddress, network) =>
   saveAccountLocal(SAVINGS, savings, accountAddress, network, savingsVersion);
 
 /**
- * @desc get account empty state
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {Boolean}
- */
-export const getAccountEmptyState = (accountAddress, network) =>
-  getAccountLocal(
-    ACCOUNT_EMPTY,
-    accountAddress,
-    network,
-    false,
-    accountEmptyVersion
-  );
-
-/**
- * @desc save account empty state
- * @param  {Boolean}  [isEmpty]
- * @param  {String}   [address]
- * @param  {String}   [network]
- */
-export const saveAccountEmptyState = (isEmpty, accountAddress, network) =>
-  saveAccountLocal(
-    ACCOUNT_EMPTY,
-    isEmpty,
-    accountAddress,
-    network,
-    accountEmptyVersion
-  );
-
-/**
  * @desc get assets
  * @param  {String}   [address]
  * @param  {String}   [network]

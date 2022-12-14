@@ -10,7 +10,6 @@ import {
   getLocalTransactions,
   getMerchantSafes,
   getPrepaidCards,
-  saveAccountEmptyState,
   saveAssets,
   saveLocalTransactions,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
@@ -100,8 +99,7 @@ export const dataUpdateAssets = assets => (dispatch, getState) => {
   const { accountAddress, network } = getState().settings;
   if (assets.length) {
     saveAssets(assets, accountAddress, network);
-    // Change the state since the account isn't empty anymore
-    saveAccountEmptyState(false, accountAddress, network);
+
     dispatch({
       payload: assets,
       type: DATA_UPDATE_ASSETS,
@@ -175,11 +173,6 @@ export const addressAssetsReceived = message => async (dispatch, getState) => {
   const { accountAddress, network } = getState().settings;
 
   const payload = values(get(message, 'payload.assets', {}));
-
-  if (payload.length > 0) {
-    // Change the state since the account isn't empty anymore
-    saveAccountEmptyState(false, accountAddress, network);
-  }
 
   dispatch({
     payload,

@@ -38,6 +38,5 @@ export { default as useUpdateAssetOnchainBalance } from './useUpdateAssetOnchain
 export { default as useWalletConnectConnections } from '@cardstack/hooks/wallet-connect/useWalletConnectConnections';
 export { default as useWallets } from './useWallets';
 export { default as useWalletsWithBalancesAndNames } from './useWalletsWithBalancesAndNames';
-export { default as useAccountEmptyState } from './useAccountEmptyState';
 export * from './useAssetListData';
 export * from './usePinnedAndHiddenItemOptions';

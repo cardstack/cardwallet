@@ -33,7 +33,6 @@ import { PinFlow } from '@cardstack/screens/PinScreen/types';
 import { PinScreenNavParams } from '@cardstack/screens/PinScreen/usePinScreen';
 
 import { mapDispatchToActions } from '@cardstack/utils';
-import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/accountLocal';
 import { isValidSeed } from '@rainbow-me/helpers/validators';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 
@@ -193,17 +192,9 @@ export default function useWalletManager() {
               title: walletLoadingStates.CREATING_WALLET,
             });
 
-            const wallet = await createOrImportWallet({
+            await createOrImportWallet({
               pin,
             });
-
-            const walletAddress = wallet?.address;
-
-            await saveAccountEmptyState(
-              true,
-              walletAddress?.toLowerCase(),
-              network
-            );
 
             initWalletResetNavState();
           } catch (e) {
@@ -211,7 +202,7 @@ export default function useWalletManager() {
           }
         },
       }),
-    [createWalletPin, initWalletResetNavState, network, showLoadingOverlay]
+    [createWalletPin, initWalletResetNavState, showLoadingOverlay]
   );
 
   const importWallet = useCallback(
