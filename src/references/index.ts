@@ -8,7 +8,6 @@ export {
   PAIR_GET_RESERVES_FRAGMENT,
   PAIR_INTERFACE,
   RAINBOW_TOKEN_LIST,
-  TOKEN_SAFE_LIST,
 } from './uniswap';
 export { default as compoundCERC20ABI } from './compound/compound-cerc20-abi.json';
 export { default as compoundCETHABI } from './compound/compound-ceth-abi.json';

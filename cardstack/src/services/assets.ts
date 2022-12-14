@@ -45,11 +45,12 @@ const getOnChainTokenBalance = async ({
     return {
       amount: tokenBalance,
       display: displayBalance,
+      wei: balance,
     };
   } catch (e) {
     logger.sentry('Error getOnChainTokenBalance, symbol:', symbol, e);
 
-    return { amount: '0', display: '' };
+    return { amount: '0', display: `0 ${symbol}`, wei: '0' };
   }
 };
 
@@ -76,10 +77,11 @@ const getOnChainNativeTokenBalance = async ({
     return {
       amount: tokenBalance,
       display: displayBalance,
+      wei: balance,
     };
   } catch (e) {
     logger.sentry('Error getOnChainNativeTokenBalance,symbol:', symbol, e);
 
-    return { amount: '0', display: '' };
+    return { amount: '0', display: `0 ${symbol}`, wei: '0' };
   }
 };

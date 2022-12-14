@@ -8,11 +8,10 @@ import store from '@rainbow-me/redux/store';
 import { ETH_ICON_URL } from '@rainbow-me/references';
 
 export const buildAssetUniqueIdentifier = item => {
-  const balance = get(item, 'balance.amount', '');
-  const nativePrice = get(item, 'native.price.display', '');
   const id = get(item, 'id');
+  const address = get(item, 'address');
 
-  return compact([balance, nativePrice, id]).join('_');
+  return compact([address, id]).join('_');
 };
 
 const addNativeTokenPlaceholder = (
