@@ -153,13 +153,17 @@ const useAssets = () => {
     [isLoadingAssets, isLoadingBalances, isLoadingGnosisPrices, isLoadingPrices]
   );
 
+  const refresh = useCallback(() => {
+    // TODO: refresh data
+  }, []);
+
   return {
     assetsIdWithoutNfts,
     assets,
     assetsIds: ids,
     legacyAssetsStruct,
     isLoading,
-
+    refresh,
     getAsset,
     getAssetPrice,
     getAssetBalance,

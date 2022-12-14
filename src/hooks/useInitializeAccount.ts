@@ -1,18 +1,14 @@
-import { captureException } from '@sentry/react-native';
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { dataLoadState } from '../redux/data';
 import { walletConnectLoadState } from '../redux/walletconnect';
 import useAccountSettings from './useAccountSettings';
-import WalletConnect from '@cardstack/models/wallet-connect';
-import {
-  collectiblesLoadState,
-  collectiblesRefreshState,
-} from '@cardstack/redux/collectibles';
+
+import WalletConnect, { signClient } from '@cardstack/models/wallet-connect';
+import { collectiblesLoadState } from '@cardstack/redux/collectibles';
 import { requestsLoadState } from '@cardstack/redux/requests';
 import { mapDispatchToActions } from '@cardstack/utils';
-import { fallbackExplorerInit } from '@rainbow-me/redux/fallbackExplorer';
 import { imageMetadataCacheLoadState } from '@rainbow-me/redux/imageMetadata';
 import { settingsLoadCurrency } from '@rainbow-me/redux/settings';
 import logger from 'logger';
@@ -23,7 +19,7 @@ export default function useInitializeAccount() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (accountAddress) WalletConnect.init(accountAddress);
+    if (accountAddress && !signClient) WalletConnect.init(accountAddress);
   }, [accountAddress]);
 
   const loadAccountData = useCallback(async () => {
@@ -43,20 +39,5 @@ export default function useInitializeAccount() {
     return Promise.allSettled(promises);
   }, [dispatch, isOnCardPayNetwork]);
 
-  const fetchAccountAssets = useCallback(async () => {
-    try {
-      await Promise.all(
-        mapDispatchToActions(dispatch, [
-          fallbackExplorerInit,
-          collectiblesRefreshState,
-        ])
-      );
-      logger.sentry('Initialize account data and collectibles ');
-    } catch (error) {
-      logger.sentry('Error initializing account data');
-      captureException(error);
-    }
-  }, [dispatch]);
-
-  return { loadAccountData, fetchAccountAssets };
+  return { loadAccountData };
 }

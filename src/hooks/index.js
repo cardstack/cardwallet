@@ -26,7 +26,6 @@ export { default as useIsMounted } from './useIsMounted';
 export { default as useIsWalletEthZero } from './useIsWalletEthZero';
 export { default as useMaxInputBalance } from './useMaxInputBalance';
 export { default as usePrevious } from './usePrevious';
-export { default as useRefreshAccountData } from './useRefreshAccountData';
 export { default as useRequests } from './useRequests';
 export { default as useSafeImageUri } from './useSafeImageUri';
 export { default as useSendableCollectibles } from './useSendableCollectibles';

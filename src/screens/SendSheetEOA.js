@@ -27,7 +27,6 @@ import {
   useGas,
   useMaxInputBalance,
   usePrevious,
-  useRefreshAccountData,
   useSendableCollectibles,
   useUpdateAssetOnchainBalance,
 } from '@rainbow-me/hooks';
@@ -69,7 +68,6 @@ const useSendSheetScreen = () => {
   } = useAccountSettings();
 
   const { sendableCollectibles } = useSendableCollectibles();
-  const fetchData = useRefreshAccountData();
 
   const [amountDetails, setAmountDetails] = useState({
     assetAmount: '',
@@ -428,7 +426,6 @@ const useSendSheetScreen = () => {
     recipient,
     recipientFieldRef,
     allAssets,
-    fetchData,
     nativeCurrency,
     network,
     onSelectAsset,

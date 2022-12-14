@@ -20,7 +20,6 @@ import {
   getTitle,
   getTransactionLabel,
   parseNewTransaction,
-  parseTransactions,
 } from '@rainbow-me/parsers';
 import { ethereumUtils, isLowerCaseMatch } from '@rainbow-me/utils';
 import logger from 'logger';
@@ -118,52 +117,6 @@ const checkMeta = message => (dispatch, getState) => {
     isLowerCaseMatch(currency, nativeCurrency) &&
     (!metaNetwork || isLowerCaseMatch(metaNetwork, network))
   );
-};
-
-const checkForConfirmedSavingsActions = transactionsData => dispatch => {
-  const foundConfirmedSavings = find(
-    transactionsData,
-    transaction =>
-      (transaction?.type === 'deposit' || transaction?.type === 'withdraw') &&
-      transaction?.status === 'confirmed'
-  );
-  if (foundConfirmedSavings) {
-    dispatch(updateRefetchSavings(true));
-  }
-};
-
-export const transactionsReceived = (message, appended = false) => async (
-  dispatch,
-  getState
-) => {
-  const isValidMeta = dispatch(checkMeta(message));
-  if (!isValidMeta) return;
-  const transactionData = get(message, 'payload.transactions', []);
-  if (appended) {
-    dispatch(checkForConfirmedSavingsActions(transactionData));
-  }
-
-  const { accountAddress, nativeCurrency, network } = getState().settings;
-  const { transactions } = getState().data;
-
-  const { parsedTransactions, potentialNftTransaction } = parseTransactions(
-    transactionData,
-    accountAddress,
-    nativeCurrency,
-    transactions,
-    network,
-    appended
-  );
-  if (appended && potentialNftTransaction) {
-    setTimeout(() => {
-      dispatch(collectiblesRefreshState());
-    }, 60000);
-  }
-  dispatch({
-    payload: parsedTransactions,
-    type: DATA_UPDATE_TRANSACTIONS,
-  });
-  saveLocalTransactions(parsedTransactions, accountAddress, network);
 };
 
 export const addressAssetsReceived = message => async (dispatch, getState) => {

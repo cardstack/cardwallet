@@ -63,7 +63,6 @@ export default function SendSheet({
   selectedGasPrice,
   type,
   onMaxBalancePress,
-  fetchData = undefined,
   onPressTransactionSpeed = undefined,
   showNativeCurrencyField = true,
 }) {
@@ -119,7 +118,6 @@ export default function SendSheet({
         <SendAssetList
           allAssets={allAssets}
           collectibles={sendableCollectibles}
-          fetchData={fetchData}
           nativeCurrency={nativeCurrency}
           network={network}
           onSelectAsset={onSelectAsset}

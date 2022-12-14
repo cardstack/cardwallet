@@ -7,6 +7,7 @@ import { BN } from 'ethereumjs-util';
 import { toLower, uniqBy } from 'lodash';
 import Web3 from 'web3';
 
+import { collectiblesRefreshState } from '@cardstack/redux/collectibles';
 import { AssetTypes } from '@cardstack/types';
 
 import {
@@ -14,6 +15,7 @@ import {
   saveAssets,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
 import { assetsVersion } from '@rainbow-me/handlers/localstorage/common';
+import store from '@rainbow-me/redux/store';
 import { shitcoins } from '@rainbow-me/references';
 import migratedTokens from '@rainbow-me/references/migratedTokens.json';
 import logger from 'logger';
@@ -205,9 +207,12 @@ export const getAccountAssets = async ({
   // Store assets and block to just fetch newest tx on refresh
   await saveAssets(
     { assets: tokensInWallet, latestTxBlockNumber },
+    accountAddress,
     network,
     assetsVersion
   );
+
+  await store.dispatch(collectiblesRefreshState());
 
   return tokensInWallet;
 };
