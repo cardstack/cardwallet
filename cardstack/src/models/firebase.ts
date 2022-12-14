@@ -125,7 +125,7 @@ export const isFCMTokenStored = async (
  * if not we register it in the Hub and store the token locally
  * associated with the selected network.
  */
-export const storeRegisterFCMToken = async () => {
+export const storeRegisteredFCMToken = async () => {
   try {
     const walletAddress = (await loadAddress()) || '';
 
@@ -198,7 +198,7 @@ export const checkPushPermissionAndRegisterToken = async () => {
     }
   }
 
-  await storeRegisterFCMToken();
+  await storeRegisteredFCMToken();
 };
 
 export const registerTokenRefreshListener = () =>
