@@ -98,7 +98,7 @@ export const removeFCMToken = async (address: string) => {
   }
 };
 
-interface isFCMTokenStoredProps {
+interface FCMTokenStoredReturn {
   isTokenStored: boolean;
   addressesByNetwork?: Record<NetworkType, string[]>;
   fcmToken: string | null;
@@ -107,7 +107,7 @@ interface isFCMTokenStoredProps {
 // check if token's stored by confirming addresses includes wallet address
 export const isFCMTokenStored = async (
   walletAddress: string
-): Promise<isFCMTokenStoredProps> => {
+): Promise<FCMTokenStoredReturn> => {
   const { fcmToken, addressesByNetwork } = await getFCMToken();
   const network: NetworkType = await getNetwork();
   return {
@@ -119,9 +119,13 @@ export const isFCMTokenStored = async (
   };
 };
 
-// check if token is registered in hub with checking stored in asyncStorage associated with wallet address
-// and if not stored, register to hub, then update asyncStorage)
-export const saveFCMToken = async () => {
+/**
+ * The Push Token needs to be re-registered within each network, this function
+ * validates if the device token is saved for current selected network,
+ * if not we register it in the Hub and store the token locally
+ * associated with the selected network.
+ */
+export const storeRegisteredFCMToken = async () => {
   try {
     const walletAddress = (await loadAddress()) || '';
 
@@ -145,6 +149,8 @@ export const saveFCMToken = async () => {
           saveLocal(DEVICE_FCM_TOKEN_KEY, {
             data: { fcmToken: newFcmToken, [network]: [walletAddress] },
           });
+
+          logger.log('FCM token changed and was registered for', network);
         } else {
           saveLocal(DEVICE_FCM_TOKEN_KEY, {
             data: {
@@ -158,19 +164,19 @@ export const saveFCMToken = async () => {
               ),
             },
           });
-        }
 
-        logger.log('FCM token registered!!!');
+          logger.log('FCM token registered for', network);
+        }
 
         return;
       }
 
       logger.sentry('FCM token register failed!', walletAddress);
     } else {
-      logger.sentry('FCM token already registered for this account!');
+      logger.log('FCM token already registered for this account');
     }
   } catch (error) {
-    logger.sentry('error fcm token - cannot register fcm token!', error);
+    logger.sentry('Error trying to register FCM token', error);
   }
 };
 
@@ -192,7 +198,7 @@ export const checkPushPermissionAndRegisterToken = async () => {
     }
   }
 
-  await saveFCMToken();
+  await storeRegisteredFCMToken();
 };
 
 export const registerTokenRefreshListener = () =>
