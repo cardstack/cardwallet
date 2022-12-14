@@ -3,15 +3,12 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 
 import { transformObjKeysToCamelCase } from '@cardstack/utils';
 
-import { queryPromiseWrapper } from '../utils';
-
-import { checkHubAuth, fetchHubBaseQuery, hubBodyBuilder } from './hub-service';
+import { fetchHubBaseQuery, hubBodyBuilder } from './hub-service';
 import {
   RequestCardDropQueryParams,
   EoaClaimedAttrsType,
   GetEoaClaimedQueryParams,
   GetEoaClaimedQueryResult,
-  CheckHubAuthQueryParams,
   GetExchangeRatesQueryParams,
 } from './hub-types';
 
@@ -51,17 +48,6 @@ export const hubApi = createApi({
       }) => transformObjKeysToCamelCase(response?.data?.attributes),
       providesTags: [HubCacheTags.EOA_CLAIM],
     }),
-    checkHubAuth: builder.query<boolean, CheckHubAuthQueryParams>({
-      async queryFn(params) {
-        return queryPromiseWrapper<boolean, CheckHubAuthQueryParams>(
-          checkHubAuth,
-          params,
-          {
-            errorLogMessage: 'Error checking hub auth',
-          }
-        );
-      },
-    }),
     getExchangeRates: builder.query<
       Record<NativeCurrency | string, number>,
       GetExchangeRatesQueryParams | void
@@ -78,6 +64,5 @@ export const hubApi = createApi({
 export const {
   useGetEoaClaimedQuery,
   useRequestEmailCardDropMutation,
-  useCheckHubAuthQuery,
   useGetExchangeRatesQuery,
 } = hubApi;

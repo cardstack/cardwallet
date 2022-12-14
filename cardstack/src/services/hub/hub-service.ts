@@ -13,7 +13,6 @@ import {
   getHubToken,
   deleteHubToken,
 } from '@cardstack/models/secure-storage';
-import Web3Instance from '@cardstack/models/web3-instance';
 import { MerchantSafeType, NetworkType } from '@cardstack/types';
 
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
@@ -25,7 +24,6 @@ import { safesApi } from '../safes-api';
 import { hubApi } from './hub-api';
 import {
   BaseQueryExtraOptions,
-  CheckHubAuthQueryParams,
   GetExchangeRatesQueryParams,
   PostProfilePurchaseQueryParams,
   UpdateProfileInfoParams,
@@ -214,25 +212,6 @@ export const getHubAuthToken = async (
 
     return null;
   }
-};
-
-export const checkHubAuth = async ({
-  accountAddress,
-  network,
-}: CheckHubAuthQueryParams) => {
-  const authToken = await getHubAuthToken(accountAddress, network);
-
-  if (!authToken) {
-    return false;
-  }
-
-  const web3 = Web3Instance.get();
-  const hubUrl = getConstantByNetwork('hubUrl', network);
-
-  const hubAuthInstance = await getSDK('HubAuth', web3, hubUrl);
-  const isAuthenticated = await hubAuthInstance.checkValidAuth(authToken);
-
-  return isAuthenticated;
 };
 
 // External Queries

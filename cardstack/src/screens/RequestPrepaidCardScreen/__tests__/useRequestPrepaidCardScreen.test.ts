@@ -28,7 +28,6 @@ jest.mock('@cardstack/services', () => ({
       isError: false,
     },
   ]),
-  useCheckHubAuthQuery: jest.fn().mockResolvedValue({ data: true }),
   hubApi: jest.fn(),
 }));
 
