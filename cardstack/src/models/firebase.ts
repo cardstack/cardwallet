@@ -98,7 +98,7 @@ export const removeFCMToken = async (address: string) => {
   }
 };
 
-interface isFCMTokenStoredProps {
+interface FCMTokenStoredReturn {
   isTokenStored: boolean;
   addressesByNetwork?: Record<NetworkType, string[]>;
   fcmToken: string | null;
@@ -107,7 +107,7 @@ interface isFCMTokenStoredProps {
 // check if token's stored by confirming addresses includes wallet address
 export const isFCMTokenStored = async (
   walletAddress: string
-): Promise<isFCMTokenStoredProps> => {
+): Promise<FCMTokenStoredReturn> => {
   const { fcmToken, addressesByNetwork } = await getFCMToken();
   const network: NetworkType = await getNetwork();
   return {
