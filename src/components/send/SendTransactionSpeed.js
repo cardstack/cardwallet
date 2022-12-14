@@ -31,11 +31,11 @@ export default function SendTransactionSpeed({
       return `${gasPrice?.nativeDisplay} ≈ ${nativeCurrencySymbol}${gasPrice?.amount}`;
     }
 
-    if (!gasPrice.txFee) {
+    if (!gasPrice) {
       return 'Loading gas prices';
     }
 
-    return `${gasPrice.txFee?.value.display} ≈ ${gasPrice.txFee?.native.value.display}`;
+    return `${gasPrice?.value.display} ≈ ${gasPrice?.native.value.display}`;
   }, [gasPrice, isDepot, nativeCurrencySymbol]);
 
   const hasTimeAmount = useMemo(
