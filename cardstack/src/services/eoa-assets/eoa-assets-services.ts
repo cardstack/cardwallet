@@ -1,6 +1,11 @@
-import { delay, getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import {
+  delay,
+  getConstantByNetwork,
+  NativeCurrency,
+} from '@cardstack/cardpay-sdk';
 import { BN } from 'ethereumjs-util';
 import { toLower, uniqBy } from 'lodash';
+import Web3 from 'web3';
 
 import { AssetTypes } from '@cardstack/types';
 
@@ -13,10 +18,15 @@ import { shitcoins } from '@rainbow-me/references';
 import migratedTokens from '@rainbow-me/references/migratedTokens.json';
 import logger from 'logger';
 
+import { getNativeBalanceFromOracle } from '..';
 import { getOnChainAssetBalance } from '../assets';
 
-import { Asset } from './eoa-assets-api';
-import { EOABaseParams, EOATxListResponse } from './eoa-assets-types';
+import {
+  Asset,
+  EOABaseParams,
+  EOATxListResponse,
+  GetTokensBalanceParams,
+} from './eoa-assets-types';
 
 // Some contracts like SNX / SUSD use an ERC20 proxy
 // some of those tokens have been migrated to a new address
@@ -207,4 +217,52 @@ export const getAccountAssets = async ({
   );
 
   return tokensWithBalance;
+};
+
+export const getCardPayTokensPrice = async ({
+  nativeCurrency,
+}: {
+  nativeCurrency: NativeCurrency;
+}) => {
+  const cardpayTokens = ['DAI', 'DAI.CPXD', 'CARD', 'CARD.CPXD'];
+
+  const params = {
+    nativeCurrency,
+    balance: Web3.utils.toWei('1'),
+  };
+
+  const tokensPrices = await cardpayTokens.reduce(async (prices, symbol) => {
+    const price = await getNativeBalanceFromOracle({
+      symbol,
+      ...params,
+    });
+
+    return { ...(await prices), [symbol]: price };
+  }, Promise.resolve({}));
+
+  return tokensPrices;
+};
+
+export const getTokensBalances = async ({
+  assets,
+  accountAddress,
+  network,
+}: GetTokensBalanceParams) => {
+  const tokensBalance = await Object.keys(assets).reduce(
+    async (balances, key) => {
+      const { symbol = 'ETH', address = 'eth', decimals = 18 } =
+        assets[key] || {};
+
+      const tokenBalance = await getOnChainAssetBalance({
+        asset: { symbol, address, decimals },
+        accountAddress,
+        network,
+      });
+
+      return { ...(await balances), [address]: tokenBalance };
+    },
+    Promise.resolve({})
+  );
+
+  return tokensBalance;
 };

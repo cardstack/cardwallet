@@ -1,37 +1,33 @@
-import { createEntityAdapter, Dictionary, EntityId } from '@reduxjs/toolkit';
+import { NativeCurrency } from '@cardstack/cardpay-sdk';
+import { createEntityAdapter } from '@reduxjs/toolkit';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
-import { AssetTypes } from '@cardstack/types';
 
 import { queryPromiseWrapper } from '../utils';
 
-import { getAccountAssets } from './eoa-assets-services';
-
-export interface Asset {
-  id: string;
-  address: string;
-  tokenID?: string;
-  name: string;
-  symbol: string;
-  decimals: number;
-  type: AssetTypes;
-}
+import { Price } from './coingecko/coingecko-types';
+import {
+  getAccountAssets,
+  getCardPayTokensPrice,
+  getTokensBalances,
+} from './eoa-assets-services';
+import {
+  Asset,
+  EOABaseParams,
+  GetAssetsResult,
+  GetTokensBalanceParams,
+  GetTokensBalanceResult,
+} from './eoa-assets-types';
 
 const assetsAdapter = createEntityAdapter<Asset>();
-
-interface Response {
-  assets: Dictionary<Asset>;
-  ids: EntityId[];
-}
 
 export const eoaAssetsApi = createApi({
   reducerPath: 'eoaAssetsApi',
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
   tagTypes: [],
   endpoints: builder => ({
-    getEOAAssets: builder.query<Response, any>({
+    getEOAAssets: builder.query<GetAssetsResult, EOABaseParams>({
       async queryFn(params) {
-        const response = await queryPromiseWrapper<Asset[], any>(
+        const response = await queryPromiseWrapper<Asset[], EOABaseParams>(
           getAccountAssets,
           params,
           {
@@ -54,7 +50,38 @@ export const eoaAssetsApi = createApi({
         return response;
       },
     }),
+    getCardPayTokensPrices: builder.query<
+      Price,
+      { nativeCurrency: NativeCurrency }
+    >({
+      async queryFn(params) {
+        return queryPromiseWrapper<Price, { nativeCurrency: NativeCurrency }>(
+          getCardPayTokensPrice,
+          params,
+          {
+            errorLogMessage: 'Error getCardPayTokensPrice',
+          }
+        );
+      },
+    }),
+    getOnChainTokenBalances: builder.query<
+      GetTokensBalanceResult,
+      GetTokensBalanceParams
+    >({
+      async queryFn(params) {
+        return queryPromiseWrapper<
+          GetTokensBalanceResult,
+          GetTokensBalanceParams
+        >(getTokensBalances, params, {
+          errorLogMessage: 'Error getTokensBalances',
+        });
+      },
+    }),
   }),
 });
 
-export const { useGetEOAAssetsQuery } = eoaAssetsApi;
+export const {
+  useGetEOAAssetsQuery,
+  useGetCardPayTokensPricesQuery,
+  useGetOnChainTokenBalancesQuery,
+} = eoaAssetsApi;
