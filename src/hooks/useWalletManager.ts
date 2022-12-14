@@ -24,6 +24,7 @@ import {
 import useAccountSettings from './useAccountSettings';
 import useInitializeAccount from './useInitializeAccount';
 
+import { registerFCMToken } from '@cardstack/models/firebase';
 import { getPin, getSeedPhrase } from '@cardstack/models/secure-storage';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { appStateUpdate } from '@cardstack/redux/appState';
@@ -162,6 +163,9 @@ export default function useWalletManager() {
       logger.sentry('loaded account data');
 
       await fetchAccountAssets();
+
+      // The push token needs to be re-registered within each network.
+      await registerFCMToken();
 
       dispatch(appStateUpdate({ walletReady: true }));
     } catch (error) {
