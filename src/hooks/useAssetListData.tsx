@@ -1,7 +1,3 @@
-import {
-  convertAmountToNativeDisplay,
-  getConstantByNetwork,
-} from '@cardstack/cardpay-sdk';
 import { orderBy } from 'lodash';
 import { BalanceCoinRowWrapper } from '../components/coin-row';
 import useAccountSettings from './useAccountSettings';
@@ -17,10 +13,8 @@ import {
 } from '@cardstack/components';
 import { AssetListSectionItem } from '@cardstack/components/AssetList/types';
 import { useAssets } from '@cardstack/hooks/assets/useAssets';
-import { assetsWithoutNFTs } from '@cardstack/parsers/collectibles';
 import { useGetSafesDataQuery } from '@cardstack/services';
 import {
-  AssetType,
   AssetWithNativeType,
   CollectibleType,
   DepotType,
@@ -28,7 +22,6 @@ import {
   PrepaidCardType,
 } from '@cardstack/types';
 
-import { getTotalAssetsBalance } from '@rainbow-me/helpers/assets';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 const usePrepaidCardSection = (
