@@ -1,11 +1,7 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { KebabToCamelCaseKeys } from 'globals';
 
-import {
-  CustodialWalletAttrs,
-  IAPProviderType,
-  NetworkType,
-} from '@cardstack/types';
+import { CustodialWalletAttrs, IAPProviderType } from '@cardstack/types';
 
 export interface HubBaseResponse<Attrs> {
   id: string;
@@ -37,11 +33,6 @@ export type EoaClaimedAttrsType = {
 };
 
 export type GetEoaClaimedQueryResult = KebabToCamelCaseKeys<EoaClaimedAttrsType>;
-
-export interface CheckHubAuthQueryParams {
-  accountAddress: string;
-  network: NetworkType;
-}
 
 export interface GetExchangeRatesQueryParams {
   from: NativeCurrency | string;
