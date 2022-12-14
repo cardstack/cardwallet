@@ -19,20 +19,20 @@ export const coingeckoApi = createApi({
     getAssetsPriceByContract: builder.query<Price, GetPricesByContractParams>({
       query: ({ network, nativeCurrency, addresses = [] }) => {
         const platform = getCoingeckoPlatformName(network);
-        const contratAddressQuery = addresses.filter(Boolean).join(',');
+        const contracts = addresses.filter(Boolean).join(',');
 
-        return `/token_price/${platform}?contract_addresses=${contratAddressQuery}&vs_currencies=${nativeCurrency}`;
+        return `/token_price/${platform}?contract_addresses=${contracts}&vs_currencies=${nativeCurrency}`;
       },
+      // Map from { [address]:{ [currency]: 0.0303 }} => { [address]: 0.0303 }
       transformResponse: (
-        { data }: { data: CoingeckoPriceResponse },
+        response: CoingeckoPriceResponse,
         _,
         { nativeCurrency }
       ) =>
-        // Map from { [address]:{ [currency]: 0.0303 }} => { [address]: 0.0303 }
-        Object.entries(data).reduce(
+        Object.entries(response).reduce(
           (prices, [address, price]) => ({
             ...prices,
-            [address]: price[nativeCurrency],
+            [address]: price[nativeCurrency.toLowerCase()],
           }),
           {}
         ),
@@ -41,21 +41,19 @@ export const coingeckoApi = createApi({
       query: ({ network, nativeCurrency }) => {
         const id = getConstantByNetwork('nativeTokenCoingeckoId', network);
 
-        return `/price?ids=${id}&vs_currencies=${nativeCurrency}&include_24hr_change=true&include_last_updated_at=true`;
+        return `/price?ids=${id}&vs_currencies=${nativeCurrency}`;
       },
-
+      // Map from { [coingeckoID]: { [currency]: 0.0303 }} => { [address]: 0.0303 } }
       transformResponse: (
-        { data }: { data: CoingeckoPriceResponse },
+        response: CoingeckoPriceResponse,
         _,
         { nativeCurrency, network }
       ) => {
-        // Map from { [coingeckoID]: { [currency]: 0.0303 }} => { [address]: 0.0303 } }
-
         const address = getConstantByNetwork('nativeTokenAddress', network);
         const id = getConstantByNetwork('nativeTokenCoingeckoId', network);
 
         return {
-          [address]: data[id][nativeCurrency],
+          [address]: response[id][nativeCurrency.toLowerCase()],
         };
       },
     }),

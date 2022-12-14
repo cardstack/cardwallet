@@ -18,8 +18,8 @@ import { shitcoins } from '@rainbow-me/references';
 import migratedTokens from '@rainbow-me/references/migratedTokens.json';
 import logger from 'logger';
 
-import { getNativeBalanceFromOracle } from '..';
 import { getOnChainAssetBalance } from '../assets';
+import { getNativeBalanceFromOracle } from '../exchange-rate-service';
 
 import {
   Asset,
@@ -80,17 +80,18 @@ const discoverTokens = async (baseParams: EOABaseParams) => {
     // since NFTS can have the same contractAddress but a diff tokenID
     // while tokens don't have this field its enough to filter by contract address
     token => [token.contractAddress, token.tokenID].filter(Boolean).join('-')
-  );
+  ).filter(Boolean);
 
   const newTokens = uniqueTokensTxs.reduce((tokens, token) => {
     const {
       contractAddress,
       tokenID,
       tokenDecimal,
-      tokenSymbol: symbol,
+      tokenSymbol,
       tokenName: name,
     } = token;
 
+    const symbol = tokenSymbol?.toUpperCase();
     const address = getCurrentAddress(contractAddress);
     const type = getTokenType(symbol, name, tokenID);
 
@@ -189,34 +190,26 @@ export const getAccountAssets = async ({
   );
 
   // discoverTokens might not include the native token, so we add it manually
-  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
+  const nativeToken = {
+    address: getConstantByNetwork('nativeTokenAddress', network),
+    name: getConstantByNetwork('nativeTokenName', network),
+    symbol: getConstantByNetwork('nativeTokenSymbol', network),
+    decimals: 18, // TODO: use decimals from sdk on next sdk release,
+    id: getConstantByNetwork('nativeTokenAddress', network),
+    type: AssetTypes.token,
+  };
 
-  const nativeTokenIsMissing = !tokens.some(
-    token => token?.symbol === nativeTokenSymbol
-  );
-
-  if (nativeTokenIsMissing) {
-    const nativeToken = {
-      address: getConstantByNetwork('nativeTokenAddress', network),
-      name: getConstantByNetwork('nativeTokenName', network),
-      symbol: nativeTokenSymbol,
-      decimals: 18, // TODO: use decimals from sdk on next sdk release,
-      id: getConstantByNetwork('nativeTokenAddress', network),
-      type: AssetTypes.token,
-    };
-
-    // Native token should always appear even if it has no balance
-    tokensWithBalance.concat(nativeToken); // Modifying array to avoid undefined values
-  }
+  // Native token should always appear even if it has no balance
+  const tokensInWallet = [...tokensWithBalance, nativeToken];
 
   // Store assets and block to just fetch newest tx on refresh
   await saveAssets(
-    { assets: tokensWithBalance, latestTxBlockNumber },
+    { assets: tokensInWallet, latestTxBlockNumber },
     network,
     assetsVersion
   );
 
-  return tokensWithBalance;
+  return tokensInWallet;
 };
 
 export const getCardPayTokensPrice = async ({

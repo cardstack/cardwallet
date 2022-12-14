@@ -1,3 +1,5 @@
+import { Asset } from '@cardstack/services/eoa-assets/eoa-assets-types';
+
 import { TokenType } from '.';
 export interface BalanceType {
   amount: string;
@@ -16,31 +18,21 @@ export enum AssetTypes {
 }
 
 export interface AssetType {
+  id: string;
   address: string;
   balance?: BalanceType;
-  coingecko_id: string | null;
   decimals: number;
   icon_url: string;
   name: string;
   tokenID?: string;
-  price: {
-    changed_at: number | null;
-    relative_change_24h: number;
-    value: number;
-  };
+  type: AssetTypes;
   symbol: string;
-  type?: AssetTypes;
-  id: string;
 }
 
-export interface AssetWithNativeType extends AssetType {
+export interface AssetWithNativeType extends Asset {
+  balance?: BalanceType;
   native: {
     balance: BalanceType;
-    change: string;
-    price: {
-      amount: number;
-      display: string;
-    };
   };
 }
 

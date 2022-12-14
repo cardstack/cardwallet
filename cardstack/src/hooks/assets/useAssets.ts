@@ -4,7 +4,6 @@ import {
   getConstantByNetwork,
 } from '@cardstack/cardpay-sdk';
 import { EntityId } from '@reduxjs/toolkit';
-import { BN } from 'ethereumjs-util';
 import { utils as ethersUtils } from 'ethers';
 import { useCallback, useMemo } from 'react';
 
@@ -18,6 +17,7 @@ import {
   useGetOnChainTokenBalancesQuery,
 } from '@cardstack/services/eoa-assets/eoa-assets-api';
 import { AssetsDictionary } from '@cardstack/services/eoa-assets/eoa-assets-types';
+import { AssetWithNativeType } from '@cardstack/types';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
 
@@ -35,6 +35,7 @@ const useAssets = () => {
 
   const {
     data: { assets = {} as AssetsDictionary, ids = [] } = {},
+    isLoading: isLoadingAssets,
   } = useGetEOAAssetsQuery(
     {
       accountAddress,
@@ -44,12 +45,18 @@ const useAssets = () => {
     { skip: !accountAddress }
   );
 
-  const { data: prices } = useGetAssetsPriceByContractQuery(
+  const {
+    data: prices,
+    isLoading: isLoadingPrices,
+  } = useGetAssetsPriceByContractQuery(
     { addresses: ids, nativeCurrency, network },
     { skip: !ids.length }
   );
 
-  const { data: gnosisPrices } = useGetCardPayTokensPricesQuery(
+  const {
+    data: gnosisPrices,
+    isLoading: isLoadingGnosisPrices,
+  } = useGetCardPayTokensPricesQuery(
     { nativeCurrency },
     { skip: !ids.length || !isOnCardPayNetwork }
   );
@@ -59,7 +66,10 @@ const useAssets = () => {
     nativeCurrency,
   });
 
-  const { data: balances } = useGetOnChainTokenBalancesQuery(
+  const {
+    data: balances,
+    isLoading: isLoadingBalances,
+  } = useGetOnChainTokenBalancesQuery(
     { assets, accountAddress, network },
     { skip: !ids.length }
   );
@@ -90,27 +100,71 @@ const useAssets = () => {
     [getAssetBalance, getAssetPrice, nativeCurrency]
   );
 
-  const getTotalAssetsNativeBalance = useMemo(() => {
-    const assetsWithoutNfts = ids.filter(
-      id =>
-        ethersUtils.isHexString(id) ||
-        id === getConstantByNetwork('nativeTokenAddress', network)
-    );
+  const assetsIdWithoutNfts = useMemo(
+    () =>
+      ids.filter(
+        id =>
+          ethersUtils.isHexString(id) ||
+          id === getConstantByNetwork('nativeTokenAddress', network)
+      ),
+    [ids, network]
+  );
 
-    const total = assetsWithoutNfts.reduce(
-      (sum, key) => sum.add(new BN(getAssetBalance(key).amount)),
-      new BN(0)
-    );
+  const getTotalAssetNativeBalance = useCallback(
+    (idsTosSum: EntityId[]) => {
+      const total = idsTosSum.reduce(
+        (sum: number, key) =>
+          sum + Number(getAssetNativeCurrencyBalance(key).amount),
+        0
+      );
 
-    return convertAmountToNativeDisplay(total.toString(), nativeCurrency);
-  }, [getAssetBalance, ids, nativeCurrency, network]);
+      return convertAmountToNativeDisplay(total.toString(), nativeCurrency);
+    },
+    [getAssetNativeCurrencyBalance, nativeCurrency]
+  );
+
+  const legacyAssetsStruct = useMemo(
+    () =>
+      assetsIdWithoutNfts.reduce(
+        (legacyAssets, id) => [
+          ...legacyAssets,
+          {
+            ...assets[id],
+            balance: getAssetBalance(id),
+            native: { balance: getAssetNativeCurrencyBalance(id) },
+          },
+        ],
+        [] as Partial<AssetWithNativeType>[]
+      ),
+    [
+      assetsIdWithoutNfts,
+      assets,
+      getAssetBalance,
+      getAssetNativeCurrencyBalance,
+    ]
+  );
+
+  const isLoading = useMemo(
+    () =>
+      isLoadingPrices ||
+      isLoadingBalances ||
+      isLoadingGnosisPrices ||
+      isLoadingAssets,
+    [isLoadingAssets, isLoadingBalances, isLoadingGnosisPrices, isLoadingPrices]
+  );
 
   return {
+    assetsIdWithoutNfts,
+    assets,
+    assetsIds: ids,
+    legacyAssetsStruct,
+    isLoading,
+
     getAsset,
     getAssetPrice,
     getAssetBalance,
     getAssetNativeCurrencyBalance,
-    getTotalAssetsNativeBalance,
+    getTotalAssetNativeBalance,
   };
 };
 

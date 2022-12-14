@@ -16,6 +16,7 @@ import {
   PrepaidCard,
 } from '@cardstack/components';
 import { AssetListSectionItem } from '@cardstack/components/AssetList/types';
+import { useAssets } from '@cardstack/hooks/assets/useAssets';
 import { assetsWithoutNFTs } from '@cardstack/parsers/collectibles';
 import { useGetSafesDataQuery } from '@cardstack/services';
 import {
@@ -86,55 +87,19 @@ const useMerchantSafeSection = (
 });
 
 const useOtherTokensSection = (): AssetListSectionItem<AssetWithNativeType> => {
-  const [stateAssets, nativeCurrency, network] = useRainbowSelector<
-    [AssetType[], string, string]
-  >(state => [
-    state.data.assets,
-    state.settings.nativeCurrency,
-    state.settings.network,
-  ]);
+  const { legacyAssetsStruct, getTotalAssetNativeBalance } = useAssets();
 
-  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
+  const { hidden } = usePinnedAndHiddenItemOptions();
 
-  const assetsToInclude = assetsWithoutNFTs(
-    stateAssets
-  ) as AssetWithNativeType[];
+  const assets = legacyAssetsStruct as AssetWithNativeType[];
 
-  const total = convertAmountToNativeDisplay(
-    getTotalAssetsBalance(assetsToInclude),
-    nativeCurrency
-  );
-
-  const { hidden, pinned } = usePinnedAndHiddenItemOptions();
-  const count = assetsToInclude.filter(a => !hidden.includes(a.address)).length;
-
-  let assets = orderBy(
-    assetsToInclude,
-    [
-      function (p) {
-        return pinned.includes(p.address);
-      },
-      function (p) {
-        return p.symbol;
-      },
-    ],
-    ['desc', 'asc', 'asc']
-  ) as AssetWithNativeType[];
-
-  const nativeBalance = assets.find(a => nativeTokenSymbol.includes(a.symbol));
-  const nativeBalancePinned = nativeBalance
-    ? pinned.includes(nativeBalance.address)
-    : false;
-
-  if (nativeBalancePinned) {
-    assets = assets.sort(a => (nativeTokenSymbol.includes(a.symbol) ? -1 : 1));
-  }
+  const notHiddenItems = assets.filter(a => !hidden.includes(a.address));
 
   return {
     header: {
       title: 'Other Tokens',
-      count,
-      total,
+      count: notHiddenItems.length,
+      total: getTotalAssetNativeBalance(notHiddenItems.map(a => a.id)),
       type: PinnedHiddenSectionOption.BALANCES,
       showContextMenu: true,
     },
@@ -165,6 +130,8 @@ export const useAssetListData = () => {
     noCardPayAccount,
     isOnCardPayNetwork,
   } = useAccountSettings();
+
+  const { isLoading: isLoadingEOAAssets } = useAssets();
 
   const {
     isFetching: isFetchingSafes,
@@ -199,12 +166,8 @@ export const useAssetListData = () => {
   const isUninitializedOnCardPayCompatible =
     isOnCardPayNetwork && isUninitialized;
 
-  const isLoadingRainbowAssets = useRainbowSelector(
-    state => state.data.isLoadingAssets
-  );
-
   const isLoadingAssets =
-    isLoadingRainbowAssets || isUninitializedOnCardPayCompatible || isLoading;
+    isLoadingEOAAssets || isUninitializedOnCardPayCompatible || isLoading;
 
   // order of sections in asset list
   const orderedSections = [
