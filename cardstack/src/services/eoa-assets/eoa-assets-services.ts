@@ -3,7 +3,6 @@ import {
   getConstantByNetwork,
   NativeCurrency,
 } from '@cardstack/cardpay-sdk';
-import { BN } from 'ethereumjs-util';
 import { toLower, uniqBy } from 'lodash';
 import Web3 from 'web3';
 
@@ -22,11 +21,13 @@ import logger from 'logger';
 import { getOnChainAssetBalance } from '../assets';
 import { getNativeBalanceFromOracle } from '../exchange-rate-service';
 
+import { Price } from './coingecko/coingecko-types';
 import {
   Asset,
   EOABaseParams,
   EOATxListResponse,
   GetTokensBalanceParams,
+  GetTokensBalanceResult,
 } from './eoa-assets-types';
 
 // Some contracts like SNX / SUSD use an ERC20 proxy
@@ -148,7 +149,8 @@ const getTxsTokenData = async (
     const allTxs = [...previousTx, ...newTxs];
 
     if (status === '1' && newTxs.length === offset) {
-      if (message.contains('rate limit')) {
+      // Some apis might have rate limit, if so we wait before trying again
+      if (message?.includes('rate limit')) {
         await delay(5000);
       }
 
@@ -177,17 +179,21 @@ export const getAccountAssets = async ({
     accountAddress,
   });
 
-  const tokensWithBalance = await Promise.all(
-    tokens.filter(async asset => {
-      const balance = await getOnChainAssetBalance({
-        asset,
-        accountAddress,
-        network,
-      });
+  // Filter out tokens without balance
+  const tokensWithBalance = await tokens.reduce(async (assets, asset) => {
+    const balance = await getOnChainAssetBalance({
+      asset,
+      accountAddress,
+      network,
+    });
 
-      return !new BN(balance.amount).isZero();
-    })
-  );
+    // No balance
+    if (!parseFloat(balance.amount)) {
+      return assets;
+    }
+
+    return [...(await assets), asset];
+  }, Promise.resolve([] as Asset[]));
 
   // discoverTokens might not include the native token, so we add it manually
   const nativeToken = {
@@ -233,7 +239,7 @@ export const getCardPayTokensPrice = async ({
     });
 
     return { ...(await prices), [symbol]: price };
-  }, Promise.resolve({}));
+  }, Promise.resolve({} as Price));
 
   return tokensPrices;
 };
@@ -256,7 +262,7 @@ export const getTokensBalances = async ({
 
       return { ...(await balances), [address]: tokenBalance };
     },
-    Promise.resolve({})
+    Promise.resolve({} as GetTokensBalanceResult)
   );
 
   return tokensBalance;
