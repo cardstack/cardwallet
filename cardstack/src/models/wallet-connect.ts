@@ -32,7 +32,7 @@ const metadata = {
   ],
 };
 
-let signClient: SignClient | null = null;
+export let signClient: SignClient | null = null;
 
 const WalletConnect = {
   init: async (accountAddress: string) => {

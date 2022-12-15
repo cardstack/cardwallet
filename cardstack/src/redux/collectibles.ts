@@ -2,27 +2,20 @@ import assert from 'assert';
 
 import { captureException } from '@sentry/react-native';
 import { Contract } from 'ethers';
-import { concat, isEmpty, without } from 'lodash';
+import { concat, isEmpty } from 'lodash';
 import { AnyAction } from 'redux';
 
 import { IPFS_HTTP_URL } from '@cardstack/constants';
-import {
-  assetsWithoutNFTsByFamily,
-  getNFTFamilies,
-} from '@cardstack/parsers/collectibles';
+import { Asset } from '@cardstack/services/eoa-assets/eoa-assets-types';
 import {
   apiFetchCollectiblesForOwner,
   OPENSEA_LIMIT_PER_PAGE,
   OPENSEA_LIMIT_TOTAL,
 } from '@cardstack/services/opensea-api';
-import {
-  AssetType,
-  AssetTypes,
-  CollectibleType,
-  NetworkType,
-} from '@cardstack/types';
+import { AssetTypes, CollectibleType, NetworkType } from '@cardstack/types';
 
 import {
+  getAssets,
   getCollectibles as getCollectiblesFromStorage,
   saveCollectibles as saveCollectiblesToStorage,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
@@ -31,7 +24,6 @@ import { erc721ABI } from '@rainbow-me/references';
 import logger from 'logger';
 
 import { getEtherWeb3Provider } from '../../../src/handlers/web3';
-import { dataUpdateAssets } from '../../../src/redux/data';
 
 // -- Constants ------------------------------------------------------------- //
 const COLLECTIBLES_LOAD_REQUEST = 'collectibles/COLLECTIBLES_LOAD_REQUEST';
@@ -95,6 +87,7 @@ export const collectiblesRefreshState = () => async (
   switch (network) {
     case NetworkType.mainnet:
     case NetworkType.polygon:
+    case NetworkType.goerli:
       // OpenSea API only supports some networks
       return dispatch(fetchNFTsViaOpenSea());
     case NetworkType.gnosis:
@@ -113,7 +106,6 @@ const fetchNFTsViaOpenSea = () => (
 ) => {
   dispatch({ type: COLLECTIBLES_FETCH_REQUEST });
   const { accountAddress, nativeCurrency, network } = getState().settings;
-  const { assets } = getState().data;
   const { collectibles: existingNFTs } = getState().collectibles;
   const shouldUpdateInBatches = isEmpty(existingNFTs);
 
@@ -156,19 +148,6 @@ const fetchNFTsViaOpenSea = () => (
           });
         }
 
-        const existingFamilies = getNFTFamilies(existingNFTs);
-        const newFamilies = getNFTFamilies(nfts);
-        const incomingFamilies = without(newFamilies, ...existingFamilies);
-
-        if (incomingFamilies.length) {
-          const assetsWithoutNFTs = assetsWithoutNFTsByFamily(
-            assets,
-            incomingFamilies
-          );
-
-          dispatch(dataUpdateAssets(assetsWithoutNFTs));
-        }
-
         saveCollectiblesToStorage(nfts, accountAddress, network);
       } else {
         scheduledFetchHandle = setTimeout(fetchPage, 200);
@@ -188,16 +167,19 @@ const fetchNFTsViaRpcNode = () => async (
   dispatch: AppDispatch,
   getState: AppGetState
 ) => {
+  dispatch({ type: COLLECTIBLES_FETCH_REQUEST });
+
   const { accountAddress, nativeCurrency, network } = getState().settings;
-  const assets: AssetType[] = getState().data.assets;
+
+  const { assets } = (await getAssets(accountAddress, network)) as {
+    assets: Asset[];
+  };
 
   // Find the assets that are NFTs.
   const assetsWithTokenIds = assets.filter(asset => asset.tokenID);
 
   const existingNFTs: CollectibleType[] = (getState().collectibles as any)
     .collectibles;
-
-  dispatch({ type: COLLECTIBLES_FETCH_REQUEST });
 
   // enhance them with metadata from the tokenURI so that they have a similar shape to what parseCollectiblesFromOpenSeaResponse creates
   try {
@@ -286,7 +268,6 @@ const fetchNFTsViaRpcNode = () => async (
               networkName: network,
               lastPrice: null,
               type: AssetTypes.nft,
-              uniqueId: `${asset.address}_${asset.tokenID}`,
             };
 
             return collectible;

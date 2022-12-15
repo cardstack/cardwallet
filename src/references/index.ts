@@ -1,14 +1,11 @@
-import { mapKeys, mapValues } from 'lodash';
 import { DAI_ADDRESS, WBTC_ADDRESS } from './addresses';
 import savingAssets from './compound/saving-assets.json';
-import { Asset, SavingsAsset } from '@rainbow-me/entities';
 
 export {
   PAIR_GET_RESERVES_CALL_DATA,
   PAIR_GET_RESERVES_FRAGMENT,
   PAIR_INTERFACE,
   RAINBOW_TOKEN_LIST,
-  TOKEN_SAFE_LIST,
 } from './uniswap';
 export { default as compoundCERC20ABI } from './compound/compound-cerc20-abi.json';
 export { default as compoundCETHABI } from './compound/compound-ceth-abi.json';
@@ -35,16 +32,3 @@ export const DefaultUniswapFavorites = {
 };
 
 export const savingsAssetsList = savingAssets;
-
-export const savingsAssetsListByUnderlying: Record<
-  string,
-  Record<string, SavingsAsset>
-> = mapValues(savingAssets, (assetsByNetwork: Record<string, Asset>) =>
-  mapKeys(
-    mapValues(assetsByNetwork, (assetByContract, contractAddress) => ({
-      ...assetByContract,
-      contractAddress,
-    })),
-    value => value.address
-  )
-);

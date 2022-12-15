@@ -31,10 +31,9 @@ export const BalanceCoinRow = ({
   pinned = false,
   hidden = false,
 }: BalanceCoinRowProps) => {
-  // Without price there's no way to get currency conversion
-  const hasPriceUnit = !!item.native?.price?.amount;
-
-  const nativeBalance = hasPriceUnit ? item.native?.balance?.display : '';
+  const nativeBalance = parseFloat(item.native.balance.amount)
+    ? item.native?.balance?.display
+    : '';
 
   return (
     <Container width="100%" paddingHorizontal={4} marginBottom={2}>

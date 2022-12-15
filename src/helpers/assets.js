@@ -8,11 +8,10 @@ import store from '@rainbow-me/redux/store';
 import { ETH_ICON_URL } from '@rainbow-me/references';
 
 export const buildAssetUniqueIdentifier = item => {
-  const balance = get(item, 'balance.amount', '');
-  const nativePrice = get(item, 'native.price.display', '');
-  const uniqueId = get(item, 'uniqueId');
+  const id = get(item, 'id');
+  const address = get(item, 'address');
 
-  return compact([balance, nativePrice, uniqueId]).join('_');
+  return compact([address, id]).join('_');
 };
 
 const addNativeTokenPlaceholder = (
@@ -32,10 +31,7 @@ const addNativeTokenPlaceholder = (
     asset => asset.address === nativeTokenAddress
   );
 
-  const { genericAssets } = store.getState().data;
   if (includePlaceholder && !hasNativeCurrency && assets.length > 0) {
-    const { relative_change_24h, value } = genericAssets?.eth?.price || {};
-
     const zeroToken = {
       address: nativeTokenAddress,
       balance: {
@@ -55,19 +51,10 @@ const addNativeTokenPlaceholder = (
           amount: '0.00',
           display: convertAmountToNativeDisplay('0.00', nativeCurrency),
         },
-        change: relative_change_24h ? `${relative_change_24h.toFixed(2)}%` : '',
-        price: {
-          amount: value || '0.00',
-          display: convertAmountToNativeDisplay(
-            value ? value : '0.00',
-            nativeCurrency
-          ),
-        },
       },
-      price: value,
       symbol: nativeTokenSymbol,
       type: 'token',
-      uniqueId: nativeTokenAddress,
+      id: nativeTokenAddress,
     };
 
     return concat([zeroToken], assets);

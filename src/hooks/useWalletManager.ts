@@ -21,7 +21,6 @@ import {
   walletsSetSelected,
   walletsUpdate,
 } from '../redux/wallets';
-import useAccountSettings from './useAccountSettings';
 import useInitializeAccount from './useInitializeAccount';
 
 import { storeRegisteredFCMToken } from '@cardstack/models/firebase';
@@ -33,7 +32,6 @@ import { PinFlow } from '@cardstack/screens/PinScreen/types';
 import { PinScreenNavParams } from '@cardstack/screens/PinScreen/usePinScreen';
 
 import { mapDispatchToActions } from '@cardstack/utils';
-import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/accountLocal';
 import { isValidSeed } from '@rainbow-me/helpers/validators';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 
@@ -46,9 +44,8 @@ interface WalletsState {
 export default function useWalletManager() {
   const dispatch = useDispatch();
 
-  const { loadAccountData, fetchAccountAssets } = useInitializeAccount();
+  const { loadAccountData } = useInitializeAccount();
 
-  const { network } = useAccountSettings();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   const { navigate } = useNavigation();
@@ -162,8 +159,6 @@ export default function useWalletManager() {
       await loadAccountData();
       logger.sentry('loaded account data');
 
-      await fetchAccountAssets();
-
       // The push token needs to be re-registered within each network.
       await storeRegisteredFCMToken();
 
@@ -176,7 +171,7 @@ export default function useWalletManager() {
     } finally {
       dispatch(appStateUpdate({ walletReady: true }));
     }
-  }, [dispatch, migrateWalletIfNeeded, loadAccountData, fetchAccountAssets]);
+  }, [dispatch, migrateWalletIfNeeded, loadAccountData]);
 
   const initWalletResetNavState = useCallback(async () => {
     await initializeWallet();
@@ -193,17 +188,9 @@ export default function useWalletManager() {
               title: walletLoadingStates.CREATING_WALLET,
             });
 
-            const wallet = await createOrImportWallet({
+            await createOrImportWallet({
               pin,
             });
-
-            const walletAddress = wallet?.address;
-
-            await saveAccountEmptyState(
-              true,
-              walletAddress?.toLowerCase(),
-              network
-            );
 
             initWalletResetNavState();
           } catch (e) {
@@ -211,7 +198,7 @@ export default function useWalletManager() {
           }
         },
       }),
-    [createWalletPin, initWalletResetNavState, network, showLoadingOverlay]
+    [createWalletPin, initWalletResetNavState, showLoadingOverlay]
   );
 
   const importWallet = useCallback(

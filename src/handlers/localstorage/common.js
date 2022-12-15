@@ -96,6 +96,7 @@ export const getAccountLocal = async (
 ) => {
   const key = getKey(prefix, accountAddress, network);
   const result = await getLocal(key, version);
+
   return result ? result.data : emptyState;
 };
 

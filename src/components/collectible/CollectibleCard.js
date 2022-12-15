@@ -77,7 +77,7 @@ const CollectibleCard = ({
 
 export default magicMemo(CollectibleCard, [
   'height',
-  'item.uniqueId',
+  'item.id',
   'style',
   'width',
 ]);

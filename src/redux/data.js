@@ -1,17 +1,13 @@
 import { isZero } from '@cardstack/cardpay-sdk';
 import produce from 'immer';
-import { concat, get, isEmpty, partition, toLower, values } from 'lodash';
+import { concat, isEmpty, partition, toLower } from 'lodash';
 import { getTransactionReceipt } from '../handlers/web3';
-import { collectiblesRefreshState } from '@cardstack/redux/collectibles';
 import { NetworkType } from '@cardstack/types';
 import {
-  getAssets,
   getDepots,
   getLocalTransactions,
   getMerchantSafes,
   getPrepaidCards,
-  saveAccountEmptyState,
-  saveAssets,
   saveLocalTransactions,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
 import DirectionTypes from '@rainbow-me/helpers/transactionDirectionTypes';
@@ -21,9 +17,8 @@ import {
   getTitle,
   getTransactionLabel,
   parseNewTransaction,
-  parseTransactions,
 } from '@rainbow-me/parsers';
-import { ethereumUtils, isLowerCaseMatch } from '@rainbow-me/utils';
+import { ethereumUtils } from '@rainbow-me/utils';
 import logger from 'logger';
 
 let pendingTransactionsHandle = null;
@@ -32,8 +27,6 @@ const TXN_WATCHER_POLL_INTERVAL = 5000; // 5 seconds
 
 // -- Constants --------------------------------------- //
 
-const DATA_UPDATE_ASSETS = 'data/DATA_UPDATE_ASSETS';
-const DATA_UPDATE_GENERIC_ASSETS = 'data/DATA_UPDATE_GENERIC_ASSETS';
 const DATA_UPDATE_TRANSACTIONS = 'data/DATA_UPDATE_TRANSACTIONS';
 const DATA_UPDATE_GNOSIS_DATA = 'data/DATA_UPDATE_GNOSIS_DATA';
 
@@ -47,8 +40,6 @@ const DATA_LOAD_TRANSACTIONS_FAILURE = 'data/DATA_LOAD_TRANSACTIONS_FAILURE';
 const DATA_ADD_NEW_TRANSACTION_SUCCESS =
   'data/DATA_ADD_NEW_TRANSACTION_SUCCESS';
 
-const DATA_UPDATE_REFETCH_SAVINGS = 'data/DATA_UPDATE_REFETCH_SAVINGS';
-
 const DATA_CLEAR_STATE = 'data/DATA_CLEAR_STATE';
 export const DATA_UPDATE_PREPAIDCARDS = 'data/DATA_UPDATE_PREPAIDCARDS';
 
@@ -57,19 +48,16 @@ export const dataLoadState = () => async (dispatch, getState) => {
   const { accountAddress, network } = getState().settings;
   try {
     const [
-      assets,
       { prepaidCards },
       { depots },
       { merchantSafes },
     ] = await Promise.all([
-      getAssets(accountAddress, network),
       getPrepaidCards(accountAddress, network),
       getDepots(accountAddress, network),
       getMerchantSafes(accountAddress, network),
     ]);
     dispatch({
       payload: {
-        assets,
         depots,
         prepaidCards,
         merchantSafes,
@@ -94,99 +82,6 @@ export const dataLoadState = () => async (dispatch, getState) => {
 export const dataResetState = () => dispatch => {
   pendingTransactionsHandle && clearTimeout(pendingTransactionsHandle);
   dispatch({ type: DATA_CLEAR_STATE });
-};
-
-export const dataUpdateAssets = assets => (dispatch, getState) => {
-  const { accountAddress, network } = getState().settings;
-  if (assets.length) {
-    saveAssets(assets, accountAddress, network);
-    // Change the state since the account isn't empty anymore
-    saveAccountEmptyState(false, accountAddress, network);
-    dispatch({
-      payload: assets,
-      type: DATA_UPDATE_ASSETS,
-    });
-  }
-};
-
-const checkMeta = message => (dispatch, getState) => {
-  const { accountAddress, nativeCurrency, network } = getState().settings;
-  const address = get(message, 'meta.address');
-  const currency = get(message, 'meta.currency');
-  const metaNetwork = get(message, 'meta.network');
-
-  return (
-    isLowerCaseMatch(address, accountAddress) &&
-    isLowerCaseMatch(currency, nativeCurrency) &&
-    (!metaNetwork || isLowerCaseMatch(metaNetwork, network))
-  );
-};
-
-const checkForConfirmedSavingsActions = transactionsData => dispatch => {
-  const foundConfirmedSavings = find(
-    transactionsData,
-    transaction =>
-      (transaction?.type === 'deposit' || transaction?.type === 'withdraw') &&
-      transaction?.status === 'confirmed'
-  );
-  if (foundConfirmedSavings) {
-    dispatch(updateRefetchSavings(true));
-  }
-};
-
-export const transactionsReceived = (message, appended = false) => async (
-  dispatch,
-  getState
-) => {
-  const isValidMeta = dispatch(checkMeta(message));
-  if (!isValidMeta) return;
-  const transactionData = get(message, 'payload.transactions', []);
-  if (appended) {
-    dispatch(checkForConfirmedSavingsActions(transactionData));
-  }
-
-  const { accountAddress, nativeCurrency, network } = getState().settings;
-  const { transactions } = getState().data;
-
-  const { parsedTransactions, potentialNftTransaction } = parseTransactions(
-    transactionData,
-    accountAddress,
-    nativeCurrency,
-    transactions,
-    network,
-    appended
-  );
-  if (appended && potentialNftTransaction) {
-    setTimeout(() => {
-      dispatch(collectiblesRefreshState());
-    }, 60000);
-  }
-  dispatch({
-    payload: parsedTransactions,
-    type: DATA_UPDATE_TRANSACTIONS,
-  });
-  saveLocalTransactions(parsedTransactions, accountAddress, network);
-};
-
-export const addressAssetsReceived = message => async (dispatch, getState) => {
-  const isValidMeta = dispatch(checkMeta(message));
-  if (!isValidMeta) return;
-
-  const { accountAddress, network } = getState().settings;
-
-  const payload = values(get(message, 'payload.assets', {}));
-
-  if (payload.length > 0) {
-    // Change the state since the account isn't empty anymore
-    saveAccountEmptyState(false, accountAddress, network);
-  }
-
-  dispatch({
-    payload,
-    type: DATA_UPDATE_ASSETS,
-  });
-  saveAssets(payload, accountAddress, network);
-  dispatch(collectiblesRefreshState());
 };
 
 export const dataAddNewTransaction = (
@@ -369,20 +264,11 @@ const watchPendingTransactions = (
   }
 };
 
-export const updateRefetchSavings = fetch => dispatch =>
-  dispatch({
-    payload: fetch,
-    type: DATA_UPDATE_REFETCH_SAVINGS,
-  });
-
 // -- Reducer ----------------------------------------- //
 const INITIAL_STATE = {
-  assets: [], // for account-specific assets
   depots: [],
   merchantSafes: [],
   prepaidCards: [],
-  genericAssets: {},
-  isLoadingAssets: true,
   isLoadingTransactions: true,
   shouldRefetchSavings: false,
   transactions: [],
@@ -391,16 +277,6 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   return produce(state, draft => {
     switch (action.type) {
-      case DATA_UPDATE_REFETCH_SAVINGS:
-        draft.shouldRefetchSavings = action.payload;
-        break;
-      case DATA_UPDATE_GENERIC_ASSETS:
-        draft.genericAssets = action.payload;
-        break;
-      case DATA_UPDATE_ASSETS:
-        draft.assets = action.payload;
-        draft.isLoadingAssets = false;
-        break;
       case DATA_UPDATE_GNOSIS_DATA:
         draft.depots = action.payload.depots;
         draft.merchantSafes = action.payload.merchantSafes;
@@ -421,7 +297,6 @@ export default (state = INITIAL_STATE, action) => {
         draft.isLoadingTransactions = false;
         break;
       case DATA_LOAD_ASSETS_SUCCESS:
-        draft.assets = action.payload.assets;
         draft.depots = action.payload.depots;
         draft.prepaidCards = action.payload.prepaidCards;
         draft.merchantSafes = action.payload.merchantSafes;

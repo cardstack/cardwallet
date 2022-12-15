@@ -1,9 +1,6 @@
-import {
-  convertAmountAndPriceToNativeDisplay,
-  convertAmountToBalanceDisplay,
-} from '@cardstack/cardpay-sdk';
+import { convertAmountToBalanceDisplay } from '@cardstack/cardpay-sdk';
 import { utils as ethersUtils } from 'ethers';
-import { get, isNil, pick } from 'lodash';
+import { isNil, pick } from 'lodash';
 import TransactionStatusTypes from '../helpers/transactionStatusTypes';
 import { getDescription, getTitle } from './transactions';
 
@@ -13,10 +10,7 @@ import { getDescription, getTitle } from './transactions';
  * @param  {Object} [nativeCurrency='']
  * @return {String}
  */
-export const parseNewTransaction = async (
-  txDetails = null,
-  nativeCurrency = ''
-) => {
+export const parseNewTransaction = async (txDetails = null) => {
   let balance = null;
   const { amount } = txDetails;
   if (amount) {
@@ -25,11 +19,7 @@ export const parseNewTransaction = async (
       display: convertAmountToBalanceDisplay(amount, txDetails.asset),
     };
   }
-  const native = convertAmountAndPriceToNativeDisplay(
-    amount,
-    get(txDetails, 'asset.price.value', 0),
-    nativeCurrency
-  );
+
   let tx = pick(txDetails, [
     'dappName',
     'from',
@@ -70,7 +60,6 @@ export const parseNewTransaction = async (
     hash,
     minedAt: Date.now(),
     name: txDetails?.asset?.name,
-    native,
     nonce,
     pending: true,
     protocol: txDetails?.protocol,

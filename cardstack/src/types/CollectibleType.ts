@@ -27,7 +27,6 @@ export interface CollectibleType {
   isInterfaceValidated?: boolean;
   lastPrice: number | null;
   type: string;
-  uniqueId: string;
   networkName: string;
   nativeCurrency: string;
 }

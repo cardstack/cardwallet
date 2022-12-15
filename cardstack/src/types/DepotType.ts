@@ -1,4 +1,6 @@
-import { TokenType, AssetType } from '.';
+import { Asset } from '@cardstack/services/eoa-assets/eoa-assets-types';
+
+import { TokenType } from '.';
 export interface DepotType {
   address: string;
   tokens: Array<TokenType>;
@@ -6,8 +8,4 @@ export interface DepotType {
   infoDID?: string;
 }
 
-export type DepotAsset = Omit<
-  AssetType,
-  'coingecko_id' | 'price' | 'icon_url'
-> &
-  Omit<TokenType, 'tokenAddress' | 'token'>;
+export type DepotAsset = Asset & Omit<TokenType, 'tokenAddress' | 'token'>;

@@ -8,11 +8,12 @@ import Web3Instance from '@cardstack/models/web3-instance';
 import { NetworkType } from '@cardstack/types';
 import { isNativeToken } from '@cardstack/utils';
 
-import { Asset } from '@rainbow-me/entities';
 import logger from 'logger';
 
-interface GetAssetBalanceParams {
-  asset: Omit<Asset, 'name'>;
+import { Asset } from './eoa-assets/eoa-assets-types';
+
+export interface GetAssetBalanceParams {
+  asset: Pick<Asset, 'symbol' | 'address' | 'decimals'>;
   accountAddress: string;
   network: NetworkType;
 }
@@ -45,11 +46,12 @@ const getOnChainTokenBalance = async ({
     return {
       amount: tokenBalance,
       display: displayBalance,
+      wei: balance,
     };
   } catch (e) {
     logger.sentry('Error getOnChainTokenBalance, symbol:', symbol, e);
 
-    return { amount: '0', display: '' };
+    return { amount: '0', display: `0 ${symbol}`, wei: '0' };
   }
 };
 
@@ -76,10 +78,11 @@ const getOnChainNativeTokenBalance = async ({
     return {
       amount: tokenBalance,
       display: displayBalance,
+      wei: balance,
     };
   } catch (e) {
     logger.sentry('Error getOnChainNativeTokenBalance,symbol:', symbol, e);
 
-    return { amount: '0', display: '' };
+    return { amount: '0', display: `0 ${symbol}`, wei: '0' };
   }
 };

@@ -1,9 +1,10 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useState, useCallback, useEffect, useMemo, RefObject } from 'react';
+import { useCallback, useEffect, useMemo, RefObject } from 'react';
 import { SectionList } from 'react-native';
 
 import { useIsFetchingDataNewAccount } from '@cardstack/hooks';
+import { useAssets } from '@cardstack/hooks/assets/useAssets';
 import { Routes } from '@cardstack/navigation';
 import useRewardsDataFetch from '@cardstack/screens/RewardsCenterScreen/useRewardsDataFetch';
 import { useGetServiceStatusQuery } from '@cardstack/services';
@@ -13,7 +14,6 @@ import {
   PinnedHiddenSectionOption,
   useAccountSettings,
   useAssetListData,
-  useRefreshAccountData,
   useWallets,
 } from '@rainbow-me/hooks';
 
@@ -46,22 +46,17 @@ export const useAssetList = ({
   );
 
   // Handle refresh
-  const refresh = useRefreshAccountData();
+  const { refresh, isRefetching } = useAssets();
   const { refetch: refetchServiceStatus } = useGetServiceStatusQuery();
-  const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(async () => {
     refetchSafes();
-
-    setRefreshing(true);
 
     // Refresh Service Status Notice
     refetchServiceStatus();
 
     // Refresh Account Data
-    await refresh();
-
-    setRefreshing(false);
+    refresh();
   }, [refetchSafes, refetchServiceStatus, refresh]);
 
   useEffect(() => {
@@ -116,7 +111,7 @@ export const useAssetList = ({
     isLoading:
       isLoadingAssets || isLoadingSafesDiffAccount || rewardsFetchLoading,
     isFetchingSafes,
-    refreshing,
+    refreshing: isRefetching,
     sections,
     isEmpty,
     goToBuyPrepaidCard,

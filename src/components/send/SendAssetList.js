@@ -299,7 +299,7 @@ export default class SendAssetList extends React.Component {
   mapShitcoins = shitcoins =>
     shitcoins.map(token => (
       <SendCoinRow
-        key={token.uniqueId}
+        key={token.id}
         onPress={() => this.props.onSelectAsset(token)}
         rowHeight={rowHeight}
         testID="send-shitcoin"

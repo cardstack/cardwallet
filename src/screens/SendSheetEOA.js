@@ -17,19 +17,17 @@ import SendSheet, {
 import { createSignableTransaction, estimateGasLimit } from '../handlers/web3';
 import { sendTransaction } from '../model/wallet';
 import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
+import { useAssets } from '@cardstack/hooks/assets/useAssets';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { AssetTypes } from '@cardstack/types';
 import { isNativeToken } from '@cardstack/utils';
 import { Alert } from '@rainbow-me/components/alerts';
 import {
-  useAccountAssets,
   useAccountSettings,
   useGas,
   useMaxInputBalance,
   usePrevious,
-  useRefreshAccountData,
   useSendableCollectibles,
-  useUpdateAssetOnchainBalance,
 } from '@rainbow-me/hooks';
 import { dataAddNewTransaction } from '@rainbow-me/redux/data';
 import { ETH_ADDRESS_SYMBOL } from '@rainbow-me/references/addresses';
@@ -42,8 +40,12 @@ const useSendSheetScreen = () => {
 
   const { navigate } = useNavigation();
   const { params } = useRoute();
-  const updateAssetOnchainBalanceIfNeeded = useUpdateAssetOnchainBalance();
-  const { allAssets } = useAccountAssets();
+
+  const {
+    legacyAssetsStruct: allAssets,
+    getAssetPrice,
+    refetchBalances,
+  } = useAssets();
 
   const {
     gasLimit,
@@ -69,7 +71,6 @@ const useSendSheetScreen = () => {
   } = useAccountSettings();
 
   const { sendableCollectibles } = useSendableCollectibles();
-  const fetchData = useRefreshAccountData();
 
   const [amountDetails, setAmountDetails] = useState({
     assetAmount: '',
@@ -117,7 +118,7 @@ const useSendSheetScreen = () => {
       const _assetAmount = newAssetAmount.replace(/[^0-9.]/g, '');
       let _nativeAmount = '';
       if (_assetAmount.length) {
-        const priceUnit = get(selected, 'price.value', 0);
+        const priceUnit = getAssetPrice(selected.id);
         const {
           amount: convertedNativeAmount,
         } = convertAmountAndPriceToNativeDisplay(
@@ -138,7 +139,7 @@ const useSendSheetScreen = () => {
         nativeAmount: _nativeAmount,
       });
     },
-    [maxInputBalance, nativeCurrency, selected]
+    [getAssetPrice, maxInputBalance, nativeCurrency, selected]
   );
 
   const onSelectAsset = useCallback(
@@ -157,30 +158,10 @@ const useSendSheetScreen = () => {
       } else {
         setSelected(newSelected);
         sendUpdateAssetAmount('');
-
-        // Selection might be empty so we check before trying to update
-        if (isEmpty(newSelected)) return;
-
-        // Since we don't trust the balance from zerion,
-        // let's hit the blockchain and update it
-        updateAssetOnchainBalanceIfNeeded(
-          newSelected,
-          accountAddress,
-          updatedAsset => {
-            // set selected asset with new balance
-            setSelected(updatedAsset);
-            // Update selected to recalculate the maxInputAmount
-            onSelectAsset(updatedAsset);
-          }
-        );
       }
+      refetchBalances();
     },
-    [
-      accountAddress,
-      sendUpdateAssetAmount,
-      updateAssetOnchainBalanceIfNeeded,
-      updateMaxInputBalance,
-    ]
+    [refetchBalances, sendUpdateAssetAmount, updateMaxInputBalance]
   );
 
   const onChangeNativeAmount = useCallback(
@@ -189,7 +170,7 @@ const useSendSheetScreen = () => {
       const _nativeAmount = newNativeAmount.replace(/[^0-9.]/g, '');
       let _assetAmount = '';
       if (_nativeAmount.length) {
-        const priceUnit = get(selected, 'price.value', 0);
+        const priceUnit = getAssetPrice(selected.id);
         const convertedAssetAmount = convertAmountFromNativeValue(
           _nativeAmount,
           priceUnit,
@@ -207,7 +188,7 @@ const useSendSheetScreen = () => {
         nativeAmount: _nativeAmount,
       });
     },
-    [maxInputBalance, selected]
+    [getAssetPrice, maxInputBalance, selected]
   );
 
   const onMaxBalancePress = useCallback(async () => {
@@ -428,7 +409,6 @@ const useSendSheetScreen = () => {
     recipient,
     recipientFieldRef,
     allAssets,
-    fetchData,
     nativeCurrency,
     network,
     onSelectAsset,
@@ -448,7 +428,7 @@ const useSendSheetScreen = () => {
       ? undefined
       : onPressTransactionSpeed, // Temporary turn off gas price picker on layer 2
     // without price, hide fiat field, since there's no way to calculate it
-    showNativeCurrencyField: Boolean(selected?.price?.value),
+    showNativeCurrencyField: Boolean(Number(selected?.native?.balance.amount)),
   };
 };
 

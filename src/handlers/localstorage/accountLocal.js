@@ -1,16 +1,14 @@
 import { getAccountLocal, saveAccountLocal } from './common';
 
-const assetsVersion = '0.2.1';
+const assetsVersion = '1.0.0';
+
 const prepaidCardsVersion = '0.2.0';
 const depotVersion = '0.2.0';
 const merchantSafeVersion = '0.2.0';
-const savingsVersion = '0.2.0';
 const transactionsVersion = '0.2.6';
 const collectiblesVersion = '0.2.4';
-const accountEmptyVersion = '0.1.0';
 
 const ACCOUNT_INFO = 'accountInfo';
-const ACCOUNT_EMPTY = 'accountEmpty';
 const ASSETS = 'assets';
 const PREPAID_CARDS = 'prepaidCards';
 const DEPOTS = 'depots';
@@ -35,65 +33,23 @@ export const accountLocalKeys = [
 ];
 
 /**
- * @desc get savings
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {Object}
- */
-export const getSavings = (accountAddress, network) =>
-  getAccountLocal(SAVINGS, accountAddress, network, {}, savingsVersion);
-
-/**
- * @desc save savings
- * @param  {String}   [address]
- * @param  {Array}    [savings]
- * @param  {String}   [network]
- */
-export const saveSavings = (savings, accountAddress, network) =>
-  saveAccountLocal(SAVINGS, savings, accountAddress, network, savingsVersion);
-
-/**
- * @desc get account empty state
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {Boolean}
- */
-export const getAccountEmptyState = (accountAddress, network) =>
-  getAccountLocal(
-    ACCOUNT_EMPTY,
-    accountAddress,
-    network,
-    false,
-    accountEmptyVersion
-  );
-
-/**
- * @desc save account empty state
- * @param  {Boolean}  [isEmpty]
- * @param  {String}   [address]
- * @param  {String}   [network]
- */
-export const saveAccountEmptyState = (isEmpty, accountAddress, network) =>
-  saveAccountLocal(
-    ACCOUNT_EMPTY,
-    isEmpty,
-    accountAddress,
-    network,
-    accountEmptyVersion
-  );
-
-/**
  * @desc get assets
  * @param  {String}   [address]
  * @param  {String}   [network]
  * @return {Object}
  */
 export const getAssets = (accountAddress, network) =>
-  getAccountLocal(ASSETS, accountAddress, network, [], assetsVersion);
+  getAccountLocal(
+    ASSETS,
+    accountAddress,
+    network,
+    { latestBlockNumber: undefined, assets: [] },
+    assetsVersion
+  );
 
 /**
  * @desc save assets
- * @param  {Array}    [assets]
+ * @param  {Array | Object}    [assets]
  * @param  {String}   [address]
  * @param  {String}   [network]
  */

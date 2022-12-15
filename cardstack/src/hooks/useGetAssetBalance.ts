@@ -1,16 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { getOnChainAssetBalance } from '@cardstack/services/assets';
-import { NetworkType } from '@cardstack/types';
+import {
+  GetAssetBalanceParams,
+  getOnChainAssetBalance,
+} from '@cardstack/services/assets';
 
-import { Asset } from '@rainbow-me/entities';
-import { logger } from '@rainbow-me/utils';
-
-interface UseGetAssetBalanceParams {
-  asset: Asset;
-  accountAddress: string;
-  network: NetworkType;
-}
+import logger from 'logger';
 
 /**
  * get asset balance hook
@@ -19,7 +14,7 @@ export const useGetAssetBalance = ({
   asset,
   accountAddress,
   network,
-}: UseGetAssetBalanceParams) => {
+}: GetAssetBalanceParams) => {
   const [balance, setBalance] = useState({
     amount: '0',
     display: `0 ${asset.symbol}`,

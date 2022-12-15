@@ -1,4 +1,3 @@
-export { parseAssetName, parseAssetSymbol } from './accounts';
 export {
   defaultGasPriceFormat,
   parseTxFees,
