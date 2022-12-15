@@ -36,6 +36,8 @@ const useAssets = () => {
   const {
     data: { assets = {} as AssetsDictionary, ids = [] } = {},
     isLoading: isLoadingAssets,
+    isFetching: isRefetchingAssets,
+    refetch: refetchAssets,
   } = useGetEOAAssetsQuery(
     {
       accountAddress,
@@ -48,6 +50,8 @@ const useAssets = () => {
   const {
     data: prices,
     isLoading: isLoadingPrices,
+    isFetching: isRefetchingPrices,
+    refetch: refetchPrices,
   } = useGetAssetsPriceByContractQuery(
     { addresses: ids, nativeCurrency, network },
     { skip: !ids.length }
@@ -56,12 +60,19 @@ const useAssets = () => {
   const {
     data: gnosisPrices,
     isLoading: isLoadingGnosisPrices,
+    isFetching: isRefetchingGnosisPrices,
+    refetch: refetchGnosisPrices,
   } = useGetCardPayTokensPricesQuery(
     { nativeCurrency },
     { skip: !ids.length || !isOnCardPayNetwork }
   );
 
-  const { data: nativeTokenPrice } = useGetNativeTokensPriceQuery({
+  const {
+    data: nativeTokenPrice,
+    refetch: refetchNativePrice,
+    isFetching: isRefetchingNativePrice,
+    isLoading: isLoadingNativePrice,
+  } = useGetNativeTokensPriceQuery({
     network,
     nativeCurrency,
   });
@@ -70,6 +81,7 @@ const useAssets = () => {
     data: balances,
     isLoading: isLoadingBalances,
     refetch: refetchBalances,
+    isFetching: isRefetchingBalances,
   } = useGetOnChainTokenBalancesQuery(
     { assets, accountAddress, network },
     { skip: !ids.length }
@@ -145,18 +157,51 @@ const useAssets = () => {
     ]
   );
 
+  const refresh = useCallback(() => {
+    refetchAssets();
+    refetchBalances();
+    refetchPrices();
+    refetchGnosisPrices();
+    refetchNativePrice();
+  }, [
+    refetchAssets,
+    refetchBalances,
+    refetchGnosisPrices,
+    refetchNativePrice,
+    refetchPrices,
+  ]);
+
   const isLoading = useMemo(
     () =>
       isLoadingPrices ||
       isLoadingBalances ||
       isLoadingGnosisPrices ||
+      isLoadingAssets ||
+      isLoadingNativePrice,
+    [
       isLoadingAssets,
-    [isLoadingAssets, isLoadingBalances, isLoadingGnosisPrices, isLoadingPrices]
+      isLoadingBalances,
+      isLoadingGnosisPrices,
+      isLoadingNativePrice,
+      isLoadingPrices,
+    ]
   );
 
-  const refresh = useCallback(() => {
-    // TODO: refresh data
-  }, []);
+  const isRefetching = useMemo(
+    () =>
+      isRefetchingPrices ||
+      isRefetchingBalances ||
+      isRefetchingGnosisPrices ||
+      isRefetchingAssets ||
+      isRefetchingNativePrice,
+    [
+      isRefetchingAssets,
+      isRefetchingBalances,
+      isRefetchingGnosisPrices,
+      isRefetchingNativePrice,
+      isRefetchingPrices,
+    ]
+  );
 
   return {
     assetsIdWithoutNfts,
@@ -164,6 +209,7 @@ const useAssets = () => {
     assetsIds: ids,
     legacyAssetsStruct,
     isLoading,
+    isRefetching,
     refresh,
     refetchBalances,
     getAsset,
