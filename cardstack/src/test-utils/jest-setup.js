@@ -186,10 +186,6 @@ jest.mock('@rainbow-me/utils', () => ({
   gasUtils: jest.fn(),
 }));
 
-jest.mock('@rainbow-me/hooks/charts/useChartThrottledPoints', () => ({
-  default: jest.fn(),
-}));
-
 jest.mock('@rainbow-me/components/animations/procs', () => ({
   default: jest.fn(),
 }));

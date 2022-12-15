@@ -55,7 +55,6 @@ const getColorsByTheme = darkMode => {
     blueGreyDarker: '#0F0F11', // '15, 15, 17'
     blueGreyDarkLight: '#F3F4F5', // '243, 244, 245'
     brightRed: '#FF7171', // '255, 113, 113'
-    chartGreen: '#66D28F', // '102, 210, 143'
     dark: '#25292E', // '37, 41, 46'
     darkGrey: '#71778A', // '113, 119, 138'
     flamingo: '#E540F1', // '229, 64, 241'
