@@ -32,7 +32,7 @@ import {
   RequestPrepaidCardScreen,
   SupportAndFeesSheet,
   AvailableBalanceSheet,
-  TokenWithChartSheet,
+  TokenSheet,
   WyreAuthenticationWidget,
 } from '@cardstack/screens';
 import {
@@ -188,8 +188,8 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
     component: AvailableBalanceSheet,
     options: sheetPreset(),
   },
-  TOKEN_WITH_CHART_SHEET: {
-    component: TokenWithChartSheet,
+  TOKEN_SHEET: {
+    component: TokenSheet,
     options: sheetPreset({ backgroundOpacity: 'half' }),
   },
   WYRE_AUTH_WIDGET: {

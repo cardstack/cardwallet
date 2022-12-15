@@ -27,7 +27,7 @@ export const BalanceSection = ({
         ...token.token,
       };
 
-      navigate(Routes.TOKEN_WITH_CHART_SHEET, { asset, safeAddress });
+      navigate(Routes.TOKEN_SHEET, { asset, safeAddress });
     },
     [navigate, safeAddress]
   );

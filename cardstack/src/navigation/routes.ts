@@ -31,7 +31,7 @@ export const MainRoutes = {
   COLOR_PICKER_MODAL: 'ColorPickerModal',
   SUPPORT_AND_FEES: 'SupportAndFeesSheet',
   AVAILABLE_BALANCE_SHEET: 'AvailableBalanceSheet',
-  TOKEN_WITH_CHART_SHEET: 'TokenWithChartSheet',
+  TOKEN_SHEET: 'TokenSheet',
   WYRE_AUTH_WIDGET: 'WyreAuthenticationWidget',
 } as const;
 
