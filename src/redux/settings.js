@@ -10,10 +10,6 @@ import { etherWeb3SetHttpProvider } from '../handlers/web3';
 import { updateLanguage } from '../languages';
 
 import { dataResetState } from './data';
-import {
-  fallbackExplorerClearState,
-  fallbackExplorerInit,
-} from './fallbackExplorer';
 import { walletConnectUpdateSessions } from './walletconnect';
 import { collectiblesResetState } from '@cardstack/redux/collectibles';
 import { requestsResetState } from '@cardstack/redux/requests';
@@ -113,13 +109,11 @@ export const settingsChangeLanguage = language => async dispatch => {
 
 export const settingsChangeNativeCurrency = nativeCurrency => async dispatch => {
   dispatch(dataResetState());
-  dispatch(fallbackExplorerClearState());
   try {
     dispatch({
       payload: nativeCurrency,
       type: SETTINGS_UPDATE_NATIVE_CURRENCY_SUCCESS,
     });
-    dispatch(fallbackExplorerInit());
     saveNativeCurrency(nativeCurrency);
   } catch (error) {
     logger.log('Error changing native currency', error);

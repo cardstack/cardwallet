@@ -7,10 +7,8 @@ const merchantSafeVersion = '0.2.0';
 const savingsVersion = '0.2.0';
 const transactionsVersion = '0.2.6';
 const collectiblesVersion = '0.2.4';
-const accountEmptyVersion = '0.1.0';
 
 const ACCOUNT_INFO = 'accountInfo';
-const ACCOUNT_EMPTY = 'accountEmpty';
 const ASSETS = 'assets';
 const PREPAID_CARDS = 'prepaidCards';
 const DEPOTS = 'depots';

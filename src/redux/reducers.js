@@ -1,6 +1,5 @@
 import contacts from './contacts';
 import data from './data';
-import fallbackExplorer from './fallbackExplorer';
 import gas from './gas';
 import imageMetadata from './imageMetadata';
 import settings from './settings';
@@ -20,7 +19,6 @@ export default {
   collectibles, // responsible for extracting collectibles (NFTs) from the assets state and fetching additional metadata for display
   contacts,
   data,
-  fallbackExplorer,
   gas,
   imageMetadata,
   requests,
