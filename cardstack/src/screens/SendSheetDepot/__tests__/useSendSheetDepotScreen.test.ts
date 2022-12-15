@@ -5,10 +5,11 @@ import { waitFor } from '@testing-library/react-native';
 import Web3 from 'web3';
 
 import { getSafesInstance } from '@cardstack/models/safes-providers';
+import { useGetSafesDataQuery } from '@cardstack/services';
 import { getUsdConverter } from '@cardstack/services/exchange-rate-service';
 import { reshapeSingleDepotTokenToAsset } from '@cardstack/utils';
 
-import { useAccountAssets, useAccountSettings } from '@rainbow-me/hooks';
+import { useAccountSettings } from '@rainbow-me/hooks';
 
 import { updatedData } from '../../../helpers/__mocks__/dataMocks';
 import { useSendSheetDepotScreen } from '../useSendSheetDepotScreen';
@@ -35,7 +36,6 @@ jest.mock('@cardstack/navigation', () => ({
 const mockAccountAddress = '0x0000000000000000000';
 
 jest.mock('@rainbow-me/hooks', () => ({
-  useAccountAssets: jest.fn(),
   useAccountSettings: jest.fn().mockImplementation(() => ({
     accountAddress: mockAccountAddress,
     nativeCurrency: 'USD',
@@ -91,7 +91,7 @@ const mainDepot = updatedData.updatedDepots[0];
 
 describe('useSendSheetDepotScreen', () => {
   beforeEach(() => {
-    (useAccountAssets as jest.Mock).mockImplementation(() => ({
+    (useGetSafesDataQuery as jest.Mock).mockImplementation(() => ({
       depots: updatedData.updatedDepots,
     }));
 
@@ -116,7 +116,7 @@ describe('useSendSheetDepotScreen', () => {
   });
 
   it('should return the current reshaped token from params if no depot is found', async () => {
-    (useAccountAssets as jest.Mock).mockImplementation(() => ({
+    (useGetSafesDataQuery as jest.Mock).mockImplementation(() => ({
       depots: [],
     }));
 

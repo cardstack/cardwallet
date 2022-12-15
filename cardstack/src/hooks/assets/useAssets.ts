@@ -69,6 +69,7 @@ const useAssets = () => {
   const {
     data: balances,
     isLoading: isLoadingBalances,
+    refetch: refetchBalances,
   } = useGetOnChainTokenBalancesQuery(
     { assets, accountAddress, network },
     { skip: !ids.length }
@@ -164,6 +165,7 @@ const useAssets = () => {
     legacyAssetsStruct,
     isLoading,
     refresh,
+    refetchBalances,
     getAsset,
     getAssetPrice,
     getAssetBalance,

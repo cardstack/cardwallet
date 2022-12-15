@@ -31,10 +31,7 @@ const addNativeTokenPlaceholder = (
     asset => asset.address === nativeTokenAddress
   );
 
-  const { genericAssets } = store.getState().data;
   if (includePlaceholder && !hasNativeCurrency && assets.length > 0) {
-    const { relative_change_24h, value } = genericAssets?.eth?.price || {};
-
     const zeroToken = {
       address: nativeTokenAddress,
       balance: {
@@ -54,16 +51,7 @@ const addNativeTokenPlaceholder = (
           amount: '0.00',
           display: convertAmountToNativeDisplay('0.00', nativeCurrency),
         },
-        change: relative_change_24h ? `${relative_change_24h.toFixed(2)}%` : '',
-        price: {
-          amount: value || '0.00',
-          display: convertAmountToNativeDisplay(
-            value ? value : '0.00',
-            nativeCurrency
-          ),
-        },
       },
-      price: value,
       symbol: nativeTokenSymbol,
       type: 'token',
       id: nativeTokenAddress,

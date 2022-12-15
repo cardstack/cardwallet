@@ -1,16 +1,13 @@
 import { isZero } from '@cardstack/cardpay-sdk';
 import produce from 'immer';
-import { concat, get, isEmpty, partition, toLower, values } from 'lodash';
+import { concat, isEmpty, partition, toLower } from 'lodash';
 import { getTransactionReceipt } from '../handlers/web3';
-import { collectiblesRefreshState } from '@cardstack/redux/collectibles';
 import { NetworkType } from '@cardstack/types';
 import {
-  getAssets,
   getDepots,
   getLocalTransactions,
   getMerchantSafes,
   getPrepaidCards,
-  saveAssets,
   saveLocalTransactions,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
 import DirectionTypes from '@rainbow-me/helpers/transactionDirectionTypes';
@@ -21,7 +18,7 @@ import {
   getTransactionLabel,
   parseNewTransaction,
 } from '@rainbow-me/parsers';
-import { ethereumUtils, isLowerCaseMatch } from '@rainbow-me/utils';
+import { ethereumUtils } from '@rainbow-me/utils';
 import logger from 'logger';
 
 let pendingTransactionsHandle = null;
@@ -31,7 +28,6 @@ const TXN_WATCHER_POLL_INTERVAL = 5000; // 5 seconds
 // -- Constants --------------------------------------- //
 
 const DATA_UPDATE_ASSETS = 'data/DATA_UPDATE_ASSETS';
-const DATA_UPDATE_GENERIC_ASSETS = 'data/DATA_UPDATE_GENERIC_ASSETS';
 const DATA_UPDATE_TRANSACTIONS = 'data/DATA_UPDATE_TRANSACTIONS';
 const DATA_UPDATE_GNOSIS_DATA = 'data/DATA_UPDATE_GNOSIS_DATA';
 
@@ -55,19 +51,16 @@ export const dataLoadState = () => async (dispatch, getState) => {
   const { accountAddress, network } = getState().settings;
   try {
     const [
-      assets,
       { prepaidCards },
       { depots },
       { merchantSafes },
     ] = await Promise.all([
-      getAssets(accountAddress, network),
       getPrepaidCards(accountAddress, network),
       getDepots(accountAddress, network),
       getMerchantSafes(accountAddress, network),
     ]);
     dispatch({
       payload: {
-        assets,
         depots,
         prepaidCards,
         merchantSafes,
@@ -92,47 +85,6 @@ export const dataLoadState = () => async (dispatch, getState) => {
 export const dataResetState = () => dispatch => {
   pendingTransactionsHandle && clearTimeout(pendingTransactionsHandle);
   dispatch({ type: DATA_CLEAR_STATE });
-};
-
-export const dataUpdateAssets = assets => (dispatch, getState) => {
-  const { accountAddress, network } = getState().settings;
-  if (assets.length) {
-    saveAssets(assets, accountAddress, network);
-
-    dispatch({
-      payload: assets,
-      type: DATA_UPDATE_ASSETS,
-    });
-  }
-};
-
-const checkMeta = message => (dispatch, getState) => {
-  const { accountAddress, nativeCurrency, network } = getState().settings;
-  const address = get(message, 'meta.address');
-  const currency = get(message, 'meta.currency');
-  const metaNetwork = get(message, 'meta.network');
-
-  return (
-    isLowerCaseMatch(address, accountAddress) &&
-    isLowerCaseMatch(currency, nativeCurrency) &&
-    (!metaNetwork || isLowerCaseMatch(metaNetwork, network))
-  );
-};
-
-export const addressAssetsReceived = message => async (dispatch, getState) => {
-  const isValidMeta = dispatch(checkMeta(message));
-  if (!isValidMeta) return;
-
-  const { accountAddress, network } = getState().settings;
-
-  const payload = values(get(message, 'payload.assets', {}));
-
-  dispatch({
-    payload,
-    type: DATA_UPDATE_ASSETS,
-  });
-  saveAssets(payload, accountAddress, network);
-  dispatch(collectiblesRefreshState());
 };
 
 export const dataAddNewTransaction = (
@@ -327,7 +279,6 @@ const INITIAL_STATE = {
   depots: [],
   merchantSafes: [],
   prepaidCards: [],
-  genericAssets: {},
   isLoadingAssets: true,
   isLoadingTransactions: true,
   shouldRefetchSavings: false,
@@ -339,9 +290,6 @@ export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
       case DATA_UPDATE_REFETCH_SAVINGS:
         draft.shouldRefetchSavings = action.payload;
-        break;
-      case DATA_UPDATE_GENERIC_ASSETS:
-        draft.genericAssets = action.payload;
         break;
       case DATA_UPDATE_ASSETS:
         draft.assets = action.payload;

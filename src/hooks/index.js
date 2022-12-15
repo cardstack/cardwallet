@@ -3,12 +3,10 @@ export {
   useChartDataLabels,
   useChartThrottledPoints,
 } from './charts';
-export { default as useAccountAssets } from './useAccountAssets';
 export { default as useAccountProfile } from './useAccountProfile';
 export { default as useAccountSettings } from './useAccountSettings';
 export { default as useAccountTransactions } from './useAccountTransactions';
 export { default as useAppVersion } from './useAppVersion';
-export { default as useAsset } from './useAsset';
 export { default as useBuyPrepaidCard } from '@cardstack/hooks/prepaid-card/useBuyPrepaidCard';
 export { default as useClipboard } from './useClipboard';
 export { default as useColorForAsset } from './useColorForAsset';
@@ -33,7 +31,6 @@ export { default as useSendFeedback } from './useSendFeedback';
 export { default as useShakeAnimation } from './useShakeAnimation';
 export { default as useTimeout } from './useTimeout';
 export { default as useTransformOrigin } from './useTransformOrigin';
-export { default as useUpdateAssetOnchainBalance } from './useUpdateAssetOnchainBalance';
 export { default as useWalletConnectConnections } from '@cardstack/hooks/wallet-connect/useWalletConnectConnections';
 export { default as useWallets } from './useWallets';
 export { default as useWalletsWithBalancesAndNames } from './useWalletsWithBalancesAndNames';

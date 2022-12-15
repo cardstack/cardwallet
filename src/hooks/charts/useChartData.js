@@ -2,7 +2,6 @@ import { isEmpty } from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 
 import { daysFromTheFirstTx } from '../../utils/ethereumUtils';
-import useAsset from '../useAsset';
 
 const formatChartData = chart => {
   if (!chart || isEmpty(chart)) return null;
@@ -11,9 +10,8 @@ const formatChartData = chart => {
 
 export default function useChartData(asset) {
   const [daysFromFirstTx, setDaysFromFirstTx] = useState(1000);
-  const { price: priceObject } = useAsset(asset);
 
-  const { value: price } = priceObject || {};
+  const { value: price } = {};
 
   const chart = formatChartData(asset.chartPrices);
   const chartType = 'd';

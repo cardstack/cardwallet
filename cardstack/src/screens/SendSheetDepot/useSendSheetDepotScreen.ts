@@ -14,6 +14,7 @@ import { useBooleanState } from '@cardstack/hooks';
 import { getSafesInstance } from '@cardstack/models/safes-providers';
 import { useLoadingOverlay, Routes, Navigation } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
+import { useGetSafesDataQuery } from '@cardstack/services';
 import {
   getUsdConverter,
   getValueInNativeCurrency,
@@ -27,7 +28,7 @@ import { useWorker } from '@cardstack/utils/hooks-utilities';
 
 import { Alert } from '@rainbow-me/components/alerts';
 import { useSendAddressValidation } from '@rainbow-me/components/send/SendSheet';
-import { useAccountAssets, useAccountSettings } from '@rainbow-me/hooks';
+import { useAccountSettings } from '@rainbow-me/hooks';
 import logger from 'logger';
 
 interface Params {
@@ -47,10 +48,18 @@ export const useSendSheetDepotScreen = () => {
   const { params } = useRoute<RouteType<Params>>();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
-  // Assets
+  const { accountAddress, network, nativeCurrency } = useAccountSettings();
+
   const {
     depots: [depot],
-  } = useAccountAssets();
+  } = useGetSafesDataQuery(
+    { address: accountAddress, nativeCurrency },
+    {
+      selectFromResult: ({ data }) => ({
+        depots: data?.depots || [],
+      }),
+    }
+  );
 
   const reshapedAsset = useMemo(
     () =>
@@ -93,8 +102,6 @@ export const useSendSheetDepotScreen = () => {
 
   const isValidAddress = useSendAddressValidation(recipient);
   const [isAuthorizing, setIsAuthorizing] = useState(false);
-
-  const { accountAddress, network, nativeCurrency } = useAccountSettings();
 
   const getNativeCurrencyAmount = useCallback(
     async (amount: string) => {

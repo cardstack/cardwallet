@@ -39,17 +39,15 @@ import logger from 'logger';
 
 const { RNBip39 } = NativeModules;
 
+// TODO: FIX PRICE
 const getEthPriceUnit = () => {
-  const { assets, genericAssets } = store.getState().data;
+  const { assets } = store.getState().data;
   const { network } = store.getState().settings;
   const nativeTokenAddress = getConstantByNetwork(
     'nativeTokenAddress',
     network
   );
-  const genericEthPrice = genericAssets?.eth?.price?.value;
-  return (
-    genericEthPrice || getAsset(assets, nativeTokenAddress)?.price?.value || 0
-  );
+  return getAsset(assets, nativeTokenAddress)?.price?.value || 0;
 };
 
 const getBalanceAmount = async (selectedGasPrice, selected) => {

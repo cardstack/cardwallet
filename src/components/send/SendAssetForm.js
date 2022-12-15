@@ -1,9 +1,7 @@
 import React from 'react';
 
-import { useAsset } from '../../hooks';
 import { SendCoinRow } from '../coin-row';
 import CollectiblesSendRow from '../coin-row/CollectiblesSendRow';
-import SendSavingsCoinRow from '../coin-row/SendSavingsCoinRow';
 import { Icon } from '../icons';
 import SendAssetFormCollectible from './SendAssetFormCollectible';
 import SendAssetFormToken from './SendAssetFormToken';
@@ -24,16 +22,9 @@ export default function SendAssetForm({
   txSpeedRenderer,
   ...props
 }) {
-  const selectedAsset = useAsset(selected);
+  const isNft = selected.type === AssetTypes.nft;
 
-  const isNft = selectedAsset.type === AssetTypes.nft;
-  const isSavings = selectedAsset.type === AssetTypes.compound;
-
-  const AssetRowElement = isNft
-    ? CollectiblesSendRow
-    : isSavings
-    ? SendSavingsCoinRow
-    : SendCoinRow;
+  const AssetRowElement = isNft ? CollectiblesSendRow : SendCoinRow;
 
   return (
     <Container
@@ -65,7 +56,7 @@ export default function SendAssetForm({
       >
         {isNft ? (
           <SendAssetFormCollectible
-            asset={selectedAsset}
+            asset={selected}
             buttonRenderer={buttonRenderer}
             txSpeedRenderer={txSpeedRenderer}
           />
@@ -79,7 +70,7 @@ export default function SendAssetForm({
             onChangeAssetAmount={onChangeAssetAmount}
             onChangeNativeAmount={onChangeNativeAmount}
             onFocus={onFocus}
-            selected={selectedAsset}
+            selected={selected}
             sendMaxBalance={sendMaxBalance}
             txSpeedRenderer={txSpeedRenderer}
           />
