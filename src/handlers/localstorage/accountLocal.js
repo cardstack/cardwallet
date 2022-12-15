@@ -1,10 +1,10 @@
 import { getAccountLocal, saveAccountLocal } from './common';
 
-const legacyAssetsVersion = '0.2.1';
+const assetsVersion = '1.0.0';
+
 const prepaidCardsVersion = '0.2.0';
 const depotVersion = '0.2.0';
 const merchantSafeVersion = '0.2.0';
-const savingsVersion = '0.2.0';
 const transactionsVersion = '0.2.6';
 const collectiblesVersion = '0.2.4';
 
@@ -33,34 +33,19 @@ export const accountLocalKeys = [
 ];
 
 /**
- * @desc get savings
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {Object}
- */
-export const getSavings = (accountAddress, network) =>
-  getAccountLocal(SAVINGS, accountAddress, network, {}, savingsVersion);
-
-/**
- * @desc save savings
- * @param  {String}   [address]
- * @param  {Array}    [savings]
- * @param  {String}   [network]
- */
-export const saveSavings = (savings, accountAddress, network) =>
-  saveAccountLocal(SAVINGS, savings, accountAddress, network, savingsVersion);
-
-/**
  * @desc get assets
  * @param  {String}   [address]
  * @param  {String}   [network]
  * @return {Object}
  */
-export const getAssets = (
-  accountAddress,
-  network,
-  version = legacyAssetsVersion
-) => getAccountLocal(ASSETS, accountAddress, network, [], version);
+export const getAssets = (accountAddress, network) =>
+  getAccountLocal(
+    ASSETS,
+    accountAddress,
+    network,
+    { latestBlockNumber: undefined, assets: [] },
+    assetsVersion
+  );
 
 /**
  * @desc save assets
@@ -68,12 +53,8 @@ export const getAssets = (
  * @param  {String}   [address]
  * @param  {String}   [network]
  */
-export const saveAssets = (
-  assets,
-  accountAddress,
-  network,
-  version = legacyAssetsVersion
-) => saveAccountLocal(ASSETS, assets, accountAddress, network, version);
+export const saveAssets = (assets, accountAddress, network) =>
+  saveAccountLocal(ASSETS, assets, accountAddress, network, assetsVersion);
 
 /**
  * @desc get prepaid cards

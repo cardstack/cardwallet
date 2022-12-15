@@ -19,7 +19,6 @@ import {
   getCollectibles as getCollectiblesFromStorage,
   saveCollectibles as saveCollectiblesToStorage,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
-import { assetsVersion } from '@rainbow-me/handlers/localstorage/common';
 import { AppDispatch, AppGetState } from '@rainbow-me/redux/store';
 import { erc721ABI } from '@rainbow-me/references';
 import logger from 'logger';
@@ -172,11 +171,9 @@ const fetchNFTsViaRpcNode = () => async (
 
   const { accountAddress, nativeCurrency, network } = getState().settings;
 
-  const { assets } = (await getAssets(
-    accountAddress,
-    network,
-    assetsVersion
-  )) as { assets: Asset[] };
+  const { assets } = (await getAssets(accountAddress, network)) as {
+    assets: Asset[];
+  };
 
   // Find the assets that are NFTs.
   const assetsWithTokenIds = assets.filter(asset => asset.tokenID);

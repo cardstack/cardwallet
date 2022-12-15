@@ -14,7 +14,6 @@ import {
   getAssets,
   saveAssets,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
-import { assetsVersion } from '@rainbow-me/handlers/localstorage/common';
 import store from '@rainbow-me/redux/store';
 import { shitcoins } from '@rainbow-me/references';
 import migratedTokens from '@rainbow-me/references/migratedTokens.json';
@@ -65,8 +64,7 @@ const discoverTokens = async (baseParams: EOABaseParams) => {
 
   const { latestTxBlockNumber, assets: localStoredAssets } = (await getAssets(
     accountAddress,
-    network,
-    assetsVersion
+    network
   )) as { assets: Asset[]; latestTxBlockNumber?: number };
 
   const allTokensTxs = await getTxsTokenData(baseParams, latestTxBlockNumber);
@@ -208,8 +206,7 @@ export const getAccountAssets = async ({
   await saveAssets(
     { assets: tokensInWallet, latestTxBlockNumber },
     accountAddress,
-    network,
-    assetsVersion
+    network
   );
 
   await store.dispatch(collectiblesRefreshState());

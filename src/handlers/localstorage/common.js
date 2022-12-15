@@ -2,7 +2,6 @@
 import { toLower } from 'lodash';
 import logger from 'logger';
 
-export const assetsVersion = '1.0.0';
 const defaultVersion = '0.1.0';
 
 export const getKey = (prefix, accountAddress, network) =>
@@ -98,12 +97,7 @@ export const getAccountLocal = async (
   const key = getKey(prefix, accountAddress, network);
   const result = await getLocal(key, version);
 
-  const emptyStateByVersion =
-    version === assetsVersion
-      ? { latestBlockNumber: undefined, assets: [] }
-      : emptyState;
-
-  return result ? result.data : emptyStateByVersion;
+  return result ? result.data : emptyState;
 };
 
 export const saveAccountLocal = (
