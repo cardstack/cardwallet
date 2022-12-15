@@ -34,34 +34,23 @@ const TokenSheet = () => {
 
   return (
     <Sheet scrollEnabled={false}>
-      <Container
-        {...centerRowProps}
-        justifyContent="space-between"
-        marginVertical={2}
-        paddingHorizontal={5}
-      >
-        <BalanceTitle title={strings.balance} />
-        <Container {...centerRowProps}>
-          <CoinIcon {...asset} size={20} />
-          <Text fontSize={20} marginLeft={1} weight="extraBold">
-            {asset.balance?.display}
+      <Container paddingHorizontal={5} justifyContent="space-between" flex={1}>
+        <Container flex={0.5}>
+          <CoinIcon {...asset} size={50} />
+          <Text size="medium" weight="extraBold" paddingTop={3}>
+            {asset.name}
           </Text>
         </Container>
-        {hasNativeBalance && (
-          <>
-            <BalanceTitle title={strings.value} />
-            <Text fontSize={20} weight="extraBold">
-              {asset?.native?.balance.display}
-            </Text>
-          </>
-        )}
-      </Container>
-      <Container
-        {...centerRowProps}
-        justifyContent="space-around"
-        paddingTop={2}
-        width="100%"
-      >
+        <Container {...centerRowProps} justifyContent="space-between">
+          <BalanceInfo label={strings.balance} value={asset.balance?.display} />
+          {hasNativeBalance && (
+            <BalanceInfo
+              label={strings.value}
+              value={asset?.native?.balance.display}
+              alignItems="flex-end"
+            />
+          )}
+        </Container>
         <SendActionButton asset={asset} safeAddress={safeAddress} />
       </Container>
     </Sheet>
@@ -70,8 +59,21 @@ const TokenSheet = () => {
 
 export default memo(TokenSheet);
 
-const BalanceTitle = ({ title }: { title: string }) => (
-  <Text color="grayText" fontSize={13} marginBottom={1}>
-    {title}
-  </Text>
+const BalanceInfo = ({
+  label,
+  value,
+  alignItems,
+}: {
+  label: string;
+  value?: string;
+  alignItems?: ContainerProps['alignItems'];
+}) => (
+  <Container alignItems={alignItems}>
+    <Text color="grayText" fontSize={13}>
+      {label}
+    </Text>
+    <Text fontSize={20} weight="extraBold">
+      {value}
+    </Text>
+  </Container>
 );

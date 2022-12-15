@@ -46,7 +46,7 @@ export default function SendActionButton({
   }, [dispatch, asset, navigate, safeAddress]);
 
   return (
-    <Button iconProps={iconProps} onPress={handlePress}>
+    <Button alignSelf="center" iconProps={iconProps} onPress={handlePress}>
       Send
     </Button>
   );
