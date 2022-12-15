@@ -40,17 +40,24 @@ describe('Rewards explanation', () => {
     expect(parseTemplateExplanation(template, data)).toBe('Template Value B');
   });
 
-  it('should parse WEI amount to human readable string with default 2 decimals', () => {
-    const wei = '3498646326433040826368';
+  it('should parse token amount to human readable string with default 2 decimals', () => {
+    const amount = '3498646326433040826368';
     const token = '3498.65';
 
-    expect(parseExplanationAmount(wei)).toBe(token);
+    expect(parseExplanationAmount(amount, 18, 2)).toBe(token);
   });
 
-  it('should parse WEI amount to human readable string with defined decimals', () => {
-    const wei = '3498646326433040826368';
+  it('should parse token amount to human readable string with defined decimals', () => {
+    const amount = '3498646326433040826368';
     const token = '3498.646';
 
-    expect(parseExplanationAmount(wei, 3)).toBe(token);
+    expect(parseExplanationAmount(amount, 18, 3)).toBe(token);
+  });
+
+  it('should parse token amount to human readable string with defined decimals, and different token decimals', () => {
+    const amount = '3498646326433040826368';
+    const token = '3498646326433.0408';
+
+    expect(parseExplanationAmount(amount, 9, 4)).toBe(token);
   });
 });

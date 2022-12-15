@@ -82,12 +82,10 @@ const getValidProofs = async ({
   return validProofs;
 };
 
-const getTokenSymbolForAddress = async (tokenAddress: string) => {
-  const rewardPoolInstance = await getRewardsPoolInstance();
-
-  const token = await rewardPoolInstance.addTokenSymbol([{ tokenAddress }]);
-
-  return token?.[0]?.tokenSymbol;
+const getTokenDetailsForAddress = async (tokenAddress: string) => {
+  const [web3, signer] = await getWeb3ProviderWithEthSigner();
+  const assetsAPI = await getSDK('Assets', web3, signer);
+  return await assetsAPI.getTokenInfo(tokenAddress);
 };
 
 // Queries
@@ -139,25 +137,27 @@ export const fetchValidProofsWithToken = async ({
       };
 
       if (proof.explanationData?.token) {
-        const tokenSymbol = await getTokenSymbolForAddress(
+        const { symbol, decimals } = await getTokenDetailsForAddress(
           proof.explanationData.token
         );
 
-        if (tokenSymbol) {
-          proof.explanationData.token = tokenSymbol;
+        if (symbol) {
+          proof.explanationData.token = symbol;
         }
-      }
 
-      if (proof.explanationData?.amount) {
-        proof.explanationData.amount = parseExplanationAmount(
-          proof.explanationData.amount
-        );
-      }
+        if (proof.explanationData?.amount) {
+          proof.explanationData.amount = parseExplanationAmount(
+            proof.explanationData.amount,
+            decimals
+          );
+        }
 
-      if (proof.explanationData?.rollover_amount) {
-        proof.explanationData.rollover_amount = parseExplanationAmount(
-          proof.explanationData.rollover_amount
-        );
+        if (proof.explanationData?.rollover_amount) {
+          proof.explanationData.rollover_amount = parseExplanationAmount(
+            proof.explanationData.rollover_amount,
+            decimals
+          );
+        }
       }
 
       if (proof.explanationData && proof.explanationTemplate) {
