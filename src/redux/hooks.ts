@@ -2,7 +2,6 @@ import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { ChainId } from '@uniswap/sdk';
 import { useSelector } from 'react-redux';
 import {
-  AssetType,
   CollectibleType,
   DepotType,
   ERC20TransactionType,
@@ -13,7 +12,6 @@ import {
 
 interface ReduxState {
   data: {
-    assets: AssetType[];
     isLoadingAssets: boolean;
     prepaidCards: PrepaidCardType[];
     depots: DepotType[];

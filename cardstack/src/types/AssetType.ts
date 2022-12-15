@@ -17,18 +17,6 @@ export enum AssetTypes {
   uniswapV2 = 'uniswap-v2',
 }
 
-export interface AssetType {
-  id: string;
-  address: string;
-  balance?: BalanceType;
-  decimals: number;
-  icon_url: string;
-  name: string;
-  tokenID?: string;
-  type: AssetTypes;
-  symbol: string;
-}
-
 export interface AssetWithNativeType extends Asset {
   balance?: BalanceType;
   native: {
@@ -36,7 +24,6 @@ export interface AssetWithNativeType extends Asset {
   };
 }
 
-export interface AssetWithTokensType extends AssetType {
-  address: string;
+export interface AssetWithTokensType extends Asset {
   tokens: Array<TokenType>;
 }

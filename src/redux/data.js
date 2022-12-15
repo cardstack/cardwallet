@@ -27,7 +27,6 @@ const TXN_WATCHER_POLL_INTERVAL = 5000; // 5 seconds
 
 // -- Constants --------------------------------------- //
 
-const DATA_UPDATE_ASSETS = 'data/DATA_UPDATE_ASSETS';
 const DATA_UPDATE_TRANSACTIONS = 'data/DATA_UPDATE_TRANSACTIONS';
 const DATA_UPDATE_GNOSIS_DATA = 'data/DATA_UPDATE_GNOSIS_DATA';
 
@@ -40,8 +39,6 @@ const DATA_LOAD_TRANSACTIONS_FAILURE = 'data/DATA_LOAD_TRANSACTIONS_FAILURE';
 
 const DATA_ADD_NEW_TRANSACTION_SUCCESS =
   'data/DATA_ADD_NEW_TRANSACTION_SUCCESS';
-
-const DATA_UPDATE_REFETCH_SAVINGS = 'data/DATA_UPDATE_REFETCH_SAVINGS';
 
 const DATA_CLEAR_STATE = 'data/DATA_CLEAR_STATE';
 export const DATA_UPDATE_PREPAIDCARDS = 'data/DATA_UPDATE_PREPAIDCARDS';
@@ -267,19 +264,11 @@ const watchPendingTransactions = (
   }
 };
 
-export const updateRefetchSavings = fetch => dispatch =>
-  dispatch({
-    payload: fetch,
-    type: DATA_UPDATE_REFETCH_SAVINGS,
-  });
-
 // -- Reducer ----------------------------------------- //
 const INITIAL_STATE = {
-  assets: [], // for account-specific assets
   depots: [],
   merchantSafes: [],
   prepaidCards: [],
-  isLoadingAssets: true,
   isLoadingTransactions: true,
   shouldRefetchSavings: false,
   transactions: [],
@@ -288,13 +277,6 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   return produce(state, draft => {
     switch (action.type) {
-      case DATA_UPDATE_REFETCH_SAVINGS:
-        draft.shouldRefetchSavings = action.payload;
-        break;
-      case DATA_UPDATE_ASSETS:
-        draft.assets = action.payload;
-        draft.isLoadingAssets = false;
-        break;
       case DATA_UPDATE_GNOSIS_DATA:
         draft.depots = action.payload.depots;
         draft.merchantSafes = action.payload.merchantSafes;
@@ -315,7 +297,6 @@ export default (state = INITIAL_STATE, action) => {
         draft.isLoadingTransactions = false;
         break;
       case DATA_LOAD_ASSETS_SUCCESS:
-        draft.assets = action.payload.assets;
         draft.depots = action.payload.depots;
         draft.prepaidCards = action.payload.prepaidCards;
         draft.merchantSafes = action.payload.merchantSafes;
