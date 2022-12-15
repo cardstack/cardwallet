@@ -58,6 +58,10 @@ jest.mock('@cardstack/services/hub/hub-service', () => ({
     .mockResolvedValue({ data: { USD: 1, EUR: 0.86 } }),
 }));
 
+jest.mock('@cardstack/services', () => ({
+  useGetSafesDataQuery: jest.fn(),
+}));
+
 jest.mock('../../../services/exchange-rate-service.ts', () => {
   const actualExchange = jest.requireActual(
     '../../../services/exchange-rate-service.ts'

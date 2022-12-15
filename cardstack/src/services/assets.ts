@@ -8,11 +8,12 @@ import Web3Instance from '@cardstack/models/web3-instance';
 import { NetworkType } from '@cardstack/types';
 import { isNativeToken } from '@cardstack/utils';
 
-import { Asset } from '@rainbow-me/entities';
 import logger from 'logger';
 
-interface GetAssetBalanceParams {
-  asset: Omit<Asset, 'name'>;
+import { Asset } from './eoa-assets/eoa-assets-types';
+
+export interface GetAssetBalanceParams {
+  asset: Pick<Asset, 'symbol' | 'address' | 'decimals'>;
   accountAddress: string;
   network: NetworkType;
 }

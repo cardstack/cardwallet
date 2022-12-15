@@ -55,7 +55,6 @@ const FromSection = ({
       decimals: 18,
       symbol: nativeTokenSymbol,
       address: '',
-      name: '',
     },
     accountAddress,
     network: txNetwork as NetworkType,

@@ -1,11 +1,13 @@
 export type { TxFee, SelectedGasPrice } from './gas';
-export type Numberish = string | number;
-export type {
-  Asset,
-  SavingsAsset,
-  ParsedAddressAsset,
-  RainbowToken,
-  UniswapCurrency,
-  UniswapSubgraphAsset,
-  RawUniswapSubgraphAsset,
-} from './tokens';
+export interface RainbowToken {
+  address: string;
+  decimals: number;
+  name: string;
+  symbol: string;
+  color?: string;
+  favorite?: boolean;
+  isRainbowCurated?: boolean;
+  isVerified?: boolean;
+  shadowColor?: string;
+  id: string;
+}

@@ -60,6 +60,7 @@ const getTransactionDisplayDetails = (
   if (transaction.data === '0x') {
     const value = fromWei(convertHexToString(transaction.value));
     const asset = ethereumUtils.getNativeTokenAsset(assets);
+    // TODO: handle price
     const priceUnit = get(asset, 'price.value', 0);
 
     const { amount, display } = convertAmountAndPriceToNativeDisplay(
@@ -98,6 +99,7 @@ const getTransactionDisplayDetails = (
       asset.decimals
     );
 
+    // TODO: handle price
     const priceUnit = get(asset, 'price.value', 0);
 
     const native = convertAmountAndPriceToNativeDisplay(

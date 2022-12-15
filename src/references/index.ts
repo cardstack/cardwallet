@@ -1,7 +1,5 @@
-import { mapKeys, mapValues } from 'lodash';
 import { DAI_ADDRESS, WBTC_ADDRESS } from './addresses';
 import savingAssets from './compound/saving-assets.json';
-import { Asset, SavingsAsset } from '@rainbow-me/entities';
 
 export {
   PAIR_GET_RESERVES_CALL_DATA,
@@ -34,16 +32,3 @@ export const DefaultUniswapFavorites = {
 };
 
 export const savingsAssetsList = savingAssets;
-
-export const savingsAssetsListByUnderlying: Record<
-  string,
-  Record<string, SavingsAsset>
-> = mapValues(savingAssets, (assetsByNetwork: Record<string, Asset>) =>
-  mapKeys(
-    mapValues(assetsByNetwork, (assetByContract, contractAddress) => ({
-      ...assetByContract,
-      contractAddress,
-    })),
-    value => value.address
-  )
-);
