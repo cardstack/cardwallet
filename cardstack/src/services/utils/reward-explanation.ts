@@ -1,4 +1,3 @@
-import { fromWei } from '@cardstack/cardpay-sdk';
 import BigNumber from 'bignumber.js';
 
 /**
@@ -22,11 +21,13 @@ export const parseTemplateExplanation = (template: string, data?: any) => {
 
 /**
  * parseExplanationAmount
- * @param weiAmount amount number in WEI as defined in explanationData.
- * @param decimals numbers to add in return string.
- * @returns formatted string with WEI converted to readable string.
+ * @param amount amount number in WEI as defined in explanationData.
+ * @param tokenDecimals places to shift the decimal point.
+ * @param resultDecimals decimal places to keep in the result
+ * @returns formatted string with amount converted to readable string.
  */
 export const parseExplanationAmount = (
-  weiAmount: BigNumber.Value,
-  decimals = 2
-) => parseFloat(fromWei(weiAmount)).toFixed(decimals);
+  amount: BigNumber.Value,
+  tokenDecimals: number,
+  resultDecimals = 2
+) => new BigNumber(amount).shiftedBy(-tokenDecimals).toFixed(resultDecimals);
