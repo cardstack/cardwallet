@@ -7,7 +7,7 @@ import logger from 'logger';
 
 import { NetworkType } from '../types/NetworkType';
 
-const HUB_TOKEN_EXPIRATION_SECONDS = 3600 * 24;
+const HUB_TOKEN_EXPIRATION_MILISECONDS = 1000 * 3600 * 24;
 
 const keys = {
   AUTH_PIN: `${SECURE_STORE_KEY}_AUTH_PIN`,
@@ -184,7 +184,7 @@ const getHubToken = async (
       const { token, timestamp } = JSON.parse(data);
 
       const isValid =
-        new Date().getTime() - timestamp < HUB_TOKEN_EXPIRATION_SECONDS;
+        new Date().getTime() - timestamp < HUB_TOKEN_EXPIRATION_MILISECONDS;
 
       if (isValid) {
         return token;
