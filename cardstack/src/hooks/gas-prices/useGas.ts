@@ -12,7 +12,7 @@ import { GasPricesQueryResults } from '@cardstack/services/hub/gas-prices/gas-pr
 
 import { useAccountAssets, useAccountSettings } from '@rainbow-me/hooks';
 import { ethUnits } from '@rainbow-me/references';
-import { ethereumUtils, showActionSheetWithOptions } from '@rainbow-me/utils';
+import { ethereumUtils } from '@rainbow-me/utils';
 
 import { ParseTxFeeParams, TxFee, UseGasParams } from './types';
 
