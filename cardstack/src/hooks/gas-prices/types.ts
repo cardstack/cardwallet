@@ -12,7 +12,7 @@ export interface ParseTxFeeParams {
 export type TxFee = Record<
   string,
   {
-    native: { value: { amount: string; display: string } };
+    native: { amount: string; display: string };
     value: { amount: string; display: string };
   }
 >;

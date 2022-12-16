@@ -1,6 +1,6 @@
 import {
+  convertAmountAndPriceToNativeDisplay,
   convertRawAmountToBalance,
-  convertRawAmountToNativeDisplay,
   fromWei,
   getConstantByNetwork,
   greaterThanOrEqualTo,
@@ -10,9 +10,11 @@ import { useCallback, useMemo, useState } from 'react';
 import { useGetGasPricesQuery } from '@cardstack/services';
 import { GasPricesQueryResults } from '@cardstack/services/hub/gas-prices/gas-prices-types';
 
-import { useAccountAssets, useAccountSettings } from '@rainbow-me/hooks';
+import { useAccountSettings } from '@rainbow-me/hooks';
 import { ethUnits } from '@rainbow-me/references';
 import { ethereumUtils } from '@rainbow-me/utils';
+
+import { useAssets } from '../assets/useAssets';
 
 import { ParseTxFeeParams, TxFee, UseGasParams } from './types';
 
@@ -21,12 +23,18 @@ const GAS_PRICE_POLLING_INTERVAL = 60000; // 1min
 export const useGas = ({ network }: UseGasParams) => {
   const { nativeCurrency } = useAccountSettings();
   const chainId = getConstantByNetwork('chainId', network);
-  const { assets } = useAccountAssets();
+
+  const nativeTokenDecimals = getConstantByNetwork(
+    'nativeTokenDecimals',
+    network
+  );
+
+  const { assets, getAssetBalance, getAssetPrice } = useAssets();
   const [txFees, setTxFees] = useState<TxFee>();
 
   const [selectedGasSpeed, setSelectedGasSpeed] = useState<
     keyof GasPricesQueryResults
-  >('fast');
+  >('standard');
 
   const { data: gasPricesData } = useGetGasPricesQuery(
     { chainId },
@@ -39,10 +47,9 @@ export const useGas = ({ network }: UseGasParams) => {
         return;
       }
 
-      const tokenPriceUnit =
-        params?.nativeTokenPriceUnit ?? ethereumUtils.getEthPriceUnit();
-
       const gasLimit = params?.gasLimit ?? ethUnits.basic_tx;
+      const nativeToken = ethereumUtils.getNativeTokenAsset(assets);
+      const nativeTokenPrice = getAssetPrice(nativeToken?.id);
 
       const speeds = Object.keys(gasPricesData) as Array<
         keyof typeof gasPricesData
@@ -54,21 +61,23 @@ export const useGas = ({ network }: UseGasParams) => {
           network
         );
 
-        const amount = gasLimit * (gasPricesData[speed].amount as number);
+        const fee = gasLimit * (gasPricesData[speed].amount as number); // value in GWEI
+
+        const ethValue = convertRawAmountToBalance(fee, {
+          decimals: nativeTokenDecimals,
+          symbol: nativeTokenSymbol,
+        });
 
         return {
           native: {
-            value: convertRawAmountToNativeDisplay(
-              amount,
-              18,
-              tokenPriceUnit,
-              nativeCurrency
+            ...convertAmountAndPriceToNativeDisplay(
+              ethValue.amount,
+              nativeTokenPrice,
+              nativeCurrency,
+              2
             ),
           },
-          value: convertRawAmountToBalance(amount, {
-            decimals: 18,
-            symbol: nativeTokenSymbol,
-          }),
+          value: ethValue,
         };
       });
 
@@ -78,17 +87,23 @@ export const useGas = ({ network }: UseGasParams) => {
 
       setTxFees(mapSpeedsToValues);
     },
-    [network, nativeCurrency, gasPricesData]
+    [
+      network,
+      nativeCurrency,
+      gasPricesData,
+      nativeTokenDecimals,
+      assets,
+      getAssetPrice,
+    ]
   );
 
   const hasSufficientForGas = useMemo(() => {
     const nativeTokenAsset = ethereumUtils.getNativeTokenAsset(assets);
-    const balanceAmount = nativeTokenAsset.balance.amount || 0;
-
+    const { amount } = getAssetBalance(nativeTokenAsset.id);
     const txFeeAmount = fromWei(txFees?.[selectedGasSpeed].value.amount || 0);
 
-    return greaterThanOrEqualTo(balanceAmount, txFeeAmount);
-  }, [txFees, selectedGasSpeed, assets]);
+    return greaterThanOrEqualTo(amount, txFeeAmount);
+  }, [txFees, selectedGasSpeed, assets, getAssetBalance]);
 
   /**
    * Handles the ActionSheet with the different speed options
@@ -96,7 +111,7 @@ export const useGas = ({ network }: UseGasParams) => {
   const showTransactionSpeedActionSheet = useCallback(() => {
     // const options = Object.values(txFees).map(speed => ({
     //   `${upperFirst(speed)}: ${cost}`
-    // }));0x543450aeD7660acd764B8d3EFD107137521c4cc1
+    // }));
     // const options = [
     //   ...formatGasSpeedItems(gasPrices, txFees),
     //   { label: 'Cancel' },
@@ -125,7 +140,7 @@ export const useGas = ({ network }: UseGasParams) => {
 
   return {
     getTxFees,
-    selectedFee: txFees?.standard,
+    selectedFee: txFees?.[selectedGasSpeed],
     setSelectedGasSpeed,
     selectedGasSpeed,
     hasSufficientForGas,

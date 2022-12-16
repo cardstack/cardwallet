@@ -17,8 +17,8 @@ import SendSheet, {
 import { createSignableTransaction, estimateGasLimit } from '../handlers/web3';
 import { sendTransaction } from '../model/wallet';
 import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
-import { useAssets } from '@cardstack/hooks/assets/useAssets';
 import { useGas } from '@cardstack/hooks';
+import { useAssets } from '@cardstack/hooks/assets/useAssets';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { AssetTypes } from '@cardstack/types';
 import { isNativeToken } from '@cardstack/utils';
