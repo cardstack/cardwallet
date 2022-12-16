@@ -1,7 +1,6 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import { getCoingeckoPlatformName } from './coingecko-services';
 import {
   CoingeckoPriceResponse,
   GetNativeTokensPricesParams,
@@ -18,7 +17,8 @@ export const coingeckoApi = createApi({
   endpoints: builder => ({
     getAssetsPriceByContract: builder.query<Price, GetPricesByContractParams>({
       query: ({ network, nativeCurrency, addresses = [] }) => {
-        const platform = getCoingeckoPlatformName(network);
+        const platform = getConstantByNetwork('coingeckoPlatform', network);
+
         const contracts = addresses.filter(Boolean).join(',');
 
         return `/token_price/${platform}?contract_addresses=${contracts}&vs_currencies=${nativeCurrency}`;
