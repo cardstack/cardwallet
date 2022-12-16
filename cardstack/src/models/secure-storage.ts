@@ -14,6 +14,7 @@ const keys = {
   SEED: `${SECURE_STORE_KEY}_SEED`,
   PKEY: `${SECURE_STORE_KEY}_PKEY`,
   HUB_TOKEN: `${SECURE_STORE_KEY}_HUB_TOKEN`,
+  FCM_TOKEN: `${SECURE_STORE_KEY}_FCM_TOKEN`,
 } as const;
 
 type KeysType = typeof keys;
@@ -38,6 +39,8 @@ const getSecureValue = async (
     return null;
   }
 };
+
+const encryptor = new AesEncryptor();
 
 const getEncryptedItemByKey = async (key: Keys) => {
   const secureKey = trimSecureKey(key);
@@ -84,6 +87,7 @@ const buildKeyWithId = (key: Keys, id: string, network?: NetworkType) =>
   `${key}_${id}${network ? `_${network}` : ''}`;
 
 // PIN
+
 const savePin = async (pin: string) =>
   await SecureStore.setItemAsync(keys.AUTH_PIN, pin);
 
@@ -95,9 +99,31 @@ const deletePin = async () => {
   logger.log('Deleted PIN');
 };
 
-const encryptor = new AesEncryptor();
+const updateSecureStorePin = async (
+  wallets: AllRainbowWallets,
+  newPin: string
+) => {
+  try {
+    for (const walletId of Object.keys(wallets)) {
+      const walletAddresses = wallets[walletId].addresses;
+
+      const seedPhrase = await getSeedPhrase(walletId);
+      await saveSeedPhrase(seedPhrase, walletId, newPin);
+
+      for (const account of walletAddresses) {
+        const privateKey = await getPrivateKey(account.address);
+        await savePrivateKey(privateKey, account.address, newPin);
+      }
+    }
+
+    await savePin(newPin);
+  } catch (error) {
+    logger.sentry('Error updating secure store PIN', error);
+  }
+};
 
 // SEED
+
 const saveSeedPhrase = async (seed: string, walletId: string, pin: string) => {
   const seedKey = buildKeyWithId(keys.SEED, walletId);
 
@@ -121,6 +147,7 @@ const deleteSeedPhrase = async (walletId: string) => {
 };
 
 // PRIVATE_KEY
+
 const savePrivateKey = async (
   privateKey: string,
   walletAddress: string,
@@ -205,6 +232,46 @@ const deleteHubToken = async (walletAddress: string, network: NetworkType) => {
   logger.log('Deleted Hub Token');
 };
 
+// FCM TOKEN
+
+const saveSecureFCMToken = (
+  token: string,
+  walletAddress: string,
+  network: NetworkType
+) => {
+  const key = buildKeyWithId(keys.FCM_TOKEN, walletAddress, network);
+
+  return SecureStore.setItemAsync(key, token);
+};
+
+const getSecureFCMToken = async (
+  walletAddress: string,
+  network: NetworkType
+): Promise<string | undefined> => {
+  const key = buildKeyWithId(keys.FCM_TOKEN, walletAddress, network);
+
+  try {
+    const token = await SecureStore.getItemAsync(key);
+
+    return token || undefined;
+  } catch (e) {
+    logger.sentry('Error while restoring FCM token data', e);
+  }
+};
+
+const deleteSecureFCMToken = async (
+  walletAddress: string,
+  network: NetworkType
+) => {
+  const key = buildKeyWithId(keys.FCM_TOKEN, walletAddress, network);
+
+  await SecureStore.deleteItemAsync(key);
+
+  logger.log('Deleted FCM Token');
+};
+
+// Utils
+
 const wipeSecureStorage = async (wallets: AllRainbowWallets) => {
   // these deletions need to be sequential, otherwise they break
   try {
@@ -224,33 +291,11 @@ const wipeSecureStorage = async (wallets: AllRainbowWallets) => {
   }
 };
 
-const updateSecureStorePin = async (
-  wallets: AllRainbowWallets,
-  newPin: string
-) => {
-  try {
-    for (const walletId of Object.keys(wallets)) {
-      const walletAddresses = wallets[walletId].addresses;
-
-      const seedPhrase = await getSeedPhrase(walletId);
-      await saveSeedPhrase(seedPhrase, walletId, newPin);
-
-      for (const account of walletAddresses) {
-        const privateKey = await getPrivateKey(account.address);
-        await savePrivateKey(privateKey, account.address, newPin);
-      }
-    }
-
-    await savePin(newPin);
-  } catch (error) {
-    logger.sentry('Error updating secure store PIN', error);
-  }
-};
-
 export {
   savePin,
   getPin,
   deletePin,
+  updateSecureStorePin,
   getSeedPhrase,
   saveSeedPhrase,
   deleteSeedPhrase,
@@ -260,6 +305,8 @@ export {
   saveHubToken,
   getHubToken,
   deleteHubToken,
+  saveSecureFCMToken,
+  getSecureFCMToken,
+  deleteSecureFCMToken,
   wipeSecureStorage,
-  updateSecureStorePin,
 };
