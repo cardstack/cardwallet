@@ -49,6 +49,16 @@ Follow steps 1 through 4 from the iOS steps above, then:
 
 7. Launch an Android emulator or connect a test device
 
+
+
+### Troubleshooting
+
+Error regarding file system watches on linux. You may need to increase the maximum number of file system watches. You can do this by running the following command:
+
+    echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+If you get an error about metro not running you can start the server manually by running `yarn start`.
+
 ## How to run the tests
 
 `yarn test`
@@ -65,6 +75,12 @@ Follow steps 1 through 4 from the iOS steps above, then:
   - Syncs app vars for lane specific variables to `.env.${LANE}` file (lanes are alpha, beta, release)
 - `yarn contexts:sync`
   - Syncs all app and lane-specific variables from the context repo
+
+##### Troubleshooting
+
+If you get an error saying the cryptex password is incorrect but you have checked it is correct, you may need the following fastlane plugin branch https://github.com/IanCal/fastlane-plugin-cryptex
+
+On some filesystems the temp files written are not available immediately and a short sleep is required to allow the file to be written.
 
 #### Publishing
 
