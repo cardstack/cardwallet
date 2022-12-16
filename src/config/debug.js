@@ -3,7 +3,6 @@
  * could be useful during development.
  */
 
-export const disableCharts = false;
 export const enableActionsOnReadOnlyWallet = false;
 export const debugLayoutAnimations = false;
 export const forceFallbackProvider = false;

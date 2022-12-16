@@ -36,7 +36,7 @@ export { default as PinScreen } from './PinScreen/PinScreen';
 export { default as UnlockScreen } from './UnlockScreen/UnlockScreen';
 export { default as SupportAndFeesSheet } from './sheets/SupportAndFeesSheet/SupportAndFeesSheet';
 export { default as AvailableBalanceSheet } from './sheets/AvailableBalanceSheet/AvailableBalanceSheet';
-export { default as TokenWithChartSheet } from './sheets/TokenWithChartSheet/TokenWithChartSheet';
+export { default as TokenSheet } from './sheets/TokenSheet/TokenSheet';
 export { default as SeedPhraseBackup } from './SeedPhraseBackup/SeedPhraseBackup';
 export { default as SecurityScreen } from './SecurityScreen/SecurityScreen';
 export * from './Profile';

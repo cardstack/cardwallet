@@ -2,12 +2,13 @@ import { useNavigation } from '@react-navigation/native';
 //Rb side doesn't know how to handle globals
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { OptionalUnion } from 'globals';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import { useDispatch } from 'react-redux';
 import { Button, IconProps } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
 import {
+  AssetTypes,
   AssetWithNativeType,
   CollectibleType,
   TokenType,
@@ -45,8 +46,19 @@ export default function SendActionButton({
     navigate(route, { asset, safeAddress });
   }, [dispatch, asset, navigate, safeAddress]);
 
+  const disabled = useMemo(() => {
+    const noBalance = !parseFloat(asset.balance?.amount || '');
+
+    return noBalance && asset.type === AssetTypes.token;
+  }, [asset]);
+
   return (
-    <Button iconProps={iconProps} onPress={handlePress}>
+    <Button
+      alignSelf="center"
+      disabled={disabled}
+      iconProps={iconProps}
+      onPress={handlePress}
+    >
       Send
     </Button>
   );

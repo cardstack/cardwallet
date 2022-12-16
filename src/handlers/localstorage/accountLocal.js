@@ -13,7 +13,6 @@ const ASSETS = 'assets';
 const PREPAID_CARDS = 'prepaidCards';
 const DEPOTS = 'depots';
 const MERCHANT_SAFES = 'merchantSafes';
-const ACCOUNT_CHARTS = 'accountCharts';
 const PURCHASE_TRANSACTIONS = 'purchaseTransactions';
 const SAVINGS = 'savings';
 const TRANSACTIONS = 'transactions';
@@ -22,7 +21,6 @@ const COLLECTIBLES = 'collectibles';
 export const accountLocalKeys = [
   ACCOUNT_INFO,
   ASSETS,
-  ACCOUNT_CHARTS,
   PURCHASE_TRANSACTIONS,
   SAVINGS,
   TRANSACTIONS,

@@ -136,9 +136,3 @@ export async function findAndParseOldSeed(
     captureException(e);
   }
 }
-
-// TODO: remove after old backup implementation is gone.
-export const isCloudBackupPasswordValid = (password: string) =>
-  password &&
-  password !== '' &&
-  password.length >= cloudBackupPasswordMinLength;

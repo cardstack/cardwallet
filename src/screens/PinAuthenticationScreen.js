@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, Keyboard } from 'react-native';
 import { Centered, Column, ColumnWithMargins } from '../components/layout';
 import { Numpad, PinValue } from '../components/numpad';
-import { SheetTitle } from '../components/sheet';
 import {
   getAuthTimelock,
   getPinAuthAttemptsLeft,
@@ -223,7 +222,14 @@ const PinAuthenticationScreen = () => {
               {appName}
             </Text>
           </CenteredContainer>
-          <SheetTitle color="white">{titleMap[actionType]}</SheetTitle>
+          <Text
+            color="white"
+            fontSize={18}
+            textAlign="center"
+            weight="extraBold"
+          >
+            {titleMap[actionType]}
+          </Text>
           <PinValue translateX={errorAnimation} value={value} />
         </ColumnWithMargins>
       </Centered>

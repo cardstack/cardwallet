@@ -186,10 +186,6 @@ jest.mock('@rainbow-me/utils', () => ({
   gasUtils: jest.fn(),
 }));
 
-jest.mock('@rainbow-me/hooks/charts/useChartThrottledPoints', () => ({
-  default: jest.fn(),
-}));
-
 jest.mock('@rainbow-me/components/animations/procs', () => ({
   default: jest.fn(),
 }));
@@ -221,10 +217,6 @@ jest.mock('@rainbow-me/redux/hooks', () => ({
 
 jest.mock('@rainbow-me/utils/measureText', () => ({
   default: jest.fn(),
-}));
-
-jest.mock('@rainbow-me/react-native-animated-number', () => ({
-  AnimatedNumber: jest.fn(),
 }));
 
 jest.mock('@rainbow-me/components/text', () => ({

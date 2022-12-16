@@ -11,6 +11,7 @@ import {
   useGetRewardWithdrawGasEstimateQuery,
   useWithdrawRewardBalanceMutation,
 } from '@cardstack/services/rewards-center/rewards-center-api';
+import { MerchantOrDepotSafe } from '@cardstack/types';
 import { fromWeiToFixedEth } from '@cardstack/utils';
 
 import { Alert } from '@rainbow-me/components/alerts';
@@ -21,7 +22,7 @@ import { strings } from './strings';
 interface NavParams {
   tokenInfo: TokenWithSafeAddress;
   fromRewardSafe: string;
-  withdrawTo: any; // TODO: create right type with avatar customization
+  withdrawTo: MerchantOrDepotSafe;
 }
 
 export const useRewardWithdrawConfimationScreen = () => {
@@ -46,7 +47,6 @@ export const useRewardWithdrawConfimationScreen = () => {
     [balance, fromRewardSafe, tokenAddress, withdrawTo]
   );
 
-  // TODO: retry state for gas estimate failure
   const {
     data: gasEstimate = new BN(0),
     isLoading: loadingGas,
