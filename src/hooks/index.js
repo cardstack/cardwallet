@@ -7,7 +7,6 @@ export { default as useClipboard } from './useClipboard';
 export { default as useColorForAsset } from './useColorForAsset';
 export { default as useContacts } from './useContacts';
 export { default as useDimensions } from './useDimensions';
-export { default as useGas } from './useGas';
 export { default as useHeight } from './useHeight';
 export { default as useHideSplashScreen } from './useHideSplashScreen';
 export { default as useImageMetadata } from './useImageMetadata';

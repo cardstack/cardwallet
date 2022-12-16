@@ -39,23 +39,12 @@ import logger from 'logger';
 
 const { RNBip39 } = NativeModules;
 
-// TODO: FIX PRICE
-const getEthPriceUnit = () => {
-  const { assets } = store.getState().data;
-  const { network } = store.getState().settings;
-  const nativeTokenAddress = getConstantByNetwork(
-    'nativeTokenAddress',
-    network
-  );
-  return getAsset(assets, nativeTokenAddress)?.price?.value || 0;
-};
-
 const getBalanceAmount = async (selectedGasPrice, selected) => {
   const network = store.getState().settings.network;
   let amount = get(selected, 'balance.amount', 0);
   if (isNativeToken(selected?.symbol, network)) {
     if (!isEmpty(selectedGasPrice)) {
-      const txFeeRaw = get(selectedGasPrice, 'txFee.value.amount');
+      const txFeeRaw = get(selectedGasPrice, 'value.amount');
       const txFeeAmount = fromWei(txFeeRaw);
       const remaining = subtract(amount, txFeeAmount);
       amount = greaterThan(remaining, 0) ? remaining : '0';
@@ -268,7 +257,6 @@ export default {
   getAsset,
   getBalanceAmount,
   getDataString,
-  getEthPriceUnit,
   getHash,
   getNativeTokenAsset,
   hasPreviousTransactions,

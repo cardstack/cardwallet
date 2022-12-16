@@ -73,7 +73,9 @@ const useSendSheetScreen = () => {
   const [isAuthorizing, setIsAuthorizing] = useState(false);
   const [recipient, setRecipient] = useState('');
   const [selected, setSelected] = useState({});
-  const { maxInputBalance, updateMaxInputBalance } = useMaxInputBalance();
+  const { maxInputBalance, updateMaxInputBalance } = useMaxInputBalance({
+    selectedFee,
+  });
 
   const prevSelectedGasPrice = usePrevious(selectedFee);
 
@@ -302,15 +304,6 @@ const useSendSheetScreen = () => {
     onSubmit,
     showLoadingOverlay,
   ]);
-
-  // const onPressTransactionSpeed = useCallback(() => {
-  //   gasUtils.showTransactionSpeedOptions(
-  //     gasPrices,
-  //     txFees,
-  //     gasPriceOption => updateGasPriceOption(gasPriceOption),
-  //     onSuccess
-  //   );
-  // }, [txFees, gasPrices, updateGasPriceOption]);
 
   const onResetAssetSelection = useCallback(() => {
     onSelectAsset({});
