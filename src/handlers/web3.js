@@ -60,7 +60,7 @@ export const toChecksumAddress = address => {
   }
 };
 
-export const addPaddingToGasEstimate = async (
+const addPaddingToGasEstimate = async (
   estimatedGas,
   paddingFactor,
   provider
@@ -95,7 +95,7 @@ export const addPaddingToGasEstimate = async (
  * @param {Boolean} addPadding (default false) flag if a padding should be added or not.
  * @param {Number} paddingFactor (default 1.1) buffer to be added to gas limit.
  */
-export const estimateTransferNFTGas = async (
+const estimateTransferNFTGas = async (
   params,
   addPadding = false,
   paddingFactor = 1.1
@@ -121,11 +121,11 @@ export const estimateTransferNFTGas = async (
 };
 
 /**
- * @desc estimate gas limit
- * @param  {String} address
+ * @desc Estimates the gas limit for a transaction
+ * @param  {Object} transaction {data, from, to, value}
  * @return {String} gas limit
  */
-export const estimateGas = async estimateGasData => {
+const estimateGas = async estimateGasData => {
   try {
     const web3ProviderInstance = await Web3WsProvider.getEthers();
     const estimatedGas = await web3ProviderInstance.estimateGas(
@@ -138,7 +138,12 @@ export const estimateGas = async estimateGasData => {
   }
 };
 
-export const estimateGasWithPadding = async (
+/**
+ * @desc Estimates the gas limit with a padding. The default value for the padding is 1.1.
+ * @param  {Object} transaction {data, from, to, value}
+ * @return {String} gas limit
+ */
+const estimateGasWithPadding = async (
   txPayload,
   network = undefined,
   paddingFactor = 1.1
@@ -259,7 +264,7 @@ const resolveNameOrAddress = async nameOrAddress => {
  * @param  {Object}  transaction { asset, from, to, gasPrice }
  * @return {Object}
  */
-export const getTransferNftTransaction = async transaction => {
+const getTransferNftTransaction = async transaction => {
   const { from, to, asset } = transaction;
   const contractAddress = get(transaction, 'asset.asset_contract.address');
   const gasLimit = toHex(transaction.gasLimit) || undefined;
@@ -281,7 +286,7 @@ export const getTransferNftTransaction = async transaction => {
  * @param  {Object}  transaction { asset, from, to, amount, gasPrice }
  * @return {Object}
  */
-export const getTransferTokenTransaction = async transaction => {
+const getTransferTokenTransaction = async transaction => {
   const value = convertAmountToRawAmount(
     transaction.amount,
     transaction.asset.decimals
@@ -325,7 +330,7 @@ const estimateAssetBalancePortion = asset => {
   return '0';
 };
 
-export const getDataForTokenTransfer = (value, to) => {
+const getDataForTokenTransfer = (value, to) => {
   const transferMethodHash = smartContractMethods.token_transfer.hash;
   const data = ethereumUtils.getDataString(transferMethodHash, [
     ethereumUtils.removeHexPrefix(to),
@@ -334,7 +339,7 @@ export const getDataForTokenTransfer = (value, to) => {
   return data;
 };
 
-export const getDataForNftTransfer = (from, to, asset) => {
+const getDataForNftTransfer = (from, to, asset) => {
   const schema_name = get(asset, 'asset_contract.schema_name');
   const assetIdHex = convertStringToHex(asset.id);
 
