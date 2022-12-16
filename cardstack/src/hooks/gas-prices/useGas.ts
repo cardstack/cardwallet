@@ -12,7 +12,7 @@ import { GasPricesQueryResults } from '@cardstack/services/hub/gas-prices/gas-pr
 
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { ethUnits } from '@rainbow-me/references';
-import { ethereumUtils } from '@rainbow-me/utils';
+import { ethereumUtils, showActionSheetWithOptions } from '@rainbow-me/utils';
 
 import { useAssets } from '../assets/useAssets';
 
@@ -106,37 +106,35 @@ export const useGas = ({ network }: UseGasParams) => {
   }, [txFees, selectedGasSpeed, assets, getAssetBalance]);
 
   /**
-   * Handles the ActionSheet with the different speed options
+   * ActionSheet with the different speed options.
+   * Shows the value in the user's native currency
    */
   const showTransactionSpeedActionSheet = useCallback(() => {
-    // const options = Object.values(txFees).map(speed => ({
-    //   `${upperFirst(speed)}: ${cost}`
-    // }));
-    // const options = [
-    //   ...formatGasSpeedItems(gasPrices, txFees),
-    //   { label: 'Cancel' },
-    // ];
-    // const cancelButtonIndex = options.length - 1;
+    if (!txFees) {
+      return;
+    }
 
-    // if (!txFees) {
-    //   return;
-    // }
+    const options = Object.keys(txFees).map(
+      speed => `${speed.toUpperCase()}: ${txFees[speed].native.display}`
+    );
 
-    // const options = Object.values(txFees).map(fee => `${fee.native.value}`);
+    showActionSheetWithOptions(
+      {
+        cancelButtonIndex: options.length,
+        options: [...options, 'Cancel'],
+      },
+      (buttonIndex: number) => {
+        // let's trigger this only if it's not the cancel button
+        if (buttonIndex !== options.length) {
+          const gasSpeed = Object.keys(txFees)[
+            buttonIndex
+          ] as keyof GasPricesQueryResults;
 
-    // console.log('options', Object.values(txFees));
-
-    // showActionSheetWithOptions(
-    //   {
-    //     cancelButtonIndex: options.length,
-    //     options,
-    //   },
-    //   (buttonIndex: number) => {
-    //     console.log('Click Button', buttonIndex);
-    //   }
-    // );
-    return false;
-  }, []);
+          setSelectedGasSpeed(gasSpeed);
+        }
+      }
+    );
+  }, [txFees]);
 
   return {
     getTxFees,
