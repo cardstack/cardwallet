@@ -74,7 +74,7 @@ export const fetchHubBaseQuery: BaseQueryFn<
 
   // Append FCM Token to URL.
   if (extraOptionsOverwrite.appendFCMToken) {
-    const { fcmToken } = await getFCMToken();
+    const fcmToken = (await getFCMToken()) || '';
 
     if (typeof args === 'string') {
       args += `/${fcmToken}`;
