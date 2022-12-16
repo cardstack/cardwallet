@@ -46,7 +46,7 @@ export const removeFCMToken = async (walletAddress?: string) => {
       }
     }
   } catch (e) {
-    logger.sentry('Unregister FcmToken failed --', e);
+    logger.sentry('Unregister FcmToken failed', e);
   }
 };
 
