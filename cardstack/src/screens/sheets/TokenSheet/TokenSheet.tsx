@@ -20,11 +20,6 @@ type RouteParams = {
   safeAddress?: string;
 };
 
-const centerRowProps: ContainerProps = {
-  alignItems: 'center',
-  flexDirection: 'row',
-};
-
 const TokenSheet = () => {
   const { params } = useRoute<RouteType<RouteParams>>();
 
@@ -41,7 +36,11 @@ const TokenSheet = () => {
             {asset.name}
           </Text>
         </Container>
-        <Container {...centerRowProps} justifyContent="space-between">
+        <Container
+          alignItems="center"
+          flexDirection="row"
+          justifyContent="space-between"
+        >
           <BalanceInfo label={strings.balance} value={asset.balance?.display} />
           {hasNativeBalance && (
             <BalanceInfo
