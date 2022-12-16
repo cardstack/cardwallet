@@ -280,15 +280,6 @@ const prices = {
   },
 };
 
-const chartData = {
-  spoa: [
-    [1629316840055, 0.9992493517535592],
-    [1629317140870, 0.9983760748596904],
-    [1629320428398, 0.9988230904876851],
-    [1629320760703, 1.0006668259255413],
-  ],
-};
-
 const updatedAssets = [
   {
     asset: {
@@ -314,12 +305,6 @@ const updatedAssets = [
       },
       symbol: 'SPOA',
       balance: { amount: '0.0049', display: '0.0049 SPOA' },
-      chartPrices: [
-        [1629316840055, 0.9992493517535592],
-        [1629317140870, 0.9983760748596904],
-        [1629320428398, 0.9988230904876851],
-        [1629320760703, 1.0006668259255413],
-      ],
     },
   },
   {
@@ -346,7 +331,6 @@ const updatedAssets = [
       },
       symbol: 'DOM',
       balance: { amount: '2', display: '2 DOM' },
-      chartPrices: null,
     },
   },
   {
@@ -374,7 +358,6 @@ const updatedAssets = [
       },
       symbol: 'DAI.CPXD',
       balance: { amount: '57', display: '57 DAI.CPXD' },
-      chartPrices: null,
     },
   },
   {
@@ -402,7 +385,6 @@ const updatedAssets = [
       },
       symbol: 'CARD.CPXD',
       balance: { amount: '1', display: '1 CARD.CPXD' },
-      chartPrices: null,
     },
   },
 ];
@@ -441,12 +423,6 @@ const updatedDepots = [
           relative_change_24h: 22.304616235477624,
           value: 0.00889263,
         },
-        chartPrices: [
-          [1629314735879, 0.0072259548640652245],
-          [1629315032452, 0.007219093412036481],
-          [1629315351742, 0.007221452392607805],
-          [1629315563048, 0.007215497853372955],
-        ],
       },
       {
         tokenAddress: '0xFeDc0c803390bbdA5C4C296776f4b574eC4F30D1',
@@ -476,12 +452,6 @@ const updatedDepots = [
           relative_change_24h: 0.5608860044696169,
           value: 1,
         },
-        chartPrices: [
-          [1629316840055, 0.9992493517535592],
-          [1629317140870, 0.9983760748596904],
-          [1629320428398, 0.9988230904876851],
-          [1629320760703, 1.0006668259255413],
-        ],
       },
     ],
     createdAt: 1627335495,
@@ -530,12 +500,6 @@ const updatedPrepaidCards = [
           relative_change_24h: 22.304616235477624,
           value: 0.00889263,
         },
-        chartPrices: [
-          [1629314735879, 0.0072259548640652245],
-          [1629315032452, 0.007219093412036481],
-          [1629315351742, 0.007221452392607805],
-          [1629315563048, 0.007215497853372955],
-        ],
       },
       {
         tokenAddress: '0xFeDc0c803390bbdA5C4C296776f4b574eC4F30D1',
@@ -565,12 +529,6 @@ const updatedPrepaidCards = [
           relative_change_24h: 0.5608860044696169,
           value: 1,
         },
-        chartPrices: [
-          [1629316840055, 0.9992493517535592],
-          [1629317140870, 0.9983760748596904],
-          [1629320428398, 0.9988230904876851],
-          [1629320760703, 1.0006668259255413],
-        ],
       },
     ],
     createdAt: 1627495725,
@@ -627,12 +585,6 @@ const updatedPrepaidCards = [
           relative_change_24h: 22.304616235477624,
           value: 0.00889263,
         },
-        chartPrices: [
-          [1629314735879, 0.0072259548640652245],
-          [1629315032452, 0.007219093412036481],
-          [1629315351742, 0.007221452392607805],
-          [1629315563048, 0.007215497853372955],
-        ],
       },
       {
         tokenAddress: '0xFeDc0c803390bbdA5C4C296776f4b574eC4F30D1',
@@ -662,12 +614,6 @@ const updatedPrepaidCards = [
           relative_change_24h: 0.5608860044696169,
           value: 1,
         },
-        chartPrices: [
-          [1629316840055, 0.9992493517535592],
-          [1629317140870, 0.9983760748596904],
-          [1629320428398, 0.9988230904876851],
-          [1629320760703, 1.0006668259255413],
-        ],
       },
     ],
     createdAt: 1627336615,
@@ -745,7 +691,6 @@ export const inputData = {
 
 export const fetchedData = {
   prices,
-  chartData,
 };
 
 export const updatedData = {
