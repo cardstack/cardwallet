@@ -10,7 +10,6 @@ function loadStories() {
   require('../src/components/CollapsibleBanner/CollapsibleBanner.story');
   require('../src/components/Depot/Depot.story');
   require('../src/components/Icon/Icon.story');
-  require('../src/components/ListItem/ListItem.story');
   require('../src/components/OptionItem/OptionItem.story');
   require('../src/components/PrepaidCard/PrepaidCard.story');
   require('../src/components/RadioList/RadioList.story');
@@ -26,7 +25,6 @@ const stories = [
   '../src/components/CollapsibleBanner/CollapsibleBanner.story',
   '../src/components/Depot/Depot.story',
   '../src/components/Icon/Icon.story',
-  '../src/components/ListItem/ListItem.story',
   '../src/components/OptionItem/OptionItem.story',
   '../src/components/PrepaidCard/PrepaidCard.story',
   '../src/components/RadioList/RadioList.story',

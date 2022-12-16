@@ -15,7 +15,7 @@ export * from './BalanceCoinRow';
 export * from './OptionItem';
 export * from './Input';
 export * from './Sheet';
-export * from './ListItem';
+export * from './ListItem/ListEmptyComponent';
 export * from './RadioList';
 export * from './Checkbox';
 export * from './AssetList';
