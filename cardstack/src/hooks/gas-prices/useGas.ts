@@ -42,12 +42,12 @@ export const useGas = ({ network }: UseGasParams) => {
   );
 
   const getTxFees = useCallback(
-    (params?: ParseTxFeeParams) => {
+    ({ gasLimit: updatedGasLimit }: ParseTxFeeParams) => {
       if (!gasPricesData) {
         return;
       }
 
-      const gasLimit = params?.gasLimit ?? ethUnits.basic_tx;
+      const gasLimit = updatedGasLimit ?? ethUnits.basic_tx;
       const nativeToken = ethereumUtils.getNativeTokenAsset(assets);
       const nativeTokenPrice = getAssetPrice(nativeToken?.id);
 

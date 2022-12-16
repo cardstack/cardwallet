@@ -5,7 +5,6 @@ export interface UseGasParams {
 }
 
 export interface ParseTxFeeParams {
-  nativeTokenPriceUnit?: number;
   gasLimit?: number;
 }
 
