@@ -19,8 +19,10 @@ import {
   deleteSecureFCMToken,
 } from './secure-storage';
 
-export const getFCMToken = async (): Promise<string | undefined> => {
-  const keyAddress = (await loadAddress()) || '';
+export const getFCMToken = async (
+  walletAddress?: string
+): Promise<string | undefined> => {
+  const keyAddress = walletAddress || (await loadAddress()) || '';
   const keyNetwork: NetworkType = await getNetwork();
 
   const fcmToken = await getSecureFCMToken(keyAddress, keyNetwork);
@@ -28,17 +30,17 @@ export const getFCMToken = async (): Promise<string | undefined> => {
   return fcmToken;
 };
 
-export const removeFCMToken = async () => {
+export const removeFCMToken = async (walletAddress?: string) => {
   try {
-    const fcmToken = await getFCMToken();
+    const fcmToken = await getFCMToken(walletAddress);
 
     if (fcmToken) {
-      const response = await unregisterFcmToken();
+      const response = await unregisterFcmToken(fcmToken);
 
       if ('data' in response) {
-        logger.sentry('Unregistering FCM Token', response);
+        logger.log('Unregistering FCM Token', response);
 
-        const keyAddress = (await loadAddress()) || '';
+        const keyAddress = walletAddress || (await loadAddress()) || '';
         const keyNetwork: NetworkType = await getNetwork();
         await deleteSecureFCMToken(keyAddress, keyNetwork);
       }
