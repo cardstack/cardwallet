@@ -1,6 +1,4 @@
-import messaging, {
-  FirebaseMessagingTypes,
-} from '@react-native-firebase/messaging';
+import messaging from '@react-native-firebase/messaging';
 import { requestNotifications } from 'react-native-permissions';
 
 import {
@@ -19,9 +17,7 @@ import {
   deleteSecureFCMToken,
 } from './secure-storage';
 
-export const getFCMToken = async (
-  walletAddress?: string
-): Promise<string | undefined> => {
+export const getFCMToken = async (walletAddress?: string) => {
   const keyAddress = walletAddress || (await loadAddress()) || '';
   const keyNetwork: NetworkType = await getNetwork();
 
@@ -80,12 +76,9 @@ export const storeRegisteredFCMToken = async () => {
   }
 };
 
-export const getPermissionStatus = (): Promise<FirebaseMessagingTypes.AuthorizationStatus> =>
-  messaging().hasPermission();
+export const getPermissionStatus = () => messaging().hasPermission();
 
-export const needsNotificationPermission = async (): Promise<
-  boolean | undefined
-> => {
+export const needsNotificationPermission = async () => {
   try {
     const { DENIED, AUTHORIZED, PROVISIONAL } = messaging.AuthorizationStatus;
 
