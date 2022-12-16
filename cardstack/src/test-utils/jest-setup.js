@@ -219,10 +219,6 @@ jest.mock('@rainbow-me/utils/measureText', () => ({
   default: jest.fn(),
 }));
 
-jest.mock('@rainbow-me/react-native-animated-number', () => ({
-  AnimatedNumber: jest.fn(),
-}));
-
 jest.mock('@rainbow-me/components/text', () => ({
   default: jest.fn(),
 }));

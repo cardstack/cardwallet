@@ -5481,13 +5481,6 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.8.6.tgz#ad75ebe8dbecfa145af3c7e4d0ae98016458d005"
   integrity sha512-1oXH2bAFXz9SttE1v/0Jp+2ZVePsPEAPGIuPKrmljWZcS3FPBEn2Q4WcANozZC0YiCjTWOF55k0g6rbSZS39ew==
 
-"@rainbow-me/react-native-animated-number@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@rainbow-me/react-native-animated-number/-/react-native-animated-number-0.0.2.tgz#78ec113ea0752ebfea15aea6d4e21a419ad145ca"
-  integrity sha512-zrJo1yczJrDgTPGfFu2HJI6zNfdikVmlahnFbd71+I5xAAR2mSK4TTj9a56YNSvfmPbAaebwFRgx9+ARt5T4Ow==
-  dependencies:
-    react-merge-refs "^1.0.0"
-
 "@rainbow-me/react-native-payments@1.1.5":
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/@rainbow-me/react-native-payments/-/react-native-payments-1.1.5.tgz#cdf03c8a55070f0c6cb000a58b906dc9980d9d3f"
@@ -20867,11 +20860,6 @@ react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
-
-react-merge-refs@^1.0.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/react-merge-refs/-/react-merge-refs-1.1.0.tgz#73d88b892c6c68cbb7a66e0800faa374f4c38b06"
-  integrity sha512-alTKsjEL0dKH/ru1Iyn7vliS2QRcBp9zZPGoWxUOvRGWPUYgjo+V01is7p04It6KhgrzhJGnIj9GgX8W4bZoCQ==
 
 react-native-action-sheet@^2.2.0:
   version "2.2.0"
