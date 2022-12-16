@@ -45,11 +45,10 @@ Follow steps 1 through 4 from the iOS steps above, then:
 
 5. Run `bundle exec fastlane sync_google_service_info`
 
-6. Run `yarn start` to start the React Native Bundler.
+6. Run `yarn android`
 
-7. Run `yarn android`
+7. Launch an Android emulator or connect a test device
 
-8. Launch an Android emulator or connect a test device
 
 
 ### Troubleshooting
@@ -58,6 +57,7 @@ Error regarding file system watches on linux. You may need to increase the maxim
 
     echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
+If you get an error about metro not running you can start the server manually by running `yarn start`.
 
 ## How to run the tests
 
