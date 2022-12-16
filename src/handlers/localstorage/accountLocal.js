@@ -1,6 +1,6 @@
 import { getAccountLocal, saveAccountLocal } from './common';
 
-const assetsVersion = '1.0.0';
+const assetsVersion = '1.0.1';
 
 const prepaidCardsVersion = '0.2.0';
 const depotVersion = '0.2.0';

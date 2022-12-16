@@ -179,34 +179,17 @@ export const getAccountAssets = async ({
     accountAddress,
   });
 
-  // Filter out tokens without balance
-  const tokensWithBalance = await tokens.reduce(async (assets, asset) => {
-    const balance = await getOnChainAssetBalance({
-      asset,
-      accountAddress,
-      network,
-    });
-
-    // No balance
-    if (!parseFloat(balance.amount)) {
-      return assets;
-    }
-
-    return [...(await assets), asset];
-  }, Promise.resolve([] as Asset[]));
-
   // discoverTokens might not include the native token, so we add it manually
   const nativeToken = {
     address: getConstantByNetwork('nativeTokenAddress', network),
     name: getConstantByNetwork('nativeTokenName', network),
     symbol: getConstantByNetwork('nativeTokenSymbol', network),
-    decimals: 18, // TODO: use decimals from sdk on next sdk release,
+    decimals: getConstantByNetwork('nativeTokenDecimals', network),
     id: getConstantByNetwork('nativeTokenAddress', network),
     type: AssetTypes.token,
   };
 
-  // Native token should always appear even if it has no balance
-  const tokensInWallet = [...tokensWithBalance, nativeToken];
+  const tokensInWallet = uniqBy([...tokens, nativeToken], token => token.id);
 
   // Store assets and block to just fetch newest tx on refresh
   await saveAssets(
