@@ -3,6 +3,7 @@ import { WebsocketProvider } from 'web3-core';
 
 import { NetworkType } from '@cardstack/types';
 
+import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import logger from 'logger';
 
 import Web3WsProvider from './web3-provider';
@@ -16,7 +17,9 @@ const Web3Instance = {
 
     try {
       if (web3Instance.currentProvider === null || isProviderDisconnected) {
-        web3Instance.setProvider(await Web3WsProvider.get());
+        const network = await getNetwork();
+
+        web3Instance.setProvider(await Web3WsProvider.get(network));
       }
     } catch (e) {
       logger.log('Failed while getting web3Instance', e);
