@@ -11,14 +11,14 @@ import {
 } from '@cardstack/cardpay-sdk';
 import UnstoppableResolution from '@unstoppabledomains/resolution';
 
-import { BigNumber, Contract, utils as ethersUtils, providers } from 'ethers';
+import { BigNumber, Contract, utils as ethersUtils } from 'ethers';
 import { get, startsWith } from 'lodash';
 import Web3 from 'web3';
 
 import smartContractMethods from '../references/smartcontract-methods.json';
 import ethereumUtils from '../utils/ethereumUtils';
 
-import Web3WsProvider from '@cardstack/models/web3-provider';
+import Web3Instance from '@cardstack/models/web3-instance';
 import { AssetTypes, NetworkType } from '@cardstack/types';
 import { isNativeToken } from '@cardstack/utils/cardpay-utils';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
@@ -26,44 +26,17 @@ import { erc721ABI, ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
 
 /**
- * @desc web3 http instance - to be used with ethers contracts
- */
-let web3Provider;
-
-/**
- * @desc set a different web3 provider
- * @param {String} network
- */
-
-export const etherWeb3SetHttpProvider = async network => {
-  try {
-    web3Provider = new providers.Web3Provider(
-      await Web3WsProvider.get(network)
-    );
-  } catch (error) {
-    logger.error('provider error', error);
-  }
-
-  return web3Provider?.ready;
-};
-
-/**
- * @desc returns connected web3Provider, reconnect when it's not connected
+ * @desc returns connected web3Provider
  * @param {String} network
  */
 
 export const getEtherWeb3Provider = async (network = undefined) => {
-  let wsConnected = web3Provider?.provider?.connected;
+  const currentNetwork = network || (await getNetwork());
+  const web3 = await Web3Instance.getEthers(currentNetwork);
 
-  // check websocket state and reconnect if disconnected
-  while (!wsConnected) {
-    const currentNetwork = network || (await getNetwork());
-    await etherWeb3SetHttpProvider(currentNetwork);
-    wsConnected = web3Provider?.provider?.connected;
-    logger.log('ws restarted', wsConnected, currentNetwork);
-  }
+  logger.log('[Web3-Ethers] ready!');
 
-  return web3Provider;
+  return web3;
 };
 
 export const sendRpcCall = async payload => {
@@ -226,15 +199,16 @@ export const estimateGasWithPadding = async (
  * @param {String} hash
  * @return {Promise}
  */
-export const getTransaction = hash => web3Provider?.getTransaction(hash);
+export const getTransaction = async hash =>
+  await getEtherWeb3Provider()?.getTransaction(hash);
 
 /**
  * @desc get address transaction count
  * @param {String} address
  * @return {Promise}
  */
-export const getTransactionCount = address =>
-  web3Provider?.getTransactionCount(address, 'pending');
+export const getTransactionCount = async address =>
+  await getEtherWeb3Provider()?.getTransactionCount(address, 'pending');
 
 /**
  * @desc get transaction details

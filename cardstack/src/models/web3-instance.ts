@@ -1,3 +1,5 @@
+import { ethers } from 'ethers';
+import { ExternalProvider } from 'ethers/node_modules/@ethersproject/providers';
 import Web3 from 'web3';
 import { WebsocketProvider } from 'web3-core';
 
@@ -9,6 +11,8 @@ import logger from 'logger';
 import Web3WsProvider from './web3-provider';
 
 const web3Instance: Web3 = new Web3();
+
+let ethersWeb3Instance: ethers.providers.Web3Provider | null = null;
 
 const Web3Instance = {
   get: async () => {
@@ -30,6 +34,21 @@ const Web3Instance = {
   // Separated instance with custom network for wc requests
   withNetwork: async (network: NetworkType) =>
     new Web3(await Web3WsProvider.get(network)),
+  getEthers: async (network: NetworkType) => {
+    if (!ethersWeb3Instance) {
+      try {
+        const provider = ((await Web3WsProvider.get(
+          network
+        )) as unknown) as ExternalProvider;
+
+        ethersWeb3Instance = new ethers.providers.Web3Provider(provider);
+      } catch (e) {
+        logger.error('[Web3-Ethers]: Failed getting provider', e);
+      }
+    }
+
+    return ethersWeb3Instance?.ready;
+  },
 };
 
 export default Web3Instance;
