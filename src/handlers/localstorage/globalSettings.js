@@ -2,6 +2,7 @@ import { isSupportedChain } from '@cardstack/cardpay-sdk';
 import { getGlobal, removeLocal, saveGlobal } from './common';
 
 import { NetworkType } from '@cardstack/types';
+import { logger } from 'logger';
 
 const IMAGE_METADATA = 'imageMetadata';
 const LANGUAGE = 'language';
@@ -38,13 +39,18 @@ export const saveLanguage = language => saveGlobal(LANGUAGE, language);
 export const getNetwork = async () => {
   const defaultNetwork = NetworkType.gnosis;
 
-  const network = await getGlobal(NETWORK, defaultNetwork);
+  try {
+    const network = await getGlobal(NETWORK, defaultNetwork);
 
-  if (isSupportedChain(network)) {
-    return network;
+    if (isSupportedChain(network)) {
+      return network;
+    }
+
+    await saveNetwork(defaultNetwork);
+  } catch (e) {
+    logger.sentry('[Storage]: Failed getting network, returning default');
   }
 
-  await saveNetwork(defaultNetwork);
   return defaultNetwork;
 };
 
