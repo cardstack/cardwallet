@@ -18,7 +18,7 @@ import { useAssets } from '../assets/useAssets';
 
 import { ParseTxFeeParams, TxFee, UseGasParams } from './types';
 
-const GAS_PRICE_POLLING_INTERVAL = 60000; // 1min
+const GAS_PRICE_POLLING_INTERVAL = 10000; // 10s
 
 export const useGas = ({ network }: UseGasParams) => {
   const { nativeCurrency } = useAccountSettings();
