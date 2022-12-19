@@ -44,7 +44,7 @@ import {
   updateSecureStorePin,
   wipeSecureStorage,
 } from '@cardstack/models/secure-storage';
-import Web3Instance from '@cardstack/models/web3-instance';
+import Web3WsProvider from '@cardstack/models/web3-provider';
 import { clearFlags } from '@cardstack/redux/persistedFlagsSlice';
 import { restartApp } from '@cardstack/utils';
 import { Device } from '@cardstack/utils/device';
@@ -169,7 +169,8 @@ export const loadWallet = async (): Promise<null | ethers.Wallet> => {
   const privateKey = await loadPrivateKey();
 
   if (privateKey) {
-    const web3Provider = await Web3Instance.getEthers();
+    const web3Provider = (await Web3WsProvider.getEthers()) as ethers.providers.Provider;
+
     return new ethers.Wallet(privateKey, web3Provider);
   }
   if (Device.isIOS) {

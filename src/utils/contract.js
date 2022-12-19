@@ -6,7 +6,7 @@ import { toHex } from '../handlers/web3';
 import { loadWallet } from '../model/wallet';
 import { ethUnits } from '../references';
 import erc20ABI from '../references/erc20-abi.json';
-import Web3Instance from '@cardstack/models/web3-instance';
+import Web3WsProvider from '@cardstack/models/web3-provider';
 import logger from 'logger';
 
 const estimateApproveWithExchange = async (owner, spender, exchange) => {
@@ -28,7 +28,7 @@ const estimateApproveWithExchange = async (owner, spender, exchange) => {
 
 const estimateApprove = async (owner, tokenAddress, spender) => {
   logger.sentry('exchange estimate approve', { owner, spender, tokenAddress });
-  const web3Provider = await Web3Instance.getEthers();
+  const web3Provider = await Web3WsProvider.getEthers();
   const exchange = new Contract(tokenAddress, erc20ABI, web3Provider);
   return await estimateApproveWithExchange(owner, spender, exchange);
 };
@@ -56,7 +56,7 @@ const approve = async (
 const getRawAllowance = async (owner, token, spender) => {
   try {
     const { address: tokenAddress } = token;
-    const web3Provider = await Web3Instance.getEthers();
+    const web3Provider = await Web3WsProvider.getEthers();
     const tokenContract = new Contract(tokenAddress, erc20ABI, web3Provider);
     const allowance = await tokenContract.allowance(owner, spender);
     return allowance.toString();

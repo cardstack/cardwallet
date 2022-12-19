@@ -1,4 +1,4 @@
-import { utils, Wallet } from 'ethers';
+import { ethers, utils, Wallet } from 'ethers';
 
 import {
   DEFAULT_HD_PATH,
@@ -8,6 +8,7 @@ import {
 import logger from 'logger';
 
 import Web3Instance from './web3-instance';
+import Web3WsProvider from './web3-provider';
 
 export interface EthersSignerWithSeedParams {
   accountIndex: number;
@@ -54,7 +55,9 @@ const getEthersWallet = async (accountAddress?: string) => {
   try {
     const privateKey = await loadPrivateKey(accountAddress);
 
-    return new Wallet(privateKey);
+    const provider = (await Web3WsProvider.getEthers()) as ethers.providers.Provider;
+
+    return new Wallet(privateKey, provider);
   } catch (e) {
     logger.sentry('Error getting ethersWallet' + e);
   }

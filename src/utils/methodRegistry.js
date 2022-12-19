@@ -1,12 +1,12 @@
 import { Contract } from 'ethers';
 import namesOverrides from '../references/method-names-overrides.json';
 import methodRegistryABI from '../references/method-registry-abi.json';
-import Web3Instance from '@cardstack/models/web3-instance';
+import Web3WsProvider from '@cardstack/models/web3-provider';
 
 const METHOD_REGISTRY_ADDRESS = '0x44691B39d1a75dC4E0A0346CBB15E310e6ED1E86';
 
 export const methodRegistryLookupAndParse = async methodSignatureBytes => {
-  const web3Provider = await Web3Instance.getEthers();
+  const web3Provider = await Web3WsProvider.getEthers();
 
   const registry = new Contract(
     METHOD_REGISTRY_ADDRESS,
