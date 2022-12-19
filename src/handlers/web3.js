@@ -21,26 +21,11 @@ import ethereumUtils from '../utils/ethereumUtils';
 import Web3Instance from '@cardstack/models/web3-instance';
 import { AssetTypes, NetworkType } from '@cardstack/types';
 import { isNativeToken } from '@cardstack/utils/cardpay-utils';
-import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { erc721ABI, ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
 
-/**
- * @desc returns connected web3Provider
- * @param {String} network
- */
-
-export const getEtherWeb3Provider = async (network = undefined) => {
-  const currentNetwork = network || (await getNetwork());
-  const web3 = await Web3Instance.getEthers(currentNetwork);
-
-  logger.log('[Web3-Ethers] ready!');
-
-  return web3;
-};
-
 export const sendRpcCall = async payload => {
-  const web3ProviderInstance = await getEtherWeb3Provider();
+  const web3ProviderInstance = await Web3Instance.getEthers();
   return web3ProviderInstance.send(payload.method, payload.params);
 };
 
@@ -116,7 +101,7 @@ export const estimateTransferNFTGas = async (
   paddingFactor = 1.1
 ) => {
   try {
-    const provider = await getEtherWeb3Provider();
+    const provider = await Web3Instance.getEthers();
 
     const contract = new Contract(params.to, erc721ABI, provider);
     const contractEstGas = await contract.estimateGas.transferFrom(
@@ -142,7 +127,7 @@ export const estimateTransferNFTGas = async (
  */
 export const estimateGas = async estimateGasData => {
   try {
-    const web3ProviderInstance = await getEtherWeb3Provider();
+    const web3ProviderInstance = await Web3Instance.getEthers();
     const estimatedGas = await web3ProviderInstance.estimateGas(
       estimateGasData
     );
@@ -160,7 +145,7 @@ export const estimateGasWithPadding = async (
 ) => {
   try {
     const txPayloadToEstimate = { ...txPayload };
-    const web3ProviderInstance = await getEtherWeb3Provider(network);
+    const web3ProviderInstance = await Web3Instance.getEthers(network);
     const { gasLimit } = await web3ProviderInstance.getBlock();
     const { to, data } = txPayloadToEstimate;
     // 1 - Check if the receiver is a contract
@@ -200,7 +185,7 @@ export const estimateGasWithPadding = async (
  * @return {Promise}
  */
 export const getTransaction = async hash =>
-  await getEtherWeb3Provider()?.getTransaction(hash);
+  await Web3Instance.getEthers()?.getTransaction(hash);
 
 /**
  * @desc get address transaction count
@@ -208,7 +193,7 @@ export const getTransaction = async hash =>
  * @return {Promise}
  */
 export const getTransactionCount = async address =>
-  await getEtherWeb3Provider()?.getTransactionCount(address, 'pending');
+  await Web3Instance.getEthers()?.getTransactionCount(address, 'pending');
 
 /**
  * @desc get transaction details
@@ -263,7 +248,7 @@ const resolveNameOrAddress = async nameOrAddress => {
     if (/^([\w-]+\.)+(crypto)$/.test(nameOrAddress)) {
       return resolveUnstoppableDomain(nameOrAddress);
     }
-    const web3ProviderInstance = await getEtherWeb3Provider();
+    const web3ProviderInstance = await Web3Instance.getEthers();
     return web3ProviderInstance.resolveName(nameOrAddress);
   }
   return nameOrAddress;

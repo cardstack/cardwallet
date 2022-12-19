@@ -34,20 +34,26 @@ const Web3Instance = {
   // Separated instance with custom network for wc requests
   withNetwork: async (network: NetworkType) =>
     new Web3(await Web3WsProvider.get(network)),
-  getEthers: async (network: NetworkType) => {
+  getEthers: async (network?: NetworkType) => {
     if (!ethersWeb3Instance) {
       try {
+        const currentNetwork = network || (await getNetwork());
+
         const provider = ((await Web3WsProvider.get(
-          network
+          currentNetwork
         )) as unknown) as ExternalProvider;
 
         ethersWeb3Instance = new ethers.providers.Web3Provider(provider);
+
+        await ethersWeb3Instance?._ready();
+
+        logger.log('[Web3-Ethers]: ready!');
       } catch (e) {
         logger.error('[Web3-Ethers]: Failed getting provider', e);
       }
     }
 
-    return ethersWeb3Instance?.ready;
+    return ethersWeb3Instance as ethers.providers.Provider;
   },
 };
 

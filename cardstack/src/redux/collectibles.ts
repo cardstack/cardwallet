@@ -6,6 +6,7 @@ import { concat, isEmpty } from 'lodash';
 import { AnyAction } from 'redux';
 
 import { IPFS_HTTP_URL } from '@cardstack/constants';
+import Web3Instance from '@cardstack/models/web3-instance';
 import { Asset } from '@cardstack/services/eoa-assets/eoa-assets-types';
 import {
   apiFetchCollectiblesForOwner,
@@ -22,8 +23,6 @@ import {
 import { AppDispatch, AppGetState } from '@rainbow-me/redux/store';
 import { erc721ABI } from '@rainbow-me/references';
 import logger from 'logger';
-
-import { getEtherWeb3Provider } from '../../../src/handlers/web3';
 
 // -- Constants ------------------------------------------------------------- //
 const COLLECTIBLES_LOAD_REQUEST = 'collectibles/COLLECTIBLES_LOAD_REQUEST';
@@ -183,7 +182,7 @@ const fetchNFTsViaRpcNode = () => async (
 
   // enhance them with metadata from the tokenURI so that they have a similar shape to what parseCollectiblesFromOpenSeaResponse creates
   try {
-    const web3Provider = await getEtherWeb3Provider();
+    const web3Provider = await Web3Instance.getEthers(network);
 
     const collectibles = (
       await Promise.all(
