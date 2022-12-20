@@ -198,7 +198,7 @@ export const getAccountAssets = async ({
     network
   );
 
-  await store.dispatch(collectiblesRefreshState());
+  store.dispatch(collectiblesRefreshState());
 
   return tokensInWallet;
 };

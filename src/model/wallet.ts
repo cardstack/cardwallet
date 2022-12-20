@@ -17,11 +17,7 @@ import {
   DEPRECATED_authenticateWithPIN,
   DEPRECATED_getExistingPIN,
 } from '../handlers/authentication';
-import {
-  addHexPrefix,
-  getEtherWeb3Provider,
-  isHexStringIgnorePrefix,
-} from '../handlers/web3';
+import { addHexPrefix, isHexStringIgnorePrefix } from '../handlers/web3';
 import showWalletErrorAlert from '../helpers/support';
 import { isValidSeed } from '../helpers/validators';
 import { EthereumWalletType } from '../helpers/walletTypes';
@@ -48,6 +44,7 @@ import {
   updateSecureStorePin,
   wipeSecureStorage,
 } from '@cardstack/models/secure-storage';
+import Web3WsProvider from '@cardstack/models/web3-provider';
 import { clearFlags } from '@cardstack/redux/persistedFlagsSlice';
 import { restartApp } from '@cardstack/utils';
 import { Device } from '@cardstack/utils/device';
@@ -172,7 +169,8 @@ export const loadWallet = async (): Promise<null | ethers.Wallet> => {
   const privateKey = await loadPrivateKey();
 
   if (privateKey) {
-    const web3Provider = await getEtherWeb3Provider();
+    const web3Provider = (await Web3WsProvider.getEthers()) as ethers.providers.Provider;
+
     return new ethers.Wallet(privateKey, web3Provider);
   }
   if (Device.isIOS) {

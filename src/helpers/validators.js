@@ -1,7 +1,7 @@
 import { isValidAddress } from 'ethereumjs-util';
 import { utils as ethersUtils } from 'ethers';
+import Web3WsProvider from '@cardstack/models/web3-provider';
 import {
-  getEtherWeb3Provider,
   isHexStringIgnorePrefix,
   resolveUnstoppableDomain,
 } from '@rainbow-me/handlers/web3';
@@ -44,7 +44,7 @@ export const isUnstoppableAddressFormat = address => {
 export const checkIsValidAddressOrDomain = async address => {
   if (isENSAddressFormat(address)) {
     try {
-      const web3Provider = await getEtherWeb3Provider();
+      const web3Provider = await Web3WsProvider.getEthers();
       const resolvedAddress = await web3Provider.resolveName(address);
       return !!resolvedAddress;
     } catch (error) {

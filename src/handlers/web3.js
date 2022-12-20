@@ -11,7 +11,7 @@ import {
 } from '@cardstack/cardpay-sdk';
 import UnstoppableResolution from '@unstoppabledomains/resolution';
 
-import { BigNumber, Contract, utils as ethersUtils, providers } from 'ethers';
+import { BigNumber, Contract, utils as ethersUtils } from 'ethers';
 import { get, startsWith } from 'lodash';
 import Web3 from 'web3';
 
@@ -21,53 +21,11 @@ import ethereumUtils from '../utils/ethereumUtils';
 import Web3WsProvider from '@cardstack/models/web3-provider';
 import { AssetTypes, NetworkType } from '@cardstack/types';
 import { isNativeToken } from '@cardstack/utils/cardpay-utils';
-import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { erc721ABI, ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
 
-/**
- * @desc web3 http instance - to be used with ethers contracts
- */
-let web3Provider;
-
-/**
- * @desc set a different web3 provider
- * @param {String} network
- */
-
-export const etherWeb3SetHttpProvider = async network => {
-  try {
-    web3Provider = new providers.Web3Provider(
-      await Web3WsProvider.get(network)
-    );
-  } catch (error) {
-    logger.error('provider error', error);
-  }
-
-  return web3Provider?.ready;
-};
-
-/**
- * @desc returns connected web3Provider, reconnect when it's not connected
- * @param {String} network
- */
-
-export const getEtherWeb3Provider = async (network = undefined) => {
-  let wsConnected = web3Provider?.provider?.connected;
-
-  // check websocket state and reconnect if disconnected
-  while (!wsConnected) {
-    const currentNetwork = network || (await getNetwork());
-    await etherWeb3SetHttpProvider(currentNetwork);
-    wsConnected = web3Provider?.provider?.connected;
-    logger.log('ws restarted', wsConnected, currentNetwork);
-  }
-
-  return web3Provider;
-};
-
 export const sendRpcCall = async payload => {
-  const web3ProviderInstance = await getEtherWeb3Provider();
+  const web3ProviderInstance = await Web3WsProvider.getEthers();
   return web3ProviderInstance.send(payload.method, payload.params);
 };
 
@@ -143,7 +101,7 @@ export const estimateTransferNFTGas = async (
   paddingFactor = 1.1
 ) => {
   try {
-    const provider = await getEtherWeb3Provider();
+    const provider = await Web3WsProvider.getEthers();
 
     const contract = new Contract(params.to, erc721ABI, provider);
     const contractEstGas = await contract.estimateGas.transferFrom(
@@ -169,7 +127,7 @@ export const estimateTransferNFTGas = async (
  */
 export const estimateGas = async estimateGasData => {
   try {
-    const web3ProviderInstance = await getEtherWeb3Provider();
+    const web3ProviderInstance = await Web3WsProvider.getEthers();
     const estimatedGas = await web3ProviderInstance.estimateGas(
       estimateGasData
     );
@@ -187,7 +145,7 @@ export const estimateGasWithPadding = async (
 ) => {
   try {
     const txPayloadToEstimate = { ...txPayload };
-    const web3ProviderInstance = await getEtherWeb3Provider(network);
+    const web3ProviderInstance = await Web3WsProvider.getEthers(network);
     const { gasLimit } = await web3ProviderInstance.getBlock();
     const { to, data } = txPayloadToEstimate;
     // 1 - Check if the receiver is a contract
@@ -226,15 +184,16 @@ export const estimateGasWithPadding = async (
  * @param {String} hash
  * @return {Promise}
  */
-export const getTransaction = hash => web3Provider?.getTransaction(hash);
+export const getTransaction = async hash =>
+  await Web3WsProvider.getEthers()?.getTransaction(hash);
 
 /**
  * @desc get address transaction count
  * @param {String} address
  * @return {Promise}
  */
-export const getTransactionCount = address =>
-  web3Provider?.getTransactionCount(address, 'pending');
+export const getTransactionCount = async address =>
+  await Web3WsProvider.getEthers()?.getTransactionCount(address, 'pending');
 
 /**
  * @desc get transaction details
@@ -289,7 +248,7 @@ const resolveNameOrAddress = async nameOrAddress => {
     if (/^([\w-]+\.)+(crypto)$/.test(nameOrAddress)) {
       return resolveUnstoppableDomain(nameOrAddress);
     }
-    const web3ProviderInstance = await getEtherWeb3Provider();
+    const web3ProviderInstance = await Web3WsProvider.getEthers();
     return web3ProviderInstance.resolveName(nameOrAddress);
   }
   return nameOrAddress;

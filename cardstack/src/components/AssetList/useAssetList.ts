@@ -27,10 +27,7 @@ export const useAssetList = ({
   const { navigate, setParams } = useNavigation();
   const { params } = useRoute<AssetListRouteType>();
 
-  const {
-    hasClaimableRewards,
-    isLoading: rewardsFetchLoading,
-  } = useRewardsDataFetch();
+  const { hasClaimableRewards } = useRewardsDataFetch();
 
   const {
     sections,
@@ -108,8 +105,7 @@ export const useAssetList = ({
   ]);
 
   return {
-    isLoading:
-      isLoadingAssets || isLoadingSafesDiffAccount || rewardsFetchLoading,
+    isLoading: isLoadingAssets || isLoadingSafesDiffAccount,
     isFetchingSafes,
     refreshing: isRefetching,
     sections,

@@ -6,7 +6,6 @@ import {
   saveNativeCurrency,
   saveNetwork,
 } from '../handlers/localstorage/globalSettings';
-import { etherWeb3SetHttpProvider } from '../handlers/web3';
 import { updateLanguage } from '../languages';
 
 import { dataResetState } from './data';
@@ -59,9 +58,6 @@ export const settingsLoadNetwork = () => async dispatch => {
       payload: { chainId, network },
       type: SETTINGS_UPDATE_NETWORK_SUCCESS,
     });
-
-    // Set ethersProdiver on end to avoid locking app on gnosis state in error case
-    etherWeb3SetHttpProvider(network);
   } catch (error) {
     logger.error('Error loading network settings', error);
   }
