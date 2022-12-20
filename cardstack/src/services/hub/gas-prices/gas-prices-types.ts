@@ -13,8 +13,5 @@ export type GasPricesAttrsType = {
 
 export type GasPricesQueryResults = Record<
   keyof Omit<GasPricesAttrsType, 'chain-id'>,
-  {
-    amount: BigNumberish;
-    display: string;
-  }
+  BigNumberish
 >;

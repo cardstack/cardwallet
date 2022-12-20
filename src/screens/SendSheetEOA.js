@@ -14,7 +14,7 @@ import SendSheet, {
   useSendAddressValidation,
   useShowAssetFlags,
 } from '../components/send/SendSheet';
-import { createSignableTransaction, estimateGasLimit } from '../handlers/web3';
+import { createSignableTransaction } from '../handlers/web3';
 import { sendTransaction } from '../model/wallet';
 import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
 import { useGas } from '@cardstack/hooks';
@@ -56,11 +56,11 @@ const useSendSheetScreen = () => {
   } = useAccountSettings();
 
   const {
-    getTxFees,
+    updateTxFees,
     selectedFee,
     hasSufficientForGas,
     showTransactionSpeedActionSheet,
-  } = useGas({ network });
+  } = useGas();
 
   const { sendableCollectibles } = useSendableCollectibles();
 
@@ -73,9 +73,7 @@ const useSendSheetScreen = () => {
   const [isAuthorizing, setIsAuthorizing] = useState(false);
   const [recipient, setRecipient] = useState('');
   const [selected, setSelected] = useState({});
-  const { maxInputBalance, updateMaxInputBalance } = useMaxInputBalance({
-    selectedFee,
-  });
+  const { maxInputBalance, updateMaxInputBalance } = useMaxInputBalance();
 
   const prevSelectedGasPrice = usePrevious(selectedFee);
 
@@ -92,7 +90,7 @@ const useSendSheetScreen = () => {
       isNativeToken(selected?.symbol, network) &&
       prevSelectedGasPrice?.value.amount !== selectedFee?.value.amount
     ) {
-      updateMaxInputBalance(selected);
+      updateMaxInputBalance({ selectedAsset: selected, selectedFee, network });
     }
   }, [
     prevSelectedGasPrice,
@@ -133,7 +131,11 @@ const useSendSheetScreen = () => {
 
   const onSelectAsset = useCallback(
     newSelected => {
-      updateMaxInputBalance(newSelected);
+      updateMaxInputBalance({
+        selectedAsset: newSelected,
+        selectedFee,
+        network,
+      });
       if (get(newSelected, 'type') === AssetTypes.nft) {
         setAmountDetails({
           assetAmount: '1',
@@ -150,7 +152,13 @@ const useSendSheetScreen = () => {
       }
       refetchBalances();
     },
-    [refetchBalances, sendUpdateAssetAmount, updateMaxInputBalance]
+    [
+      refetchBalances,
+      sendUpdateAssetAmount,
+      updateMaxInputBalance,
+      network,
+      selectedFee,
+    ]
   );
 
   const onChangeNativeAmount = useCallback(
@@ -180,10 +188,9 @@ const useSendSheetScreen = () => {
     [getAssetPrice, maxInputBalance, selected]
   );
 
-  const onMaxBalancePress = useCallback(async () => {
-    const newBalanceAmount = await updateMaxInputBalance(selected);
-    sendUpdateAssetAmount(newBalanceAmount);
-  }, [selected, sendUpdateAssetAmount, updateMaxInputBalance]);
+  const onMaxBalancePress = useCallback(() => {
+    sendUpdateAssetAmount(maxInputBalance);
+  }, [sendUpdateAssetAmount, maxInputBalance]);
 
   const onChangeAssetAmount = useCallback(
     newAssetAmount => {
@@ -201,27 +208,23 @@ const useSendSheetScreen = () => {
       hasSufficientForGas;
 
     if (!selectedFee || !validTransaction || isAuthorizing) {
-      logger.sentry('preventing tx submit for one of the following reasons:');
-      logger.sentry('selectedFee ? ', selectedFee);
-      logger.sentry('validTransaction ? ', validTransaction);
-      logger.sentry('isAuthorizing ? ', isAuthorizing);
+      logger.sentry('Preventing Tx submit given values:', {
+        selectedFee,
+        validTransaction,
+        isAuthorizing,
+      });
       captureEvent('Preventing tx submit');
       return false;
     }
 
     let submitSuccess = false;
 
-    // Estimate the tx with gas limit padding before sending
-    const updatedGasLimit = await estimateGasLimit(
-      {
-        address: accountAddress,
-        amount: amountDetails.assetAmount,
-        asset: selected,
-        recipient,
-      },
-      network,
-      true
-    );
+    // Estimate the tx before sending
+    const updatedGasLimit = await updateTxFees({
+      amount: amountDetails.assetAmount,
+      asset: selected,
+      recipient,
+    });
 
     const txDetails = {
       amount: amountDetails.assetAmount,
@@ -261,8 +264,7 @@ const useSendSheetScreen = () => {
     return submitSuccess;
   }, [
     accountAddress,
-    amountDetails.assetAmount,
-    amountDetails.isSufficientBalance,
+    amountDetails,
     dispatch,
     isAuthorizing,
     hasSufficientForGas,
@@ -271,6 +273,7 @@ const useSendSheetScreen = () => {
     recipient,
     selected,
     selectedFee,
+    updateTxFees,
   ]);
 
   const onSendPress = useCallback(async () => {
@@ -338,29 +341,18 @@ const useSendSheetScreen = () => {
 
   useEffect(() => {
     if (isValidAddress) {
-      estimateGasLimit(
-        {
-          address: accountAddress,
-          amount: amountDetails.assetAmount,
-          asset: selected,
-          recipient,
-        },
-        network
-      )
-        .then(gasLimit => getTxFees({ gasLimit }))
-        .catch(e => {
-          logger.log('Error estimating gas limit for transaction', e);
-        });
+      updateTxFees({
+        amount: amountDetails.assetAmount,
+        asset: selected,
+        recipient,
+      });
     }
   }, [
-    accountAddress,
     amountDetails.assetAmount,
-    dispatch,
     isValidAddress,
-    network,
     recipient,
     selected,
-    getTxFees,
+    updateTxFees,
   ]);
 
   return {

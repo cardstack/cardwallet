@@ -4,97 +4,107 @@ import {
   fromWei,
   getConstantByNetwork,
   greaterThanOrEqualTo,
+  multiply,
 } from '@cardstack/cardpay-sdk';
 import { useCallback, useMemo, useState } from 'react';
 
 import { useGetGasPricesQuery } from '@cardstack/services';
 import { GasPricesQueryResults } from '@cardstack/services/hub/gas-prices/gas-prices-types';
+import { capitalizeFirstLetter } from '@cardstack/utils';
 
+import { estimateGasLimit } from '@rainbow-me/handlers/web3';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { ethUnits } from '@rainbow-me/references';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 import { useAssets } from '../assets/useAssets';
 
-import { ParseTxFeeParams, TxFee, UseGasParams } from './types';
+import { ParseTxFeeParams, TxFee } from './types';
 
 const GAS_PRICE_POLLING_INTERVAL = 10000; // 10s
 
-export const useGas = ({ network }: UseGasParams) => {
-  const { nativeCurrency } = useAccountSettings();
-  const chainId = getConstantByNetwork('chainId', network);
+export const useGas = () => {
+  const { nativeCurrency, network, accountAddress } = useAccountSettings();
 
-  const { getAssetBalance, getAssetPrice } = useAssets();
+  const { getAssetBalance, getAssetPrice, getAsset } = useAssets();
+
   const [txFees, setTxFees] = useState<TxFee>();
-
-  const nativeToken = useMemo(() => {
-    const address = getConstantByNetwork('nativeTokenAddress', network);
-    const symbol = getConstantByNetwork('nativeTokenSymbol', network);
-
-    return {
-      price: getAssetPrice(address),
-      balance: getAssetBalance(address),
-      symbol,
-    };
-  }, [network, getAssetPrice, getAssetBalance]);
 
   const [selectedGasSpeed, setSelectedGasSpeed] = useState<
     keyof GasPricesQueryResults
   >('standard');
 
   const { data: gasPricesData } = useGetGasPricesQuery(
-    { chainId },
+    { chainId: getConstantByNetwork('chainId', network) },
     { pollingInterval: GAS_PRICE_POLLING_INTERVAL }
   );
 
-  const getTxFees = useCallback(
+  const nativeToken = useMemo(() => {
+    const address = getConstantByNetwork('nativeTokenAddress', network);
+
+    return {
+      price: getAssetPrice(address),
+      balance: getAssetBalance(address),
+      ...getAsset(address),
+    };
+  }, [network, getAssetPrice, getAssetBalance, getAsset]);
+
+  const parseTxFees = useCallback(
     ({ gasLimit: updatedGasLimit }: ParseTxFeeParams) => {
       if (!gasPricesData) {
         return;
       }
 
-      const nativeTokenDecimals = getConstantByNetwork(
-        'nativeTokenDecimals',
-        network
-      );
-
       const gasLimit = updatedGasLimit ?? ethUnits.basic_tx;
 
-      const speeds = Object.keys(gasPricesData) as Array<
-        keyof typeof gasPricesData
-      >;
+      const mapGasPriceToSpeeds = Object.entries(gasPricesData).reduce(
+        (speeds, [speed, amount]) => {
+          const fee = multiply(gasLimit, Number(amount));
 
-      const calculateGasFee = speeds.map(speed => {
-        const nativeTokenSymbol = getConstantByNetwork(
-          'nativeTokenSymbol',
-          network
-        );
+          const valueInNativeToken = convertRawAmountToBalance(fee, {
+            decimals: nativeToken.decimals ?? 18,
+            symbol: nativeToken.symbol,
+          });
 
-        const fee = gasLimit * (gasPricesData[speed].amount as number); // value in GWEI
-
-        const valueInEth = convertRawAmountToBalance(fee, {
-          decimals: nativeTokenDecimals,
-          symbol: nativeTokenSymbol,
-        });
-
-        return {
-          native: convertAmountAndPriceToNativeDisplay(
-            valueInEth.amount,
-            nativeToken.price,
-            nativeCurrency,
-            2
-          ),
-          value: valueInEth,
-        };
-      });
-
-      const mapSpeedsToValues = Object.fromEntries(
-        speeds.map((key, index) => [key, calculateGasFee[index]])
+          return {
+            ...speeds,
+            [speed]: {
+              native: convertAmountAndPriceToNativeDisplay(
+                valueInNativeToken.amount,
+                nativeToken.price,
+                nativeCurrency,
+                2
+              ),
+              value: valueInNativeToken,
+            },
+          };
+        },
+        {}
       );
 
-      setTxFees(mapSpeedsToValues);
+      setTxFees(mapGasPriceToSpeeds);
     },
-    [network, nativeCurrency, gasPricesData, nativeToken]
+    [nativeCurrency, gasPricesData, nativeToken]
+  );
+
+  const updateTxFees = useCallback(
+    async ({ asset, amount, recipient }) => {
+      const gasLimit = await estimateGasLimit(
+        {
+          address: accountAddress,
+          amount,
+          asset,
+          recipient,
+        },
+        network,
+        true
+      );
+
+      parseTxFees({ gasLimit });
+
+      return gasLimit;
+    },
+    [network, accountAddress, parseTxFees]
   );
 
   const hasSufficientForGas = useMemo(() => {
@@ -113,7 +123,8 @@ export const useGas = ({ network }: UseGasParams) => {
     }
 
     const options = Object.keys(txFees).map(
-      speed => `${speed.toUpperCase()}: ${txFees[speed].native.display}`
+      speed =>
+        `${capitalizeFirstLetter(speed)}: ${txFees[speed].native.display}`
     );
 
     showActionSheetWithOptions(
@@ -135,7 +146,7 @@ export const useGas = ({ network }: UseGasParams) => {
   }, [txFees]);
 
   return {
-    getTxFees,
+    updateTxFees,
     selectedFee: txFees?.[selectedGasSpeed],
     setSelectedGasSpeed,
     selectedGasSpeed,

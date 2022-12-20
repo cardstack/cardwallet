@@ -1,11 +1,5 @@
-import { NetworkType } from '@cardstack/types';
-
-export interface UseGasParams {
-  network: NetworkType;
-}
-
 export interface ParseTxFeeParams {
-  gasLimit?: number;
+  gasLimit?: string;
 }
 
 export type TxFee = Record<
