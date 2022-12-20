@@ -1,10 +1,4 @@
-import {
-  fromWei,
-  getConstantByNetwork,
-  greaterThan,
-  isZero,
-  subtract,
-} from '@cardstack/cardpay-sdk';
+import { getConstantByNetwork, isZero } from '@cardstack/cardpay-sdk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { captureException } from '@sentry/react-native';
 
@@ -16,21 +10,13 @@ import {
 } from 'ethereumjs-util';
 import { hdkey } from 'ethereumjs-wallet';
 import { Wallet } from 'ethers';
-import {
-  find,
-  get,
-  isEmpty,
-  isString,
-  matchesProperty,
-  replace,
-  toLower,
-} from 'lodash';
+import { find, get, isString, matchesProperty, replace, toLower } from 'lodash';
 import { Linking, NativeModules } from 'react-native';
 import { ETHERSCAN_API_KEY } from 'react-native-dotenv';
 import URL from 'url-parse';
 
 import { NetworkType } from '@cardstack/types';
-import { isNativeToken, normalizeTxHash } from '@cardstack/utils';
+import { normalizeTxHash } from '@cardstack/utils';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import { DEFAULT_HD_PATH, WalletLibraryType } from '@rainbow-me/model/wallet';
 import store from '@rainbow-me/redux/store';
@@ -38,20 +24,6 @@ import store from '@rainbow-me/redux/store';
 import logger from 'logger';
 
 const { RNBip39 } = NativeModules;
-
-const getBalanceAmount = async (selectedGasPrice, selected) => {
-  const network = store.getState().settings.network;
-  let amount = get(selected, 'balance.amount', 0);
-  if (isNativeToken(selected?.symbol, network)) {
-    if (!isEmpty(selectedGasPrice)) {
-      const txFeeRaw = get(selectedGasPrice, 'value.amount');
-      const txFeeAmount = fromWei(txFeeRaw);
-      const remaining = subtract(amount, txFeeAmount);
-      amount = greaterThan(remaining, 0) ? remaining : '0';
-    }
-  }
-  return amount;
-};
 
 const getHash = txn => txn.hash.split('-').shift();
 
@@ -255,7 +227,6 @@ export default {
   deriveAccountFromPrivateKey,
   deriveAccountFromWalletInput,
   getAsset,
-  getBalanceAmount,
   getDataString,
   getHash,
   getNativeTokenAsset,
