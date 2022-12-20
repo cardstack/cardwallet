@@ -33,6 +33,7 @@ export const useTransactionActions = (isMessageRequest: boolean) => {
       peerId,
       requestId,
       event,
+      txNetwork,
     },
   } = useRouteParams();
 
@@ -89,6 +90,7 @@ export const useTransactionActions = (isMessageRequest: boolean) => {
       if (sendInsteadOfSign) {
         const result = await sendTransaction({
           transaction: txPayloadUpdated,
+          network: txNetwork,
         });
 
         if (result) {
@@ -114,6 +116,7 @@ export const useTransactionActions = (isMessageRequest: boolean) => {
       } else {
         const signature = await signTransaction({
           transaction: txPayloadUpdated,
+          network: txNetwork,
         });
 
         await sendResponseToWalletConnect(signature);
@@ -130,7 +133,8 @@ export const useTransactionActions = (isMessageRequest: boolean) => {
     method,
     params,
     closeScreen,
-    displayDetails,
+    txNetwork,
+    displayDetails.request,
     dappName,
     dispatch,
     sendResponseToWalletConnect,
@@ -143,7 +147,7 @@ export const useTransactionActions = (isMessageRequest: boolean) => {
       const sign =
         method === SIGN_TYPED_DATA ? signTypedDataMessage : signPersonalMessage;
 
-      const flatFormatSignature = await sign(messageForSigning);
+      const flatFormatSignature = await sign(messageForSigning, txNetwork);
 
       await sendResponseToWalletConnect(flatFormatSignature);
     } catch (e) {
@@ -151,7 +155,7 @@ export const useTransactionActions = (isMessageRequest: boolean) => {
     }
 
     closeScreen();
-  }, [closeScreen, method, params, sendResponseToWalletConnect]);
+  }, [closeScreen, method, params, sendResponseToWalletConnect, txNetwork]);
 
   const onConfirmTransaction = useCallback(async () => {
     if (isAuthorizing) return;

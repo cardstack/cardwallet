@@ -7,6 +7,8 @@ import {
 } from '@rainbow-me/model/wallet';
 import logger from 'logger';
 
+import { NetworkType } from '../types/NetworkType';
+
 import Web3Instance from './web3-instance';
 import Web3WsProvider from './web3-provider';
 
@@ -19,6 +21,7 @@ export interface EthersSignerWithSeedParams {
 
 export interface EthersSignerParams {
   accountAddress?: string;
+  network?: NetworkType;
 }
 
 export const getEthersWalletWithSeed = async (
@@ -51,11 +54,16 @@ export const getEthersWalletWithSeed = async (
   }
 };
 
-const getEthersWallet = async (accountAddress?: string) => {
+export const getEthersWallet = async ({
+  accountAddress,
+  network,
+}: EthersSignerParams = {}) => {
   try {
     const privateKey = await loadPrivateKey(accountAddress);
 
-    const provider = (await Web3WsProvider.getEthers()) as ethers.providers.Provider;
+    const provider = (await Web3WsProvider.getEthers(
+      network
+    )) as ethers.providers.Provider;
 
     return new Wallet(privateKey, provider);
   } catch (e) {
@@ -64,4 +72,4 @@ const getEthersWallet = async (accountAddress?: string) => {
 };
 
 export const getWeb3ProviderWithEthSigner = (params?: EthersSignerParams) =>
-  Promise.all([Web3Instance.get(), getEthersWallet(params?.accountAddress)]);
+  Promise.all([Web3Instance.get(), getEthersWallet(params)]);

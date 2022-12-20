@@ -16,8 +16,6 @@ import {
   PrepaidLinearGradientInfo,
 } from '@cardstack/types';
 
-export const NATIVE_TOKEN_SYMBOLS = ['eth', 'spoa', 'xdai', 'keth'];
-
 const MAINNETS = [NetworkType.mainnet, NetworkType.gnosis, NetworkType.polygon];
 
 const LAYER_1_NETWORKS = [NetworkType.mainnet, NetworkType.goerli];

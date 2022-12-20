@@ -18,7 +18,6 @@ import {
   DEPRECATED_getExistingPIN,
 } from '../handlers/authentication';
 import { addHexPrefix, isHexStringIgnorePrefix } from '../handlers/web3';
-import showWalletErrorAlert from '../helpers/support';
 import { isValidSeed } from '../helpers/validators';
 import { EthereumWalletType } from '../helpers/walletTypes';
 import { getRandomColor } from '../styles/colors';
@@ -32,7 +31,10 @@ import {
   selectedWalletKey,
 } from '../utils/keychainConstants';
 import * as keychain from './keychain';
-import { getEthersWalletWithSeed } from '@cardstack/models/ethers-wallet';
+import {
+  getEthersWallet,
+  getEthersWalletWithSeed,
+} from '@cardstack/models/ethers-wallet';
 import { backupUserDataIntoCloud } from '@cardstack/models/rn-cloud';
 
 import {
@@ -44,8 +46,8 @@ import {
   updateSecureStorePin,
   wipeSecureStorage,
 } from '@cardstack/models/secure-storage';
-import Web3WsProvider from '@cardstack/models/web3-provider';
 import { clearFlags } from '@cardstack/redux/persistedFlagsSlice';
+import { NetworkType } from '@cardstack/types';
 import { restartApp } from '@cardstack/utils';
 import { Device } from '@cardstack/utils/device';
 
@@ -70,7 +72,7 @@ type EthereumWalletSeed =
 
 interface TransactionRequestParam {
   transaction: ethers.providers.TransactionRequest;
-  existingWallet?: ethers.Wallet;
+  network: NetworkType;
 }
 
 interface MessageTypeProperty {
@@ -165,27 +167,14 @@ export const publicAccessControlOptions = {
   accessible: ACCESSIBLE.ALWAYS_THIS_DEVICE_ONLY,
 };
 
-export const loadWallet = async (): Promise<null | ethers.Wallet> => {
-  const privateKey = await loadPrivateKey();
-
-  if (privateKey) {
-    const web3Provider = (await Web3WsProvider.getEthers()) as ethers.providers.Provider;
-
-    return new ethers.Wallet(privateKey, web3Provider);
-  }
-  if (Device.isIOS) {
-    showWalletErrorAlert();
-  }
-  return null;
-};
-
 export const sendTransaction = async ({
   transaction,
-  existingWallet,
+  network,
 }: TransactionRequestParam) => {
   try {
     logger.sentry('about to send transaction', transaction);
-    const wallet = existingWallet || (await loadWallet());
+    const wallet = await getEthersWallet({ network });
+
     if (!wallet) return null;
     try {
       const result = await wallet.sendTransaction(transaction);
@@ -210,10 +199,11 @@ export const sendTransaction = async ({
 
 export const signTransaction = async ({
   transaction,
+  network,
 }: TransactionRequestParam): Promise<null | string> => {
   try {
     logger.sentry('about to sign transaction', transaction);
-    const wallet = await loadWallet();
+    const wallet = await getEthersWallet({ network });
     if (!wallet) return null;
     try {
       return wallet.signTransaction(transaction);
@@ -234,11 +224,12 @@ export const signTransaction = async ({
 };
 
 export const signPersonalMessage = async (
-  message: string | Uint8Array
+  message: string | Uint8Array,
+  network: NetworkType
 ): Promise<null | string> => {
   try {
     logger.sentry('about to sign personal/eth message', message);
-    const wallet = await loadWallet();
+    const wallet = await getEthersWallet({ network });
     try {
       if (!wallet) return null;
       return wallet.signMessage(
@@ -263,11 +254,12 @@ export const signPersonalMessage = async (
 };
 
 export const signTypedDataMessage = async (
-  message: string | TypedData
+  message: string | TypedData,
+  network: NetworkType
 ): Promise<null | string> => {
   try {
     logger.sentry('about to sign typed data  message', message);
-    const wallet = await loadWallet();
+    const wallet = await getEthersWallet({ network });
     if (!wallet) return null;
     try {
       const pkeyBuffer = toBuffer(addHexPrefix(wallet.privateKey));
