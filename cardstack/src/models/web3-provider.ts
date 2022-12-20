@@ -98,16 +98,21 @@ const createProvider = async (network: NetworkType) => {
 const providers = supportedChainsArray.reduce(
   (chains, network) => ({
     ...chains,
-    [network]: { provider: null, isConnecting: false },
+    [network]: {
+      provider: null,
+      isConnecting: false,
+      ethers: null,
+    },
   }),
   {} as Record<
     NetworkType,
-    { provider: WebsocketProvider; isConnecting: boolean }
+    {
+      provider: WebsocketProvider;
+      isConnecting: boolean;
+      ethers: ethers.providers.WebSocketProvider;
+    }
   >
 );
-
-let ethersProvider: ethers.providers.WebSocketProvider | null = null;
-let ethersReady: Promise<ethers.providers.Network>;
 
 const checkProviderConnection = (network: NetworkType) =>
   new Promise<WebsocketProvider>(resolve => {
@@ -138,22 +143,24 @@ const Web3WsProvider = {
   },
   getEthers: async (network?: NetworkType) => {
     try {
-      const currentNetwork = network || (await getNetwork());
+      const currentNetwork = network || ((await getNetwork()) as NetworkType);
+
+      const current = providers[currentNetwork];
 
       const node = await getNodeConfig(currentNetwork);
 
-      if (!ethersProvider) {
-        ethersProvider = new ethers.providers.WebSocketProvider(node);
+      if (!current.ethers) {
+        current.ethers = new ethers.providers.WebSocketProvider(node);
 
-        ethersReady = ethersProvider.ready;
+        logger.log('[Ether sWs]: Creating provider', currentNetwork);
       }
+
+      await current.ethers.ready;
+
+      return current.ethers;
     } catch (e) {
-      logger.log('[Ethers Wss]: Error setting provider');
+      logger.log('[Ethers Ws]: Error setting provider');
     }
-
-    await ethersReady;
-
-    return ethersProvider;
   },
 };
 
