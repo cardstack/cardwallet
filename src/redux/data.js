@@ -2,7 +2,6 @@ import { isZero } from '@cardstack/cardpay-sdk';
 import produce from 'immer';
 import { concat, isEmpty, partition, toLower } from 'lodash';
 import { getTransactionReceipt } from '../handlers/web3';
-import { NetworkType } from '@cardstack/types';
 import {
   getDepots,
   getLocalTransactions,
@@ -84,33 +83,34 @@ export const dataResetState = () => dispatch => {
   dispatch({ type: DATA_CLEAR_STATE });
 };
 
-export const dataAddNewTransaction = (
-  txDetails,
-  accountAddressToUpdate = '',
-  disableTxnWatcher = false
-) => async (dispatch, getState) => {
+export const dataAddNewTransaction = (txDetails, txNetwork) => async (
+  dispatch,
+  getState
+) => {
   const { transactions } = getState().data;
   const { accountAddress, nativeCurrency, network } = getState().settings;
-  if (
-    accountAddressToUpdate &&
-    toLower(accountAddressToUpdate) !== toLower(accountAddress)
-  )
-    return;
 
   try {
     const parsedTransaction = await parseNewTransaction(
       txDetails,
       nativeCurrency
     );
+
     const _transactions = [parsedTransaction, ...transactions];
+
     dispatch({
       payload: _transactions,
       type: DATA_ADD_NEW_TRANSACTION_SUCCESS,
     });
+
     saveLocalTransactions(_transactions, accountAddress, network);
-    if (!disableTxnWatcher || network !== NetworkType.mainnet) {
+
+    const enableWatcher = !txNetwork || txNetwork === network;
+
+    if (enableWatcher) {
       dispatch(watchPendingTransactions(accountAddress));
     }
+
     return parsedTransaction;
     // eslint-disable-next-line no-empty
   } catch (error) {}
@@ -217,29 +217,6 @@ export const dataWatchPendingTransactions = (cb = null) => async (
   }
 
   return false;
-};
-
-export const dataUpdateTransaction = (txHash, txObj, watch, cb) => (
-  dispatch,
-  getState
-) => {
-  const { transactions } = getState().data;
-
-  const allOtherTx = transactions.filter(tx => tx.hash !== txHash);
-  const updatedTransactions = [txObj].concat(allOtherTx);
-
-  dispatch({
-    payload: updatedTransactions,
-    type: DATA_UPDATE_TRANSACTIONS,
-  });
-  const { accountAddress, network } = getState().settings;
-  saveLocalTransactions(updatedTransactions, accountAddress, network);
-  // Always watch cancellation and speed up
-  if (watch) {
-    dispatch(
-      watchPendingTransactions(accountAddress, TXN_WATCHER_MAX_TRIES, cb)
-    );
-  }
 };
 
 const watchPendingTransactions = (

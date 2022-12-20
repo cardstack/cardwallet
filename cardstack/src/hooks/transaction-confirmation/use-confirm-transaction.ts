@@ -109,7 +109,7 @@ export const useTransactionActions = (isMessageRequest: boolean) => {
             to,
           };
 
-          dispatch(dataAddNewTransaction(txDetails));
+          dispatch(dataAddNewTransaction(txDetails, txNetwork));
 
           await sendResponseToWalletConnect(hash);
         }
