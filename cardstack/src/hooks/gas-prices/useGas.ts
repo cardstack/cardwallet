@@ -12,7 +12,7 @@ import { GasPricesQueryResults } from '@cardstack/services/hub/gas-prices/gas-pr
 
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { ethUnits } from '@rainbow-me/references';
-import { ethereumUtils, showActionSheetWithOptions } from '@rainbow-me/utils';
+import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 import { useAssets } from '../assets/useAssets';
 
@@ -24,8 +24,19 @@ export const useGas = ({ network }: UseGasParams) => {
   const { nativeCurrency } = useAccountSettings();
   const chainId = getConstantByNetwork('chainId', network);
 
-  const { assets, getAssetBalance, getAssetPrice } = useAssets();
+  const { getAssetBalance, getAssetPrice } = useAssets();
   const [txFees, setTxFees] = useState<TxFee>();
+
+  const nativeToken = useMemo(() => {
+    const address = getConstantByNetwork('nativeTokenAddress', network);
+    const symbol = getConstantByNetwork('nativeTokenSymbol', network);
+
+    return {
+      price: getAssetPrice(address),
+      balance: getAssetBalance(address),
+      symbol,
+    };
+  }, [network, getAssetPrice, getAssetBalance]);
 
   const [selectedGasSpeed, setSelectedGasSpeed] = useState<
     keyof GasPricesQueryResults
@@ -48,8 +59,6 @@ export const useGas = ({ network }: UseGasParams) => {
       );
 
       const gasLimit = updatedGasLimit ?? ethUnits.basic_tx;
-      const nativeToken = ethereumUtils.getNativeTokenAsset(assets);
-      const nativeTokenPrice = getAssetPrice(nativeToken?.id);
 
       const speeds = Object.keys(gasPricesData) as Array<
         keyof typeof gasPricesData
@@ -63,21 +72,19 @@ export const useGas = ({ network }: UseGasParams) => {
 
         const fee = gasLimit * (gasPricesData[speed].amount as number); // value in GWEI
 
-        const ethValue = convertRawAmountToBalance(fee, {
+        const valueInEth = convertRawAmountToBalance(fee, {
           decimals: nativeTokenDecimals,
           symbol: nativeTokenSymbol,
         });
 
         return {
-          native: {
-            ...convertAmountAndPriceToNativeDisplay(
-              ethValue.amount,
-              nativeTokenPrice,
-              nativeCurrency,
-              2
-            ),
-          },
-          value: ethValue,
+          native: convertAmountAndPriceToNativeDisplay(
+            valueInEth.amount,
+            nativeToken.price,
+            nativeCurrency,
+            2
+          ),
+          value: valueInEth,
         };
       });
 
@@ -87,16 +94,14 @@ export const useGas = ({ network }: UseGasParams) => {
 
       setTxFees(mapSpeedsToValues);
     },
-    [network, nativeCurrency, gasPricesData, assets, getAssetPrice]
+    [network, nativeCurrency, gasPricesData, nativeToken]
   );
 
   const hasSufficientForGas = useMemo(() => {
-    const nativeTokenAsset = ethereumUtils.getNativeTokenAsset(assets);
-    const { amount } = getAssetBalance(nativeTokenAsset.id);
     const txFeeAmount = fromWei(txFees?.[selectedGasSpeed].value.amount || 0);
 
-    return greaterThanOrEqualTo(amount, txFeeAmount);
-  }, [txFees, selectedGasSpeed, assets, getAssetBalance]);
+    return greaterThanOrEqualTo(nativeToken.balance.amount, txFeeAmount);
+  }, [txFees, selectedGasSpeed, nativeToken]);
 
   /**
    * ActionSheet with the different speed options.
