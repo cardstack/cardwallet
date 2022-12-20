@@ -76,52 +76,63 @@ const createProvider = async (network: NetworkType) => {
 
   //@ts-expect-error it's wrongly typed bc it says it doesn't have param, but it does
   wssProvider?.on('error', e => {
-    provider?.reconnect();
+    providers[network]?.provider?.reconnect();
     logger.sentry('[WS socket] error', e, network);
   });
 
   //@ts-expect-error ditto
   wssProvider?.on('end', e => {
-    provider?.reconnect();
+    providers[network]?.provider?.reconnect();
     logger.sentry('[WS socket] ended', e);
   });
 
   //@ts-expect-error ditto
   wssProvider?.on('close', e => {
-    provider?.reconnect();
+    providers[network]?.provider?.reconnect();
     logger.sentry('[WS socket] close', e);
   });
 
   return wssProvider;
 };
 
-let provider: WebsocketProvider | null = null;
-// Flag to avoid creating multiple instances while connecting
-let isConnecting = false;
+const providers = supportedChainsArray.reduce(
+  (chains, network) => ({
+    ...chains,
+    [network]: { provider: null, isConnecting: false },
+  }),
+  {} as Record<
+    NetworkType,
+    { provider: WebsocketProvider; isConnecting: boolean }
+  >
+);
 
 let ethersProvider: ethers.providers.WebSocketProvider | null = null;
 let ethersReady: Promise<ethers.providers.Network>;
 
-const checkProviderConnection = () =>
+const checkProviderConnection = (network: NetworkType) =>
   new Promise<WebsocketProvider>(resolve => {
+    const current = providers[network];
+
     const timer = setInterval(() => {
-      if (provider?.connected) {
+      if (current.provider?.connected) {
         clearInterval(timer);
-        isConnecting = false;
-        resolve(provider);
+        current.isConnecting = false;
+        resolve(current.provider);
       }
     }, 10);
   });
 
 const Web3WsProvider = {
   get: async (network: NetworkType) => {
-    if (!provider?.connected && !isConnecting) {
-      isConnecting = true;
+    const current = providers[network];
 
-      provider = await createProvider(network);
+    if (!current.provider?.connected && !current.isConnecting) {
+      current.isConnecting = true;
+
+      current.provider = await createProvider(network);
     }
 
-    const connectedProvider = await checkProviderConnection();
+    const connectedProvider = await checkProviderConnection(network);
 
     return connectedProvider;
   },
