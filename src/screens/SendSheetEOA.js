@@ -7,16 +7,17 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { captureEvent, captureException } from '@sentry/react-native';
 import { get, isEmpty, isString } from 'lodash';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { InteractionManager, Keyboard } from 'react-native';
+import { Keyboard } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { SendSheetType } from '../components/send';
 import SendSheet, {
   useSendAddressValidation,
   useShowAssetFlags,
 } from '../components/send/SendSheet';
-import { createSignableTransaction, estimateGasLimit } from '../handlers/web3';
+import { createSignableTransaction } from '../handlers/web3';
 import { sendTransaction } from '../model/wallet';
 import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
+import { useGas } from '@cardstack/hooks';
 import { useAssets } from '@cardstack/hooks/assets/useAssets';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { AssetTypes } from '@cardstack/types';
@@ -24,15 +25,12 @@ import { isNativeToken } from '@cardstack/utils';
 import { Alert } from '@rainbow-me/components/alerts';
 import {
   useAccountSettings,
-  useGas,
   useMaxInputBalance,
   usePrevious,
   useSendableCollectibles,
 } from '@rainbow-me/hooks';
 import { dataAddNewTransaction } from '@rainbow-me/redux/data';
-import { ETH_ADDRESS_SYMBOL } from '@rainbow-me/references/addresses';
 
-import { gasUtils } from '@rainbow-me/utils';
 import logger from 'logger';
 
 const useSendSheetScreen = () => {
@@ -47,19 +45,6 @@ const useSendSheetScreen = () => {
     refetchBalances,
   } = useAssets();
 
-  const {
-    gasLimit,
-    gasPrices,
-    isSufficientGas,
-    selectedGasPrice,
-    startPollingGasPrices,
-    txFees,
-    updateDefaultGasLimit,
-    updateGasPriceOption,
-    updateTxFee,
-    shouldUpdateTxFee,
-  } = useGas();
-
   const recipientFieldRef = useRef();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
@@ -69,6 +54,13 @@ const useSendSheetScreen = () => {
     network,
     isOnCardPayNetwork,
   } = useAccountSettings();
+
+  const {
+    updateTxFees,
+    selectedFee,
+    hasSufficientForGas,
+    showTransactionSpeedActionSheet,
+  } = useGas();
 
   const { sendableCollectibles } = useSendableCollectibles();
 
@@ -83,7 +75,7 @@ const useSendSheetScreen = () => {
   const [selected, setSelected] = useState({});
   const { maxInputBalance, updateMaxInputBalance } = useMaxInputBalance();
 
-  const prevSelectedGasPrice = usePrevious(selectedGasPrice);
+  const prevSelectedGasPrice = usePrevious(selectedFee);
 
   const isValidAddress = useSendAddressValidation(recipient);
 
@@ -92,23 +84,18 @@ const useSendSheetScreen = () => {
     selected
   );
 
-  useEffect(() => {
-    InteractionManager.runAfterInteractions(() => startPollingGasPrices());
-  }, [startPollingGasPrices]);
-
   // Recalculate balance when gas price changes
   useEffect(() => {
     if (
       isNativeToken(selected?.symbol, network) &&
-      get(prevSelectedGasPrice, 'txFee.value.amount', 0) !==
-        get(selectedGasPrice, 'txFee.value.amount', 0)
+      prevSelectedGasPrice?.value.amount !== selectedFee?.value.amount
     ) {
-      updateMaxInputBalance(selected);
+      updateMaxInputBalance({ selectedAsset: selected, selectedFee, network });
     }
   }, [
     prevSelectedGasPrice,
     selected,
-    selectedGasPrice,
+    selectedFee,
     updateMaxInputBalance,
     network,
   ]);
@@ -144,7 +131,11 @@ const useSendSheetScreen = () => {
 
   const onSelectAsset = useCallback(
     newSelected => {
-      updateMaxInputBalance(newSelected);
+      updateMaxInputBalance({
+        selectedAsset: newSelected,
+        selectedFee,
+        network,
+      });
       if (get(newSelected, 'type') === AssetTypes.nft) {
         setAmountDetails({
           assetAmount: '1',
@@ -161,7 +152,13 @@ const useSendSheetScreen = () => {
       }
       refetchBalances();
     },
-    [refetchBalances, sendUpdateAssetAmount, updateMaxInputBalance]
+    [
+      refetchBalances,
+      sendUpdateAssetAmount,
+      updateMaxInputBalance,
+      network,
+      selectedFee,
+    ]
   );
 
   const onChangeNativeAmount = useCallback(
@@ -191,10 +188,9 @@ const useSendSheetScreen = () => {
     [getAssetPrice, maxInputBalance, selected]
   );
 
-  const onMaxBalancePress = useCallback(async () => {
-    const newBalanceAmount = await updateMaxInputBalance(selected);
-    sendUpdateAssetAmount(newBalanceAmount);
-  }, [selected, sendUpdateAssetAmount, updateMaxInputBalance]);
+  const onMaxBalancePress = useCallback(() => {
+    sendUpdateAssetAmount(maxInputBalance);
+  }, [sendUpdateAssetAmount, maxInputBalance]);
 
   const onChangeAssetAmount = useCallback(
     newAssetAmount => {
@@ -207,47 +203,35 @@ const useSendSheetScreen = () => {
 
   const onSubmit = useCallback(async () => {
     const validTransaction =
-      isValidAddress && amountDetails.isSufficientBalance && isSufficientGas;
-    if (!selectedGasPrice.txFee || !validTransaction || isAuthorizing) {
-      logger.sentry('preventing tx submit for one of the following reasons:');
-      logger.sentry('selectedGasPrice.txFee ? ', selectedGasPrice?.txFee);
-      logger.sentry('validTransaction ? ', validTransaction);
-      logger.sentry('isAuthorizing ? ', isAuthorizing);
+      isValidAddress &&
+      amountDetails.isSufficientBalance &&
+      hasSufficientForGas;
+
+    if (!selectedFee || !validTransaction || isAuthorizing) {
+      logger.sentry('Preventing Tx submit given values:', {
+        selectedFee,
+        validTransaction,
+        isAuthorizing,
+      });
       captureEvent('Preventing tx submit');
       return false;
     }
 
     let submitSuccess = false;
-    let updatedGasLimit = null;
-    // Attempt to update gas limit before sending ERC20 / ERC721
-    if (selected?.address !== ETH_ADDRESS_SYMBOL) {
-      try {
-        // Estimate the tx with gas limit padding before sending
-        updatedGasLimit = await estimateGasLimit(
-          {
-            address: accountAddress,
-            amount: amountDetails.assetAmount,
-            asset: selected,
-            recipient,
-          },
-          network,
-          true
-        );
-        logger.log('gasLimit updated before sending', {
-          after: updatedGasLimit,
-          before: gasLimit,
-        });
-        updateTxFee(updatedGasLimit);
-        // eslint-disable-next-line no-empty
-      } catch (e) {}
-    }
+
+    // Estimate the tx before sending
+    const updatedGasLimit = await updateTxFees({
+      amount: amountDetails.assetAmount,
+      asset: selected,
+      recipient,
+    });
 
     const txDetails = {
       amount: amountDetails.assetAmount,
       asset: selected,
       from: accountAddress,
-      gasLimit: updatedGasLimit || gasLimit,
-      gasPrice: get(selectedGasPrice, 'value.amount'),
+      gasLimit: updatedGasLimit,
+      gasPrice: selectedFee.value.amount,
       nonce: null,
       to: recipient,
     };
@@ -280,26 +264,24 @@ const useSendSheetScreen = () => {
     return submitSuccess;
   }, [
     accountAddress,
-    amountDetails.assetAmount,
-    amountDetails.isSufficientBalance,
+    amountDetails,
     dispatch,
-    gasLimit,
     isAuthorizing,
-    isSufficientGas,
+    hasSufficientForGas,
     isValidAddress,
     network,
     recipient,
     selected,
-    selectedGasPrice,
-    updateTxFee,
+    selectedFee,
+    updateTxFees,
   ]);
 
-  const submitTransaction = useCallback(async () => {
+  const onSendPress = useCallback(async () => {
     setIsAuthorizing(true);
     if (Number(amountDetails.assetAmount) <= 0) {
       logger.sentry('amountDetails.assetAmount ? ', amountDetails?.assetAmount);
       captureEvent('Preventing tx submit due to amount <= 0');
-      return false;
+      return;
     }
 
     try {
@@ -326,29 +308,9 @@ const useSendSheetScreen = () => {
     showLoadingOverlay,
   ]);
 
-  const onPressTransactionSpeed = useCallback(
-    onSuccess => {
-      const hideCustom = true;
-      gasUtils.showTransactionSpeedOptions(
-        gasPrices,
-        txFees,
-        gasPriceOption => updateGasPriceOption(gasPriceOption),
-        onSuccess,
-        hideCustom
-      );
-    },
-    [txFees, gasPrices, updateGasPriceOption]
-  );
-
-  const onSendPress = useCallback(submitTransaction, [submitTransaction]);
-
   const onResetAssetSelection = useCallback(() => {
     onSelectAsset({});
   }, [onSelectAsset]);
-
-  useEffect(() => {
-    updateDefaultGasLimit();
-  }, [updateDefaultGasLimit]);
 
   useEffect(() => {
     if (
@@ -379,28 +341,18 @@ const useSendSheetScreen = () => {
 
   useEffect(() => {
     if (isValidAddress) {
-      estimateGasLimit(
-        {
-          address: accountAddress,
-          amount: amountDetails.assetAmount,
-          asset: selected,
-          recipient,
-        },
-        network
-      )
-        .then(gasLimit => updateTxFee(gasLimit))
-        .catch(() => updateTxFee(null));
+      updateTxFees({
+        amount: amountDetails.assetAmount,
+        asset: selected,
+        recipient,
+      });
     }
   }, [
-    accountAddress,
     amountDetails.assetAmount,
-    dispatch,
     isValidAddress,
-    network,
     recipient,
     selected,
-    shouldUpdateTxFee, // Flag to rerender screen with new gasEstimations
-    updateTxFee,
+    updateTxFees,
   ]);
 
   return {
@@ -416,17 +368,17 @@ const useSendSheetScreen = () => {
     sendableCollectibles,
     amountDetails,
     isAuthorizing,
-    isSufficientGas,
+    isSufficientGas: hasSufficientForGas,
     onSendPress,
     onChangeAssetAmount,
     onChangeNativeAmount,
     onResetAssetSelection,
     selected,
     onMaxBalancePress,
-    selectedGasPrice,
+    selectedGasPrice: selectedFee,
     onPressTransactionSpeed: isOnCardPayNetwork
       ? undefined
-      : onPressTransactionSpeed, // Temporary turn off gas price picker on layer 2
+      : showTransactionSpeedActionSheet, // Temporary turn off gas price picker on layer 2
     // without price, hide fiat field, since there's no way to calculate it
     showNativeCurrencyField: Boolean(Number(selected?.native?.balance.amount)),
   };

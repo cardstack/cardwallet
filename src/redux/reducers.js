@@ -1,6 +1,5 @@
 import contacts from './contacts';
 import data from './data';
-import gas from './gas';
 import imageMetadata from './imageMetadata';
 import settings from './settings';
 import walletconnect from './walletconnect';
@@ -19,7 +18,6 @@ export default {
   collectibles, // responsible for extracting collectibles (NFTs) from the assets state and fetching additional metadata for display
   contacts,
   data,
-  gas,
   imageMetadata,
   requests,
   settings,

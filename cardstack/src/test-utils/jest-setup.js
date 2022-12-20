@@ -166,24 +166,15 @@ jest.mock('@rainbow-me/react-native-payments', () => ({
   PaymentRequest: jest.fn(),
 }));
 
-jest.mock('@rainbow-me/parsers/gas', () => ({
-  default: jest.fn(),
-}));
-
 jest.mock('@rainbow-me/references', () => ({
   shitcoins: 'JSON-MOCK-RETURN',
 }));
 
 jest.mock('@rainbow-me/references/migratedTokens.json', () => ({}));
 
-jest.mock('@rainbow-me/redux/gas', () => ({
-  default: jest.fn(),
-}));
-
 jest.mock('@rainbow-me/utils', () => ({
   magicMemo: jest.fn(),
   neverRerender: jest.fn(),
-  gasUtils: jest.fn(),
 }));
 
 jest.mock('@rainbow-me/components/animations/procs', () => ({

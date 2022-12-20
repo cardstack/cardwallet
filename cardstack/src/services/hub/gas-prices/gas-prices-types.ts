@@ -1,4 +1,4 @@
-import { defaultGasPriceFormat } from '@rainbow-me/parsers';
+import { BigNumberish } from 'ethers';
 
 export type GasPricesQueryParams = {
   chainId: number;
@@ -12,6 +12,6 @@ export type GasPricesAttrsType = {
 };
 
 export type GasPricesQueryResults = Record<
-  string,
-  ReturnType<typeof defaultGasPriceFormat> | null
+  keyof Omit<GasPricesAttrsType, 'chain-id'>,
+  BigNumberish
 >;

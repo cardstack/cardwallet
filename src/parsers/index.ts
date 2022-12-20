@@ -1,9 +1,3 @@
-export {
-  defaultGasPriceFormat,
-  parseTxFees,
-  gweiToWei,
-  weiToGwei,
-} from './gas';
 export { parseNewTransaction } from './newTransaction';
 export {
   parseTransactions,

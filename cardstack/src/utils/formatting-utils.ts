@@ -85,3 +85,7 @@ export const addLeftZero = (value: string | number | undefined) =>
   value ? ('0' + value).slice(-2) : '00';
 
 export const shortNetworkName = (value: string) => value.split(' ')[0];
+
+export const capitalizeFirstLetter = (value: string) => {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+};

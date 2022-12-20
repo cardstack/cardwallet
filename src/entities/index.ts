@@ -1,4 +1,3 @@
-export type { TxFee, SelectedGasPrice } from './gas';
 export interface RainbowToken {
   address: string;
   decimals: number;
