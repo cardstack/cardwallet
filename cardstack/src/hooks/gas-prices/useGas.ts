@@ -24,11 +24,6 @@ export const useGas = ({ network }: UseGasParams) => {
   const { nativeCurrency } = useAccountSettings();
   const chainId = getConstantByNetwork('chainId', network);
 
-  const nativeTokenDecimals = getConstantByNetwork(
-    'nativeTokenDecimals',
-    network
-  );
-
   const { assets, getAssetBalance, getAssetPrice } = useAssets();
   const [txFees, setTxFees] = useState<TxFee>();
 
@@ -46,6 +41,11 @@ export const useGas = ({ network }: UseGasParams) => {
       if (!gasPricesData) {
         return;
       }
+
+      const nativeTokenDecimals = getConstantByNetwork(
+        'nativeTokenDecimals',
+        network
+      );
 
       const gasLimit = updatedGasLimit ?? ethUnits.basic_tx;
       const nativeToken = ethereumUtils.getNativeTokenAsset(assets);
@@ -87,14 +87,7 @@ export const useGas = ({ network }: UseGasParams) => {
 
       setTxFees(mapSpeedsToValues);
     },
-    [
-      network,
-      nativeCurrency,
-      gasPricesData,
-      nativeTokenDecimals,
-      assets,
-      getAssetPrice,
-    ]
+    [network, nativeCurrency, gasPricesData, assets, getAssetPrice]
   );
 
   const hasSufficientForGas = useMemo(() => {
