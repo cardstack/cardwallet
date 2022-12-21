@@ -49,15 +49,4 @@ const RAINBOW_TOKEN_LIST: Record<string, RainbowToken> = keyBy(
   'address'
 );
 
-const PAIR_INTERFACE = new ethersUtils.Interface(IUniswapV2PairABI);
-const PAIR_GET_RESERVES_FRAGMENT = PAIR_INTERFACE.getFunction('getReserves');
-const PAIR_GET_RESERVES_CALL_DATA: string = PAIR_INTERFACE.encodeFunctionData(
-  PAIR_GET_RESERVES_FRAGMENT
-);
-
-export {
-  PAIR_GET_RESERVES_CALL_DATA,
-  PAIR_GET_RESERVES_FRAGMENT,
-  PAIR_INTERFACE,
-  RAINBOW_TOKEN_LIST,
-};
+export { RAINBOW_TOKEN_LIST };
