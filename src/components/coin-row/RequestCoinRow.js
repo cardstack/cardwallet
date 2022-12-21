@@ -53,7 +53,6 @@ const TopRow = ({ expirationColor, expiresAt }) => {
 };
 
 const RequestCoinRow = ({ item, ...props }) => {
-  const buttonRef = useRef();
   const dispatch = useDispatch();
   const { navigate } = useNavigation();
   const [expiresAt, setExpiresAt] = useState(null);

@@ -9,7 +9,7 @@ import {
   saveAuthTimelock,
   savePinAuthAttemptsLeft,
 } from '../handlers/localstorage/globalSettings';
-import { useDimensions, useShakeAnimation } from '../hooks';
+import { useDimensions } from '../hooks';
 import { useBlockBackButton } from '../hooks/useBlockBackButton';
 import { CenteredContainer, Icon, Text } from '@cardstack/components';
 import { appName } from '@cardstack/constants';
@@ -28,7 +28,6 @@ const PinAuthenticationScreen = () => {
   useBlockBackButton();
   const { params } = useRoute();
   const { setParams } = useNavigation();
-  const [errorAnimation, onShake] = useShakeAnimation();
 
   const { isNarrowPhone, isSmallPhone, isTallPhone } = useDimensions();
 
@@ -144,7 +143,6 @@ const PinAuthenticationScreen = () => {
           if (actionType === 'authentication') {
             const valid = params.validPin === nextValue;
             if (!valid) {
-              onShake();
               setAttemptsLeft(attemptsLeft - 1);
               savePinAuthAttemptsLeft(attemptsLeft - 1);
               setTimeout(() => {
@@ -170,9 +168,7 @@ const PinAuthenticationScreen = () => {
           } else {
             // Confirmation
             const valid = initialPin === nextValue;
-            if (!valid) {
-              onShake();
-            } else {
+            if (valid) {
               params.onSuccess(nextValue);
               finished.current = true;
               setTimeout(() => {
@@ -185,7 +181,7 @@ const PinAuthenticationScreen = () => {
         return nextValue;
       });
     },
-    [actionType, attemptsLeft, dismissPinScreen, initialPin, onShake, params]
+    [actionType, attemptsLeft, dismissPinScreen, initialPin, params]
   );
 
   const titleMap = useMemo(
@@ -230,7 +226,7 @@ const PinAuthenticationScreen = () => {
           >
             {titleMap[actionType]}
           </Text>
-          <PinValue translateX={errorAnimation} value={value} />
+          <PinValue value={value} />
         </ColumnWithMargins>
       </Centered>
       <ColumnWithMargins align="center" margin={isTallPhone ? 27 : 12}>

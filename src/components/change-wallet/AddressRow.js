@@ -6,11 +6,11 @@ import { removeFirstEmojiFromString } from '../../helpers/emojiHandler';
 import { ContactAvatar } from '../contacts';
 import ImageAvatar from '../contacts/ImageAvatar';
 import {
+  AnimatedPressable,
   Container,
   Icon,
   Text,
   TruncatedAddress,
-  AnimatedPressable,
 } from '@cardstack/components';
 import {
   getAddressPreview,
