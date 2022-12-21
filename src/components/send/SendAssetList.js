@@ -208,25 +208,22 @@ export default class SendAssetList extends React.Component {
     </Fragment>
   );
 
-  collectiblesRenderItem = item => {
-    console.log({ item });
-    return (
-      <View>
-        <TokenFamilyHeader
-          childrenAmount={item.data.length}
-          familyImage={item.familyImage}
-          isCoinRow
-          isOpen={this.state.openCards[item.familyId]}
-          onPress={() => {
-            this.changeOpenTab(item.familyId);
-          }}
-          testID={`${item.name}-family-header`}
-          title={item.name}
-        />
-        {this.state.openCards[item.familyId] && this.mapTokens(item.data)}
-      </View>
-    );
-  };
+  collectiblesRenderItem = item => (
+    <View>
+      <TokenFamilyHeader
+        childrenAmount={item.data.length}
+        familyImage={item.familyImage}
+        isCoinRow
+        isOpen={this.state.openCards[item.familyId]}
+        onPress={() => {
+          this.changeOpenTab(item.familyId);
+        }}
+        testID={`${item.name}-family-header`}
+        title={item.name}
+      />
+      {this.state.openCards[item.familyId] && this.mapTokens(item.data)}
+    </View>
+  );
 
   renderRow = (type, data) => {
     if (type === 'COIN_ROW') {
