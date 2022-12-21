@@ -1,13 +1,21 @@
 import { fromWei, greaterThan, subtract } from '@cardstack/cardpay-sdk';
 import { useCallback, useState } from 'react';
+import { TxFeeValue } from '@cardstack/hooks/gas-prices/types';
+import { AssetWithNativeType, NetworkType } from '@cardstack/types';
 import { isNativeToken } from '@cardstack/utils';
+
+interface UpdateMaxInputBalanceParams {
+  selectedAsset: AssetWithNativeType;
+  selectedFee: TxFeeValue;
+  network: NetworkType;
+}
 
 export default function useMaxInputBalance() {
   const [maxInputBalance, setMaxInputBalance] = useState('0');
 
   const updateMaxInputBalance = useCallback(
-    ({ selectedAsset, selectedFee, network }) => {
-      const assetAmount = selectedAsset.balance.amount ?? '0';
+    ({ selectedAsset, selectedFee, network }: UpdateMaxInputBalanceParams) => {
+      const assetAmount = selectedAsset.balance?.amount ?? '0';
 
       if (!isNativeToken(selectedAsset?.symbol, network)) {
         setMaxInputBalance(assetAmount);
