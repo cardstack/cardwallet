@@ -58,8 +58,8 @@ export const useGas = () => {
       const gasLimit = updatedGasLimit ?? ethUnits.basic_tx;
 
       const mapGasPriceToSpeeds = Object.entries(gasPricesData).reduce(
-        (speeds, [speed, amount]) => {
-          const fee = multiply(gasLimit, Number(amount));
+        (speeds, [speed, gasPrice]) => {
+          const fee = multiply(gasLimit, Number(gasPrice));
 
           const valueInNativeToken = convertRawAmountToBalance(fee, {
             decimals: nativeToken.decimals ?? 18,
@@ -76,6 +76,7 @@ export const useGas = () => {
                 2
               ),
               value: valueInNativeToken,
+              gasPrice,
             },
           };
         },

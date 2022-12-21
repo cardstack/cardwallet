@@ -416,6 +416,6 @@ export const estimateGasLimit = async (
   if (addPadding) {
     return estimateGasWithPadding(estimateGasData, network);
   } else {
-    return estimateGas(estimateGasData, asset);
+    return estimateGas(estimateGasData);
   }
 };

@@ -152,7 +152,7 @@ const Web3WsProvider = {
       if (!current.ethers) {
         current.ethers = new ethers.providers.WebSocketProvider(node);
 
-        logger.log('[Ether sWs]: Creating provider', currentNetwork);
+        logger.log('[Ether Ws]: Creating provider', currentNetwork);
       }
 
       await current.ethers.ready;
