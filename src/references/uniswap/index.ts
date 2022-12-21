@@ -1,6 +1,3 @@
-import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json';
-
-import { utils as ethersUtils } from 'ethers';
 import { keyBy, map, toLower } from 'lodash';
 
 import RAINBOW_TOKEN_LIST_DATA from './rainbow-token-list.json';

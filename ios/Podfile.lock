@@ -409,8 +409,6 @@ PODS:
     - glog
   - react-native-aes-crypto (2.0.2):
     - React-Core
-  - react-native-background-timer (2.4.1):
-    - React-Core
   - react-native-camera (3.44.3):
     - React-Core
     - react-native-camera/RCT (= 3.44.3)
@@ -611,8 +609,6 @@ PODS:
     - React
   - RNSVG (12.1.1):
     - React
-  - RNTextSize (4.0.0-rc.1):
-    - React
   - RNVectorIcons (8.1.0):
     - React-Core
   - SDWebImage (5.9.3):
@@ -694,7 +690,6 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-aes-crypto (from `../node_modules/react-native-aes-crypto`)
-  - react-native-background-timer (from `../node_modules/react-native-background-timer`)
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-cloud-fs (from `../node_modules/react-native-cloud-fs`)
   - react-native-flipper (from `../node_modules/react-native-flipper`)
@@ -746,7 +741,6 @@ DEPENDENCIES:
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNStoreReview (from `../node_modules/react-native-store-review/ios`)
   - RNSVG (from `../node_modules/react-native-svg`)
-  - RNTextSize (from `../node_modules/react-native-text-size`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - TcpSockets (from `../node_modules/react-native-tcp`)
   - ToolTipMenu (from `../node_modules/react-native-tooltip`)
@@ -857,8 +851,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-aes-crypto:
     :path: "../node_modules/react-native-aes-crypto"
-  react-native-background-timer:
-    :path: "../node_modules/react-native-background-timer"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
   react-native-cloud-fs:
@@ -961,8 +953,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-store-review/ios"
   RNSVG:
     :path: "../node_modules/react-native-svg"
-  RNTextSize:
-    :path: "../node_modules/react-native-text-size"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   TcpSockets:
@@ -1034,7 +1024,6 @@ SPEC CHECKSUMS:
   React-jsinspector: eb202e43b3879aba9a14f3f65788aec85d4e1ea9
   React-logger: 98f663b292a60967ebbc6d803ae96c1381183b6d
   react-native-aes-crypto: d7e87fd02cee7285983c00957a34063dfc4c94b3
-  react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-camera: b8cc03e2feec0c04403d0998e37cf519d8fd4c6f
   react-native-cloud-fs: 1e883ec82ff418d320c128f61971dd971b128ca0
   react-native-flipper: 4bfe0a324e663f1ae2f76ad0da75673de6895efe
@@ -1086,7 +1075,6 @@ SPEC CHECKSUMS:
   RNSentry: ec3c033c13bcb65c79f19d54ca54c514d1832bb5
   RNStoreReview: 62d6afd7c37db711a594bbffca6b0ea3a812b7a8
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
-  RNTextSize: 21c94a67819fbf2c358a219bf6d251e3be9e5f29
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   SDWebImage: a31ee8e90a97303529e03fb0c333eae0eacb88e9
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
