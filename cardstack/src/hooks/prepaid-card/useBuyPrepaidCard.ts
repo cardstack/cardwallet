@@ -93,7 +93,7 @@ export default function useBuyPrepaidCard() {
   }, [navigate]);
 
   // Handle local exiting polling, TODO: Replace with job polling
-  const [startTimeout] = useTimeout();
+  const { startTimeout } = useTimeout();
 
   const hasStartedTimeout = useRef(false);
 
