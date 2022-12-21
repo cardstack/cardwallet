@@ -5,11 +5,11 @@ import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
 import { getRandomColor } from '../../styles/colors';
 import Divider from '../Divider';
-import { ButtonPressAnimation } from '../animations';
 import ImageAvatar from '../contacts/ImageAvatar';
 import CopyTooltip from '../copy-tooltip';
 import { ProfileAvatarButton, ProfileModal, ProfileNameInput } from './profile';
 import {
+  AnimatedPressable,
   Container,
   OptionItem,
   Text,
@@ -153,7 +153,7 @@ export default function WalletProfileState({
         )}
       </Container>
       <Container marginVertical={5}>
-        <ButtonPressAnimation onPress={handleSubmit}>
+        <AnimatedPressable onPress={handleSubmit}>
           {isNewProfile ? (
             <OptionItem
               justifyContent="center"
@@ -166,14 +166,14 @@ export default function WalletProfileState({
               Done
             </Text>
           )}
-        </ButtonPressAnimation>
+        </AnimatedPressable>
       </Container>
       <Container marginBottom={6} marginTop={5}>
-        <ButtonPressAnimation onPress={handleCancel}>
+        <AnimatedPressable onPress={handleCancel}>
           <Text color="grayText" textAlign="center" weight="bold">
             Cancel
           </Text>
-        </ButtonPressAnimation>
+        </AnimatedPressable>
       </Container>
     </WalletProfileModal>
   );

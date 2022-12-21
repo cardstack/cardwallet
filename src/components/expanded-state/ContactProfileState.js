@@ -6,11 +6,11 @@ import { useTheme } from '../../context/ThemeContext';
 import { useAccountSettings, useContacts } from '../../hooks';
 import { magicMemo } from '../../utils';
 import Divider from '../Divider';
-import { ButtonPressAnimation } from '../animations';
 import { showDeleteContactActionSheet } from '../contacts';
 import CopyTooltip from '../copy-tooltip';
 import { ProfileAvatarButton, ProfileModal, ProfileNameInput } from './profile';
 import {
+  AnimatedPressable,
   CenteredContainer,
   OptionItem,
   Text,
@@ -106,17 +106,17 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
         </CopyTooltip>
       </CenteredContainer>
       <CenteredContainer marginVertical={5}>
-        <ButtonPressAnimation onPress={handleAddContact}>
+        <AnimatedPressable onPress={handleAddContact}>
           <OptionItem
             justifyContent="center"
             testID="wallet-info-submit-button"
             textProps={{ color: 'settingsTeal' }}
             title={contact ? 'Done' : 'Add Contact'}
           />
-        </ButtonPressAnimation>
+        </AnimatedPressable>
       </CenteredContainer>
       <CenteredContainer marginBottom={6} marginTop={5}>
-        <ButtonPressAnimation
+        <AnimatedPressable
           onPress={
             contact
               ? handleDeleteContact
@@ -129,7 +129,7 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
           <Text color="grayText" textAlign="center" weight="bold">
             {contact ? 'Delete Contact' : 'Cancel'}
           </Text>
-        </ButtonPressAnimation>
+        </AnimatedPressable>
       </CenteredContainer>
     </ContactProfileModal>
   );

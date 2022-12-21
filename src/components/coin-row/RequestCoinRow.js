@@ -10,12 +10,12 @@ import React, {
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
-import { ButtonPressAnimation } from '../animations';
 import { RequestCoinIcon } from '../coin-icon';
 import { RowWithMargins } from '../layout';
 import { Emoji, Text } from '../text';
 import CoinName from './CoinName';
 import CoinRow from './CoinRow';
+import { AnimatedPressable } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
 import { removeRequest } from '@cardstack/redux/requests';
 
@@ -104,11 +104,7 @@ const RequestCoinRow = ({ item, ...props }) => {
   );
 
   return (
-    <ButtonPressAnimation
-      onPress={handlePressOpen}
-      scaleTo={0.98}
-      waitFor={buttonRef}
-    >
+    <AnimatedPressable onPress={handlePressOpen}>
       <CoinRow
         {...props}
         {...overridenItem}
@@ -118,7 +114,7 @@ const RequestCoinRow = ({ item, ...props }) => {
         expiresAt={expiresAt}
         topRowRender={TopRow}
       />
-    </ButtonPressAnimation>
+    </AnimatedPressable>
   );
 };
 

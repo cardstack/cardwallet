@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 
 import { useDimensions } from '../../hooks';
-import { ButtonPressAnimation } from '../animations';
 
 import {
+  AnimatedPressable,
   CenteredContainer,
   Container,
   Icon,
@@ -16,7 +16,7 @@ const KeyboardButton = ({ children, ...props }) => {
   const keyWidth = isTallPhone ? 100 : 80;
 
   return (
-    <ButtonPressAnimation
+    <AnimatedPressable
       {...props}
       duration={35}
       pressOutDuration={75}
@@ -30,7 +30,7 @@ const KeyboardButton = ({ children, ...props }) => {
       >
         {children}
       </CenteredContainer>
-    </ButtonPressAnimation>
+    </AnimatedPressable>
   );
 };
 

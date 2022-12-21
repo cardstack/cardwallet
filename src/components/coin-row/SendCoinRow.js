@@ -5,11 +5,11 @@ import React from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import { buildAssetUniqueIdentifier } from '../../helpers/assets';
 import { deviceUtils, magicMemo } from '../../utils';
-import { ButtonPressAnimation } from '../animations';
+
 import { Text } from '../text';
 import CoinName from './CoinName';
 import CoinRow from './CoinRow';
-import { CenteredContainer } from '@cardstack/components';
+import { AnimatedPressable, CenteredContainer } from '@cardstack/components';
 
 const isTinyPhone = deviceUtils.dimensions.height <= 568;
 const selectedHeight = isTinyPhone ? 62 : 78;
@@ -36,7 +36,7 @@ const TopRow = ({ name, selected }) => (
 
 const SendCoinRow = magicMemo(
   ({ item, onPress, rowHeight, selected, testID, ...props }) => (
-    <ButtonPressAnimation height={rowHeight} onPress={onPress} scaleTo={0.96}>
+    <AnimatedPressable height={rowHeight} onPress={onPress}>
       <CenteredContainer height={selectedHeight} padding={4}>
         <CoinRow
           {...item}
@@ -48,7 +48,7 @@ const SendCoinRow = magicMemo(
           topRowRender={TopRow}
         />
       </CenteredContainer>
-    </ButtonPressAnimation>
+    </AnimatedPressable>
   ),
   ['item', 'selected'],
   buildAssetUniqueIdentifier

@@ -3,11 +3,11 @@ import { Animated } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import DeleteIcon from '../../assets/swipeToDelete.png';
 import EditIcon from '../../assets/swipeToEdit.png';
-import { ButtonPressAnimation } from '../animations';
 import { Centered, Row } from '../layout';
 import { Text } from '../text';
 import ContactRow from './ContactRow';
 import showDeleteContactActionSheet from './showDeleteContactActionSheet';
+import { AnimatedPressable } from '@cardstack/components';
 import { ImgixImage } from '@rainbow-me/images';
 import { margin, position } from '@rainbow-me/styles';
 
@@ -29,7 +29,7 @@ const RightAction = ({ onPress, progress, text, x }) => {
       marginTop={12}
       style={{ transform: [{ translateX }] }}
     >
-      <ButtonPressAnimation onPress={onPress} scaleTo={0.9}>
+      <AnimatedPressable onPress={onPress}>
         <ImgixImage
           css={margin(0, 10, 5, 10)}
           source={isEdit ? EditIcon : DeleteIcon}
@@ -44,7 +44,7 @@ const RightAction = ({ onPress, progress, text, x }) => {
         >
           {text}
         </Text>
-      </ButtonPressAnimation>
+      </AnimatedPressable>
     </AnimatedCentered>
   );
 };
