@@ -40,9 +40,10 @@ jest.mock('react-native-keychain', () => ({
 }));
 
 jest.mock('react-native-device-info', () => ({
-  DeviceInfo: {
-    isEmulator: () => false,
-  },
+  isEmulator: () => false,
+  useisEmulator: () => false,
+  getVersion: () => '1.0.0',
+  getBuildNumber: () => '1',
 }));
 
 jest.mock('react-native-reanimated', () => {
