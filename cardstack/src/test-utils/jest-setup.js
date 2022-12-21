@@ -149,15 +149,11 @@ jest.mock('@reduxjs/toolkit/query/react', () => ({
 // RAINBOW MOCKS
 
 jest.mock('@rainbow-me/references', () => ({
-  shitcoins: 'JSON-MOCK-RETURN',
+  spammyTokens: 'JSON-MOCK-RETURN',
 }));
 
 jest.mock('@rainbow-me/react-native-payments', () => ({
   PaymentRequest: jest.fn(),
-}));
-
-jest.mock('@rainbow-me/references', () => ({
-  shitcoins: 'JSON-MOCK-RETURN',
 }));
 
 jest.mock('@rainbow-me/references/migratedTokens.json', () => ({}));

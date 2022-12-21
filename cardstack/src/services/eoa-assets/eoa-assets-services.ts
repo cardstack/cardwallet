@@ -14,7 +14,7 @@ import {
   saveAssets,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
 import store from '@rainbow-me/redux/store';
-import { shitcoins } from '@rainbow-me/references';
+import { spammyTokens } from '@rainbow-me/references';
 import migratedTokens from '@rainbow-me/references/migratedTokens.json';
 import logger from 'logger';
 
@@ -97,7 +97,7 @@ const discoverTokens = async (baseParams: EOABaseParams) => {
     const type = getTokenType(symbol, name, tokenID);
 
     // Remove spammy tokens
-    if (shitcoins.includes(address) || type === AssetTypes.compound) {
+    if (spammyTokens.includes(address) || type === AssetTypes.compound) {
       return tokens;
     }
 

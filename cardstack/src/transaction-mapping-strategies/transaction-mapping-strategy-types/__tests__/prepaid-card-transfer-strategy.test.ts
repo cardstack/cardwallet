@@ -9,10 +9,6 @@ import {
 
 jest.mock('../../../utils', () => ({ deviceUtils: { isIOS14: false } }));
 
-jest.mock('@rainbow-me/references', () => ({
-  shitcoins: 'JSON-MOCK-RETURN',
-}));
-
 jest.mock('@cardstack/utils', () => ({
   convertSpendForBalanceDisplay: jest.fn().mockReturnValue({
     nativeBalanceDisplay: '$1.00 USD',
