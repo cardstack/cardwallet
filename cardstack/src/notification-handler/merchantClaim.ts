@@ -6,11 +6,9 @@ import {
   getRevenuePoolBalances,
   updateSafeWithTokenPrices,
 } from '@cardstack/services';
-import { MerchantSafeType } from '@cardstack/types';
 import { updateMerchantSafeWithCustomization } from '@cardstack/utils';
 
 import { getNativeCurrency } from '@rainbow-me/handlers/localstorage/globalSettings';
-import store from '@rainbow-me/redux/store';
 import Logger from 'logger';
 
 export type MerchantClaimNotificationBody = {
@@ -21,21 +19,6 @@ export const merchantClaimHandler = async (
   data: MerchantClaimNotificationBody
 ) => {
   try {
-    const { merchantSafes } = store.getState().data;
-
-    const merchantData = merchantSafes.find(
-      (merchantSafe: MerchantSafeType) =>
-        merchantSafe.address === data.merchantId
-    );
-
-    if (merchantData) {
-      Navigation.handleAction(Routes.MERCHANT_SCREEN, {
-        merchantSafe: merchantData,
-      });
-
-      return;
-    }
-
     const merchantSafe = (await getSafeData(data.merchantId)) as MerchantSafe;
 
     if (merchantSafe) {
