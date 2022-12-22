@@ -143,12 +143,12 @@ export default class SendAssetList extends React.Component {
           familiesHeight += familyHeaderHeight;
         }
       }
-      const smallBalanesheight =
+      const smallBalancesheight =
         allAssets.length === visibleAssetsLength ? 0 : smallBalancesHeader;
 
       const heightBelow =
         visibleAssetsLength * rowHeight +
-        smallBalanesheight +
+        smallBalancesheight +
         familiesHeight +
         dividerHeight;
       const renderSize =
