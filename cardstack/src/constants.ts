@@ -1,3 +1,5 @@
+import DeviceInfo from 'react-native-device-info';
+
 export const ENABLE_PIN_ITEMS = false;
 export const TRANSACTION_PAGE_SIZE = 100; // Temp increase the page size
 export const SUPPORT_EMAIL_ADDRESS = 'appfeedback@cardstack.com';
@@ -26,3 +28,4 @@ export const defaultErrorAlert = {
 export const cardSpaceSuffix = 'card.xyz';
 export const cardSpaceDomain = `.${cardSpaceSuffix}`;
 export const appName = 'Cardstack Wallet';
+export const appVersion = `${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`;

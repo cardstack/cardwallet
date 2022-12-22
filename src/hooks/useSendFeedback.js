@@ -3,8 +3,11 @@ import { debounce } from 'lodash';
 import { useCallback } from 'react';
 import Mailer from 'react-native-mail';
 import { Alert } from '../components/alerts';
-import useAppVersion from './useAppVersion';
-import { appName, SUPPORT_EMAIL_ADDRESS } from '@cardstack/constants';
+import {
+  appName,
+  appVersion,
+  SUPPORT_EMAIL_ADDRESS,
+} from '@cardstack/constants';
 
 const setClipboardToFeedbackEmail = () =>
   Clipboard.setString(SUPPORT_EMAIL_ADDRESS);
@@ -39,10 +42,9 @@ function feedbackEmailOptions(appVersion) {
 }
 
 export default function useSendFeedback() {
-  const appVersion = useAppVersion();
   const onSendFeedback = useCallback(
     () => Mailer.mail(feedbackEmailOptions(appVersion), handleMailError),
-    [appVersion]
+    []
   );
   return onSendFeedback;
 }

@@ -41,7 +41,7 @@ export default function TokenFamilyWrap({
   ...props
 }) {
   const [areChildrenVisible, setAreChildrenVisible] = useState(false);
-  const [startTimeout, stopTimeout] = useTimeout();
+  const { startTimeout, stopTimeout } = useTimeout();
   const transitionRef = useRef();
 
   const showChildren = useCallback(() => {

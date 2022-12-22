@@ -26,7 +26,7 @@ export const useScanner = ({
 }: useScannerParams = {}) => {
   const { navigate } = useNavigation();
   const { walletConnectOnSessionRequest } = useWalletConnectConnections();
-  const [startTimeout] = useTimeout();
+  const { startTimeout } = useTimeout();
 
   const isWcScanEnabled = useRef(true);
 

@@ -36,7 +36,7 @@ jest.mock(
 );
 
 jest.mock('@rainbow-me/hooks', () => ({
-  useTimeout: () => [jest.fn()],
+  useTimeout: () => ({ stopTimeout: jest.fn(), startTimeout: jest.fn() }),
 }));
 
 const wrapper: React.FC<{ isFocused: boolean }> = ({

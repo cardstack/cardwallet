@@ -17,6 +17,7 @@ export const deviceDimensions = {
 
 export default function useDimensions() {
   const { height, scale, width } = useWindowDimensions();
+
   return {
     height,
     isLargePhone: width >= deviceDimensions.iphoneX.width,

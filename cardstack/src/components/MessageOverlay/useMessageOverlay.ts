@@ -15,7 +15,7 @@ export interface MessageOverlayParams {
 export const useMessageOverlay = () => {
   const { navigate } = useNavigation();
 
-  const [startTimeout, stopTimeout] = useTimeout();
+  const { startTimeout, stopTimeout } = useTimeout();
 
   const dismissMessage = useDismissCurrentRoute(Routes.MESSAGE_OVERLAY);
 

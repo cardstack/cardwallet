@@ -4,18 +4,16 @@ import { VERSION_TAP_COUNT } from 'react-native-dotenv';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import { Text, useMessageOverlay } from '@cardstack/components';
+import { appVersion } from '@cardstack/constants';
 import { useRemoteConfigs } from '@cardstack/hooks';
 import {
   setUserAccessType,
   UserAccessType,
 } from '@cardstack/services/analytics';
 
-import { useAppVersion } from '@rainbow-me/hooks';
-
 import logger from 'logger';
 
 const AppVersionStamp = ({ showBetaUserDisclaimer = false }) => {
-  const appVersion = useAppVersion();
   const numberOfTaps = useRef(0);
   const { configs, fetchRemoteConfigs } = useRemoteConfigs();
 
