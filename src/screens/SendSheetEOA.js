@@ -231,7 +231,7 @@ const useSendSheetScreen = () => {
       asset: selected,
       from: accountAddress,
       gasLimit: updatedGasLimit,
-      gasPrice: selectedFee.value.amount,
+      gasPrice: selectedFee.gasPrice,
       nonce: null,
       to: recipient,
     };
@@ -254,8 +254,8 @@ const useSendSheetScreen = () => {
         await dispatch(dataAddNewTransaction(txDetails));
       }
     } catch (error) {
-      logger.sentry('TX Details', txDetails);
-      logger.sentry('SendSheet onSubmit error');
+      logger.sentry('SendSheetSubmit error, TX Details:', txDetails);
+      logger.log(error);
       captureException(error);
       submitSuccess = false;
     } finally {
