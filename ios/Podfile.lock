@@ -436,7 +436,7 @@ PODS:
     - React-Core
   - react-native-cloud-fs (2.4.0):
     - React
-  - react-native-flipper (0.146.1):
+  - react-native-flipper (0.176.1):
     - React-Core
   - react-native-get-random-values (1.8.0):
     - React-Core
@@ -609,12 +609,12 @@ PODS:
   - RNScreens (3.18.2):
     - React-Core
     - React-RCTImage
-  - RNSentry (3.4.0):
+  - RNSentry (5.0.0-alpha.10):
     - React-Core
-    - Sentry (= 7.11.0)
+    - Sentry/HybridSDK (= 7.31.2)
   - RNSVG (12.5.0):
     - React-Core
-  - RNVectorIcons (8.1.0):
+  - RNVectorIcons (9.2.0):
     - React-Core
   - SDWebImage (5.9.3):
     - SDWebImage/Core (= 5.9.3)
@@ -622,9 +622,7 @@ PODS:
   - SDWebImageWebPCoder (0.6.1):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.7)
-  - Sentry (7.11.0):
-    - Sentry/Core (= 7.11.0)
-  - Sentry/Core (7.11.0)
+  - Sentry/HybridSDK (7.31.2)
   - SocketRocket (0.6.0)
   - TcpSockets (4.0.0):
     - CocoaAsyncSocket
@@ -1020,7 +1018,7 @@ SPEC CHECKSUMS:
   react-native-aes-crypto: d7e87fd02cee7285983c00957a34063dfc4c94b3
   react-native-camera: b8cc03e2feec0c04403d0998e37cf519d8fd4c6f
   react-native-cloud-fs: 1e883ec82ff418d320c128f61971dd971b128ca0
-  react-native-flipper: 4bfe0a324e663f1ae2f76ad0da75673de6895efe
+  react-native-flipper: 7e4b1c3fe1a2eecbe7304e5ff6b89231b3ec61dc
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-netinfo: 5a001e406317eaaf1e4846906650e107dadcaa72
@@ -1064,12 +1062,12 @@ SPEC CHECKSUMS:
   RNReactNativeHapticFeedback: 1e3efeca9628ff9876ee7cdd9edec1b336913f8c
   RNReanimated: ce445c233a6ff5600223484a88ad5704945d972a
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
-  RNSentry: ec3c033c13bcb65c79f19d54ca54c514d1832bb5
+  RNSentry: 56e67020e45e81cc94231819df968dbc41890364
   RNSVG: 6adc5c52d2488a476248413064b7f2832e639057
-  RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
+  RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   SDWebImage: a31ee8e90a97303529e03fb0c333eae0eacb88e9
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
-  Sentry: 0c5cd63d714187b4a39c331c1f0eb04ba7868341
+  Sentry: b15765d11769852fe78c9add942f7df60ed5dbf5
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   TcpSockets: a8eb6b5867fe643e6cfed5db2e4de62f4d1e8fd0
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc

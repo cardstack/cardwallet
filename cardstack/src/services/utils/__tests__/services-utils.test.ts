@@ -1,4 +1,4 @@
-import * as sentry from '@sentry/minimal';
+import * as sentry from '@sentry/react-native';
 
 import { IncidentType } from '@cardstack/types';
 
