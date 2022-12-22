@@ -10,7 +10,6 @@ import {
   Animated,
   Easing,
   Pressable,
-  ViewProps,
   PressableProps,
   ViewStyle,
   GestureResponderEvent,
@@ -33,7 +32,7 @@ enum Duration {
   out = 120,
 }
 
-type RestyleProps = ViewProps &
+type RestyleProps = ViewStyle &
   LayoutProps<Theme> &
   SpacingProps<Theme> &
   PositionProps<Theme> &

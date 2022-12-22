@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { View, ViewProps } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 import styled from 'styled-components';
 import { buildFlexStyles } from '@rainbow-me/styles';
 
@@ -25,7 +25,7 @@ const flexPropTypes = {
   wrap: PropTypes.bool,
 };
 
-interface FlexProps extends ViewProps {
+interface FlexProps extends ViewStyle {
   align?: 'baseline' | 'center' | 'end' | 'start' | 'stretch' | null;
   direction?: 'column' | 'column-reverse' | 'row' | 'row-reverse' | null;
   flex?: number | null;

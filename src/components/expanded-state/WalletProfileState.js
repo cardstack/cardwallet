@@ -6,14 +6,12 @@ import { useTheme } from '../../context/ThemeContext';
 import { getRandomColor } from '../../styles/colors';
 import Divider from '../Divider';
 import ImageAvatar from '../contacts/ImageAvatar';
-import CopyTooltip from '../copy-tooltip';
 import { ProfileAvatarButton, ProfileModal, ProfileNameInput } from './profile';
 import {
   AnimatedPressable,
   Container,
   OptionItem,
   Text,
-  TruncatedAddress,
 } from '@cardstack/components';
 import { Routes, useDismissCurrentRoute } from '@cardstack/navigation';
 import theme from '@cardstack/theme';
@@ -48,7 +46,6 @@ const WalletProfileModal = styled(ProfileModal).attrs({
 
 export default function WalletProfileState({
   actionType,
-  address,
   isNewProfile,
   onCloseModal,
   profile,
@@ -102,10 +99,6 @@ export default function WalletProfileState({
     value,
   ]);
 
-  const handleTriggerFocusInput = useCallback(() => inputRef.current?.focus(), [
-    inputRef,
-  ]);
-
   return (
     <WalletProfileModal>
       <Container
@@ -137,20 +130,6 @@ export default function WalletProfileState({
           testID="wallet-info-input"
           value={value}
         />
-        {address && (
-          <CopyTooltip
-            onHide={handleTriggerFocusInput}
-            textToCopy={address}
-            tooltipText="Copy Address"
-          >
-            <TruncatedAddress
-              address={address}
-              color="blueText"
-              fontSize={14}
-              marginTop={1}
-            />
-          </CopyTooltip>
-        )}
       </Container>
       <Container marginVertical={5}>
         <AnimatedPressable onPress={handleSubmit}>
