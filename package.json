@@ -131,11 +131,11 @@
     "punycode": "^1.2.4",
     "querystring-es3": "^0.2.1",
     "rainbow-token-list": "rainbow-me/token-lists#092bd84fac3b2032b94f05a1a49899252e5eb923",
-    "react": "17.0.2",
+    "react": "18.1.0",
     "react-coin-icon": "^0.1.42",
     "react-fast-compare": "^2.0.4",
     "react-flatten-children": "^1.1.2",
-    "react-native": "0.68.5",
+    "react-native": "0.70.6",
     "react-native-action-sheet": "^2.2.0",
     "react-native-aes-crypto": "brunobar79/react-native-aes#65c49f7e70266615b2999eaa7db654d3fe4f2e3b",
     "react-native-bootsplash": "3.2.6",
@@ -269,7 +269,7 @@
     "react-devtools": "^4.24.3",
     "react-native-storybook-loader": "^2.0.2",
     "react-native-svg-transformer": "^0.14.3",
-    "react-test-renderer": "17.0.2",
+    "react-test-renderer": "18.1.0",
     "rn-nodeify": "10.2.0",
     "schedule": "0.5.0",
     "stylelint-config-react-native-styled-components": "^0.5.0",
@@ -409,7 +409,7 @@
     }
   },
   "volta": {
-    "node": "14.17.6",
+    "node": "16",
     "yarn": "1.22.11"
   }
 }
