@@ -1,5 +1,4 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
-import { ChainId } from '@uniswap/sdk';
 import { useSelector } from 'react-redux';
 import {
   CollectibleType,
@@ -22,7 +21,7 @@ interface ReduxState {
     accountAddress: string;
     nativeCurrency: NativeCurrency;
     network: NetworkType;
-    chainId: ChainId;
+    chainId: number;
   };
   collectibles: {
     fetchingCollectibles: boolean;

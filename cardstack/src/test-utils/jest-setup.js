@@ -27,13 +27,6 @@ jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
 
 jest.mock('react-native-flipper');
 
-jest.mock('react-native-background-timer', () => ({
-  start: jest.fn(),
-  stop: jest.fn(),
-  setTimeout: jest.fn(),
-  clearTimeout: jest.fn(),
-}));
-
 jest.mock('react-native-keychain', () => ({
   getSupportedBiometryType: jest.fn(),
   ACCESSIBLE: 'AccessibleAlways',
@@ -134,10 +127,6 @@ jest.mock('react-native-haptic-feedback', () => ({
   ReactNativeHapticFeedback: jest.fn(),
 }));
 
-jest.mock('react-native-text-size', () => ({
-  TextSize: jest.fn(),
-}));
-
 jest.mock('react-native-action-sheet', () => ({
   ActionSheet: jest.fn(),
 }));
@@ -160,15 +149,11 @@ jest.mock('@reduxjs/toolkit/query/react', () => ({
 // RAINBOW MOCKS
 
 jest.mock('@rainbow-me/references', () => ({
-  shitcoins: 'JSON-MOCK-RETURN',
+  spammyTokens: 'JSON-MOCK-RETURN',
 }));
 
 jest.mock('@rainbow-me/react-native-payments', () => ({
   PaymentRequest: jest.fn(),
-}));
-
-jest.mock('@rainbow-me/references', () => ({
-  shitcoins: 'JSON-MOCK-RETURN',
 }));
 
 jest.mock('@rainbow-me/references/migratedTokens.json', () => ({}));
@@ -181,11 +166,6 @@ jest.mock('@rainbow-me/utils', () => ({
 jest.mock('@rainbow-me/components/animations/procs', () => ({
   default: jest.fn(),
 }));
-
-const mockButtonPressAnimation = ({ children }) => <RNView>{children}</RNView>;
-jest.mock('@rainbow-me/components/animations/ButtonPressAnimation', () =>
-  jest.fn(mockButtonPressAnimation)
-);
 
 jest.mock('@rainbow-me/components/animations', () => ({
   default: jest.fn(),
@@ -205,10 +185,6 @@ jest.mock('@rainbow-me/hooks', () => ({
 
 jest.mock('@rainbow-me/redux/hooks', () => ({
   useRainbowSelector: jest.fn(),
-}));
-
-jest.mock('@rainbow-me/utils/measureText', () => ({
-  default: jest.fn(),
 }));
 
 jest.mock('@rainbow-me/components/text', () => ({
@@ -239,12 +215,6 @@ jest.mock('@cardstack/navigation', () => ({
 
 jest.mock('@cardstack/navigation/screens', () => ({
   default: jest.fn(),
-}));
-
-// Mock to avoid not checksum address console.warn
-jest.mock('@uniswap/sdk', () => ({
-  ...jest.requireActual('@uniswap/sdk'),
-  Token: jest.fn(),
 }));
 
 jest.mock('react-native-localize', () => ({

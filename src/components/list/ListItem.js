@@ -1,9 +1,8 @@
 import { isString } from 'lodash';
 import React, { useCallback } from 'react';
-import { ButtonPressAnimation } from '../animations';
 import { Icon } from '../icons';
 import { Centered, Row, RowWithMargins } from '../layout';
-import { Text } from '@cardstack/components';
+import { AnimatedPressable, Text } from '@cardstack/components';
 import { padding, position } from '@rainbow-me/styles';
 
 const ListItemHeight = 56;
@@ -22,8 +21,7 @@ const ListItem = ({
   icon,
   iconMargin,
   label,
-  scaleTo = 0.975,
-  testID,
+
   disabled,
   ...props
 }) => {
@@ -34,13 +32,11 @@ const ListItem = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.onPress, props.value]);
   return (
-    <ButtonPressAnimation
+    <AnimatedPressable
       activeOpacity={activeOpacity}
       disabled={disabled}
       enableHapticFeedback={false}
       onPress={onPress}
-      scaleTo={scaleTo}
-      testID={testID}
     >
       <Row
         align="center"
@@ -62,7 +58,7 @@ const ListItem = ({
         </RowWithMargins>
         {children && <Centered flex={1}>{children}</Centered>}
       </Row>
-    </ButtonPressAnimation>
+    </AnimatedPressable>
   );
 };
 

@@ -2,10 +2,16 @@ import React, { useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { removeFirstEmojiFromString } from '../../helpers/emojiHandler';
-import { ButtonPressAnimation } from '../animations';
+
 import { ContactAvatar } from '../contacts';
 import ImageAvatar from '../contacts/ImageAvatar';
-import { Container, Icon, Text, TruncatedAddress } from '@cardstack/components';
+import {
+  AnimatedPressable,
+  Container,
+  Icon,
+  Text,
+  TruncatedAddress,
+} from '@cardstack/components';
 import {
   getAddressPreview,
   getSymbolCharacterFromAddress,
@@ -53,11 +59,9 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
 
   return (
     <View style={sx.accountRow}>
-      <ButtonPressAnimation
-        enableHapticFeedback={!editMode}
+      <AnimatedPressable
         onLongPress={onOptionsPress}
         onPress={editMode ? onOptionsPress : onPress}
-        scaleTo={editMode ? 1 : 0.98}
       >
         <Container alignItems="center" flexDirection="row">
           <Container alignItems="center" flexDirection="row" height={59}>
@@ -108,7 +112,7 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
             </Container>
           </Container>
         </Container>
-      </ButtonPressAnimation>
+      </AnimatedPressable>
     </View>
   );
 }

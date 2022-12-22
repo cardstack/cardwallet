@@ -1,21 +1,15 @@
 import { useNavigation } from '@react-navigation/native';
 import { addHours, differenceInMinutes, isPast } from 'date-fns';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
-import { ButtonPressAnimation } from '../animations';
 import { RequestCoinIcon } from '../coin-icon';
 import { RowWithMargins } from '../layout';
 import { Emoji, Text } from '../text';
 import CoinName from './CoinName';
 import CoinRow from './CoinRow';
+import { AnimatedPressable } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
 import { removeRequest } from '@cardstack/redux/requests';
 
@@ -53,7 +47,6 @@ const TopRow = ({ expirationColor, expiresAt }) => {
 };
 
 const RequestCoinRow = ({ item, ...props }) => {
-  const buttonRef = useRef();
   const dispatch = useDispatch();
   const { navigate } = useNavigation();
   const [expiresAt, setExpiresAt] = useState(null);
@@ -104,11 +97,7 @@ const RequestCoinRow = ({ item, ...props }) => {
   );
 
   return (
-    <ButtonPressAnimation
-      onPress={handlePressOpen}
-      scaleTo={0.98}
-      waitFor={buttonRef}
-    >
+    <AnimatedPressable onPress={handlePressOpen}>
       <CoinRow
         {...props}
         {...overridenItem}
@@ -118,7 +107,7 @@ const RequestCoinRow = ({ item, ...props }) => {
         expiresAt={expiresAt}
         topRowRender={TopRow}
       />
-    </ButtonPressAnimation>
+    </AnimatedPressable>
   );
 };
 

@@ -2,9 +2,10 @@ import React, { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import styled from 'styled-components';
 import { magicMemo } from '../../utils';
-import { ButtonPressAnimation } from '../animations';
+
 import { InnerBorder } from '../layout';
 import CollectibleImage from './CollectibleImage';
+import { AnimatedPressable } from '@cardstack/components';
 import { shadow as shadowUtil } from '@rainbow-me/styles';
 
 const CollectibleCardBorderRadius = 20;
@@ -29,7 +30,7 @@ const CollectibleCard = ({
   item: { background, image_preview_url, ...item },
   onPress,
   resizeMode,
-  scaleTo = 0.96,
+
   shadow,
   style,
   width,
@@ -49,11 +50,10 @@ const CollectibleCard = ({
 
   return (
     <Container
-      as={ButtonPressAnimation}
+      as={AnimatedPressable}
       disabled={disabled}
       enableHapticFeedback={enableHapticFeedback}
       onPress={handlePress}
-      scaleTo={scaleTo}
       shadow={shadow || defaultShadow}
     >
       <Content {...props} height={height} style={style} width={width}>

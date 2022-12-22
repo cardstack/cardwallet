@@ -3,10 +3,6 @@ import { PREPAID_CARD_PAYMENT_MOCK } from '@cardstack/utils/__mocks__/merchant-s
 
 jest.mock('../../../utils', () => ({ deviceUtils: { isIOS14: false } }));
 
-jest.mock('@rainbow-me/references', () => ({
-  shitcoins: 'JSON-MOCK-RETURN',
-}));
-
 jest.mock('@cardstack/utils', () => ({
   fetchMerchantInfoFromDID: jest.fn().mockReturnValue({
     color: '#0e058a',

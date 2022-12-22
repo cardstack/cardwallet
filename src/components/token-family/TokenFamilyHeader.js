@@ -3,10 +3,11 @@ import Animated, { EasingNode } from 'react-native-reanimated';
 import { toRad, useTimingTransition } from 'react-native-redash/lib/module/v1';
 import styled from 'styled-components';
 import CaretImageSource from '../../assets/family-dropdown-arrow.png';
-import { ButtonPressAnimation, interpolate } from '../animations';
+import { interpolate } from '../animations';
 import { Row, RowWithMargins } from '../layout';
 import { Emoji, Text, TruncatedText } from '../text';
 import TokenFamilyHeaderIcon from './TokenFamilyHeaderIcon';
+import { AnimatedPressable } from '@cardstack/components';
 import { ImgixImage } from '@rainbow-me/images';
 import { padding } from '@rainbow-me/styles';
 
@@ -66,7 +67,6 @@ const TokenFamilyHeader = ({
   isCoinRow,
   isOpen,
   onPress,
-  testID,
   title,
 }) => {
   const animation = useTimingTransition(!isOpen, {
@@ -82,12 +82,7 @@ const TokenFamilyHeader = ({
   );
 
   return (
-    <ButtonPressAnimation
-      key={`token_family_header_${emoji || familyImage || title}`}
-      onPress={onPress}
-      scaleTo={1.05}
-      testID={testID}
-    >
+    <AnimatedPressable onPress={onPress}>
       <Content isCoinRow={isCoinRow}>
         <RowWithMargins align="center" margin={emoji ? 5 : 9}>
           {emoji ? (
@@ -108,7 +103,7 @@ const TokenFamilyHeader = ({
           <RotatingArrowIcon style={{ transform: [{ rotate }] }} />
         </RowWithMargins>
       </Content>
-    </ButtonPressAnimation>
+    </AnimatedPressable>
   );
 };
 

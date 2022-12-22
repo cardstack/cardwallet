@@ -53,7 +53,6 @@ import SendIcon from './svg/SendIcon';
 import SendSmallIcon from './svg/SendSmallIcon';
 import ShareIcon from './svg/ShareIcon';
 import SignatureIcon from './svg/SignatureIcon';
-import SpinnerIcon from './svg/SpinnerIcon';
 import StarIcon from './svg/StarIcon';
 import SwapIcon from './svg/SwapIcon';
 import ThreeDotsIcon from './svg/ThreeDotsIcon';
@@ -116,7 +115,6 @@ const IconTypes = {
   sendSmall: SendSmallIcon,
   share: ShareIcon,
   signature: SignatureIcon,
-  spinner: SpinnerIcon,
   star: StarIcon,
   sunflower: Emoji,
   swap: SwapIcon,
