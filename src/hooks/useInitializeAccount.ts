@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { dataLoadState } from '../redux/data';
+import { dataLoadTxState } from '../redux/data';
 import { walletConnectLoadState } from '../redux/walletconnect';
 import useAccountSettings from './useAccountSettings';
 
@@ -14,7 +14,7 @@ import { settingsLoadCurrency } from '@rainbow-me/redux/settings';
 import logger from 'logger';
 
 export default function useInitializeAccount() {
-  const { isOnCardPayNetwork, accountAddress } = useAccountSettings();
+  const { accountAddress } = useAccountSettings();
 
   const dispatch = useDispatch();
 
@@ -31,13 +31,13 @@ export default function useInitializeAccount() {
       imageMetadataCacheLoadState,
       requestsLoadState,
       walletConnectLoadState,
-      ...(isOnCardPayNetwork ? [dataLoadState] : []), // Update for cardpay happens on fetchSafes
+      dataLoadTxState,
     ];
 
     const promises = mapDispatchToActions(dispatch, actions);
 
     return Promise.allSettled(promises);
-  }, [dispatch, isOnCardPayNetwork]);
+  }, [dispatch]);
 
   return { loadAccountData };
 }

@@ -1,12 +1,20 @@
+import { useGetSafesDataQuery } from '@cardstack/services';
 import { getAddressPreview } from '@cardstack/utils';
 
-import { useAccountProfile } from '@rainbow-me/hooks';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import { useAccountProfile, useAccountSettings } from '@rainbow-me/hooks';
 
 export const useNameOrPreviewFromAddress = (address: string) => {
-  const merchantSafes = useRainbowSelector(state => state.data.merchantSafes);
+  const { accountAddress, nativeCurrency } = useAccountSettings();
+  const { accountName } = useAccountProfile();
 
-  const { accountAddress, accountName } = useAccountProfile();
+  const { merchantSafes } = useGetSafesDataQuery(
+    { address: accountAddress, nativeCurrency },
+    {
+      selectFromResult: ({ data }) => ({
+        merchantSafes: data?.merchantSafes || [],
+      }),
+    }
+  );
 
   if (address === accountAddress) {
     return { name: `${accountName}` };

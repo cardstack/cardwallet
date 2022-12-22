@@ -1,4 +1,4 @@
-import { getConstantByNetwork, isZero } from '@cardstack/cardpay-sdk';
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { captureException } from '@sentry/react-native';
 
@@ -10,7 +10,7 @@ import {
 } from 'ethereumjs-util';
 import { hdkey } from 'ethereumjs-wallet';
 import { Wallet } from 'ethers';
-import { find, get, isString, matchesProperty, replace, toLower } from 'lodash';
+import { find, isString, matchesProperty, replace, toLower } from 'lodash';
 import { Linking, NativeModules } from 'react-native';
 import { ETHERSCAN_API_KEY } from 'react-native-dotenv';
 import URL from 'url-parse';
@@ -37,12 +37,6 @@ const getNativeTokenAsset = assets => {
     network
   );
   return getAsset(assets, nativeTokenAddress);
-};
-
-export const checkWalletEthZero = assets => {
-  const ethAsset = find(assets, asset => asset.address === 'eth');
-  let amount = get(ethAsset, 'balance.amount', 0);
-  return isZero(amount);
 };
 
 /**

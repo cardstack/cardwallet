@@ -3,6 +3,7 @@ import { groupBy } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 
 import { TRANSACTION_PAGE_SIZE } from '@cardstack/constants';
+import { useGetSafesDataQuery } from '@cardstack/services';
 import {
   TransactionMappingContext,
   TransactionMappingStrategy,
@@ -15,7 +16,6 @@ import {
 
 import { useAccountSettings } from '@rainbow-me/hooks';
 import usePrevious from '@rainbow-me/hooks/usePrevious';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import logger from 'logger';
 
 interface UseTransactionSectionsProps {
@@ -41,22 +41,32 @@ export const useTransactionSections = ({
   isMerchantTransaction = false,
   isDepotTransaction = false,
 }: UseTransactionSectionsProps) => {
+  const {
+    nativeCurrency,
+    accountAddress,
+    isOnCardPayNetwork,
+  } = useAccountSettings();
+
   const [sections, setSections] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // TODO: Replace with RTK
-  const [merchantSafes, prepaidCards, depots] = useRainbowSelector(state => [
-    state.data.merchantSafes,
-    state.data.prepaidCards,
-    state.data.depots,
-  ]);
+  const {
+    prepaidCards,
+    depots: [depot],
+    merchantSafes,
+    isLoading: isLoadingSafes,
+  } = useGetSafesDataQuery(
+    { address: accountAddress, nativeCurrency },
 
-  const depot = depots?.[0];
-
-  const { nativeCurrency } = useAccountSettings();
-
-  const accountAddress = useRainbowSelector(
-    state => state.settings.accountAddress
+    {
+      selectFromResult: ({ data, ...rest }) => ({
+        prepaidCards: data?.prepaidCards || [],
+        depots: data?.depots || [],
+        merchantSafes: data?.merchantSafes || [],
+        ...rest,
+      }),
+      skip: !isOnCardPayNetwork,
+    }
   );
 
   const prevLastestTx = usePrevious(transactions?.[0]?.transaction?.id);
@@ -86,6 +96,8 @@ export const useTransactionSections = ({
 
   useEffect(() => {
     const setSectionsData = async () => {
+      if (isLoadingSafes) return;
+
       if (transactions && shouldUpdate) {
         setLoading(true);
 
@@ -155,9 +167,12 @@ export const useTransactionSections = ({
     prepaidCards,
     shouldUpdate,
     isDepotTransaction,
+    isLoadingSafes,
   ]);
 
-  const isLoading = networkStatus === NetworkStatus.loading || loading;
+  const isLoading =
+    networkStatus === NetworkStatus.loading || loading || isLoadingSafes;
+
   const isFetchingMore = !!sections.length && isLoading;
 
   const onEndReached = useCallback(() => {

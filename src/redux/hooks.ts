@@ -2,19 +2,12 @@ import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { useSelector } from 'react-redux';
 import {
   CollectibleType,
-  DepotType,
   ERC20TransactionType,
-  MerchantSafeType,
   NetworkType,
-  PrepaidCardType,
 } from '@cardstack/types';
 
 interface ReduxState {
   data: {
-    isLoadingAssets: boolean;
-    prepaidCards: PrepaidCardType[];
-    depots: DepotType[];
-    merchantSafes: MerchantSafeType[];
     transactions: ERC20TransactionType[];
   };
   settings: {

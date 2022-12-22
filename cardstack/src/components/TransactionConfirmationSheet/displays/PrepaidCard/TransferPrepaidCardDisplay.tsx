@@ -9,14 +9,14 @@ import {
   TransactionConfirmationDisplayProps,
 } from '@cardstack/components';
 import { usePrepaidCard } from '@cardstack/hooks';
+import { useGetSafesDataQuery } from '@cardstack/services';
 import {
   TransferPrepaidCard1DecodedData,
   TransferPrepaidCard2DecodedData,
 } from '@cardstack/types';
 
 import { ContactAvatar } from '@rainbow-me/components/contacts';
-import { useAccountProfile } from '@rainbow-me/hooks';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import { useAccountProfile, useAccountSettings } from '@rainbow-me/hooks';
 
 import { SectionHeaderText } from '../components/SectionHeaderText';
 
@@ -29,27 +29,32 @@ interface TransferPrepaidCardDisplayProps
   data: TransferDecodedDataType;
 }
 
-export const TransferPrepaidCardDisplay = (
-  props: TransferPrepaidCardDisplayProps
-) => {
-  const { data } = props;
-
-  return (
-    <>
-      <FromSection />
-      <HorizontalDivider />
-      <TransferSection data={data} />
-      <HorizontalDivider />
-      <ToSection data={data} />
-    </>
-  );
-};
+export const TransferPrepaidCardDisplay = ({
+  data,
+}: TransferPrepaidCardDisplayProps) => (
+  <>
+    <FromSection />
+    <HorizontalDivider />
+    <TransferSection data={data} />
+    <HorizontalDivider />
+    <ToSection data={data} />
+  </>
+);
 
 const FromSection = () => {
   const { avatarKeyColor, accountName, accountSymbol } = useAccountProfile();
+  const { accountAddress, nativeCurrency } = useAccountSettings();
 
-  const depots = useRainbowSelector(state => state.data.depots);
-  const depot = depots?.[0];
+  const {
+    depots: [depot],
+  } = useGetSafesDataQuery(
+    { address: accountAddress, nativeCurrency },
+    {
+      selectFromResult: ({ data }) => ({
+        depots: data?.depots || [],
+      }),
+    }
+  );
 
   return (
     <Container marginTop={8} width="100%">
@@ -116,20 +121,18 @@ const TransferSection = ({ data }: { data: TransferDecodedDataType }) => {
   );
 };
 
-const ToSection = ({ data }: { data: TransferDecodedDataType }) => {
-  return (
-    <Container width="100%">
-      <SectionHeaderText>TO</SectionHeaderText>
-      <Container paddingHorizontal={3} marginTop={4}>
-        <Container flexDirection="row">
-          <Icon name="user-with-background" />
-          <Container marginLeft={4}>
-            <Container maxWidth={180}>
-              <Text variant="subAddress">{data.newOwner}</Text>
-            </Container>
+const ToSection = ({ data }: { data: TransferDecodedDataType }) => (
+  <Container width="100%">
+    <SectionHeaderText>TO</SectionHeaderText>
+    <Container paddingHorizontal={3} marginTop={4}>
+      <Container flexDirection="row">
+        <Icon name="user-with-background" />
+        <Container marginLeft={4}>
+          <Container maxWidth={180}>
+            <Text variant="subAddress">{data.newOwner}</Text>
           </Container>
         </Container>
       </Container>
     </Container>
-  );
-};
+  </Container>
+);
