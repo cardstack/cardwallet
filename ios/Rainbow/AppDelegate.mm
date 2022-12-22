@@ -45,6 +45,9 @@ static void InitializeFlipper(UIApplication *application) {
 #import <React/RCTSurfacePresenterBridgeAdapter.h>
 #import <ReactCommon/RCTTurboModuleManager.h>
 #import <react/config/ReactNativeConfig.h>
+
+static NSString *const kRNConcurrentRoot = @"concurrentRoot";
+
 @interface AppDelegate () <RCTCxxBridgeDelegate, RCTTurboModuleManagerDelegate> {
   RCTTurboModuleManager *_turboModuleManager;
   RCTSurfacePresenterBridgeAdapter *_bridgeAdapter;
@@ -81,7 +84,8 @@ static void InitializeFlipper(UIApplication *application) {
   bridge.surfacePresenter = _bridgeAdapter.surfacePresenter;
 #endif
 
-  UIView *rootView = RCTAppSetupDefaultRootView(bridge, @"Rainbow", nil);
+  NSDictionary *initProps = [self prepareInitialProps];
+  UIView *rootView = RCTAppSetupDefaultRootView(bridge, @"Rainbow", initProps);
 
   if (@available(iOS 13.0, *)) {
       rootView.backgroundColor = [UIColor systemBackgroundColor];
@@ -97,27 +101,30 @@ static void InitializeFlipper(UIApplication *application) {
 
   [RNBootSplash initWithStoryboard:@"LaunchScreen" rootView:rootView];
 
-  [[NSNotificationCenter defaultCenter] addObserver:self
-  selector:@selector(handleRapInProgress:)
-      name:@"rapInProgress"
-    object:nil];
-
-  [[NSNotificationCenter defaultCenter] addObserver:self
-  selector:@selector(handleRapComplete:)
-      name:@"rapCompleted"
-    object:nil];
 
   [super application:application didFinishLaunchingWithOptions:launchOptions];
   return YES;
 }
 
-- (void)handleRapInProgress:(NSNotification *)notification {
-  self.isRapRunning = YES;
+/// This method controls whether the `concurrentRoot`feature of React18 is turned on or off.
+///
+/// @see: https://reactjs.org/blog/2022/03/29/react-v18.html
+/// @note: This requires to be rendering on Fabric (i.e. on the New Architecture).
+/// @return: `true` if the `concurrentRoot` feture is enabled. Otherwise, it returns `false`.
+- (BOOL)concurrentRootEnabled
+{
+  // Switch this bool to turn on and off the concurrent root
+  return true;
+}
+- (NSDictionary *)prepareInitialProps
+{
+  NSMutableDictionary *initProps = [NSMutableDictionary new];
+#ifdef RCT_NEW_ARCH_ENABLED
+  initProps[kRNConcurrentRoot] = @([self concurrentRootEnabled]);
+#endif
+  return initProps;
 }
 
-- (void)handleRapComplete:(NSNotification *)notification {
-  self.isRapRunning = NO;
-}
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {
@@ -153,15 +160,7 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (void)applicationWillTerminate:(UIApplication *)application {
 
-  if(self.isRapRunning){
-    SentryMessage *msg = [[SentryMessage alloc] initWithFormatted:@"applicationWillTerminate was called"];
-    SentryEvent *sentryEvent = [[SentryEvent alloc] init];
-    [sentryEvent setMessage: msg];
-    [SentrySDK captureEvent:sentryEvent];
-  }
-
 }
-
 
 - (void)applicationDidBecomeActive:(UIApplication *)application{
   // delete the badge
