@@ -35,10 +35,9 @@ jest.mock('@rainbow-me/hooks', () => ({
   useDimensions: () => ({
     isTinyPhone: false,
   }),
-}));
-
-jest.mock('@rainbow-me/redux/hooks', () => ({
-  useRainbowSelector: jest.fn().mockImplementation(() => 'gnosis'),
+  useAccountSettings: jest
+    .fn()
+    .mockImplementation(() => ({ network: 'gnosis' })),
 }));
 
 // Mock useClaimAllRevenue

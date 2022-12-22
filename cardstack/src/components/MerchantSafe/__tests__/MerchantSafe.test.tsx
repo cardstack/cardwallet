@@ -31,8 +31,10 @@ jest.mock('@react-navigation/native', () => ({
   }),
 }));
 
-jest.mock('@rainbow-me/redux/hooks', () => ({
-  useRainbowSelector: jest.fn().mockImplementation(() => 'gnosis'),
+jest.mock('@rainbow-me/hooks', () => ({
+  useAccountSettings: jest
+    .fn()
+    .mockImplementation(() => ({ network: 'gnosis' })),
 }));
 
 jest.mock(
