@@ -5,12 +5,7 @@ import {
 } from '@cardstack/cardpay-sdk';
 
 import { getAccountLocal, saveAccountLocal } from './common';
-import {
-  AssetType,
-  CollectibleType,
-  NetworkType,
-  PrepaidCardType,
-} from '@cardstack/types';
+import { AssetType, CollectibleType, NetworkType } from '@cardstack/types';
 
 const assetsVersion = '1.0.1';
 
@@ -73,7 +68,7 @@ export const getPrepaidCards = (
   network: NetworkType
 ): Promise<{
   timestamp: string;
-  prepaidCards: (PrepaidCardSafe | PrepaidCardType)[];
+  prepaidCards: PrepaidCardSafe[];
 }> =>
   getAccountLocal(
     PREPAID_CARDS,
@@ -84,7 +79,7 @@ export const getPrepaidCards = (
   );
 
 export const savePrepaidCards = (
-  prepaidCards: (PrepaidCardSafe | PrepaidCardType)[],
+  prepaidCards: PrepaidCardSafe[],
   accountAddress: string,
   network: NetworkType,
   timestamp: string
