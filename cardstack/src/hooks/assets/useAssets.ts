@@ -25,7 +25,7 @@ const emptyState = {
   balance: { amount: '0', display: '' },
 };
 
-const pollintInterval = {
+const pollingInterval = {
   ten_seconds: 10000,
   one_minute: 60000,
 };
@@ -51,7 +51,7 @@ const useAssets = () => {
     },
     {
       skip: !accountAddress,
-      refetchOnMountOrArgChange: pollintInterval.one_minute,
+      refetchOnMountOrArgChange: pollingInterval.one_minute,
     }
   );
 
@@ -62,7 +62,7 @@ const useAssets = () => {
     refetch: refetchPrices,
   } = useGetAssetsPriceByContractQuery(
     { addresses: ids, nativeCurrency, network },
-    { skip: !ids.length, pollingInterval: pollintInterval.ten_seconds }
+    { skip: !ids.length, pollingInterval: pollingInterval.ten_seconds }
   );
 
   const {
@@ -74,7 +74,7 @@ const useAssets = () => {
     { nativeCurrency },
     {
       skip: !ids.length || !isOnCardPayNetwork,
-      pollingInterval: pollintInterval.one_minute,
+      pollingInterval: pollingInterval.one_minute,
     }
   );
 
@@ -88,7 +88,7 @@ const useAssets = () => {
       network,
       nativeCurrency,
     },
-    { pollingInterval: pollintInterval.ten_seconds }
+    { pollingInterval: pollingInterval.ten_seconds }
   );
 
   const {
@@ -100,7 +100,7 @@ const useAssets = () => {
     { assets, accountAddress, network },
     {
       skip: !ids.length,
-      refetchOnMountOrArgChange: pollintInterval.one_minute,
+      refetchOnMountOrArgChange: pollingInterval.one_minute,
     }
   );
 
