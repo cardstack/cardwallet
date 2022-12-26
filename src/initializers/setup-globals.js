@@ -1,6 +1,5 @@
 import logger from 'logger';
 
-// Note: shimming for reanimated need to happen before importing globalVariables.js
 // eslint-disable-next-line import/no-commonjs
 for (let variable of Object.entries(require('../../globalVariables').default)) {
   Object.defineProperty(global, variable[0], {
@@ -25,10 +24,15 @@ if (typeof process === 'undefined') {
 }
 
 process.browser = false;
+
 if (typeof Buffer === 'undefined') global.Buffer = require('buffer').Buffer;
-// global.location = global.location || { port: 80 }
 
 // Shiming order is weird, to make sure allSettled works
 // we reset the global Promise in case it doesn't exist yet
 // eslint-disable-next-line import/no-extraneous-dependencies
 if (!Promise?.allSettled) global.Promise = require('promise');
+
+// If using the crypto shim, uncomment the following line to ensure
+// crypto is loaded first, so it can populate global.crypto
+// eslint-disable-next-line import/no-commonjs
+require('crypto');

@@ -12,7 +12,9 @@ const storage = new Storage({
 global.storage = storage;
 
 const isDev = typeof __DEV__ === 'boolean' && __DEV__;
+
 process.env.NODE_ENV = isDev ? 'development' : 'production';
+
 if (typeof localStorage !== 'undefined') {
   localStorage.debug = isDev ? '*' : '';
 }
