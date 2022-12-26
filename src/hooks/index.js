@@ -3,7 +3,6 @@ export { default as useAccountSettings } from './useAccountSettings';
 export { default as useAccountTransactions } from './useAccountTransactions';
 export { default as useBuyPrepaidCard } from '@cardstack/hooks/prepaid-card/useBuyPrepaidCard';
 export { default as useClipboard } from './useClipboard';
-export { default as useColorForAsset } from './useColorForAsset';
 export { default as useContacts } from './useContacts';
 export { default as useDimensions } from './useDimensions';
 export { default as useHideSplashScreen } from './useHideSplashScreen';

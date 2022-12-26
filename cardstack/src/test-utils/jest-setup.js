@@ -119,10 +119,6 @@ jest.mock('react-native-fs', () => ({
   RNFS: jest.fn(),
 }));
 
-jest.mock('rn-dominant-color', () => ({
-  getColorFromURL: jest.fn(),
-}));
-
 jest.mock('react-native-haptic-feedback', () => ({
   ReactNativeHapticFeedback: jest.fn(),
 }));

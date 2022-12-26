@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import useDimensions from './useDimensions';
 import { updateImageMetadataCache } from '@rainbow-me/redux/imageMetadata';
 import { position } from '@rainbow-me/styles';
-import { getDominantColorFromImage } from '@rainbow-me/utils';
 
 export default function useImageMetadata(imageUrl) {
   const dispatch = useDispatch();
@@ -27,15 +26,11 @@ export default function useImageMetadata(imageUrl) {
     async ({ color, height, width }) => {
       if (isCached || !imageUrl) return;
 
-      const colorFromImage = await getDominantColorFromImage(imageUrl);
-
       dispatch(
         updateImageMetadataCache({
           id: imageUrl,
           metadata: {
-            ...(color || colorFromImage
-              ? { color: color || colorFromImage }
-              : {}),
+            ...(color ? { color } : {}),
             dimensions: {
               height,
               isSquare: height === width,
