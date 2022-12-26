@@ -17,7 +17,6 @@ function SvgComponent(props: SvgProps) {
         fill={props.fill || '#6b6a80'}
         fontSize={22}
         fontFamily="LastResort, '\\\\.LastResort'"
-        stroke={1}
       >
         <TSpan x={-12.622} y={0}>
           {'\uDBC0\uDD74'}

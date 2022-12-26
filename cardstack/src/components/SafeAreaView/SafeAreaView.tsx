@@ -12,7 +12,7 @@ import {
   BackgroundColorProps,
 } from '@shopify/restyle';
 import { ReactNode } from 'react';
-import { ViewStyle } from 'react-native';
+import { ViewProps } from 'react-native';
 import {
   SafeAreaView as RNSafeAreaContextView,
   SafeAreaViewProps,
@@ -20,7 +20,7 @@ import {
 
 import { Theme } from '../../theme';
 
-type RestyleProps = ViewStyle &
+type RestyleProps = ViewProps &
   LayoutProps<Theme> &
   SpacingProps<Theme> &
   PositionProps<Theme> &

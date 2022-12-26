@@ -56,7 +56,7 @@ const PasswordInput = forwardRef((props: PasswordInputProps, ref) => {
             paddingVertical={3}
             color="white"
             selectionColor="teal"
-            autoCompleteType="password"
+            autoComplete="password"
             blurOnSubmit={false}
             selectTextOnFocus={true}
             textContentType="password"

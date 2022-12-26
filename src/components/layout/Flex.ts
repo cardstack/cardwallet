@@ -25,29 +25,12 @@ const flexPropTypes = {
   wrap: PropTypes.bool,
 };
 
-interface FlexProps extends ViewStyle {
-  align?: 'baseline' | 'center' | 'end' | 'start' | 'stretch' | null;
-  direction?: 'column' | 'column-reverse' | 'row' | 'row-reverse' | null;
-  flex?: number | null;
-  grow?: number | null;
-  justify?:
-    | 'center'
-    | 'end'
-    | 'space-around'
-    | 'space-between'
-    | 'start'
-    | null;
-  self?: 'center' | 'end' | 'start' | 'stretch' | null;
-  shrink?: number | null;
-  wrap?: boolean | null;
-}
-
 const Flex = styled(View).withConfig({
   // We need to prevent the buildFlexStyles-related props from being
   // passed to the root element because our namespace collides with some native props
   shouldForwardProp: (prop, defaultValidatorFn) =>
     !Object.keys(flexPropTypes).includes(prop) && defaultValidatorFn(prop),
-})<FlexProps>`
+})<ViewStyle>`
   ${buildFlexStyles};
 `;
 

@@ -1,5 +1,7 @@
-import notifee, { AndroidImportance } from '@notifee/react-native';
-import { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
+import notifee, {
+  AndroidImportance,
+  Notification,
+} from '@notifee/react-native';
 
 import { NetworkType } from '@cardstack/types';
 
@@ -60,9 +62,7 @@ const notificationConfig: Record<NotificationType, NotificationConfig> = {
   },
 };
 
-export const notificationHandler = async (
-  message: FirebaseMessagingTypes.RemoteMessage | null
-) => {
+export const notificationHandler = async (message: Notification | null) => {
   if (!message?.data) {
     return;
   }

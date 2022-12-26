@@ -6,6 +6,10 @@ import logger from 'logger';
 
 import { queryPromiseWrapper, filterIncident } from '../index';
 
+jest.mock('@sentry/react-native', () => ({
+  captureException: jest.fn(),
+}));
+
 describe('service utils', () => {
   describe('queryPromiseWrapper', () => {
     const captureExceptionSpy = jest.spyOn(sentry, 'captureException');

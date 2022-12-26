@@ -13,6 +13,7 @@ import {
   PressableProps,
   ViewStyle,
   GestureResponderEvent,
+  ViewProps,
 } from 'react-native';
 import ReactNativeHapticFeedback, {
   HapticFeedbackTypes,
@@ -32,7 +33,7 @@ enum Duration {
   out = 120,
 }
 
-type RestyleProps = ViewStyle &
+type RestyleProps = ViewProps &
   LayoutProps<Theme> &
   SpacingProps<Theme> &
   PositionProps<Theme> &
