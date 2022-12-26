@@ -1,6 +1,5 @@
-import { Asset } from '@cardstack/services/eoa-assets/eoa-assets-types';
-
 import { TokenType } from '.';
+
 export interface BalanceType {
   amount: string;
   display: string;
@@ -17,13 +16,23 @@ export enum AssetTypes {
   uniswapV2 = 'uniswap-v2',
 }
 
-export interface AssetWithNativeType extends Asset {
+export interface AssetType {
+  id: string;
+  address: string;
+  tokenID?: string;
+  name: string;
+  symbol: string;
+  decimals: number;
+  type: AssetTypes;
+}
+
+export interface AssetWithNativeType extends AssetType {
   balance?: BalanceType;
   native: {
     balance: BalanceType;
   };
 }
 
-export interface AssetWithTokensType extends Asset {
+export interface AssetWithTokensType extends AssetType {
   tokens: Array<TokenType>;
 }

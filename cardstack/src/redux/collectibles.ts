@@ -7,13 +7,18 @@ import { AnyAction } from 'redux';
 
 import { IPFS_HTTP_URL } from '@cardstack/constants';
 import Web3WsProvider from '@cardstack/models/web3-provider';
-import { Asset } from '@cardstack/services/eoa-assets/eoa-assets-types';
 import {
   apiFetchCollectiblesForOwner,
   OPENSEA_LIMIT_PER_PAGE,
   OPENSEA_LIMIT_TOTAL,
 } from '@cardstack/services/opensea-api';
-import { AssetTypes, CollectibleType, NetworkType } from '@cardstack/types';
+import {
+  AssetType,
+  AssetTypes,
+  CollectibleType,
+  NetworkType,
+} from '@cardstack/types';
+import { nonNullable } from '@cardstack/utils';
 
 import {
   getAssets,
@@ -171,7 +176,7 @@ const fetchNFTsViaRpcNode = () => async (
   const { accountAddress, nativeCurrency, network } = getState().settings;
 
   const { assets } = (await getAssets(accountAddress, network)) as {
-    assets: Asset[];
+    assets: AssetType[];
   };
 
   // Find the assets that are NFTs.
@@ -279,7 +284,7 @@ const fetchNFTsViaRpcNode = () => async (
           }
         })
       )
-    ).filter(Boolean);
+    ).filter(nonNullable);
 
     saveCollectiblesToStorage(collectibles, accountAddress, network);
     // save the collectibles to redux state

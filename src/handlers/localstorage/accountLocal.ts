@@ -1,4 +1,16 @@
+import {
+  DepotSafe,
+  MerchantSafe,
+  PrepaidCardSafe,
+} from '@cardstack/cardpay-sdk';
+
 import { getAccountLocal, saveAccountLocal } from './common';
+import {
+  AssetType,
+  CollectibleType,
+  NetworkType,
+  PrepaidCardType,
+} from '@cardstack/types';
 
 const assetsVersion = '1.0.1';
 
@@ -30,56 +42,52 @@ export const accountLocalKeys = [
   PREPAID_CARDS,
 ];
 
-/**
- * @desc get assets
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {Object}
- */
-export const getAssets = (accountAddress, network) =>
+export const getAssets = (
+  accountAddress: string,
+  network: NetworkType
+): Promise<{ latestTxBlockNumber?: number; assets: AssetType[] }> =>
   getAccountLocal(
     ASSETS,
     accountAddress,
     network,
-    { latestBlockNumber: undefined, assets: [] },
+    { latestTxBlockNumber: undefined, assets: [] } as any,
     assetsVersion
   );
 
-/**
- * @desc save assets
- * @param  {Array | Object}    [assets]
- * @param  {String}   [address]
- * @param  {String}   [network]
- */
-export const saveAssets = (assets, accountAddress, network) =>
-  saveAccountLocal(ASSETS, assets, accountAddress, network, assetsVersion);
+export const saveAssets = (
+  assets: AssetType[],
+  accountAddress: string,
+  network: NetworkType,
+  latestTxBlockNumber?: number
+) =>
+  saveAccountLocal(
+    ASSETS,
+    { assets, latestTxBlockNumber },
+    accountAddress,
+    network,
+    assetsVersion
+  );
 
-/**
- * @desc get prepaid cards
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {{prepaidCards: Array, timestamp: String}}
- */
-export const getPrepaidCards = (accountAddress, network) =>
+export const getPrepaidCards = (
+  accountAddress: string,
+  network: NetworkType
+): Promise<{
+  timestamp: string;
+  prepaidCards: (PrepaidCardSafe | PrepaidCardType)[];
+}> =>
   getAccountLocal(
     PREPAID_CARDS,
     accountAddress,
     network,
-    { prepaidCards: [], timestamp: '' },
+    { prepaidCards: [], timestamp: '' } as any,
     prepaidCardsVersion
   );
 
-/**
- * @desc save prepaid cards
- * @param  {Array}    [prepaidCards]
- * @param  {String}   [address]
- * @param  {String}   [network]
- */
 export const savePrepaidCards = (
-  prepaidCards,
-  accountAddress,
-  network,
-  timestamp
+  prepaidCards: (PrepaidCardSafe | PrepaidCardType)[],
+  accountAddress: string,
+  network: NetworkType,
+  timestamp: string
 ) =>
   saveAccountLocal(
     PREPAID_CARDS,
@@ -89,28 +97,24 @@ export const savePrepaidCards = (
     prepaidCardsVersion
   );
 
-/**
- * @desc get depots
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {{depots: Array, timestamp: String}}
- */
-export const getDepots = (accountAddress, network) =>
+export const getDepots = (
+  accountAddress: string,
+  network: NetworkType
+): Promise<{ timestamp: string; depots: DepotSafe[] }> =>
   getAccountLocal(
     DEPOTS,
     accountAddress,
     network,
-    { depots: [], timestamp: '' },
+    { depots: [], timestamp: '' } as any,
     depotVersion
   );
 
-/**
- * @desc save depots
- * @param  {Array}    [depots]
- * @param  {String}   [address]
- * @param  {String}   [network]
- */
-export const saveDepots = (depots, accountAddress, network, timestamp) =>
+export const saveDepots = (
+  depots: DepotSafe[],
+  accountAddress: string,
+  network: NetworkType,
+  timestamp: string
+) =>
   saveAccountLocal(
     DEPOTS,
     { depots, timestamp },
@@ -119,32 +123,23 @@ export const saveDepots = (depots, accountAddress, network, timestamp) =>
     depotVersion
   );
 
-/**
- * @desc get merchant safes
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {{merchantSafes: Array, timestamp: String}}
- */
-export const getMerchantSafes = (accountAddress, network) =>
+export const getMerchantSafes = (
+  accountAddress: string,
+  network: NetworkType
+): Promise<{ timestamp: string; merchantSafes: MerchantSafe[] }> =>
   getAccountLocal(
     MERCHANT_SAFES,
     accountAddress,
     network,
-    { merchantSafes: [], timestamp: '' },
+    { merchantSafes: [], timestamp: '' } as any,
     merchantSafeVersion
   );
 
-/**
- * @desc save merchant safes
- * @param  {Array}    [depots]
- * @param  {String}   [address]
- * @param  {String}   [network]
- */
 export const saveMerchantSafes = (
-  merchantSafes,
-  accountAddress,
-  network,
-  timestamp
+  merchantSafes: MerchantSafe[],
+  accountAddress: string,
+  network: NetworkType,
+  timestamp: string
 ) =>
   saveAccountLocal(
     MERCHANT_SAFES,
@@ -154,7 +149,10 @@ export const saveMerchantSafes = (
     merchantSafeVersion
   );
 
-export const getLocalTransactions = (accountAddress, network) =>
+export const getLocalTransactions = (
+  accountAddress: string,
+  network: NetworkType
+) =>
   getAccountLocal(
     TRANSACTIONS,
     accountAddress,
@@ -163,13 +161,11 @@ export const getLocalTransactions = (accountAddress, network) =>
     transactionsVersion
   );
 
-/**
- * @desc save transactions
- * @param  {String}   [address]
- * @param  {Array}   [transactions]
- * @param  {String}   [network]
- */
-export const saveLocalTransactions = (transactions, accountAddress, network) =>
+export const saveLocalTransactions = (
+  transactions: any[],
+  accountAddress: string,
+  network: NetworkType
+) =>
   saveAccountLocal(
     TRANSACTIONS,
     transactions,
@@ -178,13 +174,10 @@ export const saveLocalTransactions = (transactions, accountAddress, network) =>
     transactionsVersion
   );
 
-/**
- * @desc get collectibles
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {Object}
- */
-export const getCollectibles = (accountAddress, network) =>
+export const getCollectibles = (
+  accountAddress: string,
+  network: NetworkType
+): Promise<CollectibleType[]> =>
   getAccountLocal(
     COLLECTIBLES,
     accountAddress,
@@ -193,13 +186,11 @@ export const getCollectibles = (accountAddress, network) =>
     collectiblesVersion
   );
 
-/**
- * @desc save collectibles
- * @param  {String}   [address]
- * @param  {Array}    [collectibles]
- * @param  {String}   [network]
- */
-export const saveCollectibles = (collectibles, accountAddress, network) =>
+export const saveCollectibles = (
+  collectibles: CollectibleType[],
+  accountAddress: string,
+  network: NetworkType
+) =>
   saveAccountLocal(
     COLLECTIBLES,
     collectibles,
@@ -207,21 +198,3 @@ export const saveCollectibles = (collectibles, accountAddress, network) =>
     network,
     collectiblesVersion
   );
-
-/**
- * @desc get profile info
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {Object}
- */
-export const getAccountInfo = (accountAddress, network) =>
-  getAccountLocal(ACCOUNT_INFO, accountAddress, network, {});
-
-/**
- * @desc save profile info
- * @param  {String}   [address]
- * @param  {Object}    [profile info]
- * @param  {String}   [network]
- */
-export const saveAccountInfo = (profileInfo, accountAddress, network) =>
-  saveAccountLocal(ACCOUNT_INFO, profileInfo, accountAddress, network);

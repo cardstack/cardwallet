@@ -5,15 +5,13 @@ import {
 } from '@cardstack/cardpay-sdk';
 
 import Web3Instance from '@cardstack/models/web3-instance';
-import { NetworkType } from '@cardstack/types';
+import { AssetType, NetworkType } from '@cardstack/types';
 import { isNativeToken } from '@cardstack/utils';
 
 import logger from 'logger';
 
-import { Asset } from './eoa-assets/eoa-assets-types';
-
 export interface GetAssetBalanceParams {
-  asset: Pick<Asset, 'symbol' | 'address' | 'decimals'>;
+  asset: Pick<AssetType, 'symbol' | 'address' | 'decimals'>;
   accountAddress: string;
   network: NetworkType;
 }

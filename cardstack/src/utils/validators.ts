@@ -49,3 +49,9 @@ export const matchMinLength = (text: string, minLength: number): boolean =>
   text.length >= minLength;
 
 export const hasAtLeastOneDigit = (text: string): boolean => /\d/.test(text);
+
+// Util function to be used as a type safe substitute to .filter(Boolean)
+// usage: `array.filter(nonNullable)`
+export const nonNullable = <T>(value: T): value is NonNullable<T> => {
+  return value !== null && value !== undefined;
+};
