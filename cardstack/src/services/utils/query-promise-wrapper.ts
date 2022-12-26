@@ -1,4 +1,5 @@
 import { captureException } from '@sentry/react-native';
+
 import logger from 'logger';
 
 type QueryError = {

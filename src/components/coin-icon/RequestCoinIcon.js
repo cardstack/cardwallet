@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import RequestVendorLogoIcon from './RequestVendorLogoIcon';
 
