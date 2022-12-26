@@ -3,10 +3,7 @@ import produce from 'immer';
 import { concat, isEmpty, partition, toLower } from 'lodash';
 import { getTransactionReceipt } from '../handlers/web3';
 import {
-  getDepots,
   getLocalTransactions,
-  getMerchantSafes,
-  getPrepaidCards,
   saveLocalTransactions,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
 import DirectionTypes from '@rainbow-me/helpers/transactionDirectionTypes';
@@ -27,10 +24,6 @@ const TXN_WATCHER_POLL_INTERVAL = 5000; // 5 seconds
 // -- Constants --------------------------------------- //
 
 const DATA_UPDATE_TRANSACTIONS = 'data/DATA_UPDATE_TRANSACTIONS';
-const DATA_UPDATE_GNOSIS_DATA = 'data/DATA_UPDATE_GNOSIS_DATA';
-
-const DATA_LOAD_ASSETS_SUCCESS = 'data/DATA_LOAD_ASSETS_SUCCESS';
-const DATA_LOAD_ASSETS_FAILURE = 'data/DATA_LOAD_ASSETS_FAILURE';
 
 const DATA_LOAD_TRANSACTIONS_REQUEST = 'data/DATA_LOAD_TRANSACTIONS_REQUEST';
 const DATA_LOAD_TRANSACTIONS_SUCCESS = 'data/DATA_LOAD_TRANSACTIONS_SUCCESS';
@@ -43,29 +36,8 @@ const DATA_CLEAR_STATE = 'data/DATA_CLEAR_STATE';
 export const DATA_UPDATE_PREPAIDCARDS = 'data/DATA_UPDATE_PREPAIDCARDS';
 
 // -- Actions ---------------------------------------- //
-export const dataLoadState = () => async (dispatch, getState) => {
+export const dataLoadTxState = () => async (dispatch, getState) => {
   const { accountAddress, network } = getState().settings;
-  try {
-    const [
-      { prepaidCards },
-      { depots },
-      { merchantSafes },
-    ] = await Promise.all([
-      getPrepaidCards(accountAddress, network),
-      getDepots(accountAddress, network),
-      getMerchantSafes(accountAddress, network),
-    ]);
-    dispatch({
-      payload: {
-        depots,
-        prepaidCards,
-        merchantSafes,
-      },
-      type: DATA_LOAD_ASSETS_SUCCESS,
-    });
-  } catch (error) {
-    dispatch({ type: DATA_LOAD_ASSETS_FAILURE });
-  }
   try {
     dispatch({ type: DATA_LOAD_TRANSACTIONS_REQUEST });
     const transactions = await getLocalTransactions(accountAddress, network);
@@ -243,22 +215,13 @@ const watchPendingTransactions = (
 
 // -- Reducer ----------------------------------------- //
 const INITIAL_STATE = {
-  depots: [],
-  merchantSafes: [],
-  prepaidCards: [],
   isLoadingTransactions: true,
-  shouldRefetchSavings: false,
   transactions: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
   return produce(state, draft => {
     switch (action.type) {
-      case DATA_UPDATE_GNOSIS_DATA:
-        draft.depots = action.payload.depots;
-        draft.merchantSafes = action.payload.merchantSafes;
-        draft.prepaidCards = action.payload.prepaidCards;
-        break;
       case DATA_UPDATE_TRANSACTIONS:
         draft.isLoadingTransactions = false;
         draft.transactions = action.payload;
@@ -272,15 +235,6 @@ export default (state = INITIAL_STATE, action) => {
         break;
       case DATA_LOAD_TRANSACTIONS_FAILURE:
         draft.isLoadingTransactions = false;
-        break;
-      case DATA_LOAD_ASSETS_SUCCESS:
-        draft.depots = action.payload.depots;
-        draft.prepaidCards = action.payload.prepaidCards;
-        draft.merchantSafes = action.payload.merchantSafes;
-        draft.isLoadingAssets = false;
-        break;
-      case DATA_LOAD_ASSETS_FAILURE:
-        draft.isLoadingAssets = false;
         break;
       case DATA_ADD_NEW_TRANSACTION_SUCCESS:
         draft.transactions = action.payload;

@@ -1,7 +1,8 @@
 import { renderHook } from '@testing-library/react-hooks';
 
-import { useAccountProfile } from '@rainbow-me/hooks';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import { useGetSafesDataQuery } from '@cardstack/services';
+
+import { useAccountProfile, useAccountSettings } from '@rainbow-me/hooks';
 
 import { updatedData } from '../../../helpers/__mocks__/dataMocks';
 import { useNameOrPreviewFromAddress } from '../useNameOrPreviewFromAddress';
@@ -14,17 +15,26 @@ jest.mock('@rainbow-me/redux/hooks', () => ({
 
 jest.mock('@rainbow-me/hooks', () => ({
   useAccountProfile: jest.fn(),
+  useAccountSettings: jest.fn(),
+}));
+
+jest.mock('@cardstack/services', () => ({
+  useGetSafesDataQuery: jest.fn(),
 }));
 
 describe('useNameOrPreviewFromAddress', () => {
   beforeEach(() => {
-    (useRainbowSelector as jest.Mock).mockImplementation(
-      () => updatedData.updatedMerchantSafes
-    );
+    (useGetSafesDataQuery as jest.Mock).mockImplementation(() => ({
+      merchantSafes: updatedData.updatedMerchantSafes,
+    }));
 
     (useAccountProfile as jest.Mock).mockImplementation(() => ({
-      accountAddress: '1234567890',
       accountName: 'foo',
+    }));
+
+    (useAccountSettings as jest.Mock).mockImplementation(() => ({
+      accountAddress: '1234567890',
+      nativeCurrency: 'usd',
     }));
   });
 

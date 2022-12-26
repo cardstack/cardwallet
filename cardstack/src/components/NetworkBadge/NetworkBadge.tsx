@@ -4,14 +4,14 @@ import React from 'react';
 import { Container, Text } from '@cardstack/components';
 import { shortNetworkName } from '@cardstack/utils';
 
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import { useAccountSettings } from '@rainbow-me/hooks';
 
 import { ContainerProps } from '../Container';
 
 export const NetworkBadge = (
   props: ContainerProps & { text?: string; network?: string }
 ) => {
-  const currentNetwork = useRainbowSelector(state => state.settings.network);
+  const { network: currentNetwork } = useAccountSettings();
 
   const displayNetworkName = shortNetworkName(
     getConstantByNetwork('name', props.network || currentNetwork)

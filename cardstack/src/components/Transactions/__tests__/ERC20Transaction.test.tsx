@@ -7,18 +7,14 @@ import {
   TransactionTypes,
 } from '@cardstack/types';
 
-import { useAccountProfile } from '@rainbow-me/hooks';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import { useAccountProfile, useAccountSettings } from '@rainbow-me/hooks';
 
 import { render } from '../../../test-utils';
 import { ERC20Transaction } from '../ERC20Transaction';
 
 jest.mock('@rainbow-me/hooks', () => ({
   useAccountProfile: jest.fn(),
-}));
-
-jest.mock('@rainbow-me/redux/hooks', () => ({
-  useRainbowSelector: jest.fn(),
+  useAccountSettings: jest.fn(),
 }));
 
 jest.mock('@cardstack/hooks/merchant/useNameOrPreviewFromAddress', () => ({
@@ -51,17 +47,17 @@ describe('ERC20Transaction', () => {
     };
 
     (useAccountProfile as jest.Mock).mockImplementation(() => ({
-      accountAddress: '1234567890',
       accountName: 'foo',
+    }));
+
+    (useAccountSettings as jest.Mock).mockImplementation(() => ({
+      accountAddress: '1234567890',
+      network: 'gnosis',
     }));
 
     (useNameOrPreviewFromAddress as jest.Mock).mockImplementation(() => ({
       name: 'BizName',
     }));
-
-    (useRainbowSelector as jest.Mock).mockImplementation(cb =>
-      cb({ settings: { network: 'gnosis' } })
-    );
   });
 
   afterEach(() => {

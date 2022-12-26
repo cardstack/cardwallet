@@ -8,10 +8,9 @@ import {
   HorizontalDivider,
   Text,
 } from '@cardstack/components';
-import { NetworkType } from '@cardstack/types';
 import { normalizeTxHash, ClaimStatusTypes } from '@cardstack/utils';
 
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import { useAccountSettings } from '@rainbow-me/hooks';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 import { ContainerProps } from '../Container';
@@ -52,9 +51,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
     disabled,
   } = props;
 
-  const network = useRainbowSelector(
-    state => state.settings.network
-  ) as NetworkType;
+  const { network } = useAccountSettings();
 
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
   const networkName = getConstantByNetwork('name', network);

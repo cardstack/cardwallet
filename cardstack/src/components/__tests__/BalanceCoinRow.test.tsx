@@ -1,17 +1,23 @@
 import Chance from 'chance';
 import React from 'react';
 
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import { useAccountSettings } from '@rainbow-me/hooks';
 
 import { render } from '../../test-utils';
 import { BalanceCoinRow } from '../BalanceCoinRow';
 const chance = new Chance();
 
+jest.mock('@rainbow-me/hooks', () => ({
+  useAccountSettings: jest.fn(),
+}));
+
 describe('BalanceCoinRow', () => {
   let item: any, props: any;
 
   beforeEach(() => {
-    (useRainbowSelector as jest.Mock).mockImplementation(() => 'gnosis');
+    (useAccountSettings as jest.Mock).mockImplementation(() => ({
+      network: 'gnosis',
+    }));
 
     item = {
       isHidden: false,

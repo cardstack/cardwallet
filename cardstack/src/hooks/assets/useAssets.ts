@@ -25,6 +25,11 @@ const emptyState = {
   balance: { amount: '0', display: '' },
 };
 
+const pollingInterval = {
+  ten_seconds: 10000,
+  one_minute: 60000,
+};
+
 const useAssets = () => {
   const {
     accountAddress,
@@ -44,7 +49,10 @@ const useAssets = () => {
       nativeCurrency,
       network,
     },
-    { skip: !accountAddress }
+    {
+      skip: !accountAddress,
+      refetchOnMountOrArgChange: pollingInterval.one_minute,
+    }
   );
 
   const {
@@ -54,7 +62,7 @@ const useAssets = () => {
     refetch: refetchPrices,
   } = useGetAssetsPriceByContractQuery(
     { addresses: ids, nativeCurrency, network },
-    { skip: !ids.length }
+    { skip: !ids.length, pollingInterval: pollingInterval.ten_seconds }
   );
 
   const {
@@ -64,7 +72,10 @@ const useAssets = () => {
     refetch: refetchGnosisPrices,
   } = useGetCardPayTokensPricesQuery(
     { nativeCurrency },
-    { skip: !ids.length || !isOnCardPayNetwork }
+    {
+      skip: !ids.length || !isOnCardPayNetwork,
+      pollingInterval: pollingInterval.one_minute,
+    }
   );
 
   const {
@@ -72,10 +83,13 @@ const useAssets = () => {
     refetch: refetchNativePrice,
     isFetching: isRefetchingNativePrice,
     isLoading: isLoadingNativePrice,
-  } = useGetNativeTokensPriceQuery({
-    network,
-    nativeCurrency,
-  });
+  } = useGetNativeTokensPriceQuery(
+    {
+      network,
+      nativeCurrency,
+    },
+    { pollingInterval: pollingInterval.ten_seconds }
+  );
 
   const {
     data: balances,
@@ -84,7 +98,10 @@ const useAssets = () => {
     isFetching: isRefetchingBalances,
   } = useGetOnChainTokenBalancesQuery(
     { assets, accountAddress, network },
-    { skip: !ids.length }
+    {
+      skip: !ids.length,
+      refetchOnMountOrArgChange: pollingInterval.one_minute,
+    }
   );
 
   const getAsset = useCallback((id: EntityId) => assets[id], [assets]);
