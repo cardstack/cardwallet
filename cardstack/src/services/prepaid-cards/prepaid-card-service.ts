@@ -23,7 +23,7 @@ import {
   PrepaidCardTransferQueryParams,
 } from './prepaid-card-types';
 
-export const addPrepaidCardCustomization = async (card: PrepaidCardSafe) => {
+const addPrepaidCardCustomization = async (card: PrepaidCardSafe) => {
   try {
     const cardCustomization = await fetchCardCustomizationFromDID(
       card.customizationDID
@@ -47,10 +47,7 @@ export const extendPrepaidCard = async (
   // The order matters, first add new property then modify tokens
   // otherwise tokens with prices will be overwritten by old tokens
   ...(await addPrepaidCardCustomization(prepaidCard)),
-  ...((await updateSafeWithTokenPrices(
-    prepaidCard,
-    nativeCurrency
-  )) as PrepaidCardType),
+  ...(await updateSafeWithTokenPrices(prepaidCard, nativeCurrency)),
 });
 
 export const getPrepaidCardByAddress = async (

@@ -10,13 +10,10 @@ import {
   NativeCurrency,
 } from '@cardstack/cardpay-sdk';
 import { captureException } from '@sentry/react-native';
-import Web3 from 'web3';
 
 import { getSafesInstance } from '@cardstack/models/safes-providers';
 import Web3Instance from '@cardstack/models/web3-instance';
-import { Navigation } from '@cardstack/navigation';
-import { Routes } from '@cardstack/navigation/routes';
-import { DepotType, MerchantSafeType } from '@cardstack/types';
+import { DepotType } from '@cardstack/types';
 import { updateMerchantSafeWithCustomization } from '@cardstack/utils';
 
 import {
@@ -31,10 +28,8 @@ import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import logger from 'logger';
 
 import { getNativeBalanceFromOracle } from './exchange-rate-service';
-import {
-  addPrepaidCardCustomization,
-  extendPrepaidCard,
-} from './prepaid-cards/prepaid-card-service';
+import { extendPrepaidCard } from './prepaid-cards/prepaid-card-service';
+import AssetTypes from '@rainbow-me/helpers/assetTypes';
 
 export const getSafeData = async (address: string) => {
   const safesInstance = await getSafesInstance();
@@ -63,27 +58,22 @@ export const fetchSafes = async (
     );
 
     const extendAllMerchantSafes = Promise.all(
-      merchantSafes.map(
-        async merchantSafe =>
-          ({
-            ...(await updateMerchantSafeWithCustomization(merchantSafe)),
-            ...(await updateSafeWithTokenPrices(merchantSafe, nativeCurrency)),
-            ...{
-              revenueBalances: await getRevenuePoolBalances(
-                merchantSafe.address,
-                nativeCurrency
-              ),
-            },
-          } as MerchantSafeType)
-      )
+      merchantSafes.map(async merchantSafe => ({
+        ...(await updateMerchantSafeWithCustomization(merchantSafe)),
+        ...(await updateSafeWithTokenPrices(merchantSafe, nativeCurrency)),
+        ...{
+          revenueBalances: await getRevenuePoolBalances(
+            merchantSafe.address,
+            nativeCurrency
+          ),
+        },
+      }))
     );
 
     const extendAllDepotSafes = Promise.all(
       depots.map(
-        async depot =>
-          ({
-            ...(await updateSafeWithTokenPrices(depot, nativeCurrency)),
-          } as DepotType)
+        depot =>
+          updateSafeWithTokenPrices(depot, nativeCurrency) as Promise<DepotType>
       )
     );
 
@@ -173,39 +163,6 @@ const getSafesPersistedCache = async (accountAddress: string) => {
     }
   } catch (e) {
     logger.sentry('Retrieving local cache failed', e);
-  }
-};
-
-export const fetchGnosisSafes = async (address: string) => {
-  try {
-    const safesInstance = await getSafesInstance();
-
-    const safes = (await safesInstance?.view(address))?.safes || [];
-
-    safes?.forEach(safe => {
-      safe?.tokens.forEach(({ balance, token }) => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        token.value = Web3.utils.fromWei(balance);
-      });
-    });
-
-    const { depots, prepaidCards, merchantSafes } = groupSafesByType(safes);
-
-    const extendedPrepaidCards = await Promise.all(
-      prepaidCards.map(addPrepaidCardCustomization)
-    );
-
-    return {
-      depots,
-      merchantSafes,
-      prepaidCards: extendedPrepaidCards,
-    };
-  } catch (error) {
-    Navigation.handleAction(Routes.ERROR_FALLBACK_SCREEN, {}, true);
-
-    logger.sentry('Fetch GnosisSafes failed', error);
-    captureException(error);
   }
 };
 
@@ -301,26 +258,32 @@ export const getRevenuePoolBalances = async (
   merchantAddress: string,
   nativeCurrency: NativeCurrency
 ) => {
-  const web3 = await Web3Instance.get();
+  try {
+    const web3 = await Web3Instance.get();
 
-  const revenuePool = await getSDK('RevenuePool', web3);
-  const revenueBalances = await revenuePool.balances(merchantAddress);
+    const revenuePool = await getSDK('RevenuePool', web3);
+    const revenueBalances = await revenuePool.balances(merchantAddress);
 
-  const revenueTokensWithPrice = await Promise.all(
-    revenueBalances?.map(
-      async ({ tokenSymbol: symbol, balance, tokenAddress }) => {
-        const tokenWithPrice = await addNativePriceToToken(
-          {
-            token: { symbol },
-            balance,
-          } as TokenInfo,
-          nativeCurrency
-        );
+    const revenueTokensWithPrice = await Promise.all(
+      revenueBalances?.map(
+        async ({ tokenSymbol: symbol, balance, tokenAddress }) => {
+          const tokenWithPrice = await addNativePriceToToken(
+            {
+              token: { symbol },
+              balance,
+            } as TokenInfo,
+            nativeCurrency
+          );
 
-        return { ...tokenWithPrice, tokenAddress };
-      }
-    )
-  );
+          return { ...tokenWithPrice, tokenAddress };
+        }
+      )
+    );
 
-  return revenueTokensWithPrice;
+    return revenueTokensWithPrice;
+  } catch (error) {
+    logger.sentry('Error getting revenueBalances for merchant safe', error);
+
+    return [];
+  }
 };

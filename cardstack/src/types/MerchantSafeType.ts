@@ -8,7 +8,7 @@ export interface MerchantSafeType {
   revenueBalances: TokenType[];
   type: string;
   merchantInfo?: MerchantInformation;
-  infoDID: string;
+  infoDID?: string;
 }
 
 export interface PrimarySafeUpdateProps {
