@@ -2,7 +2,6 @@ import { useNavigation } from '@react-navigation/native';
 import { RouteNames } from 'globals';
 import { useMemo, useCallback } from 'react';
 
-import { needsNotificationPermission } from '@cardstack/models/firebase';
 import { Routes } from '@cardstack/navigation/routes';
 import { useAuthSelector } from '@cardstack/redux/authSlice';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
@@ -40,9 +39,7 @@ export const useShowOnboarding = () => {
   // Calling this right after updating a store value will not have the dependencies updated,
   // so in some cases is necessary to call `navigateOnboardingTo` directly.
   const getNextOnboardingStep = useCallback(async () => {
-    const askForNotificationsPermissions = await needsNotificationPermission();
-
-    if (askForNotificationsPermissions && !hasSkippedNotificationPermission) {
+    if (!hasSkippedNotificationPermission) {
       return Routes.NOTIFICATIONS_PERMISSION;
     }
 
@@ -62,14 +59,17 @@ export const useShowOnboarding = () => {
   // Will navigate imperactively to provided route.
   const navigateOnboardingTo = useCallback(
     (route: RouteNames) => {
-      // Avoid showing profile flow when not wanted.
-      if (route === Routes.PROFILE_SLUG && !shouldShowProfileCreationFlow) {
+      // Avoid showing already completed flow.
+      if (
+        (route === Routes.PROFILE_SLUG && !shouldShowProfileCreationFlow) ||
+        (route === Routes.BACKUP_EXPLANATION && !shouldShowBackupFlow)
+      ) {
         return;
       }
 
       navigate(route);
     },
-    [navigate, shouldShowProfileCreationFlow]
+    [navigate, shouldShowProfileCreationFlow, shouldShowBackupFlow]
   );
 
   // Gets next onboarding step and tries to navigate.
