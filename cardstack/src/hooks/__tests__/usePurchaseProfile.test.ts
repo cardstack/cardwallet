@@ -1,6 +1,8 @@
 import { renderHook, waitFor, act } from '@testing-library/react-native';
 import { useIAP, Product, Purchase } from 'react-native-iap';
 
+import { Routes as mockActualRoutes } from '@cardstack/navigation/routes';
+
 import logger from 'logger';
 
 import { useInitIAPProducts, usePurchaseProfile } from '../usePurchaseProfile';
@@ -42,6 +44,14 @@ jest.mock('@cardstack/services', () => ({
     },
   ]),
   hubApi: jest.fn(),
+}));
+
+jest.mock('@cardstack/navigation', () => ({
+  Routes: mockActualRoutes,
+  useLoadingOverlay: () => ({
+    showLoadingOverlay: jest.fn(),
+    dismissLoadingOverlay: jest.fn(),
+  }),
 }));
 
 const profile = {

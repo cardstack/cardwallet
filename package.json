@@ -28,7 +28,7 @@
     "postinstall": "./scripts/postinstall.sh",
     "start": "yarn prestorybook && react-native start",
     "start:clean": "watchman watch-del-all && rm -rf $TMPDIR/react-* && rm -rf $TMPDIR/metro-* && rm -rf $TMPDIR/haste-map-* && react-native start -- --reset-cache",
-    "test": "APP_ENV=test jest",
+    "test": "APP_ENV=test jest --coverage",
     "ci": "yarn lint && yarn ts-check",
     "android-reverse-ports": "adb reverse tcp:8097 tcp:8097 && adb reverse tcp:8081 tcp:8081",
     "update-token-list": "./scripts/update-token-list.sh",
@@ -259,7 +259,7 @@
     "stylelint-config-react-native-styled-components": "^0.5.0",
     "stylelint-processor-styled-components": "^1.10.0",
     "stylelint-react-native": "^2.4.0",
-    "ts-jest": "^26.5.5",
+    "ts-jest": "28.0.8",
     "typescript": "4.5.5"
   },
   "resolutions": {

@@ -6,6 +6,7 @@ import { useAppState } from '@cardstack/hooks/useAppState';
 import { useBiometry } from '@cardstack/hooks/useBiometry';
 import { biometricAuthentication } from '@cardstack/models/biometric-auth';
 import { getPin } from '@cardstack/models/secure-storage';
+import * as requests from '@cardstack/redux/requests';
 
 import {
   getPinAuthAttempts,
@@ -53,6 +54,11 @@ const mockStorage = {
   nextDate: null,
 };
 
+jest.useFakeTimers({ legacyFakeTimers: true });
+jest.setTimeout(30000);
+
+const DateNow = Date.now;
+
 jest.mock('@rainbow-me/handlers/localstorage/globalSettings', () => ({
   getPinAuthAttempts: jest.fn(),
   getPinAuthNextDateAttempt: jest.fn(),
@@ -60,24 +66,20 @@ jest.mock('@rainbow-me/handlers/localstorage/globalSettings', () => ({
   savePinAuthNextDateAttempt: jest.fn(),
 }));
 
-const mockHandleWalletConnectRequests = jest.fn();
-jest.mock('@cardstack/redux/requests', () => ({
-  handleWalletConnectRequests: mockHandleWalletConnectRequests,
-}));
+const mockedRequest = { id: 'myRequest' };
 
 jest.mock('@rainbow-me/hooks', () => ({
   useRequests: () => ({
-    latestRequest: jest.fn().mockReturnValue({}),
+    latestRequest: jest.fn().mockReturnValue(mockedRequest),
   }),
 }));
 
-jest.useFakeTimers();
-jest.setTimeout(30000);
-
-const DateNow = Date.now;
-
 describe('useUnlockScreen', () => {
   const spyAlert = jest.spyOn(Alert, 'alert');
+
+  const spyHandleRequest = jest
+    .spyOn(requests, 'handleWalletConnectRequests')
+    .mockImplementation(jest.fn);
 
   const mockBiometryAvailableHelper = (available = false) => {
     (useBiometry as jest.Mock).mockImplementation(() => ({
@@ -221,9 +223,9 @@ describe('useUnlockScreen', () => {
     mockAuthAuthorizedHelper(true);
 
     renderHook(() => useUnlockScreen());
+
     act(async () => {
-      expect(mockHandleWalletConnectRequests).toBeCalled();
-      expect(mockHandleWalletConnectRequests).toBeCalledWith({});
+      expect(spyHandleRequest).toBeCalledWith(mockedRequest);
     });
   });
 

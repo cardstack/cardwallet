@@ -79,9 +79,9 @@ describe('useWalletCloudBackup', () => {
   const spyAlert = jest.spyOn(Alert, 'alert');
   const spyIsCloudAvailable = jest.spyOn(rnCloud, 'isIOSCloudBackupAvailable');
 
-  const useDispatchSpy = jest.spyOn(reactRedux, 'useDispatch');
   const mockDispatchFn = jest.fn();
-  useDispatchSpy.mockReturnValue(mockDispatchFn);
+
+  jest.spyOn(reactRedux, 'useDispatch').mockReturnValue(mockDispatchFn);
 
   beforeAll(() => {
     logger.sentry = jest.fn();
@@ -222,6 +222,10 @@ describe('useWalletCloudBackup', () => {
 
       act(() => {
         result.current.deleteCloudBackups();
+      });
+
+      await waitFor(() => {
+        expect(spyAlert).toBeCalled();
       });
 
       // tap on the confirm and delete button

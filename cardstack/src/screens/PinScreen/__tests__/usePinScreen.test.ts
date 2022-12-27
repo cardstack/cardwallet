@@ -40,7 +40,7 @@ const mockRouteParamsHelper = (overwrite: any = {}) => {
   }));
 };
 
-jest.useFakeTimers();
+jest.useFakeTimers({ legacyFakeTimers: true });
 
 describe('usePinScreen', () => {
   beforeEach(() => {

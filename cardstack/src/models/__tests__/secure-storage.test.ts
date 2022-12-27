@@ -34,6 +34,7 @@ describe('secure-storage', () => {
 
   beforeAll(() => {
     logger.sentry = jest.fn();
+    logger.log = jest.fn();
   });
 
   beforeEach(() => {

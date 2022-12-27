@@ -1,5 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 
+import logger from 'logger';
+
 import { useBackupRestorePhraseScreen } from '../useBackupRestorePhraseScreen';
 
 const mockSeedPhrase =
@@ -96,6 +98,8 @@ describe('useBackupRestorePhraseScreen', () => {
   });
 
   it('should set phrase as wrong after Done button press with invalid phrase input', () => {
+    const spylogger = jest.spyOn(logger, 'error').mockImplementation(jest.fn);
+
     const { result } = renderHook(useBackupRestorePhraseScreen);
 
     act(() => {
@@ -109,6 +113,7 @@ describe('useBackupRestorePhraseScreen', () => {
     expect(result.current.phrase).toMatch(mockInvalidSeedPhrase);
     expect(result.current.isPhraseComplete).toBeTruthy();
     expect(result.current.isPhraseWrong).toBeTruthy();
+    expect(spylogger).toBeCalledWith('Error: Seed phrase provided is invalid.');
   });
 
   it('should clean phrase on reset call', () => {
