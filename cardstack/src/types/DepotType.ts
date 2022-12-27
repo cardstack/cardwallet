@@ -1,4 +1,4 @@
-import { AssetType, TokenType } from '.';
+import { Asset, TokenType } from '.';
 export interface DepotType {
   address: string;
   tokens: Array<TokenType>;
@@ -6,4 +6,4 @@ export interface DepotType {
   infoDID?: string;
 }
 
-export type DepotAsset = AssetType & Omit<TokenType, 'tokenAddress' | 'token'>;
+export type DepotAsset = Asset & Omit<TokenType, 'tokenAddress' | 'token'>;

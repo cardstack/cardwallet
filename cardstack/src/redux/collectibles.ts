@@ -13,7 +13,7 @@ import {
   OPENSEA_LIMIT_TOTAL,
 } from '@cardstack/services/opensea-api';
 import {
-  AssetType,
+  Asset,
   AssetTypes,
   CollectibleType,
   NetworkType,
@@ -176,7 +176,7 @@ const fetchNFTsViaRpcNode = () => async (
   const { accountAddress, nativeCurrency, network } = getState().settings;
 
   const { assets } = (await getAssets(accountAddress, network)) as {
-    assets: AssetType[];
+    assets: Asset[];
   };
 
   // Find the assets that are NFTs.

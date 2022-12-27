@@ -5,13 +5,13 @@ import {
 } from '@cardstack/cardpay-sdk';
 
 import Web3Instance from '@cardstack/models/web3-instance';
-import { AssetType, NetworkType } from '@cardstack/types';
+import { Asset, NetworkType } from '@cardstack/types';
 import { isNativeToken } from '@cardstack/utils';
 
 import logger from 'logger';
 
 export interface GetAssetBalanceParams {
-  asset: Pick<AssetType, 'symbol' | 'address' | 'decimals'>;
+  asset: Pick<Asset, 'symbol' | 'address' | 'decimals'>;
   accountAddress: string;
   network: NetworkType;
 }

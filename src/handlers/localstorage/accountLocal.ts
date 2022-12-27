@@ -1,6 +1,6 @@
 import { getAccountLocal, saveAccountLocal } from './common';
 import {
-  AssetType,
+  Asset,
   CollectibleType,
   DepotType,
   MerchantSafeType,
@@ -41,7 +41,7 @@ export const accountLocalKeys = [
 export const getAssets = (
   accountAddress: string,
   network: NetworkType
-): Promise<{ latestTxBlockNumber?: number; assets: AssetType[] }> =>
+): Promise<{ latestTxBlockNumber?: number; assets: Asset[] }> =>
   getAccountLocal(
     ASSETS,
     accountAddress,
@@ -51,7 +51,7 @@ export const getAssets = (
   );
 
 export const saveAssets = (
-  assets: AssetType[],
+  assets: Asset[],
   accountAddress: string,
   network: NetworkType,
   latestTxBlockNumber?: number

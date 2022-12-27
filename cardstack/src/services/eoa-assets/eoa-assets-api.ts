@@ -2,7 +2,7 @@ import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { createEntityAdapter } from '@reduxjs/toolkit';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import { AssetType } from '@cardstack/types';
+import { Asset } from '@cardstack/types';
 
 import { queryPromiseWrapper } from '../utils';
 
@@ -19,7 +19,7 @@ import {
   GetTokensBalanceResult,
 } from './eoa-assets-types';
 
-const assetsAdapter = createEntityAdapter<AssetType>();
+const assetsAdapter = createEntityAdapter<Asset>();
 
 export const eoaAssetsApi = createApi({
   reducerPath: 'eoaAssetsApi',
@@ -28,7 +28,7 @@ export const eoaAssetsApi = createApi({
   endpoints: builder => ({
     getEOAAssets: builder.query<GetAssetsResult, EOABaseParams>({
       async queryFn(params) {
-        const response = await queryPromiseWrapper<AssetType[], EOABaseParams>(
+        const response = await queryPromiseWrapper<Asset[], EOABaseParams>(
           getAccountAssets,
           params,
           {

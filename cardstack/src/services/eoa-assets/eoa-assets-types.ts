@@ -1,7 +1,7 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { Dictionary, EntityId } from '@reduxjs/toolkit';
 
-import { NetworkType, AssetType, BalanceType } from '@cardstack/types';
+import { NetworkType, Asset, BalanceType } from '@cardstack/types';
 
 export interface EOABaseParams {
   network: NetworkType;
@@ -9,7 +9,7 @@ export interface EOABaseParams {
   nativeCurrency: NativeCurrency;
 }
 
-export type AssetsDictionary = Dictionary<AssetType>;
+export type AssetsDictionary = Dictionary<Asset>;
 export interface GetAssetsResult {
   assets: AssetsDictionary;
   ids: EntityId[];

@@ -7,7 +7,7 @@ import { toLower, uniqBy } from 'lodash';
 import Web3 from 'web3';
 
 import { collectiblesRefreshState } from '@cardstack/redux/collectibles';
-import { AssetType, AssetTypes } from '@cardstack/types';
+import { Asset, AssetTypes } from '@cardstack/types';
 
 import {
   getAssets,
@@ -111,7 +111,7 @@ const discoverTokens = async (baseParams: EOABaseParams) => {
     };
 
     return [...tokens, newToken];
-  }, [] as AssetType[]);
+  }, [] as Asset[]);
 
   return {
     // Merge local assets with possible new ones
@@ -179,7 +179,7 @@ export const getAccountAssets = async ({
   });
 
   // discoverTokens might not include the native token, so we add it manually
-  const nativeToken: AssetType = {
+  const nativeToken: Asset = {
     address: getConstantByNetwork('nativeTokenAddress', network),
     name: getConstantByNetwork('nativeTokenName', network),
     symbol: getConstantByNetwork('nativeTokenSymbol', network),
