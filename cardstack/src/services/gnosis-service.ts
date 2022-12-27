@@ -16,6 +16,7 @@ import { getSafesInstance } from '@cardstack/models/safes-providers';
 import Web3Instance from '@cardstack/models/web3-instance';
 import { Navigation } from '@cardstack/navigation';
 import { Routes } from '@cardstack/navigation/routes';
+import { DepotType, MerchantSafeType, PrepaidCardType } from '@cardstack/types';
 import { updateMerchantSafeWithCustomization } from '@cardstack/utils';
 
 import {
@@ -50,50 +51,67 @@ export const fetchSafes = async (
       (await safesInstance?.view(accountAddress, { viewAll: true }))?.safes ||
       [];
 
-    const safesWithTokenPrices = await Promise.all(
-      safes?.map(safe => updateSafeWithTokenPrices(safe, nativeCurrency))
+    const { depots, prepaidCards, merchantSafes } = normalizeSafesByType(safes);
+
+    // TODO: Move to prepaid-card utils.
+    const expandPrepaidCards = Promise.all(
+      prepaidCards.map(async prepaidCard => ({
+        // The order matters, first add new property then modify tokens
+        // otherwise tokens with prices will be overwritten by old tokens
+        ...(await addPrepaidCardCustomization(prepaidCard)),
+        ...((await updateSafeWithTokenPrices(
+          prepaidCard,
+          nativeCurrency
+        )) as PrepaidCardType),
+      }))
     );
 
-    const { depots, prepaidCards, merchantSafes } = normalizeSafesByType(
-      (safesWithTokenPrices as unknown) as Safe[]
+    // TODO: Move to merchant-utils.
+    const expandMerchantSafes = Promise.all(
+      merchantSafes.map(
+        async merchantSafe =>
+          ({
+            ...(await updateMerchantSafeWithCustomization(merchantSafe)),
+            ...(await updateSafeWithTokenPrices(merchantSafe, nativeCurrency)),
+            ...{
+              revenueBalances: await getRevenuePoolBalances(
+                merchantSafe.address,
+                nativeCurrency
+              ),
+            },
+          } as MerchantSafeType)
+      )
     );
 
-    const addPrepaidCardsCustomization = Promise.all(
-      prepaidCards.map(addPrepaidCardCustomization)
+    // TODO: Move to depot-utils.
+    const expandDepotSafes = Promise.all(
+      depots.map(
+        async depot =>
+          ({
+            ...(await updateSafeWithTokenPrices(depot, nativeCurrency)),
+          } as DepotType)
+      )
     );
 
-    const addMerchantSafesCustomization = Promise.all(
-      merchantSafes.map(updateMerchantSafeWithCustomization)
-    );
-
-    const [extendedPrepaidCards, extendedMerchantSafes] = await Promise.all([
-      addPrepaidCardsCustomization,
-      addMerchantSafesCustomization,
+    const [
+      prepaidCardsTyped,
+      merchantSafesTyped,
+      depotsTyped,
+    ] = await Promise.all([
+      expandPrepaidCards,
+      expandMerchantSafes,
+      expandDepotSafes,
     ]);
 
     // Unix timestamp
     const timestamp = Math.ceil(Date.now() / 1000).toString();
 
     const data = {
-      depots,
-      prepaidCards: extendedPrepaidCards,
-      merchantSafes: extendedMerchantSafes,
+      depots: depotsTyped,
+      prepaidCards: prepaidCardsTyped,
+      merchantSafes: merchantSafesTyped,
       timestamp,
     };
-
-    if (extendedMerchantSafes.length) {
-      const merchantSafesWithRevenue = await Promise.all(
-        extendedMerchantSafes.map(async merchantSafe => ({
-          ...merchantSafe,
-          revenueBalances: await getRevenuePoolBalances(
-            merchantSafe.address,
-            nativeCurrency
-          ),
-        }))
-      );
-
-      data.merchantSafes = merchantSafesWithRevenue;
-    }
 
     const network = await getNetwork();
 

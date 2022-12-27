@@ -1,11 +1,12 @@
-import {
-  DepotSafe,
-  MerchantSafe,
-  PrepaidCardSafe,
-} from '@cardstack/cardpay-sdk';
-
 import { getAccountLocal, saveAccountLocal } from './common';
-import { AssetType, CollectibleType, NetworkType } from '@cardstack/types';
+import {
+  AssetType,
+  CollectibleType,
+  DepotType,
+  MerchantSafeType,
+  NetworkType,
+  PrepaidCardType,
+} from '@cardstack/types';
 
 const assetsVersion = '1.0.1';
 
@@ -68,7 +69,7 @@ export const getPrepaidCards = (
   network: NetworkType
 ): Promise<{
   timestamp: string;
-  prepaidCards: PrepaidCardSafe[];
+  prepaidCards: PrepaidCardType[];
 }> =>
   getAccountLocal(
     PREPAID_CARDS,
@@ -79,7 +80,7 @@ export const getPrepaidCards = (
   );
 
 export const savePrepaidCards = (
-  prepaidCards: PrepaidCardSafe[],
+  prepaidCards: PrepaidCardType[],
   accountAddress: string,
   network: NetworkType,
   timestamp: string
@@ -95,7 +96,7 @@ export const savePrepaidCards = (
 export const getDepots = (
   accountAddress: string,
   network: NetworkType
-): Promise<{ timestamp: string; depots: DepotSafe[] }> =>
+): Promise<{ timestamp: string; depots: DepotType[] }> =>
   getAccountLocal(
     DEPOTS,
     accountAddress,
@@ -105,7 +106,7 @@ export const getDepots = (
   );
 
 export const saveDepots = (
-  depots: DepotSafe[],
+  depots: DepotType[],
   accountAddress: string,
   network: NetworkType,
   timestamp: string
@@ -121,7 +122,7 @@ export const saveDepots = (
 export const getMerchantSafes = (
   accountAddress: string,
   network: NetworkType
-): Promise<{ timestamp: string; merchantSafes: MerchantSafe[] }> =>
+): Promise<{ timestamp: string; merchantSafes: MerchantSafeType[] }> =>
   getAccountLocal(
     MERCHANT_SAFES,
     accountAddress,
@@ -131,7 +132,7 @@ export const getMerchantSafes = (
   );
 
 export const saveMerchantSafes = (
-  merchantSafes: MerchantSafe[],
+  merchantSafes: MerchantSafeType[],
   accountAddress: string,
   network: NetworkType,
   timestamp: string
