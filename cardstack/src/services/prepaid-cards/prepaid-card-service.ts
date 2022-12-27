@@ -1,4 +1,8 @@
-import { getSDK, PrepaidCardSafe } from '@cardstack/cardpay-sdk';
+import {
+  getSDK,
+  PrepaidCardSafe,
+  NativeCurrency,
+} from '@cardstack/cardpay-sdk';
 
 import {
   EthersSignerParams,
@@ -35,6 +39,19 @@ export const addPrepaidCardCustomization = async (card: PrepaidCardSafe) => {
 
   return card;
 };
+
+export const extendPrepaidCard = async (
+  prepaidCard: PrepaidCardSafe,
+  nativeCurrency: NativeCurrency
+) => ({
+  // The order matters, first add new property then modify tokens
+  // otherwise tokens with prices will be overwritten by old tokens
+  ...(await addPrepaidCardCustomization(prepaidCard)),
+  ...((await updateSafeWithTokenPrices(
+    prepaidCard,
+    nativeCurrency
+  )) as PrepaidCardType),
+});
 
 export const getPrepaidCardByAddress = async (
   address: string
@@ -80,15 +97,9 @@ export const fetchPrepaidCards = async ({
     )?.safes as PrepaidCardSafe[]) || [];
 
   const extendedPrepaidCards = await Promise.all(
-    prepaidCardSafes?.map(async prepaidCard => ({
-      // The order matters, first add new property then modify tokens
-      // otherwise tokens with prices will be overwritten by old tokens
-      ...(await addPrepaidCardCustomization(prepaidCard)),
-      ...((await updateSafeWithTokenPrices(
-        prepaidCard,
-        nativeCurrency
-      )) as PrepaidCardType),
-    }))
+    prepaidCardSafes?.map(async prepaidCard =>
+      extendPrepaidCard(prepaidCard, nativeCurrency)
+    )
   );
 
   return {

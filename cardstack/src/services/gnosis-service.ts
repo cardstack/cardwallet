@@ -16,7 +16,7 @@ import { getSafesInstance } from '@cardstack/models/safes-providers';
 import Web3Instance from '@cardstack/models/web3-instance';
 import { Navigation } from '@cardstack/navigation';
 import { Routes } from '@cardstack/navigation/routes';
-import { DepotType, MerchantSafeType, PrepaidCardType } from '@cardstack/types';
+import { DepotType, MerchantSafeType } from '@cardstack/types';
 import { updateMerchantSafeWithCustomization } from '@cardstack/utils';
 
 import {
@@ -31,7 +31,10 @@ import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import logger from 'logger';
 
 import { getNativeBalanceFromOracle } from './exchange-rate-service';
-import { addPrepaidCardCustomization } from './prepaid-cards/prepaid-card-service';
+import {
+  addPrepaidCardCustomization,
+  extendPrepaidCard,
+} from './prepaid-cards/prepaid-card-service';
 
 export const getSafeData = async (address: string) => {
   const safesInstance = await getSafesInstance();
@@ -51,23 +54,15 @@ export const fetchSafes = async (
       (await safesInstance?.view(accountAddress, { viewAll: true }))?.safes ||
       [];
 
-    const { depots, prepaidCards, merchantSafes } = normalizeSafesByType(safes);
+    const { depots, prepaidCards, merchantSafes } = groupSafesByType(safes);
 
-    // TODO: Move to prepaid-card utils.
-    const expandPrepaidCards = Promise.all(
-      prepaidCards.map(async prepaidCard => ({
-        // The order matters, first add new property then modify tokens
-        // otherwise tokens with prices will be overwritten by old tokens
-        ...(await addPrepaidCardCustomization(prepaidCard)),
-        ...((await updateSafeWithTokenPrices(
-          prepaidCard,
-          nativeCurrency
-        )) as PrepaidCardType),
-      }))
+    const extendAllPrepaidCards = Promise.all(
+      prepaidCards.map(async prepaidCard =>
+        extendPrepaidCard(prepaidCard, nativeCurrency)
+      )
     );
 
-    // TODO: Move to merchant-utils.
-    const expandMerchantSafes = Promise.all(
+    const extendAllMerchantSafes = Promise.all(
       merchantSafes.map(
         async merchantSafe =>
           ({
@@ -83,8 +78,7 @@ export const fetchSafes = async (
       )
     );
 
-    // TODO: Move to depot-utils.
-    const expandDepotSafes = Promise.all(
+    const extendAllDepotSafes = Promise.all(
       depots.map(
         async depot =>
           ({
@@ -98,9 +92,9 @@ export const fetchSafes = async (
       merchantSafesTyped,
       depotsTyped,
     ] = await Promise.all([
-      expandPrepaidCards,
-      expandMerchantSafes,
-      expandDepotSafes,
+      extendAllPrepaidCards,
+      extendAllMerchantSafes,
+      extendAllDepotSafes,
     ]);
 
     // Unix timestamp
@@ -196,7 +190,7 @@ export const fetchGnosisSafes = async (address: string) => {
       });
     });
 
-    const { depots, prepaidCards, merchantSafes } = normalizeSafesByType(safes);
+    const { depots, prepaidCards, merchantSafes } = groupSafesByType(safes);
 
     const extendedPrepaidCards = await Promise.all(
       prepaidCards.map(addPrepaidCardCustomization)
@@ -216,7 +210,7 @@ export const fetchGnosisSafes = async (address: string) => {
 };
 
 // Helpers
-const normalizeSafesByType = (safes: Safe[]) =>
+const groupSafesByType = (safes: Safe[]) =>
   safes.reduce(
     (
       accum: {
