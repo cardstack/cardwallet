@@ -1,7 +1,6 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
-import { act, renderHook } from '@testing-library/react-hooks';
-import { waitFor } from '@testing-library/react-native';
+import { act, renderHook, waitFor } from '@testing-library/react-native';
 import Web3 from 'web3';
 
 import { getSafesInstance } from '@cardstack/models/safes-providers';

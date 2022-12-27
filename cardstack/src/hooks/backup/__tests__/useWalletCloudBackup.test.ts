@@ -1,5 +1,4 @@
-import { act, renderHook } from '@testing-library/react-hooks';
-import { waitFor } from '@testing-library/react-native';
+import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { Alert } from 'react-native';
 import * as reactRedux from 'react-redux';
 

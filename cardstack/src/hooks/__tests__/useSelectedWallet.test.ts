@@ -1,5 +1,4 @@
-import { renderHook, act } from '@testing-library/react-hooks';
-import { waitFor } from '@testing-library/react-native';
+import { renderHook, act, waitFor } from '@testing-library/react-native';
 
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import { useWallets } from '@rainbow-me/hooks';

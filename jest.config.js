@@ -1,7 +1,12 @@
+const testingLibraryPreset = require('@testing-library/react-native/jest-preset');
+const expoPreset = require('jest-expo/jest-preset');
+
 const { pathsToModuleNameMapper } = require('ts-jest/utils');
 const { compilerOptions } = require('./tsconfig.json');
 
 module.exports = {
+  ...expoPreset,
+  ...testingLibraryPreset,
   collectCoverageFrom: [
     '<rootDir>/cardstack/src/*/**/*.js',
     '<rootDir>/cardstack/src/*/**/*.ts',
@@ -17,7 +22,6 @@ module.exports = {
   ],
   coverageDirectory: '.coverage',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  preset: 'jest-expo',
   setupFilesAfterEnv: [
     '<rootDir>/cardstack/src/test-utils/jest-setup.js',
     './node_modules/react-native-gesture-handler/jestSetup.js',

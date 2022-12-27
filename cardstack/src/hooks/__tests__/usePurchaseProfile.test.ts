@@ -1,5 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
-import { act } from '@testing-library/react-native';
+import { renderHook, waitFor, act } from '@testing-library/react-native';
 import { useIAP, Product, Purchase } from 'react-native-iap';
 
 import logger from 'logger';
@@ -64,7 +63,7 @@ describe('usePurchaseProfile', () => {
       requestPurchase: mockedRequestPurchase.mockResolvedValue(null),
       finishTransaction: mockedFinishTransaction.mockResolvedValue(null),
       products: [mockProduct],
-      currentPurchase: currentPurchase,
+      currentPurchase,
     }));
   };
 
@@ -75,24 +74,25 @@ describe('usePurchaseProfile', () => {
   beforeEach(() => {
     logger.sentry = jest.fn();
     logger.log = jest.fn();
-
-    mockUseIAP();
   });
 
   it('should render usePurchaseProfile hook', async () => {
+    mockUseIAP();
     const { result } = renderHook(() => usePurchaseProfile(profile));
 
     expect(result.current).toBeDefined();
   });
 
   it('should have profileProduct available', () => {
+    mockUseIAP();
     const { result } = renderHook(() => usePurchaseProfile(profile));
 
     expect(result.current.profileProduct).toMatchObject(mockProduct);
   });
 
   it('should request purchase when product purchase called', async () => {
-    const { result, waitFor } = renderHook(() => usePurchaseProfile(profile));
+    mockUseIAP();
+    const { result } = renderHook(() => usePurchaseProfile(profile));
 
     act(() => {
       result.current.purchaseProfile();
@@ -103,8 +103,8 @@ describe('usePurchaseProfile', () => {
     });
   });
 
-  it('should getProducts  on init call', async () => {
-    const { waitFor } = renderHook(() => useInitIAPProducts());
+  it('should getProducts on init call', async () => {
+    renderHook(() => useInitIAPProducts());
 
     await waitFor(() => {
       expect(mockedGetProducts).toHaveBeenCalledWith(['0001']);
@@ -114,7 +114,7 @@ describe('usePurchaseProfile', () => {
   it('should call validateReceipt when a currentPurchase is updated', async () => {
     mockUseIAP(mockPurchase);
 
-    const { waitFor } = renderHook(() => usePurchaseProfile(profile));
+    renderHook(() => usePurchaseProfile(profile));
 
     await waitFor(() => {
       expect(mockValidateReceipt).toBeCalledWith({
@@ -128,7 +128,7 @@ describe('usePurchaseProfile', () => {
   it('should call mockedFinishTransaction to finish the IAP transaction after a successful purchase', async () => {
     mockUseIAP(mockPurchase);
 
-    const { waitFor } = renderHook(() => usePurchaseProfile(profile));
+    renderHook(() => usePurchaseProfile(profile));
 
     await waitFor(() => {
       expect(mockedFinishTransaction).toBeCalled();

@@ -1,5 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
-import { waitFor, act } from '@testing-library/react-native';
+import { waitFor, act, renderHook } from '@testing-library/react-native';
 import { Alert } from 'react-native';
 
 import { useBiometricSwitch } from '@cardstack/components/BiometricSwitch';
@@ -393,7 +392,7 @@ describe('useUnlockScreen', () => {
         setInputPin(wrongPIN);
       });
 
-      rerender();
+      rerender({});
 
       expect(spyAlert).toBeCalledWith(
         'Temporary block',

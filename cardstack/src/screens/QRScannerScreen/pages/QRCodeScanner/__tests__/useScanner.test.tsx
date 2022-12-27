@@ -1,5 +1,5 @@
 import { NavigationContext } from '@react-navigation/native';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-native';
 import React from 'react';
 import { Alert } from 'react-native';
 

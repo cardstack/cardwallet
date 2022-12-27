@@ -1,5 +1,5 @@
 import { useRoute } from '@react-navigation/native';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-native';
 
 import { getSafeData, useGetPrepaidCardsQuery } from '@cardstack/services';
 

@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook, waitFor } from '@testing-library/react-native';
 
 import { useBackupRestorePhraseScreen } from '../useBackupRestorePhraseScreen';
 
@@ -35,7 +35,7 @@ describe('useBackupRestorePhraseScreen', () => {
   });
 
   it('should call handle wallet import on done press', async () => {
-    const { result, waitFor } = renderHook(useBackupRestorePhraseScreen);
+    const { result } = renderHook(useBackupRestorePhraseScreen);
 
     act(() => {
       result.current.handlePhraseTextChange(mockSeedPhrase);
@@ -54,7 +54,7 @@ describe('useBackupRestorePhraseScreen', () => {
   });
 
   it('should set phrase as valid when seed provided is valid but not well formatted', async () => {
-    const { result, waitFor } = renderHook(useBackupRestorePhraseScreen);
+    const { result } = renderHook(useBackupRestorePhraseScreen);
 
     act(() => {
       result.current.handlePhraseTextChange(mockDirtySeedPhrase);
