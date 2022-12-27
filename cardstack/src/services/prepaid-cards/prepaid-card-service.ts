@@ -10,7 +10,6 @@ import {
 } from '@cardstack/models/ethers-wallet';
 import { getSafesInstance } from '@cardstack/models/safes-providers';
 import { getSafeData } from '@cardstack/services';
-import { PrepaidCardType } from '@cardstack/types';
 import { fetchCardCustomizationFromDID } from '@cardstack/utils';
 
 import logger from 'logger';

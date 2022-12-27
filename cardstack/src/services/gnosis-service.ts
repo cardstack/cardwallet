@@ -29,7 +29,6 @@ import logger from 'logger';
 
 import { getNativeBalanceFromOracle } from './exchange-rate-service';
 import { extendPrepaidCard } from './prepaid-cards/prepaid-card-service';
-import AssetTypes from '@rainbow-me/helpers/assetTypes';
 
 export const getSafeData = async (address: string) => {
   const safesInstance = await getSafesInstance();
@@ -52,7 +51,7 @@ export const fetchSafes = async (
     const { depots, prepaidCards, merchantSafes } = groupSafesByType(safes);
 
     const extendAllPrepaidCards = Promise.all(
-      prepaidCards.map(async prepaidCard =>
+      prepaidCards.map(prepaidCard =>
         extendPrepaidCard(prepaidCard, nativeCurrency)
       )
     );
@@ -78,9 +77,9 @@ export const fetchSafes = async (
     );
 
     const [
-      prepaidCardsTyped,
-      merchantSafesTyped,
-      depotsTyped,
+      extendedPrepaidCards,
+      extendedMerchantSafes,
+      extendedDepots,
     ] = await Promise.all([
       extendAllPrepaidCards,
       extendAllMerchantSafes,
@@ -91,9 +90,9 @@ export const fetchSafes = async (
     const timestamp = Math.ceil(Date.now() / 1000).toString();
 
     const data = {
-      depots: depotsTyped,
-      prepaidCards: prepaidCardsTyped,
-      merchantSafes: merchantSafesTyped,
+      depots: extendedDepots,
+      prepaidCards: extendedPrepaidCards,
+      merchantSafes: extendedMerchantSafes,
       timestamp,
     };
 
