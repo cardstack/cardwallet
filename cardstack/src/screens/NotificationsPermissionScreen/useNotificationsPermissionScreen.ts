@@ -17,16 +17,15 @@ export const useNotificationsPermissionScreen = () => {
     onUpdateOptionStatus,
   } = useUpdateNotificationPreferences();
 
-  const handleEnableNotificationsOnPress = useCallback(async () => {
-    await checkPushPermissionAndRegisterToken();
-
-    navigateOnboardingTo(Routes.BACKUP_EXPLANATION);
-  }, [navigateOnboardingTo]);
-
   const handleSkipPress = useCallback(() => {
     triggerSkipNotificationPermission();
     navigateOnboardingTo(Routes.BACKUP_EXPLANATION);
   }, [triggerSkipNotificationPermission, navigateOnboardingTo]);
+
+  const handleEnableNotificationsOnPress = useCallback(async () => {
+    await checkPushPermissionAndRegisterToken();
+    handleSkipPress();
+  }, [handleSkipPress]);
 
   return {
     options,
