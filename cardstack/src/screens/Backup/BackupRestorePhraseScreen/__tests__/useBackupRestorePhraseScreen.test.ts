@@ -1,4 +1,6 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook, waitFor } from '@testing-library/react-native';
+
+import logger from 'logger';
 
 import { useBackupRestorePhraseScreen } from '../useBackupRestorePhraseScreen';
 
@@ -35,7 +37,7 @@ describe('useBackupRestorePhraseScreen', () => {
   });
 
   it('should call handle wallet import on done press', async () => {
-    const { result, waitFor } = renderHook(useBackupRestorePhraseScreen);
+    const { result } = renderHook(useBackupRestorePhraseScreen);
 
     act(() => {
       result.current.handlePhraseTextChange(mockSeedPhrase);
@@ -54,7 +56,7 @@ describe('useBackupRestorePhraseScreen', () => {
   });
 
   it('should set phrase as valid when seed provided is valid but not well formatted', async () => {
-    const { result, waitFor } = renderHook(useBackupRestorePhraseScreen);
+    const { result } = renderHook(useBackupRestorePhraseScreen);
 
     act(() => {
       result.current.handlePhraseTextChange(mockDirtySeedPhrase);
@@ -96,6 +98,8 @@ describe('useBackupRestorePhraseScreen', () => {
   });
 
   it('should set phrase as wrong after Done button press with invalid phrase input', () => {
+    const spylogger = jest.spyOn(logger, 'error').mockImplementation(jest.fn);
+
     const { result } = renderHook(useBackupRestorePhraseScreen);
 
     act(() => {
@@ -109,6 +113,7 @@ describe('useBackupRestorePhraseScreen', () => {
     expect(result.current.phrase).toMatch(mockInvalidSeedPhrase);
     expect(result.current.isPhraseComplete).toBeTruthy();
     expect(result.current.isPhraseWrong).toBeTruthy();
+    expect(spylogger).toBeCalledWith('Error: Seed phrase provided is invalid.');
   });
 
   it('should clean phrase on reset call', () => {

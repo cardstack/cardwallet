@@ -21,7 +21,7 @@ module.exports = {
   extends: 'satya164',
   plugins: ['jest'],
   settings: {
-    'react': { version: '17' },
+    'react': { version: '18' },
     'import/resolver': {
       'node': {
         extensions: [

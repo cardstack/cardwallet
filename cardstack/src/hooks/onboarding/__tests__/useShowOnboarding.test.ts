@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act, waitFor } from '@testing-library/react-native';
 
 import { useShowOnboarding } from '@cardstack/hooks/onboarding/useShowOnboarding';
 import { needsNotificationPermission } from '@cardstack/models/firebase';
@@ -86,7 +86,7 @@ describe('useShowOnboarding', () => {
   it('should navigate to notification permission flow when still not granted and has not skipped', async () => {
     mockNeedsNotificationPermission(true);
 
-    const { result, waitFor } = renderHook(useShowOnboarding);
+    const { result } = renderHook(useShowOnboarding);
 
     act(() => {
       result.current.navigateToNextOnboardingStep();
@@ -103,7 +103,7 @@ describe('useShowOnboarding', () => {
       hasSkippedNotificationPermission: true,
     });
 
-    const { result, waitFor } = renderHook(useShowOnboarding);
+    const { result } = renderHook(useShowOnboarding);
 
     act(() => {
       result.current.navigateToNextOnboardingStep();
@@ -117,7 +117,7 @@ describe('useShowOnboarding', () => {
   it('should NOT navigate to notification permission when permissions already fullfilled', async () => {
     mockNeedsNotificationPermission(false);
 
-    const { result, waitFor } = renderHook(useShowOnboarding);
+    const { result } = renderHook(useShowOnboarding);
 
     act(() => {
       result.current.navigateToNextOnboardingStep();
@@ -131,7 +131,7 @@ describe('useShowOnboarding', () => {
   it('should NOT navigate to profile flow when profile hasnt been fetched', async () => {
     mockPrimarySafeHelper({ hasProfile: false, isLoadingOnInit: true });
 
-    const { result, waitFor } = renderHook(useShowOnboarding);
+    const { result } = renderHook(useShowOnboarding);
 
     act(() => {
       result.current.navigateToNextOnboardingStep();
@@ -150,7 +150,7 @@ describe('useShowOnboarding', () => {
       hasSkippedNotificationPermission: true,
     });
 
-    const { result, waitFor } = renderHook(useShowOnboarding);
+    const { result } = renderHook(useShowOnboarding);
 
     act(() => {
       result.current.navigateToNextOnboardingStep();
@@ -167,7 +167,7 @@ describe('useShowOnboarding', () => {
       isLoadingOnInit: true,
     });
 
-    const { result, waitFor } = renderHook(useShowOnboarding);
+    const { result } = renderHook(useShowOnboarding);
 
     act(() => {
       result.current.navigateToNextOnboardingStep();
@@ -182,7 +182,7 @@ describe('useShowOnboarding', () => {
       isLoadingOnInit: false,
     });
 
-    const { result, waitFor } = renderHook(useShowOnboarding);
+    const { result } = renderHook(useShowOnboarding);
 
     act(() => {
       result.current.navigateToNextOnboardingStep();
@@ -201,7 +201,7 @@ describe('useShowOnboarding', () => {
       isLoadingOnInit: false,
     });
 
-    const { result, waitFor } = renderHook(useShowOnboarding);
+    const { result } = renderHook(useShowOnboarding);
 
     act(() => {
       result.current.navigateToNextOnboardingStep();
@@ -215,7 +215,7 @@ describe('useShowOnboarding', () => {
       hasSkippedProfileCreation: true,
     });
 
-    const { result, waitFor } = renderHook(useShowOnboarding);
+    const { result } = renderHook(useShowOnboarding);
 
     act(() => {
       result.current.navigateToNextOnboardingStep();
@@ -232,7 +232,7 @@ describe('useShowOnboarding', () => {
       isLoadingOnInit: false,
     });
 
-    const { result, waitFor } = renderHook(useShowOnboarding);
+    const { result } = renderHook(useShowOnboarding);
 
     act(() => {
       result.current.navigateToNextOnboardingStep();
@@ -249,7 +249,7 @@ describe('useShowOnboarding', () => {
       hasSkippedBackup: true,
     });
 
-    const { result, waitFor } = renderHook(useShowOnboarding);
+    const { result } = renderHook(useShowOnboarding);
 
     act(() => {
       result.current.navigateToNextOnboardingStep();

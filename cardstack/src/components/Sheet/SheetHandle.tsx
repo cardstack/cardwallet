@@ -1,5 +1,5 @@
 import React from 'react';
-import { ViewProps } from 'react-native';
+import { ViewStyle } from 'react-native';
 
 import { Container } from '../Container';
 
@@ -20,7 +20,7 @@ export const SheetHandle = ({
   );
 };
 
-export interface SheetHandleProps extends ViewProps {
+export interface SheetHandleProps extends ViewStyle {
   /** color*/
   color?: any;
   /** opacity*/

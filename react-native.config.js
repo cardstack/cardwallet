@@ -5,11 +5,6 @@ module.exports = {
     ios: {},
   },
   dependencies: {
-    'react-native-tooltips': {
-      platforms: {
-        ios: null,
-      },
-    },
     '@rainbow-me/react-native-payments': {
       platforms: {
         android: null,

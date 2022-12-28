@@ -1,5 +1,5 @@
 import { getSDK } from '@cardstack/cardpay-sdk';
-import { captureException } from '@sentry/minimal';
+import { captureException } from '@sentry/react-native';
 
 import logger from 'logger';
 

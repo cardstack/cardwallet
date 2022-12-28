@@ -1,5 +1,4 @@
-import { renderHook, act } from '@testing-library/react-hooks';
-import { waitFor } from '@testing-library/react-native';
+import { renderHook, act, waitFor } from '@testing-library/react-native';
 
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import { useWallets } from '@rainbow-me/hooks';
@@ -59,7 +58,7 @@ describe('useSelectedWallet', () => {
     // FakeTimers is a solution mentioned in the Testing Library docs:
     // https://callstack.github.io/react-native-testing-library/docs/understanding-act/
     // to avoid the `You called act(async () => ...) without await` error on console.
-    jest.useFakeTimers();
+    jest.useFakeTimers({ legacyFakeTimers: true });
 
     const { result } = renderHook(() => useSelectedWallet());
 

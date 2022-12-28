@@ -75,7 +75,7 @@ const RequestPrepaidCardScreen = () => {
                 label={strings.input.label}
                 error={inputHasError ? strings.input.error : undefined}
                 onChangeText={onChangeText}
-                autoCompleteType="email"
+                autoComplete="email"
                 keyboardType="email-address"
                 autoCapitalize="none"
                 value={email}

@@ -3,7 +3,6 @@ import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import CoinIconFallback from './CoinIconFallback';
 import { CoinIcon as ReactCoinIcon } from '@cardstack/components';
-import { useColorForAsset } from '@rainbow-me/hooks';
 import { getTokenMetadata, isETH, magicMemo } from '@rainbow-me/utils';
 
 export const CoinIconSize = 40;
@@ -19,7 +18,6 @@ const CoinIcon = ({
   ...props
 }) => {
   const tokenMetadata = getTokenMetadata(address);
-  const color = useColorForAsset({ address });
 
   const forceFallback = !symbol && !isETH(address) && isNil(tokenMetadata);
   return (
@@ -27,7 +25,6 @@ const CoinIcon = ({
       <StyledCoinIcon
         {...props}
         address={address}
-        color={color}
         fallbackRenderer={CoinIconFallback}
         forceFallback={forceFallback}
         shadowColor="transparent"

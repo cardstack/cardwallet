@@ -42,7 +42,7 @@ const PhraseInput = forwardRef((props: PasswordInputProps, ref) => {
         lineHeight={30} // Only works on iOS
         selectionColor="teal"
         allowFontScaling={false}
-        autoCompleteType="off"
+        autoComplete="off"
         autoCorrect={false}
         autoCapitalize="none"
         blurOnSubmit={true}

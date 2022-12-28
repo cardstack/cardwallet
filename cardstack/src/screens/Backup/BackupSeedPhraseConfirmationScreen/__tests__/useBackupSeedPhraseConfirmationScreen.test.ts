@@ -1,5 +1,5 @@
 import { StackActions, useRoute } from '@react-navigation/native';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-native';
 import { act } from 'react-test-renderer';
 
 import { BackupRouteParams } from '../../types';

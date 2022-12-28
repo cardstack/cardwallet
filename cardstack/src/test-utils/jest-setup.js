@@ -24,7 +24,7 @@ jest.mock('redux-persist', () => {
 });
 
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
-
+jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 jest.mock('react-native-flipper');
 
 jest.mock('react-native-keychain', () => ({
@@ -117,10 +117,6 @@ jest.mock('react-native-cloud-fs', () => ({
 
 jest.mock('react-native-fs', () => ({
   RNFS: jest.fn(),
-}));
-
-jest.mock('rn-dominant-color', () => ({
-  getColorFromURL: jest.fn(),
 }));
 
 jest.mock('react-native-haptic-feedback', () => ({

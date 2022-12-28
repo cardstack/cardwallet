@@ -7,14 +7,12 @@ import { useAccountSettings, useContacts } from '../../hooks';
 import { magicMemo } from '../../utils';
 import Divider from '../Divider';
 import { showDeleteContactActionSheet } from '../contacts';
-import CopyTooltip from '../copy-tooltip';
 import { ProfileAvatarButton, ProfileModal, ProfileNameInput } from './profile';
 import {
   AnimatedPressable,
   CenteredContainer,
   OptionItem,
   Text,
-  TruncatedAddress,
 } from '@cardstack/components';
 import theme from '@cardstack/theme';
 import { padding } from '@rainbow-me/styles';
@@ -71,10 +69,6 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
     android && Keyboard.dismiss();
   }, [address, goBack, onRemoveContact, value]);
 
-  const handleTriggerFocusInput = useCallback(() => inputRef.current?.focus(), [
-    inputRef,
-  ]);
-
   const { colors } = useTheme();
 
   return (
@@ -97,13 +91,6 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
           testID="contact-profile-name-input"
           value={value}
         />
-        <CopyTooltip
-          onHide={handleTriggerFocusInput}
-          textToCopy={address}
-          tooltipText="Copy Address"
-        >
-          <TruncatedAddress address={address} />
-        </CopyTooltip>
       </CenteredContainer>
       <CenteredContainer marginVertical={5}>
         <AnimatedPressable onPress={handleAddContact}>

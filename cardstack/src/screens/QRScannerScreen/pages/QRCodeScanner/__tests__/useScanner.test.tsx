@@ -1,5 +1,5 @@
 import { NavigationContext } from '@react-navigation/native';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-native';
 import React from 'react';
 import { Alert } from 'react-native';
 
@@ -39,10 +39,12 @@ jest.mock('@rainbow-me/hooks', () => ({
   useTimeout: () => ({ stopTimeout: jest.fn(), startTimeout: jest.fn() }),
 }));
 
-const wrapper: React.FC<{ isFocused: boolean }> = ({
-  children,
-  isFocused = true,
-}) => (
+interface WrapperProps {
+  isFocused: boolean;
+  children?: React.ReactNode;
+}
+
+const wrapper = ({ children, isFocused = true }: WrapperProps) => (
   <NavigationContext.Provider
     // @ts-expect-error not matching nav params
     value={{
@@ -54,8 +56,16 @@ const wrapper: React.FC<{ isFocused: boolean }> = ({
   </NavigationContext.Provider>
 );
 
+// We need to create this bc initialProps is not passed along while using renderHook
+// https://testing-library.com/docs/react-testing-library/api#renderhook-options-initialprops
+const createWrapperWithProps = (
+  Wrapper: typeof wrapper,
+  props: WrapperProps
+) => ({ children }: WrapperProps) => <Wrapper {...props}>{children}</Wrapper>;
+
 describe('useScanner', () => {
   const spyAlert = jest.spyOn(Alert, 'alert');
+  console.error = jest.fn();
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -71,8 +81,7 @@ describe('useScanner', () => {
 
   it('should disable scanning if screen is NOT focused', async () => {
     const { result } = renderHook(() => useScanner(), {
-      wrapper,
-      initialProps: { isFocused: false },
+      wrapper: createWrapperWithProps(wrapper, { isFocused: false }),
     });
 
     expect(result.current.isScanningEnabled).toBeFalsy();

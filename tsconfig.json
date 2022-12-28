@@ -13,7 +13,6 @@
     "target": "es2020",
     "baseUrl": ".",
     "paths": {
-      "@rainbow-me/apollo": ["src/apollo"],
       "@rainbow-me/assets": ["src/assets"],
       "@rainbow-me/config": ["src/config"],
       "@rainbow-me/entities": ["src/entities"],

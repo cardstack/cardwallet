@@ -1,10 +1,14 @@
-import * as sentry from '@sentry/minimal';
+import * as sentry from '@sentry/react-native';
 
 import { IncidentType } from '@cardstack/types';
 
 import logger from 'logger';
 
 import { queryPromiseWrapper, filterIncident } from '../index';
+
+jest.mock('@sentry/react-native', () => ({
+  captureException: jest.fn(),
+}));
 
 describe('service utils', () => {
   describe('queryPromiseWrapper', () => {

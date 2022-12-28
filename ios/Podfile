@@ -1,5 +1,5 @@
 require File.join(File.dirname(`node --print "require.resolve('expo/package.json')"`), "scripts/autolinking")
-platform :ios, '12.0'
+platform :ios, '13.0'
 install! 'cocoapods', :deterministic_uuids => false
 
 require_relative '../node_modules/react-native/scripts/react_native_pods'
@@ -30,8 +30,13 @@ target 'Rainbow' do
   use_react_native!(
     :path => config[:reactNativePath],
     # to enable hermes on iOS, change `false` to `true` and then install pods
-    :hermes_enabled => flags[:hermes_enabled],
+    :hermes_enabled => true,
     :fabric_enabled => flags[:fabric_enabled],
+    # Enables Flipper.
+    #
+    # Note that if you have use_frameworks! enabled, Flipper will not work and
+    # you should disable the next line.
+    :flipper_configuration => ENV['CI'] ? FlipperConfiguration.disabled : FlipperConfiguration.enabled,
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
@@ -45,21 +50,19 @@ target 'Rainbow' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
-  # Enables Flipper.
-  #
-  # Note that if you have use_frameworks! enabled, Flipper will not work and
-  # you should disable these next few lines.
-  if ENV['SKIP_FLIPPER'] != "true"
-    use_flipper!({ 'Flipper' => '0.144.0' })
-  end
-    post_install do |installer|
-      react_native_post_install(installer)
-      __apply_Xcode_12_5_M1_post_install_workaround(installer)
+  post_install do |installer|
+    react_native_post_install(
+      installer,
+      # Set `mac_catalyst_enabled` to `true` in order to apply patches
+      # necessary for Mac Catalyst builds
+      :mac_catalyst_enabled => false
+    )
+    __apply_Xcode_12_5_M1_post_install_workaround(installer)
 
-      # This is necessary for Xcode 14, because it signs resource bundles by default
-      # when building for devices.
-      installer.target_installation_results.pod_target_installation_results
-      .each do |pod_name, target_installation_result|
+    # This is necessary for Xcode 14, because it signs resource bundles by default
+    # when building for devices.
+    installer.target_installation_results.pod_target_installation_results
+    .each do |pod_name, target_installation_result|
       target_installation_result.resource_bundle_targets.each do |resource_bundle_target|
         resource_bundle_target.build_configurations.each do |config|
           config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'

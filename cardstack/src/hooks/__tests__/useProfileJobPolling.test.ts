@@ -1,5 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
-import { act } from '@testing-library/react-native';
+import { renderHook, act } from '@testing-library/react-native';
 
 import {
   useGetProfileJobStatusQuery,
@@ -65,7 +64,7 @@ describe('useProfileJobPolling', () => {
     );
 
     mockUseGetProfileJobStatusQuery('success');
-    rerender();
+    rerender({});
 
     expect(result.current.isCreatingProfile).toBeFalsy();
   });
@@ -76,7 +75,7 @@ describe('useProfileJobPolling', () => {
     );
 
     mockUseGetProfileJobStatusQuery('failed');
-    rerender();
+    rerender({});
 
     expect(result.current.isCreateProfileError).toBeTruthy();
   });
@@ -87,7 +86,7 @@ describe('useProfileJobPolling', () => {
     );
 
     mockUseGetProfileJobStatusQuery('failed');
-    rerender();
+    rerender({});
 
     act(() => {
       result.current.retryCurrentCreateProfile();
@@ -104,12 +103,12 @@ describe('useProfileJobPolling', () => {
     );
 
     mockUseGetProfileJobStatusQuery('failed');
-    rerender();
+    rerender({});
 
     expect(result.current.isCreatingProfile).toBeFalsy();
 
     mockUsePostProfileJobRetryMutation(true);
-    rerender();
+    rerender({});
 
     expect(result.current.isCreatingProfile).toBeTruthy();
   });
@@ -120,7 +119,7 @@ describe('useProfileJobPolling', () => {
     );
 
     mockUseGetProfileJobStatusQuery(undefined, 'CON_ERROR');
-    rerender();
+    rerender({});
 
     expect(result.current.isCreatingProfile).toBeFalsy();
     expect(result.current.isCreateProfileError).toBeFalsy();

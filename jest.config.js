@@ -1,4 +1,4 @@
-const { pathsToModuleNameMapper } = require('ts-jest/utils');
+const { pathsToModuleNameMapper } = require('ts-jest');
 const { compilerOptions } = require('./tsconfig.json');
 
 module.exports = {
@@ -15,9 +15,9 @@ module.exports = {
     '!<rootDir>/cardstack/src/components/Input/Input.tsx',
     '!<rootDir>/cardstack/src/components/Icon/custom-icons/*',
   ],
+  preset: 'jest-expo',
   coverageDirectory: '.coverage',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  preset: 'jest-expo',
   setupFilesAfterEnv: [
     '<rootDir>/cardstack/src/test-utils/jest-setup.js',
     './node_modules/react-native-gesture-handler/jestSetup.js',

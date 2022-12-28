@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Text as RNText, ViewPropTypes } from 'react-native';
+import { Text as RNText } from 'react-native';
 import styled from 'styled-components';
 import { buildTextStyles } from '@rainbow-me/styles';
 
@@ -17,7 +17,6 @@ Text.propTypes = {
   mono: PropTypes.bool,
   opacity: PropTypes.number,
   size: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  style: ViewPropTypes.style,
   uppercase: PropTypes.bool,
   weight: PropTypes.string,
 };

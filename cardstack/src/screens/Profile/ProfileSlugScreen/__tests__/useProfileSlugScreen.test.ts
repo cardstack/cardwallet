@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-native';
 import { Product, Purchase, useIAP } from 'react-native-iap';
 
 import { useLazyValidateProfileSlugQuery } from '@cardstack/services';

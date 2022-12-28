@@ -1,5 +1,5 @@
 import { StackActions, useRoute } from '@react-navigation/native';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-native';
 
 import { usePasswordInput } from '@cardstack/components';
 

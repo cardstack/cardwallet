@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook, waitFor } from '@testing-library/react-native';
 
 import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
 import { Routes } from '@cardstack/navigation';
@@ -61,9 +61,7 @@ describe('useNotificationsPermissionScreen', () => {
   });
 
   it('should check push permission when handleEnableNotificationsOnPress is called and navigate to the wallet screen', async () => {
-    const { result, waitFor } = renderHook(() =>
-      useNotificationsPermissionScreen()
-    );
+    const { result } = renderHook(() => useNotificationsPermissionScreen());
 
     act(() => result.current.handleEnableNotificationsOnPress());
 

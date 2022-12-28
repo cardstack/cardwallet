@@ -1,5 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
-import { waitFor, act } from '@testing-library/react-native';
+import { renderHook, waitFor, act } from '@testing-library/react-native';
 import { AppState } from 'react-native';
 
 import { useAppState } from '../useAppState';

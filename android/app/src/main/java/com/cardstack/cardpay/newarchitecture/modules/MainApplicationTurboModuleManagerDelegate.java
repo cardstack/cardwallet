@@ -39,9 +39,9 @@ public class MainApplicationTurboModuleManagerDelegate
   @Override
   protected synchronized void maybeLoadOtherSoLibraries() {
     if (!sIsSoLibraryLoaded) {
-      // If you change the name of your application .so file in the Android.mk file,
+      // If you change the name of your application .so file in the CMakeLists file,
       // make sure you update the name here as well.
-      SoLoader.loadLibrary("cardpay_appmodules");
+      SoLoader.loadLibrary("cardstack.cardpay_appmodules");
       sIsSoLibraryLoaded = true;
     }
   }

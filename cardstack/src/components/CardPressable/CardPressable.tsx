@@ -10,10 +10,10 @@ import {
   Animated,
   Easing,
   Pressable,
-  ViewProps,
   PressableProps,
   ViewStyle,
   GestureResponderEvent,
+  ViewProps,
 } from 'react-native';
 import ReactNativeHapticFeedback, {
   HapticFeedbackTypes,
