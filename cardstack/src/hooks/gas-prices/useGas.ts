@@ -149,8 +149,6 @@ export const useGas = () => {
   return {
     updateTxFees,
     selectedFee: txFees?.[selectedGasSpeed],
-    setSelectedGasSpeed,
-    selectedGasSpeed,
     hasSufficientForGas,
     showTransactionSpeedActionSheet,
   };
