@@ -15,3 +15,4 @@ export * from './wyre-utils';
 export * from './layouts';
 export * from './restartApp';
 export * from './redux-utils';
+export * from './validators';

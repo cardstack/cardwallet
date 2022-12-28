@@ -1,12 +1,14 @@
-import { getSDK, PrepaidCardSafe } from '@cardstack/cardpay-sdk';
+import {
+  getSDK,
+  PrepaidCardSafe,
+  NativeCurrency,
+} from '@cardstack/cardpay-sdk';
 
 import {
   EthersSignerParams,
   getWeb3ProviderWithEthSigner,
 } from '@cardstack/models/ethers-wallet';
 import { getSafesInstance } from '@cardstack/models/safes-providers';
-import { getSafeData } from '@cardstack/services';
-import { PrepaidCardType } from '@cardstack/types';
 import { fetchCardCustomizationFromDID } from '@cardstack/utils';
 
 import logger from 'logger';
@@ -19,7 +21,7 @@ import {
   PrepaidCardTransferQueryParams,
 } from './prepaid-card-types';
 
-export const addPrepaidCardCustomization = async (card: PrepaidCardSafe) => {
+const addPrepaidCardCustomization = async (card: PrepaidCardSafe) => {
   try {
     const cardCustomization = await fetchCardCustomizationFromDID(
       card.customizationDID
@@ -36,25 +38,15 @@ export const addPrepaidCardCustomization = async (card: PrepaidCardSafe) => {
   return card;
 };
 
-export const getPrepaidCardByAddress = async (
-  address: string
-): Promise<PrepaidCardSafe | undefined> => {
-  try {
-    const prepaidCard = (await getSafeData(address)) as
-      | PrepaidCardSafe
-      | undefined;
-
-    if (prepaidCard) {
-      const updatedPrepaidCard = addPrepaidCardCustomization(prepaidCard);
-
-      return updatedPrepaidCard;
-    }
-
-    return prepaidCard;
-  } catch (e) {
-    logger.sentry('Error getPrepaidCardByAddress', e);
-  }
-};
+export const extendPrepaidCard = async (
+  prepaidCard: PrepaidCardSafe,
+  nativeCurrency: NativeCurrency
+) => ({
+  // The order matters, first add new property then modify tokens
+  // otherwise tokens with prices will be overwritten by old tokens
+  ...(await addPrepaidCardCustomization(prepaidCard)),
+  ...(await updateSafeWithTokenPrices(prepaidCard, nativeCurrency)),
+});
 
 const getPrepaidCardInstance = async (signedParams?: EthersSignerParams) => {
   const [web3, signer] = await getWeb3ProviderWithEthSigner(signedParams);
@@ -80,15 +72,9 @@ export const fetchPrepaidCards = async ({
     )?.safes as PrepaidCardSafe[]) || [];
 
   const extendedPrepaidCards = await Promise.all(
-    prepaidCardSafes?.map(async prepaidCard => ({
-      // The order matters, first add new property then modify tokens
-      // otherwise tokens with prices will be overwritten by old tokens
-      ...(await addPrepaidCardCustomization(prepaidCard)),
-      ...((await updateSafeWithTokenPrices(
-        prepaidCard,
-        nativeCurrency
-      )) as PrepaidCardType),
-    }))
+    prepaidCardSafes?.map(async prepaidCard =>
+      extendPrepaidCard(prepaidCard, nativeCurrency)
+    )
   );
 
   return {

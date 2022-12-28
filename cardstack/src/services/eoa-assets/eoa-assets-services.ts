@@ -7,7 +7,7 @@ import { toLower, uniqBy } from 'lodash';
 import Web3 from 'web3';
 
 import { collectiblesRefreshState } from '@cardstack/redux/collectibles';
-import { AssetTypes } from '@cardstack/types';
+import { Asset, AssetTypes } from '@cardstack/types';
 
 import {
   getAssets,
@@ -23,7 +23,6 @@ import { getNativeBalanceFromOracle } from '../exchange-rate-service';
 
 import { Price } from './coingecko/coingecko-types';
 import {
-  Asset,
   EOABaseParams,
   EOATxListResponse,
   GetTokensBalanceParams,
@@ -63,10 +62,10 @@ const getTokenType = (
 const discoverTokens = async (baseParams: EOABaseParams) => {
   const { network, accountAddress } = baseParams;
 
-  const { latestTxBlockNumber, assets: localStoredAssets } = (await getAssets(
+  const { latestTxBlockNumber, assets: localStoredAssets } = await getAssets(
     accountAddress,
     network
-  )) as { assets: Asset[]; latestTxBlockNumber?: number };
+  );
 
   const allTokensTxs = await getTxsTokenData(baseParams, latestTxBlockNumber);
 
@@ -180,7 +179,7 @@ export const getAccountAssets = async ({
   });
 
   // discoverTokens might not include the native token, so we add it manually
-  const nativeToken = {
+  const nativeToken: Asset = {
     address: getConstantByNetwork('nativeTokenAddress', network),
     name: getConstantByNetwork('nativeTokenName', network),
     symbol: getConstantByNetwork('nativeTokenSymbol', network),
@@ -193,9 +192,10 @@ export const getAccountAssets = async ({
 
   // Store assets and block to just fetch newest tx on refresh
   await saveAssets(
-    { assets: tokensInWallet, latestTxBlockNumber },
+    tokensInWallet,
     accountAddress,
-    network
+    network,
+    latestTxBlockNumber
   );
 
   store.dispatch(collectiblesRefreshState());

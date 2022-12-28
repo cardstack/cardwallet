@@ -1,6 +1,4 @@
-import { Asset } from '@cardstack/services/eoa-assets/eoa-assets-types';
-
-import { TokenType } from '.';
+import { Asset, TokenType } from '.';
 export interface DepotType {
   address: string;
   tokens: Array<TokenType>;

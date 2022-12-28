@@ -3,12 +3,12 @@ import { MerchantInformation, TokenType } from '.';
 export interface MerchantSafeType {
   address: string;
   network?: string;
-  accumulatedSpendValue: string;
+  accumulatedSpendValue: number;
   tokens: TokenType[];
   revenueBalances: TokenType[];
   type: string;
   merchantInfo?: MerchantInformation;
-  infoDID: string;
+  infoDID?: string;
 }
 
 export interface PrimarySafeUpdateProps {

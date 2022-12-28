@@ -12,7 +12,7 @@ const merchantSafe = {
   infoDID: 'DID',
   tokens: [],
   revenueBalances: [],
-  accumulatedSpendValue: '100',
+  accumulatedSpendValue: 100,
   type: '',
   merchantInfo: {
     did: 'DID',

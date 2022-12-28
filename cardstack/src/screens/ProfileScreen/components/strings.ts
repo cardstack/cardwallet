@@ -27,7 +27,7 @@ export const strings = {
 };
 
 export const exampleMerchantData = {
-  accumulatedSpendValue: '0',
+  accumulatedSpendValue: 0,
   address: '0x45abXXXX2Bc2',
   infoDID: '',
   merchantInfo: {
