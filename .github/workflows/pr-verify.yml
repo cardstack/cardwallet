@@ -25,19 +25,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - uses: volta-cli/action@v4
-      - name: Set up yarn cache
-        uses: actions/cache@v3
+      - name: Set up node and yarn cache
+        uses: actions/setup-node@v3
         with:
-          path: ~/.cache/yarn
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          node-version-file: 'package.json'
+          cache: 'yarn'
       - name: Install dependencies
         run: |
-          yarn install --network-timeout 300000 --network-concurrency 1
+          yarn install --prefer-offline --frozen-lockfile
       - name: Apply patches
         run: |
-          yarn patch-package
+          yarn postinstall
       - name: Run lint
         run: |
           yarn lint
@@ -46,4 +44,4 @@ jobs:
           yarn ts-check
       - name: Run Tests
         run: |
-          yarn test
+          yarn test:ci
