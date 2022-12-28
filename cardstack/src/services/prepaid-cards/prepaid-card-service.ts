@@ -9,7 +9,6 @@ import {
   getWeb3ProviderWithEthSigner,
 } from '@cardstack/models/ethers-wallet';
 import { getSafesInstance } from '@cardstack/models/safes-providers';
-import { getSafeData } from '@cardstack/services';
 import { fetchCardCustomizationFromDID } from '@cardstack/utils';
 
 import logger from 'logger';
@@ -48,26 +47,6 @@ export const extendPrepaidCard = async (
   ...(await addPrepaidCardCustomization(prepaidCard)),
   ...(await updateSafeWithTokenPrices(prepaidCard, nativeCurrency)),
 });
-
-export const getPrepaidCardByAddress = async (
-  address: string
-): Promise<PrepaidCardSafe | undefined> => {
-  try {
-    const prepaidCard = (await getSafeData(address)) as
-      | PrepaidCardSafe
-      | undefined;
-
-    if (prepaidCard) {
-      const updatedPrepaidCard = addPrepaidCardCustomization(prepaidCard);
-
-      return updatedPrepaidCard;
-    }
-
-    return prepaidCard;
-  } catch (e) {
-    logger.sentry('Error getPrepaidCardByAddress', e);
-  }
-};
 
 const getPrepaidCardInstance = async (signedParams?: EthersSignerParams) => {
   const [web3, signer] = await getWeb3ProviderWithEthSigner(signedParams);

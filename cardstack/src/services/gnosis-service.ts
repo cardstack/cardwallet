@@ -13,7 +13,6 @@ import { captureException } from '@sentry/react-native';
 
 import { getSafesInstance } from '@cardstack/models/safes-providers';
 import Web3Instance from '@cardstack/models/web3-instance';
-import { DepotType } from '@cardstack/types';
 import { updateMerchantSafeWithCustomization } from '@cardstack/utils';
 
 import {
@@ -70,10 +69,7 @@ export const fetchSafes = async (
     );
 
     const extendAllDepotSafes = Promise.all(
-      depots.map(
-        depot =>
-          updateSafeWithTokenPrices(depot, nativeCurrency) as Promise<DepotType>
-      )
+      depots.map(depot => updateSafeWithTokenPrices(depot, nativeCurrency))
     );
 
     const [
@@ -203,8 +199,8 @@ const groupSafesByType = (safes: Safe[]) =>
     }
   );
 
-export const updateSafeWithTokenPrices = async (
-  safe: Safe,
+export const updateSafeWithTokenPrices = async <S extends Safe>(
+  safe: S,
   nativeCurrency: NativeCurrency
 ) => {
   const tokensWithPrice = await Promise.all(
