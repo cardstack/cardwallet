@@ -84,8 +84,6 @@ describe('useShowOnboarding', () => {
   });
 
   it('should navigate to notification permission flow when still not granted and has not skipped', async () => {
-    mockNeedsNotificationPermission(true);
-
     const { result } = renderHook(useShowOnboarding);
 
     act(() => {
@@ -114,22 +112,13 @@ describe('useShowOnboarding', () => {
     );
   });
 
-  it('should NOT navigate to notification permission when permissions already fullfilled', async () => {
-    mockNeedsNotificationPermission(false);
-
-    const { result } = renderHook(useShowOnboarding);
-
-    act(() => {
-      result.current.navigateToNextOnboardingStep();
-    });
-
-    await waitFor(() =>
-      expect(mockedNavigate).not.toBeCalledWith(Routes.NOTIFICATIONS_PERMISSION)
-    );
-  });
-
   it('should NOT navigate to profile flow when profile hasnt been fetched', async () => {
     mockPrimarySafeHelper({ hasProfile: false, isLoadingOnInit: true });
+
+    mockUsePersistedFlagsSelector({
+      hasSkippedBackup: true,
+      hasSkippedNotificationPermission: true,
+    });
 
     const { result } = renderHook(useShowOnboarding);
 
@@ -167,6 +156,11 @@ describe('useShowOnboarding', () => {
       isLoadingOnInit: true,
     });
 
+    mockUsePersistedFlagsSelector({
+      hasSkippedBackup: true,
+      hasSkippedNotificationPermission: true,
+    });
+
     const { result } = renderHook(useShowOnboarding);
 
     act(() => {
@@ -180,6 +174,11 @@ describe('useShowOnboarding', () => {
     mockPrimarySafeHelper({
       hasProfile: true,
       isLoadingOnInit: false,
+    });
+
+    mockUsePersistedFlagsSelector({
+      hasSkippedBackup: true,
+      hasSkippedNotificationPermission: true,
     });
 
     const { result } = renderHook(useShowOnboarding);
@@ -199,6 +198,11 @@ describe('useShowOnboarding', () => {
     mockPrimarySafeHelper({
       hasProfile: false,
       isLoadingOnInit: false,
+    });
+
+    mockUsePersistedFlagsSelector({
+      hasSkippedBackup: true,
+      hasSkippedNotificationPermission: true,
     });
 
     const { result } = renderHook(useShowOnboarding);
@@ -230,6 +234,10 @@ describe('useShowOnboarding', () => {
     mockPrimarySafeHelper({
       hasProfile: true,
       isLoadingOnInit: false,
+    });
+
+    mockUsePersistedFlagsSelector({
+      hasSkippedNotificationPermission: true,
     });
 
     const { result } = renderHook(useShowOnboarding);
