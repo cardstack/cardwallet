@@ -216,6 +216,8 @@ describe('useShowOnboarding', () => {
 
   it('should NOT navigate to profile creation flow if "Skip" was pressed', async () => {
     mockUsePersistedFlagsSelector({
+      hasSkippedBackup: true,
+      hasSkippedNotificationPermission: true,
       hasSkippedProfileCreation: true,
     });
 
