@@ -436,7 +436,7 @@ PODS:
     - React-Core
   - react-native-cloud-fs (2.4.0):
     - React
-  - react-native-flipper (0.176.1):
+  - react-native-flipper (0.163.0):
     - React-Core
   - react-native-get-random-values (1.8.0):
     - React-Core
@@ -1013,7 +1013,7 @@ SPEC CHECKSUMS:
   react-native-aes-crypto: d7e87fd02cee7285983c00957a34063dfc4c94b3
   react-native-camera: b8cc03e2feec0c04403d0998e37cf519d8fd4c6f
   react-native-cloud-fs: 1e883ec82ff418d320c128f61971dd971b128ca0
-  react-native-flipper: 7e4b1c3fe1a2eecbe7304e5ff6b89231b3ec61dc
+  react-native-flipper: 2d552a8178d839ef378220101fb7f0cd5b2a8003
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-netinfo: 5a001e406317eaaf1e4846906650e107dadcaa72
@@ -1067,6 +1067,6 @@ SPEC CHECKSUMS:
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 76ad557d9c075074bff4087d57799ad35f3bd8e5
+PODFILE CHECKSUM: 274151118ad3f2da69af3b861777b86a61b39e96
 
 COCOAPODS: 1.11.2

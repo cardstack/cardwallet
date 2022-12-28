@@ -141,7 +141,7 @@
     "react-native-device-info": "5.3.1",
     "react-native-dotenv": "^2.4.2",
     "react-native-fast-image": "^8.1.5",
-    "react-native-flipper": "^0.176.1",
+    "react-native-flipper": "^0.163.0",
     "react-native-fs": "^2.16.6",
     "react-native-gesture-handler": "^2.8.0",
     "react-native-get-random-values": "^1.8.0",
