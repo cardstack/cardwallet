@@ -84,24 +84,23 @@ describe('usePurchaseProfile', () => {
   beforeEach(() => {
     logger.sentry = jest.fn();
     logger.log = jest.fn();
+
+    mockUseIAP();
   });
 
   it('should render usePurchaseProfile hook', async () => {
-    mockUseIAP();
     const { result } = renderHook(() => usePurchaseProfile(profile));
 
     expect(result.current).toBeDefined();
   });
 
   it('should have profileProduct available', () => {
-    mockUseIAP();
     const { result } = renderHook(() => usePurchaseProfile(profile));
 
     expect(result.current.profileProduct).toMatchObject(mockProduct);
   });
 
   it('should request purchase when product purchase called', async () => {
-    mockUseIAP();
     const { result } = renderHook(() => usePurchaseProfile(profile));
 
     act(() => {
