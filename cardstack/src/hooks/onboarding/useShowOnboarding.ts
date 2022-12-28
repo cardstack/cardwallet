@@ -38,7 +38,7 @@ export const useShowOnboarding = () => {
   // Will check next possible onboarding step.
   // Calling this right after updating a store value will not have the dependencies updated,
   // so in some cases is necessary to call `navigateOnboardingTo` directly.
-  const getNextOnboardingStep = useCallback(async () => {
+  const getNextOnboardingStep = useCallback(() => {
     if (!hasSkippedNotificationPermission) {
       return Routes.NOTIFICATIONS_PERMISSION;
     }
@@ -60,10 +60,15 @@ export const useShowOnboarding = () => {
   const navigateOnboardingTo = useCallback(
     (route: RouteNames) => {
       // Avoid showing already completed flow.
-      if (
-        (route === Routes.PROFILE_SLUG && !shouldShowProfileCreationFlow) ||
-        (route === Routes.BACKUP_EXPLANATION && !shouldShowBackupFlow)
-      ) {
+      if (route === Routes.BACKUP_EXPLANATION && !shouldShowBackupFlow) {
+        navigateOnboardingTo(Routes.PROFILE_SLUG);
+
+        return;
+      }
+
+      if (route === Routes.PROFILE_SLUG && !shouldShowProfileCreationFlow) {
+        navigate(Routes.WALLET_SCREEN);
+
         return;
       }
 
@@ -73,8 +78,8 @@ export const useShowOnboarding = () => {
   );
 
   // Gets next onboarding step and tries to navigate.
-  const navigateToNextOnboardingStep = useCallback(async () => {
-    const nextStep = await getNextOnboardingStep();
+  const navigateToNextOnboardingStep = useCallback(() => {
+    const nextStep = getNextOnboardingStep();
 
     if (nextStep) {
       navigateOnboardingTo(nextStep);
