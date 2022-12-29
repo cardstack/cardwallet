@@ -1,5 +1,5 @@
 import messaging from '@react-native-firebase/messaging';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   FlatList,
   Linking,
@@ -9,8 +9,17 @@ import {
 } from 'react-native';
 
 import { strings } from './strings';
-import { Container, Skeleton, Text } from '@cardstack/components';
-import { useUpdateNotificationPreferences } from '@cardstack/hooks';
+import {
+  Button,
+  CenteredContainer,
+  Container,
+  Skeleton,
+  Text,
+} from '@cardstack/components';
+import {
+  useAppState,
+  useUpdateNotificationPreferences,
+} from '@cardstack/hooks';
 import {
   checkPushPermissionAndRegisterToken,
   getPermissionStatus,
@@ -19,31 +28,50 @@ import { NotificationsOptionsType } from '@cardstack/types';
 
 import { Alert } from '@rainbow-me/components/alerts';
 
-const showAlert = (
-  alertType: 'askPermission' | 'handleDeniedPermission',
-  onSuccessCallback: () => void
-) =>
+const showPermissionAlert = () =>
   Alert({
     buttons: [
       {
-        onPress: onSuccessCallback,
-        text: strings.alert[alertType].actionButton,
+        onPress: checkPushPermissionAndRegisterToken,
+        text: strings.alert.askPermission.actionButton,
       },
       {
         style: 'cancel',
         text: strings.alert.dismissButton,
       },
     ],
-    title: strings.alert[alertType].title,
+    title: strings.alert.askPermission.title,
     message: strings.alert.message,
   });
 
+const PermissionDeniedPrompt = memo(function PermissionDeniedPrompt() {
+  return (
+    <CenteredContainer flex={0.9} marginHorizontal={10}>
+      <Text paddingBottom={2} textAlign="center" variant="bold">
+        {strings.alert.handleDeniedPermission.title}
+      </Text>
+      <Text paddingBottom={6} textAlign="center">
+        {strings.alert.message}
+      </Text>
+      <Button onPress={Linking.openSettings}>
+        {strings.alert.handleDeniedPermission.actionButton}
+      </Button>
+    </CenteredContainer>
+  );
+});
+
 const NotificationsSection = () => {
+  const { justBecameActive } = useAppState();
+
   const {
     options,
     onUpdateOptionStatus,
     isError,
   } = useUpdateNotificationPreferences();
+
+  const [showPermissionDeniedPrompt, setShowPermissionDeniedPrompt] = useState(
+    false
+  );
 
   // In case user has skipped this check during Notifications Permissions onboarding step
   // we need to present them again to opt-in notifications.
@@ -53,14 +81,11 @@ const NotificationsSection = () => {
     try {
       const permissionStatus = await getPermissionStatus();
 
-      switch (permissionStatus) {
-        case NOT_DETERMINED:
-          showAlert('askPermission', checkPushPermissionAndRegisterToken);
-          break;
-        case DENIED:
-          showAlert('handleDeniedPermission', Linking.openSettings);
-          break;
+      if (permissionStatus === NOT_DETERMINED) {
+        showPermissionAlert();
       }
+
+      setShowPermissionDeniedPrompt(permissionStatus === DENIED);
     } catch (error) {
       console.log(
         'Error checking if a user has push notifications permission',
@@ -71,7 +96,7 @@ const NotificationsSection = () => {
 
   useEffect(() => {
     pushPermissionCheck();
-  }, [pushPermissionCheck]);
+  }, [pushPermissionCheck, justBecameActive]);
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<NotificationsOptionsType>) => {
@@ -128,6 +153,10 @@ const NotificationsSection = () => {
   );
 
   const keyExtractor = (item: NotificationsOptionsType) => item.type;
+
+  if (showPermissionDeniedPrompt) {
+    return <PermissionDeniedPrompt />;
+  }
 
   return (
     <FlatList
