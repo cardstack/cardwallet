@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   extends: ['plugin:echobind/react-native', 'prettier/@typescript-eslint'],
   settings: {
-    react: { version: '18' },
+    react: { version: 'detect' },
     'import/resolver': {
       node: {
         extensions: [
