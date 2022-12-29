@@ -39,10 +39,10 @@ jobs:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - name: Decrypt fastlane vars
         run: yarn fastlane run decrypt_fastlane_vars
-      - uses: actions/cache@v3
+      - uses: actions/setup-node@v3
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          node-version-file: 'package.json'
+          cache: 'yarn'
       - uses: actions/cache@v3
         with:
           path: |
@@ -58,7 +58,7 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
       - name: Yarn Install
-        run: yarn install --network-timeout 300000 --network-concurrency 1
+        run: yarn install --prefer-offline --frozen --frozen-lockfile
       - name: Yarn Setup
         run: yarn postinstall
       - name: Sync google_services
