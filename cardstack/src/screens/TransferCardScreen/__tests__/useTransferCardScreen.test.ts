@@ -42,11 +42,23 @@ jest.mock('@cardstack/services', () => ({
   useTransferPrepaidCardMutation: jest.fn(),
 }));
 
+jest.mock('@cardstack/utils', () => ({
+  layoutEasingAnimation: jest.fn(),
+}));
+
 jest.mock('@rainbow-me/components/send/SendSheet', () => ({
   useSendAddressValidation: jest.fn(() => true),
 }));
 
 jest.mock('@rainbow-me/utils/haptics');
+
+jest.mock('react', () => {
+  const actual = jest.requireActual('react');
+  return {
+    ...actual,
+    useLayoutEffect: jest.fn(),
+  };
+});
 
 describe('useTransferCardScreen', () => {
   const mockedTransferPrepaidCard = jest.fn();
@@ -55,10 +67,10 @@ describe('useTransferCardScreen', () => {
 
   const mockTransferCardHelper = (overwriteStatus?: {
     isSuccess: boolean;
-    isError: boolean;
+    isError?: boolean;
   }) => {
     (useTransferPrepaidCardMutation as jest.Mock).mockImplementation(() => [
-      mockedTransferPrepaidCard.mockResolvedValue(Promise.resolve()),
+      mockedTransferPrepaidCard.mockReturnValue({}),
       {
         isSuccess: true,
         isError: false,
@@ -76,6 +88,11 @@ describe('useTransferCardScreen', () => {
   });
 
   it('should show loading and call transferPrepaidCard onTransferPress', async () => {
+    mockTransferCardHelper({
+      isSuccess: false,
+      isError: false,
+    });
+
     const { result } = renderHook(() => useTransferCardScreen());
 
     act(() => {
@@ -97,16 +114,8 @@ describe('useTransferCardScreen', () => {
     });
   });
 
-  it('should dismiss loading and show alert on success', async () => {
-    const { result } = renderHook(() => useTransferCardScreen());
-
-    act(() => {
-      result.current.onChangeText(validAddress);
-    });
-
-    act(() => {
-      result.current.onTransferPress();
-    });
+  it('should show alert on success', async () => {
+    renderHook(() => useTransferCardScreen());
 
     expect(spyAlert).toBeCalledWith(
       strings.alert.success.title,
@@ -116,21 +125,13 @@ describe('useTransferCardScreen', () => {
     );
   });
 
-  it('should dismiss loading and show alert on error', async () => {
-    const { result } = renderHook(() => useTransferCardScreen());
-
+  it('should show alert on error', async () => {
     mockTransferCardHelper({
       isSuccess: false,
       isError: true,
     });
 
-    act(() => {
-      result.current.onChangeText(validAddress);
-    });
-
-    act(() => {
-      result.current.onTransferPress();
-    });
+    renderHook(() => useTransferCardScreen());
 
     expect(spyAlert).toBeCalledWith(
       strings.alert.error.title,
@@ -141,15 +142,7 @@ describe('useTransferCardScreen', () => {
   });
 
   it('should goBack on alert Okay press', async () => {
-    const { result } = renderHook(() => useTransferCardScreen());
-
-    act(() => {
-      result.current.onChangeText(validAddress);
-    });
-
-    act(() => {
-      result.current.onTransferPress();
-    });
+    renderHook(() => useTransferCardScreen());
 
     act(() => {
       // Tap Okay button on Alert

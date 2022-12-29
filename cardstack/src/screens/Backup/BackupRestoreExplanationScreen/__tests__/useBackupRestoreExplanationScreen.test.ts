@@ -87,8 +87,8 @@ describe('useBackupRestoreExplanationScreen', () => {
     spyFetchUserDataFromCloud.mockResolvedValueOnce(mockedBackupData);
     const { result } = renderHook(useBackupRestoreExplanationScreen);
 
-    await act(async () => {
-      await result.current.handleRestoreCloudOnPress();
+    await act(() => {
+      result.current.handleRestoreCloudOnPress();
     });
 
     expect(mockShowOverlay).toBeCalledWith({
@@ -107,8 +107,8 @@ describe('useBackupRestoreExplanationScreen', () => {
     spyFetchUserDataFromCloud.mockRejectedValueOnce(undefined);
     const { result } = renderHook(useBackupRestoreExplanationScreen);
 
-    await act(async () => {
-      await result.current.handleRestoreCloudOnPress();
+    await act(() => {
+      result.current.handleRestoreCloudOnPress();
     });
 
     expect(mockShowOverlay).toBeCalledWith({

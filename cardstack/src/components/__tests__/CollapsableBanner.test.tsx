@@ -46,14 +46,13 @@ describe('CollapsibleBanner', () => {
 
     const collapsibleBanner = getByTestId('collapsible-banner');
 
-    await act(async () => {
-      await fireEvent.press(collapsibleBanner);
+    act(() => {
+      fireEvent.press(collapsibleBanner);
     });
 
     await waitFor(() => getByText(openedHeaderText));
-    await waitFor(() => getByText(openedBodyText));
 
-    await act(async () => {
+    act(() => {
       fireEvent.press(collapsibleBanner);
     });
 

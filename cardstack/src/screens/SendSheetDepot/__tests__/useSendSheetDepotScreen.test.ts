@@ -129,9 +129,9 @@ describe('useSendSheetDepotScreen', () => {
 
     const { result } = renderHook(() => useSendSheetDepotScreen());
 
-    await waitFor(() =>
-      expect(result.current.allAssets).toEqual(expectedAssets)
-    );
+    await act(() => {
+      waitFor(() => expect(result.current.allAssets).toEqual(expectedAssets));
+    });
   });
 
   it('should update gas fee and usdConverter initial render', async () => {
@@ -168,7 +168,7 @@ describe('useSendSheetDepotScreen', () => {
 
     const eurGasEstimate = usdGasEstimate * currencyConversionRate.EUR;
 
-    const SelectedGasPrice = {
+    const selectedGasPrice = {
       amount: eurGasEstimate,
       nativeDisplay: '0.012041962649411652 CARD',
     };
@@ -176,7 +176,7 @@ describe('useSendSheetDepotScreen', () => {
     const { result } = renderHook(() => useSendSheetDepotScreen());
 
     await waitFor(() =>
-      expect(result.current.selectedGasPrice).toEqual(SelectedGasPrice)
+      expect(result.current.selectedGasPrice).toEqual(selectedGasPrice)
     );
   });
 
@@ -195,9 +195,9 @@ describe('useSendSheetDepotScreen', () => {
       expect(result.current.selectedGasPrice.amount).toBeTruthy()
     );
 
-    await act(async () => {
-      await result.current.setRecipient(recipient);
-      await result.current.onMaxBalancePress();
+    await act(() => {
+      result.current.setRecipient(recipient);
+      result.current.onMaxBalancePress();
     });
 
     // wait amount to be updated
@@ -205,8 +205,8 @@ describe('useSendSheetDepotScreen', () => {
       expect(result.current.amountDetails.assetAmount).toBeTruthy()
     );
 
-    await act(async () => {
-      await result.current.onSendPress();
+    await act(() => {
+      result.current.onSendPress();
     });
 
     expect(mockSendTokens).toBeCalledWith(
@@ -236,10 +236,10 @@ describe('useSendSheetDepotScreen', () => {
       expect(result.current.selectedGasPrice.amount).toBeTruthy()
     );
 
-    await act(async () => {
-      await result.current.setRecipient(recipient);
-      await result.current.onMaxBalancePress();
-      await result.current.onChangeAssetAmount(updatedAssetAmount);
+    await act(() => {
+      result.current.setRecipient(recipient);
+      result.current.onMaxBalancePress();
+      result.current.onChangeAssetAmount(updatedAssetAmount);
     });
 
     // wait amount to be updated
@@ -247,8 +247,8 @@ describe('useSendSheetDepotScreen', () => {
       expect(result.current.amountDetails.assetAmount).toBeTruthy()
     );
 
-    await act(async () => {
-      await result.current.onSendPress();
+    await act(() => {
+      result.current.onSendPress();
     });
 
     expect(mockSendTokens).toBeCalledWith(

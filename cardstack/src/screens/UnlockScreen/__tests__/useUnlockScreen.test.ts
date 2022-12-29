@@ -148,11 +148,9 @@ describe('useUnlockScreen', () => {
       result.current.setInputPin(PIN);
     });
 
-    act(async () => {
-      expect(result.current.inputPin).toMatch(PIN);
-      expect(result.current.pinInvalid).toBeFalsy();
-      expect(mockSetAuthorized).toBeCalledTimes(1);
-    });
+    expect(result.current.inputPin).toMatch(PIN);
+    expect(result.current.pinInvalid).toBeFalsy();
+    expect(mockSetAuthorized).toBeCalledTimes(1);
   });
 
   it('should not call setAuthorized if inputed PIN does not match stored one and set PIN as invalid', async () => {
@@ -166,22 +164,19 @@ describe('useUnlockScreen', () => {
       result.current.setInputPin(wrongPIN);
     });
 
-    act(async () => {
-      expect(result.current.inputPin).toMatch('');
-      expect(result.current.pinInvalid).toBeTruthy();
-      expect(mockSetAuthorized).not.toBeCalled();
-      expect(savePinAuthAttempts).toBeCalledWith(1);
-    });
+    expect(result.current.inputPin).toMatch('');
+    expect(result.current.pinInvalid).toBeTruthy();
+    expect(mockSetAuthorized).not.toBeCalled();
+    expect(savePinAuthAttempts).toBeCalledWith(1);
   });
 
-  it('should authorize if biometry check is successful', async () => {
+  it('should authorize if biometry check is successful', () => {
     mockBiometryAvailableHelper(true);
     mockAuthAuthorizedHelper(true);
 
     renderHook(() => useUnlockScreen());
-    act(async () => {
-      await waitFor(() => expect(mockSetAuthorized).toBeCalledTimes(1));
-    });
+
+    waitFor(() => expect(mockSetAuthorized).toBeCalledTimes(1));
   });
 
   it('should not authorize if biometry check fails and retry should become available', async () => {
@@ -193,12 +188,8 @@ describe('useUnlockScreen', () => {
       result.current.authenticateBiometrically();
     });
 
-    act(async () => {
-      await waitFor(() => {
-        expect(result.current.retryBiometricAuth).toBeTruthy();
-        expect(mockSetAuthorized).toBeCalledTimes(0);
-      });
-    });
+    waitFor(() => expect(result.current.retryBiometricAuth).toBeTruthy());
+    expect(mockSetAuthorized).toBeCalledTimes(0);
   });
 
   it('should display alert if reset wallet is pressed', () => {
@@ -224,9 +215,7 @@ describe('useUnlockScreen', () => {
 
     renderHook(() => useUnlockScreen());
 
-    act(async () => {
-      expect(spyHandleRequest).toBeCalledWith(mockedRequest);
-    });
+    waitFor(() => expect(spyHandleRequest).toBeCalledWith(mockedRequest));
   });
 
   describe('Exponential backoff', () => {
@@ -274,11 +263,7 @@ describe('useUnlockScreen', () => {
         },
       } = renderHook(() => useUnlockScreen());
 
-      await act(async () => {
-        await waitFor(() => expect(getPin).toHaveReturned());
-        await waitFor(() => expect(getPinAuthAttempts).toHaveReturned());
-        await waitFor(() => expect(getPinAuthNextDateAttempt).toHaveReturned());
-      });
+      await waitFor(() => expect(getPinAuthNextDateAttempt).toHaveReturned());
 
       for (let i = 2; i <= MAX_WRONG_ATTEMPTS; i++) {
         act(() => {
@@ -307,11 +292,7 @@ describe('useUnlockScreen', () => {
         },
       } = renderHook(() => useUnlockScreen());
 
-      await act(async () => {
-        await waitFor(() => expect(getPin).toHaveReturned());
-        await waitFor(() => expect(getPinAuthAttempts).toHaveReturned());
-        await waitFor(() => expect(getPinAuthNextDateAttempt).toHaveReturned());
-      });
+      await waitFor(() => expect(getPinAuthNextDateAttempt).toHaveReturned());
 
       act(() => {
         setInputPin(wrongPIN);
@@ -342,11 +323,7 @@ describe('useUnlockScreen', () => {
         },
       } = renderHook(() => useUnlockScreen());
 
-      await act(async () => {
-        await waitFor(() => expect(getPin).toHaveReturned());
-        await waitFor(() => expect(getPinAuthAttempts).toHaveReturned());
-        await waitFor(() => expect(getPinAuthNextDateAttempt).toHaveReturned());
-      });
+      await waitFor(() => expect(getPinAuthNextDateAttempt).toHaveReturned());
 
       act(() => {
         setInputPin(wrongPIN);
@@ -376,11 +353,7 @@ describe('useUnlockScreen', () => {
         },
       } = renderHook(() => useUnlockScreen());
 
-      await act(async () => {
-        await waitFor(() => expect(getPin).toHaveReturned());
-        await waitFor(() => expect(getPinAuthAttempts).toHaveReturned());
-        await waitFor(() => expect(getPinAuthNextDateAttempt).toHaveReturned());
-      });
+      await waitFor(() => expect(getPinAuthNextDateAttempt).toHaveReturned());
 
       global.Date.now = jest.fn(() => DateNow() + oneMinuteinMs * 3);
 
@@ -409,11 +382,7 @@ describe('useUnlockScreen', () => {
         },
       } = renderHook(() => useUnlockScreen());
 
-      await act(async () => {
-        await waitFor(() => expect(getPin).toHaveReturned());
-        await waitFor(() => expect(getPinAuthAttempts).toHaveReturned());
-        await waitFor(() => expect(getPinAuthNextDateAttempt).toHaveReturned());
-      });
+      await waitFor(() => expect(getPinAuthNextDateAttempt).toHaveReturned());
 
       global.Date.now = jest.fn(() => DateNow() + oneMinuteinMs * 60);
 
@@ -429,12 +398,10 @@ describe('useUnlockScreen', () => {
 
       await waitFor(() => expect(pinInvalid).toEqual(false));
 
-      act(async () => {
-        expect(mockSetAuthorized).toBeCalledTimes(1);
+      expect(mockSetAuthorized).toBeCalledTimes(1);
 
-        expect(attemptsCount.current).toEqual(0);
-        expect(savePinAuthAttempts).toBeCalledWith(0);
-      });
+      expect(attemptsCount.current).toEqual(0);
+      expect(savePinAuthAttempts).toBeCalledWith(0);
     });
   });
 });

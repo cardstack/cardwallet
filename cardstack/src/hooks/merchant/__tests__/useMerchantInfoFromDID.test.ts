@@ -7,6 +7,8 @@ import { useMerchantInfoFromDID } from '../useMerchantInfoFromDID';
 jest.mock('logger');
 
 describe('useMerchantInfoFromDID', () => {
+  const spyFetchDID = jest.spyOn(MerchantUtils, 'fetchMerchantInfoFromDID');
+
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -21,9 +23,7 @@ describe('useMerchantInfoFromDID', () => {
       ownerAddress: '0x00000000000',
     };
 
-    const spyFetchDID = jest
-      .spyOn(MerchantUtils, 'fetchMerchantInfoFromDID')
-      .mockResolvedValueOnce(mockedDID);
+    spyFetchDID.mockResolvedValueOnce(mockedDID);
 
     const { result } = renderHook(() => useMerchantInfoFromDID('foo'));
 
@@ -34,9 +34,7 @@ describe('useMerchantInfoFromDID', () => {
   });
 
   it('should call fetchMerchantInfoFromDID and return undefined if did is invalid', async () => {
-    const spyFetchDID = jest
-      .spyOn(MerchantUtils, 'fetchMerchantInfoFromDID')
-      .mockRejectedValueOnce(new Error('foo error'));
+    spyFetchDID.mockRejectedValueOnce(new Error('foo error'));
 
     const { result } = renderHook(() =>
       useMerchantInfoFromDID('did does not exist')
@@ -49,9 +47,7 @@ describe('useMerchantInfoFromDID', () => {
   });
 
   it('should not call fetchMerchantInfoFromDID and return undefined if no DID is provided', async () => {
-    const spyFetchDID = jest
-      .spyOn(MerchantUtils, 'fetchMerchantInfoFromDID')
-      .mockRejectedValueOnce(new Error('foo error'));
+    spyFetchDID.mockRejectedValueOnce(new Error('foo error'));
 
     const { result } = renderHook(() => useMerchantInfoFromDID(undefined));
 

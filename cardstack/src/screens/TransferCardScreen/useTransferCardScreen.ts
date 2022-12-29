@@ -83,7 +83,7 @@ export const useTransferCardScreen = () => {
     )
   );
 
-  const onTransferPress = useCallback(async () => {
+  const onTransferPress = useCallback(() => {
     showLoadingOverlay({ title: strings.loadingTitle });
 
     transferPrepaidCard({
@@ -96,7 +96,6 @@ export const useTransferCardScreen = () => {
     newOwnerAddress,
     prepaidCardAddress,
     showLoadingOverlay,
-
     transferPrepaidCard,
   ]);
 
