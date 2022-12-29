@@ -39,6 +39,10 @@ jobs:
         with:
           ref: ${{ env.CHECKOUT_REF }}
       - uses: volta-cli/action@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
       - name: Setup Ruby & bundle
         uses: ruby/setup-ruby@v1
         with:
@@ -47,15 +51,11 @@ jobs:
         run: bundle exec fastlane run decrypt_fastlane_vars
       - uses: actions/cache@v3
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/cache@v3
-        with:
           path: '**/Pods'
           key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
           restore-keys: ${{ runner.os }}-pods-
       - name: Yarn Install
-        run: yarn install --network-timeout 300000 --network-concurrency 1
+        run: yarn install --prefer-offline --frozen --frozen-lockfile
       - name: Patch Packages
         run: yarn patch-package
       - name: RN Nodeify
@@ -63,7 +63,7 @@ jobs:
       - name: Bundle Install (ios)
         run: yarn install-bundle
       - name: Pod Install (ios)
-        run: yarn install-pods-fast-no-flipper
+        run: yarn install-pods-fast
       - name: Sync google_services
         run: yarn contexts:sync:google_services
       - name: Sync sentry_properties
