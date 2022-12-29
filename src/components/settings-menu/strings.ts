@@ -8,7 +8,7 @@ export const strings = {
       actionButton: 'Okay',
     },
     handleDeniedPermission: {
-      title: 'You have notifications disabled',
+      title: 'Notifications are disabled',
       actionButton: 'Open Settings',
     },
   },

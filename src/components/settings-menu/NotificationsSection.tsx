@@ -1,5 +1,5 @@
 import messaging from '@react-native-firebase/messaging';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   FlatList,
   Linking,
@@ -9,7 +9,13 @@ import {
 } from 'react-native';
 
 import { strings } from './strings';
-import { Button, Container, Skeleton, Text } from '@cardstack/components';
+import {
+  Button,
+  CenteredContainer,
+  Container,
+  Skeleton,
+  Text,
+} from '@cardstack/components';
 import {
   useAppState,
   useUpdateNotificationPreferences,
@@ -38,24 +44,21 @@ const showPermissionAlert = () =>
     message: strings.alert.message,
   });
 
-const PermissionDeniedPrompt = () => (
-  <Container
-    alignItems="center"
-    flex={0.9}
-    justifyContent="center"
-    marginHorizontal={10}
-  >
-    <Text paddingBottom={2} textAlign="center" variant="bold">
-      {strings.alert.handleDeniedPermission.title}
-    </Text>
-    <Text paddingBottom={6} textAlign="center">
-      {strings.alert.message}
-    </Text>
-    <Button onPress={Linking.openSettings}>
-      {strings.alert.handleDeniedPermission.actionButton}
-    </Button>
-  </Container>
-);
+const PermissionDeniedPrompt = memo(function PermissionDeniedPrompt() {
+  return (
+    <CenteredContainer flex={0.9} marginHorizontal={10}>
+      <Text paddingBottom={2} textAlign="center" variant="bold">
+        {strings.alert.handleDeniedPermission.title}
+      </Text>
+      <Text paddingBottom={6} textAlign="center">
+        {strings.alert.message}
+      </Text>
+      <Button onPress={Linking.openSettings}>
+        {strings.alert.handleDeniedPermission.actionButton}
+      </Button>
+    </CenteredContainer>
+  );
+});
 
 const NotificationsSection = () => {
   const { justBecameActive } = useAppState();
