@@ -22,9 +22,6 @@ module.exports = function (api) {
       },
     ],
     'babel-plugin-styled-components',
-    'date-fns',
-    'graphql-tag',
-    ['lodash', { id: ['lodash', 'recompact'] }],
     [
       'module:react-native-dotenv',
       {
@@ -63,8 +60,6 @@ module.exports = function (api) {
       },
       production: {
         plugins: [
-          '@babel/plugin-transform-runtime',
-          '@babel/plugin-transform-react-inline-elements',
           ['transform-remove-console', { exclude: ['error'] }],
           ...plugins,
         ],

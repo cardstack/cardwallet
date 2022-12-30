@@ -53,9 +53,11 @@ describe('useNotificationsPermissionScreen', () => {
     expect(result.current.isError).toBe(false);
   });
 
-  it('should call onUpdateOptionStatus when triggered', () => {
+  it('should call onUpdateOptionStatus when triggered', async () => {
     const { result } = renderHook(() => useNotificationsPermissionScreen());
-    act(() => result.current.onUpdateOptionStatus(mockOption.type, false));
+    await act(() =>
+      result.current.onUpdateOptionStatus(mockOption.type, false)
+    );
 
     expect(mockOnUpdateOptionStatus).toBeCalledWith(mockOption.type, false);
   });
@@ -63,7 +65,7 @@ describe('useNotificationsPermissionScreen', () => {
   it('should check push permission when handleEnableNotificationsOnPress is called and navigate to the wallet screen', async () => {
     const { result } = renderHook(() => useNotificationsPermissionScreen());
 
-    act(() => result.current.handleEnableNotificationsOnPress());
+    await act(() => result.current.handleEnableNotificationsOnPress());
 
     expect(checkPushPermissionAndRegisterToken).toBeCalled();
 

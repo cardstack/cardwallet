@@ -94,5 +94,5 @@ module.exports = {
     'jest/no-disabled-tests': 0,
     'babel/no-unused-expressions': 'off',
   },
-  env: { browser: true, node: true },
+  env: { browser: true, node: true }, // browser needs to be true so it finds btoa and fetch polyfills
 };
