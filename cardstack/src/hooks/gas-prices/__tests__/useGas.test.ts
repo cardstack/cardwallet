@@ -1,5 +1,9 @@
 import { act, renderHook } from '@testing-library/react-native';
 
+import { useAssets } from '@cardstack/hooks/assets/useAssets';
+import { useGetGasPricesQuery } from '@cardstack/services';
+import { GasPricesQueryResults } from '@cardstack/services/hub/gas-prices/gas-prices-types';
+
 import * as Web3Handlers from '@rainbow-me/handlers/web3';
 
 import { useGas } from '../useGas';
@@ -36,22 +40,33 @@ jest.mock('@cardstack/hooks/assets/useAssets', () => ({
 }));
 
 jest.mock('@cardstack/services', () => ({
-  useGetGasPricesQuery: jest.fn().mockImplementation(() => ({
-    data: {
-      slow: '115462975454',
-      standard: '116835862219',
-      fast: '118756059321',
-    },
-    isLoading: false,
-  })),
+  useGetGasPricesQuery: jest.fn(),
 }));
 
 describe('useGas', () => {
   const spyEstimateGasLimit = jest.spyOn(Web3Handlers, 'estimateGasLimit');
 
-  it('should return the gas limit estimation when calling updateTxFees', async () => {
-    spyEstimateGasLimit.mockReturnValueOnce('21000');
+  const mockedGasPriceEstimation = (data?: GasPricesQueryResults) =>
+    (useGetGasPricesQuery as jest.Mock).mockImplementation(() => ({
+      data,
+      isLoading: false,
+    }));
 
+  beforeEach(() => {
+    mockedGasPriceEstimation({
+      slow: '115462975454',
+      standard: '116835862219',
+      fast: '118756059321',
+    });
+
+    spyEstimateGasLimit.mockReturnValue('21000');
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should return the gas limit estimation when calling updateTxFees', async () => {
     const { result } = renderHook(() => useGas());
 
     await act(async () => {
@@ -78,21 +93,86 @@ describe('useGas', () => {
     expect(result.current.selectedFee).not.toBeUndefined();
   });
 
-  it.todo(
-    `should NOT update the txFee state if there's no gas price estimation`
-  );
+  it(`should NOT update the txFee state if there's no gas price estimation`, async () => {
+    mockedGasPriceEstimation();
 
-  it.todo(
-    `should expose the selected fee based on the default speed (standard)`
-  );
+    const { result } = renderHook(() => useGas());
 
-  it.todo(
-    `should expose hasSufficientForGas as true if the user has balance for gas`
-  );
+    await act(async () => {
+      const gasLimit = await result.current.updateTxFees({
+        asset: mockedAsset,
+        amount: 1,
+        recipient: '0x',
+      });
 
-  it.todo(
-    `should expose hasSufficientForGas as false if the user doesn't have balance for gas`
-  );
+      expect(gasLimit).toBe('21000');
+    });
+
+    expect(result.current.selectedFee).toBeUndefined();
+  });
+
+  it(`should expose the selected fee based on the default speed (standard)`, async () => {
+    const { result } = renderHook(() => useGas());
+
+    await act(async () => {
+      await result.current.updateTxFees({
+        asset: mockedAsset,
+        amount: 1,
+        recipient: '0x',
+      });
+    });
+
+    expect(result.current.selectedFee).toEqual({
+      gasPrice: '116835862219',
+      native: {
+        amount: '0.02453553106599',
+        display: '$0.025 USD',
+      },
+      value: {
+        amount: '0.002453553106599',
+        display: '0.00245 TST',
+      },
+    });
+  });
+
+  it(`should expose hasSufficientForGas as true if the user has balance for gas`, async () => {
+    const { result } = renderHook(() => useGas());
+
+    await act(async () => {
+      await result.current.updateTxFees({
+        asset: mockedAsset,
+        amount: 1,
+        recipient: '0x',
+      });
+    });
+
+    expect(result.current.hasSufficientForGas).toBeTruthy();
+  });
+
+  it(`should expose hasSufficientForGas as false if the user doesn't have balance for gas`, async () => {
+    spyEstimateGasLimit.mockReturnValue('999999999999');
+
+    (useAssets as jest.Mock).mockImplementation(() => ({
+      getAssetBalance: jest.fn().mockReturnValue({
+        amount: '0',
+        display: '',
+      }),
+      getAssetPrice: jest.fn().mockReturnValue('10'),
+      getAsset: jest.fn().mockReturnValue(mockedAsset),
+    }));
+
+    const { result } = renderHook(() => useGas());
+
+    await act(async () => {
+      await result.current.updateTxFees({
+        asset: mockedAsset,
+        amount: 1,
+        recipient: '0x',
+      });
+    });
+
+    expect(result.current.hasSufficientForGas).toBeFalsy();
+  });
 
   it.todo(
     `should show ActionSheet with 3 speed options when calling showTransactionSpeedActionSheet`
