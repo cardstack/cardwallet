@@ -1,15 +1,3 @@
-import logger from 'logger';
-
-// eslint-disable-next-line import/no-commonjs
-for (let variable of Object.entries(require('../../globalVariables').default)) {
-  Object.defineProperty(global, variable[0], {
-    get: () => variable[1],
-    set: () => {
-      logger.sentry(`Trying to override internal Cardstack var ${variable[0]}`);
-    },
-  });
-}
-
 if (typeof __dirname === 'undefined') global.__dirname = '/';
 if (typeof __filename === 'undefined') global.__filename = '';
 if (typeof process === 'undefined') {

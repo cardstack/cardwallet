@@ -72,7 +72,6 @@ export default function WalletList({
   onChangeAccount,
   onEditWallet,
   onPressAddAccount,
-  scrollEnabled,
   showDividers,
 }) {
   const [rows, setRows] = useState([]);
