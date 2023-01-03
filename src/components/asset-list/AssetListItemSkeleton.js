@@ -14,6 +14,7 @@ import { interpolate } from '../animations';
 import { CoinRowHeight } from '../coin-row';
 import { ColumnWithMargins, Row, RowWithMargins } from '../layout';
 import { colors } from '@cardstack/theme';
+import { Device } from '@cardstack/utils';
 import { padding, position } from '@rainbow-me/styles';
 import { lightModeThemeColors } from '@rainbow-me/styles/colors';
 
@@ -101,7 +102,8 @@ class AssetListItemSkeleton extends PureComponent {
     ]);
   }
 
-  animation = this.props.animated && ios ? this.startShimmerLoop() : () => null;
+  animation =
+    this.props.animated && Device.isIOS ? this.startShimmerLoop() : () => null;
 
   renderShimmer() {
     const { colors } = this.props;

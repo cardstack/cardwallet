@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { buildTransactionsSectionsSelector } from '../helpers/buildTransactionsSectionsSelector';
 import useContacts from './useContacts';
 import useRequests from './useRequests';
+import { Device } from '@cardstack/utils';
 
 export const NOE_PAGE = 30;
 
@@ -62,7 +63,7 @@ export default function useAccountTransactions(initialized, isFocused) {
     nextPage,
     remainingItemsLabel,
     sections,
-    transactions: ios ? transactions : slicedTransaction,
+    transactions: Device.isAndroid ? transactions : slicedTransaction,
     transactionsCount,
   };
 }

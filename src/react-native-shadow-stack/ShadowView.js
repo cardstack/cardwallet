@@ -1,8 +1,9 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { Device } from '@cardstack/utils';
 
 const ShadowView = props => {
-  if (ios || props.elevation > 0) {
+  if (Device.isIOS || props.elevation > 0) {
     return <View {...props} />;
   }
   return (

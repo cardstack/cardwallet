@@ -1,12 +1,14 @@
 import React, { useMemo } from 'react';
 import { FallbackIcon } from 'react-coin-icon';
 import { initials } from '../../utils';
+import { Device } from '@cardstack/utils';
 import { ImageWithCachedMetadata } from '@rainbow-me/images';
 import { borders } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
 import ShadowStack from 'react-native-shadow-stack';
 
-const shadowsFactory = colors => [
-  [0, 4, android ? 1 : 6, colors.shadow, 0.04],
+const shadowsFactory = () => [
+  [0, 4, Device.isAndroid ? 1 : 6, colors.shadow, 0.04],
   [0, 1, 3, colors.shadow, 0.08],
 ];
 
@@ -16,13 +18,12 @@ const TokenFamilyHeaderIcon = ({
   isCoinRow,
   style,
 }) => {
-  const { colors } = useTheme();
   const circleStyle = useMemo(
     () => borders.buildCircleAsObject(isCoinRow ? 40 : 32),
     [isCoinRow]
   );
 
-  const shadows = useMemo(() => shadowsFactory(colors), [colors]);
+  const shadows = useMemo(() => shadowsFactory(), []);
 
   return (
     <ShadowStack

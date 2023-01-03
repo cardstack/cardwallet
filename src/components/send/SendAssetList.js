@@ -16,6 +16,7 @@ import { Centered } from '../layout';
 import TokenFamilyHeader from '../token-family/TokenFamilyHeader';
 import { layoutEasingAnimation } from '@cardstack/utils';
 import { ImgixImage } from '@rainbow-me/images';
+import colors from '@rainbow-me/styles/colors';
 
 const dividerMargin = 10;
 const dividerHeight = DividerSize + dividerMargin * 2;
@@ -28,14 +29,11 @@ const SendAssetRecyclerListView = styled(RecyclerListView)`
   min-height: 1;
 `;
 
-const SendAssetListDivider = () => {
-  const { colors } = useTheme();
-  return (
-    <Centered marginVertical={dividerMargin}>
-      <Divider color={colors.rowDividerLight} />
-    </Centered>
-  );
-};
+const SendAssetListDivider = () => (
+  <Centered marginVertical={dividerMargin}>
+    <Divider color={colors.rowDividerLight} />
+  </Centered>
+);
 
 export default class SendAssetList extends React.Component {
   constructor(props) {

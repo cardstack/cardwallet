@@ -2,6 +2,7 @@ import { get, isNil } from 'lodash';
 import { css } from 'styled-components';
 import colors from './colors';
 import fonts from './fonts';
+import { Device } from '@cardstack/utils';
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -32,19 +33,12 @@ function familyFontWithAndroidWidth(weight, family, mono) {
   return `${
     fonts.family[
       mono
-        ? `SFMono${android ? `-${selectBestFontFit(mono, weight)}` : ''}`
+        ? `SFMono${
+            Device.isAndroid ? `-${selectBestFontFit(mono, weight)}` : ''
+          }`
         : family
     ]
-  }${android ? `-${selectBestFontFit(mono, weight)}` : ''}`;
-}
-
-export function fontWithWidth(weight, family = 'SFProRounded', mono = false) {
-  return {
-    fontFamily: familyFontWithAndroidWidth(weight, family, mono),
-    // https://github.com/facebook/react-native/issues/18820
-    // https://www.youtube.com/watch?v=87rhZTumujw
-    ...(ios ? { fontWeight: weight } : { fontWeight: 'normal' }),
-  };
+  }${Device.isAndroid ? `-${selectBestFontFit(mono, weight)}` : ''}`;
 }
 
 const buildTextStyles = css`
@@ -66,7 +60,7 @@ const buildTextStyles = css`
 
   /* Font Weight */
   ${({ isEmoji, weight = 'regular' }) =>
-    isEmoji || isNil(weight) || android
+    isEmoji || isNil(weight) || Device.isAndroid
       ? ''
       : `font-weight: ${get(fonts, `weight[${weight}]`, weight)};`}
 
@@ -82,7 +76,7 @@ const buildTextStyles = css`
 
   /* Line Height */
   ${({ isEmoji, lineHeight }) =>
-    isNil(lineHeight) || (isEmoji && android)
+    isNil(lineHeight) || (isEmoji && Device.isAndroid)
       ? ''
       : `line-height: ${get(fonts, `lineHeight[${lineHeight}]`, lineHeight)};`}
 

@@ -2,6 +2,7 @@ import React from 'react';
 import Animated from 'react-native-reanimated';
 import styled from 'styled-components';
 import { Column, Flex } from '../../components/layout';
+import colors from '@rainbow-me/styles/colors';
 
 const FilledValue = styled(Column)`
   width: 20;
@@ -22,7 +23,6 @@ const EmptyValue = styled(Column)`
 `;
 
 const PinValue = ({ translateX, value, ...props }) => {
-  const { colors } = useTheme();
   return (
     <Flex {...props}>
       <Animated.View

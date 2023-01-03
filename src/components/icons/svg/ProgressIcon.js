@@ -5,6 +5,7 @@ import { G, Path } from 'react-native-svg';
 import { Centered } from '../../layout';
 import Svg from '../Svg';
 import { position } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
 
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
@@ -73,7 +74,6 @@ const ProgressIcon = ({
   strokeWidth,
   ...props
 }) => {
-  const { colors } = useTheme();
   const progressColor = givenProgressColor || colors.whiteLabel;
   const color = givenColor || colors.alpha(colors.sendScreen.grey, 0.3);
   const radius = size / 2;

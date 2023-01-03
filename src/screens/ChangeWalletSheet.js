@@ -24,7 +24,7 @@ import {
   walletsSetSelected,
   walletsUpdate,
 } from '../redux/wallets';
-import { getRandomColor } from '../styles/colors';
+import colors, { getRandomColor } from '../styles/colors';
 import { Container, Sheet, Text, Touchable } from '@cardstack/components';
 import { removeFCMToken } from '@cardstack/models/firebase';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
@@ -54,7 +54,6 @@ const getWalletRowCount = wallets => {
 export default function ChangeWalletSheet() {
   const { isDamaged, selectedWallet, wallets } = useWallets();
   const [editMode, setEditMode] = useState(false);
-  const { colors } = useTheme();
 
   const { goBack, navigate } = useNavigation();
   const dispatch = useDispatch();

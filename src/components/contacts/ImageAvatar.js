@@ -3,6 +3,7 @@ import { Image } from 'react-native';
 import styled from 'styled-components';
 import { Centered } from '../layout';
 import { borders } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
 import ShadowStack from 'react-native-shadow-stack';
 
 const buildSmallShadows = (color, colors) => [
@@ -39,16 +40,14 @@ const Avatar = styled(Image)`
 `;
 
 const ImageAvatar = ({ image, size = 'medium', ...props }) => {
-  const { colors } = useTheme();
   const { dimensions, shadow } = useMemo(() => sizeConfigs(colors)[size], [
-    colors,
     size,
   ]);
 
   const shadows = useMemo(
     () =>
       size === 'small' ? buildSmallShadows(colors.shadow, colors) : shadow,
-    [shadow, size, colors]
+    [shadow, size]
   );
 
   return (

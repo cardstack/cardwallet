@@ -7,6 +7,7 @@ import { CenteredContainer, Icon, ScrollView } from '@cardstack/components';
 import { SettingsExternalURLs } from '@cardstack/constants';
 import { useSelectedWallet } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
+import { Device } from '@cardstack/utils';
 import AppVersionStamp from '@rainbow-me/components/AppVersionStamp';
 import { ColumnWithDividers } from '@rainbow-me/components/layout';
 import {
@@ -148,7 +149,7 @@ export default function SettingsScreen() {
         />
         <ListItem
           icon={<Icon color="settingsTeal" name="life-buoy" />}
-          label={ios ? 'Support' : 'Feedback & Bug Reports'}
+          label={Device.isIOS ? 'Support' : 'Feedback & Bug Reports'}
           onPress={onSendFeedback}
           testID="feedback-section"
         />

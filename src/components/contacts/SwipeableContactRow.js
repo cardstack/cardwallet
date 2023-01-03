@@ -10,6 +10,7 @@ import showDeleteContactActionSheet from './showDeleteContactActionSheet';
 import { AnimatedPressable } from '@cardstack/components';
 import { ImgixImage } from '@rainbow-me/images';
 import { margin, position } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
 
 const AnimatedCentered = Animated.createAnimatedComponent(Centered);
 
@@ -19,8 +20,6 @@ const RightAction = ({ onPress, progress, text, x }) => {
     inputRange: [0, 1],
     outputRange: [x, 0],
   });
-
-  const { colors } = useTheme();
 
   return (
     <AnimatedCentered

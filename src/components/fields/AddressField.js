@@ -1,5 +1,5 @@
 import { utils as ethersUtils } from 'ethers';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { checkIsValidAddressOrDomain } from '../../helpers/validators';
 import { Row } from '../layout';
@@ -69,7 +69,7 @@ const AddressField = (
         color={isValid ? 'settingsTeal' : 'invalid'}
         flexGrow={1}
         fontSize={15}
-        keyboardType={android ? 'visible-password' : 'default'}
+        keyboardType={Device.isAndroid ? 'visible-password' : 'default'}
         maxLength={addressUtils.maxLength}
         onBlur={expandAbbreviatedClipboard}
         onChange={handleChange}

@@ -1,7 +1,6 @@
 import chroma from 'chroma-js';
 import { toLower } from 'lodash';
 import PropTypes from 'prop-types';
-import currentColors from '../context/currentColors';
 import { avatarColor } from '@cardstack/theme';
 
 const buildRgba = (color, alpha = 1) => `rgba(${chroma(color).rgb()},${alpha})`;
@@ -229,11 +228,11 @@ const getColorForString = (colorString = '', providedThemeColors = colors) => {
 
 export const darkModeThemeColors = getColorsByTheme(true);
 export const lightModeThemeColors = getColorsByTheme(false);
-const colors = currentColors.themedColors || lightModeThemeColors;
+
+const colors = lightModeThemeColors;
+
 export const getRandomColor = () =>
   Math.floor(Math.random() * colors.avatarColor.length);
-
-currentColors.themedColors = lightModeThemeColors;
 
 export default {
   ...colors,

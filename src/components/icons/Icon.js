@@ -60,6 +60,7 @@ import TouchIdIcon from './svg/TouchIdIcon';
 import WalletConnectIcon from './svg/WalletConnectIcon';
 import WarningCircledIcon from './svg/WarningCircledIcon';
 import WarningIcon from './svg/WarningIcon';
+import colors from '@rainbow-me/styles/colors';
 
 const IconTypes = {
   applePay: ApplePayIcon,
@@ -127,7 +128,6 @@ const IconTypes = {
 
 const Icon = ({ name, testID, ...props }, ref) => {
   const IconElement = IconTypes[name] || Flex;
-  const { colors } = useTheme();
   return (
     <IconElement
       colors={colors}

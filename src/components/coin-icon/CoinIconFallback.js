@@ -6,6 +6,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { Centered } from '../layout';
 import { useBooleanState } from '@cardstack/hooks';
 import { colors } from '@cardstack/theme';
+import { Device } from '@cardstack/utils';
 import { borders, fonts, position, shadow } from '@rainbow-me/styles';
 import { getUrlForTrustIconFallback, magicMemo } from '@rainbow-me/utils';
 
@@ -61,7 +62,9 @@ function WrappedFallbackImage({
   );
 }
 
-const FallbackImageElement = android ? WrappedFallbackImage : FallbackImage;
+const FallbackImageElement = Device.isAndroid
+  ? WrappedFallbackImage
+  : FallbackImage;
 
 const CoinIconFallback = fallbackProps => {
   const { address = '', height, symbol, width } = fallbackProps;

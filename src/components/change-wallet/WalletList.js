@@ -11,7 +11,7 @@ import { EmptyAssetList } from '../asset-list';
 import AddressRow from './AddressRow';
 import { Container, OptionItem } from '@cardstack/components';
 import { NetworkType } from '@cardstack/types';
-import { getAddressPreview } from '@cardstack/utils';
+import { Device, getAddressPreview } from '@cardstack/utils';
 import { position } from '@rainbow-me/styles';
 
 const listTopPadding = 7.5;
@@ -147,7 +147,7 @@ export default function WalletList({
   useEffect(() => {
     if (rows && rows.length && !ready) {
       setTimeout(() => {
-        if (ios) {
+        if (Device.isIOS) {
           skeletonTransitionRef.current?.animateNextTransition();
         }
         setReady(true);
@@ -213,12 +213,13 @@ export default function WalletList({
           <FlatList
             data={rows}
             getItemLayout={getItemLayout}
+            horizontal
             initialNumToRender={rows.length}
             keyExtractor={keyExtractor}
             ref={scrollView}
             removeClippedSubviews
             renderItem={renderItem}
-            scrollEnabled={scrollEnabled}
+            scrollEnabled={false}
           />
           {showDividers && <WalletListDivider />}
           <Container justifyContent="flex-end" marginBottom={1} marginLeft={5}>

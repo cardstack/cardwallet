@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 import { TruncatedText } from '../text';
+import { Device } from '@cardstack/utils';
 
 const CoinName = styled(TruncatedText).attrs(
   ({ color, theme: { colors } }) => ({
     color: color || colors.dark,
     letterSpacing: 'roundedMedium',
-    lineHeight: android ? 'normalTight' : 'normal',
+    lineHeight: Device.isAndroid ? 'normalTight' : 'normal',
     size: 'lmedium',
   })
 )`

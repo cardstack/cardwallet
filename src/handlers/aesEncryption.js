@@ -1,4 +1,5 @@
 import { NativeModules } from 'react-native';
+import { Device } from '@cardstack/utils';
 const AesEncryption = NativeModules.Aes;
 
 export default class AesEncryptor {
@@ -10,7 +11,7 @@ export default class AesEncryptor {
   }
 
   generateKey = (password, salt) =>
-    android
+    Device.isAndroid
       ? AesEncryption.pbkdf2(password, salt, 5000, 256)
       : AesEncryption.pbkdf2(password, salt);
 

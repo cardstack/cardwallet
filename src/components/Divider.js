@@ -1,7 +1,6 @@
 import { constant, isNil, isNumber, times } from 'lodash';
-import React from 'react';
+import React, { memo } from 'react';
 import styled from 'styled-components';
-import { magicMemo } from '../utils';
 import { borders, position } from '@rainbow-me/styles';
 
 export const DividerSize = 2;
@@ -60,23 +59,20 @@ const Divider = ({
   inset = [0, 0, 0, 19],
   size = DividerSize,
   ...props
-}) => {
-  const { colors } = useTheme();
-  return (
-    <Container
+}) => (
+  <Container
+    {...props}
+    backgroundColor={backgroundColor}
+    horizontal={horizontal}
+    size={size}
+  >
+    <BorderLine
       {...props}
-      backgroundColor={backgroundColor}
+      color={color}
       horizontal={horizontal}
-      size={size}
-    >
-      <BorderLine
-        {...props}
-        color={color || colors.rowDivider}
-        horizontal={horizontal}
-        inset={inset}
-      />
-    </Container>
-  );
-};
+      inset={inset}
+    />
+  </Container>
+);
 
-export default magicMemo(Divider, ['color', 'inset']);
+export default memo(Divider);
