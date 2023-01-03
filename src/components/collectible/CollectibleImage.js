@@ -13,7 +13,7 @@ const getFallbackTextColor = bg =>
   });
 
 const CollectibleImage = ({
-  backgroundColor,
+  backgroundColor = 'white',
   imageUrl,
   item,
   resizeMode = ImgixImage.resizeMode.cover,
