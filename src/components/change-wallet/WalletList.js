@@ -13,6 +13,7 @@ import { Container, OptionItem } from '@cardstack/components';
 import { NetworkType } from '@cardstack/types';
 import { Device, getAddressPreview } from '@cardstack/utils';
 import { position } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
 
 const listTopPadding = 7.5;
 const rowHeight = 59;
@@ -51,11 +52,11 @@ const EmptyWalletList = styled(EmptyAssetList).attrs({
   pointerEvents: 'none',
 })`
   ${position.cover};
-  background-color: ${({ theme: { colors } }) => colors.white};
+  background-color: ${colors.white};
   padding-top: ${listTopPadding};
 `;
 
-const WalletListDivider = styled(Divider).attrs(({ theme: { colors } }) => ({
+const WalletListDivider = styled(Divider).attrs(() => ({
   color: colors.rowDividerExtraLight,
   inset: [0, 15],
 }))`

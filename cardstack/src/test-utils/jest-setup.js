@@ -7,6 +7,7 @@ import '@testing-library/jest-native/extend-expect';
 import 'react-native-gesture-handler/jestSetup';
 import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock';
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
+import { Device } from '@cardstack/utils';
 
 // GLOBAL LIBS MOCKS
 global.__reanimatedWorkletInit = jest.fn();
@@ -252,5 +253,5 @@ jest.mock('react-native-localize', () => ({
   removeEventListener: jest.fn(),
 }));
 
-global.ios = true;
-global.android = false;
+Device.isIOS = true;
+Device.isAndroid = false;

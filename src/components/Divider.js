@@ -2,6 +2,7 @@ import { constant, isNil, isNumber, times } from 'lodash';
 import React, { memo } from 'react';
 import styled from 'styled-components';
 import { borders, position } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
 
 export const DividerSize = 2;
 
@@ -45,8 +46,7 @@ const BorderLine = styled.View`
 `;
 
 const Container = styled.View`
-  background-color: ${({ backgroundColor, theme: { colors } }) =>
-    backgroundColor || colors.white};
+  background-color: ${({ backgroundColor }) => backgroundColor || colors.white};
   flex-shrink: 0;
   height: ${({ horizontal, size }) => (horizontal ? size : '100%')};
   width: ${({ horizontal, size }) => (horizontal ? '100%' : size)};

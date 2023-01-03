@@ -1,4 +1,4 @@
-import { Device } from '@cardstack/utils';
+import { Device } from '@cardstack/utils/device';
 
 const font = {};
 

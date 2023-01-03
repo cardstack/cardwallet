@@ -6,6 +6,7 @@ import { useTimeout } from '../../hooks';
 import TokenFamilyHeader, {
   TokenFamilyHeaderAnimationDuration,
 } from './TokenFamilyHeader';
+import { colors } from '@cardstack/theme';
 
 export const TokenFamilyWrapPaddingTop = 6;
 
@@ -19,7 +20,7 @@ const transition = (
 );
 
 const Container = styled.View`
-  background-color: ${({ theme: { colors } }) => colors.white};
+  background-color: ${colors.white};
   overflow: hidden;
   padding-top: ${({ isFirst }) => (isFirst ? TokenFamilyWrapPaddingTop : 0)};
 `;

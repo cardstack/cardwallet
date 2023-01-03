@@ -41,7 +41,7 @@ const ShadowStack = React.forwardRef(
         {...props}
         backgroundColor="transparent"
         borderRadius={borderRadius}
-        height={Device.isIOS ? height : height || 0}
+        height={height || 0}
         ref={ref}
         style={style}
         width={width}
@@ -58,7 +58,7 @@ const ShadowStack = React.forwardRef(
           height={height}
           overflow="hidden"
           style={[StyleSheet.absoluteFill, { backgroundColor }]}
-          width={Device.isIOS ? width : width || 0}
+          width={width || 0}
           zIndex={shadows?.length + 2 || 0}
         >
           {children}

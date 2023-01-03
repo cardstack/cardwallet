@@ -16,7 +16,7 @@ const EmptyValue = styled(Column)`
   border-width: 3;
   width: 20;
   height: 20;
-  border-color: ${({ theme: { colors } }) => colors.white};
+  border-color: ${colors.white};
   border-radius: 20;
   margin-left: 10;
   margin-right: 10;

@@ -7,8 +7,9 @@ import { Centered, Column, RowWithMargins } from '../../layout';
 import { Text, TruncatedText } from '../../text';
 import TransactionSheet from '../TransactionSheet';
 import { padding } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
 
-const Amount = styled(TruncatedText).attrs(({ theme: { colors } }) => ({
+const Amount = styled(TruncatedText).attrs(() => ({
   color: colors.dark,
   letterSpacing: 'roundedTight',
   size: 'larger',
@@ -16,7 +17,7 @@ const Amount = styled(TruncatedText).attrs(({ theme: { colors } }) => ({
   weight: 'bold',
 }))``;
 
-const AmountRow = styled(LinearGradient).attrs(({ theme: { colors } }) => ({
+const AmountRow = styled(LinearGradient).attrs(() => ({
   colors: colors.gradients.lighterGrey,
   end: { x: 0, y: 0.5 },
   start: { x: 1, y: 0.5 },
@@ -28,7 +29,7 @@ const AmountRow = styled(LinearGradient).attrs(({ theme: { colors } }) => ({
   overflow: hidden;
 `;
 
-const NativeAmount = styled(Text).attrs(({ theme: { colors } }) => ({
+const NativeAmount = styled(Text).attrs(() => ({
   align: 'center',
   color: colors.dark,
   letterSpacing: 'zero',

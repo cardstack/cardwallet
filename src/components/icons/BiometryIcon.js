@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { memo } from 'react';
 import styled from 'styled-components';
 import { Centered } from '../layout';
 import Icon from './Icon';
 import BiometryTypes from '@rainbow-me/helpers/biometryTypes';
 import { position } from '@rainbow-me/styles';
-import { magicMemo } from '@rainbow-me/utils';
+import colors from '@rainbow-me/styles/colors';
 
-const BiometryTypeIcon = styled(Icon).attrs(({ type, theme: { colors } }) => ({
+const BiometryTypeIcon = styled(Icon).attrs(({ type }) => ({
   color: colors.whiteLabel,
   name: type.toLowerCase(),
 }))`
@@ -51,4 +51,4 @@ const BiometryIcon = ({ biometryType, ...props }) =>
     </Container>
   );
 
-export default magicMemo(BiometryIcon, 'biometryType');
+export default memo(BiometryIcon);
