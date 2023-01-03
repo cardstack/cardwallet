@@ -1,8 +1,10 @@
 import { act, renderHook } from '@testing-library/react-native';
+import { ActionSheetIOS } from 'react-native';
 
 import { useAssets } from '@cardstack/hooks/assets/useAssets';
 import { useGetGasPricesQuery } from '@cardstack/services';
 import { GasPricesQueryResults } from '@cardstack/services/hub/gas-prices/gas-prices-types';
+import { Device } from '@cardstack/utils';
 
 import * as Web3Handlers from '@rainbow-me/handlers/web3';
 
@@ -44,6 +46,12 @@ jest.mock('@cardstack/services', () => ({
 }));
 
 describe('useGas', () => {
+  Device.isIOS = true;
+
+  const spyActionSheet = jest
+    .spyOn(ActionSheetIOS, 'showActionSheetWithOptions')
+    .mockImplementation(jest.fn());
+
   const spyEstimateGasLimit = jest.spyOn(Web3Handlers, 'estimateGasLimit');
 
   const mockedGasPriceEstimation = (data?: GasPricesQueryResults) =>
@@ -174,11 +182,64 @@ describe('useGas', () => {
     expect(result.current.hasSufficientForGas).toBeFalsy();
   });
 
-  it.todo(
-    `should show ActionSheet with 3 speed options when calling showTransactionSpeedActionSheet`
-  );
+  it(`should show ActionSheet with 3 speed options when calling showTransactionSpeedActionSheet`, async () => {
+    const { result } = renderHook(() => useGas());
 
-  it.todo(
-    `should update the setSelectedGasSpeed with the new speed and the selected fee`
-  );
+    await act(async () => {
+      await result.current.updateTxFees({
+        asset: mockedAsset,
+        amount: 1,
+        recipient: '0x',
+      });
+    });
+
+    act(() => {
+      result.current.showTransactionSpeedActionSheet();
+    });
+
+    expect(spyActionSheet).toBeCalledTimes(1);
+    expect(spyActionSheet).toBeCalledWith(
+      {
+        cancelButtonIndex: 3,
+        options: [
+          'Slow: $0.024 USD',
+          'Standard: $0.025 USD',
+          'Fast: $0.025 USD',
+          'Cancel',
+        ],
+      },
+      expect.any(Function)
+    );
+  });
+
+  it(`should update the setSelectedGasSpeed with the new speed and the selected fee`, async () => {
+    const { result } = renderHook(() => useGas());
+
+    await act(async () => {
+      await result.current.updateTxFees({
+        asset: mockedAsset,
+        amount: 1,
+        recipient: '0x',
+      });
+    });
+
+    act(() => {
+      result.current.showTransactionSpeedActionSheet();
+
+      // click the first item
+      spyActionSheet.mock.calls[0][1](0);
+    });
+
+    expect(result.current.selectedFee).toEqual({
+      gasPrice: '115462975454',
+      native: {
+        amount: '0.02424722484534',
+        display: '$0.024 USD',
+      },
+      value: {
+        amount: '0.002424722484534',
+        display: '0.00242 TST',
+      },
+    });
+  });
 });

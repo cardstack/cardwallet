@@ -16,7 +16,7 @@ import { capitalizeFirstLetter } from '@cardstack/utils';
 import { estimateGasLimit } from '@rainbow-me/handlers/web3';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { ethUnits } from '@rainbow-me/references';
-import { showActionSheetWithOptions } from '@rainbow-me/utils';
+import showActionSheetWithOptions from '@rainbow-me/utils/actionsheet';
 
 import { ParseTxFeeParams, TxFee } from './types';
 
