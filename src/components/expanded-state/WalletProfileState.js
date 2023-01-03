@@ -2,8 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useRef, useState } from 'react';
 import styled from 'styled-components';
 
-import { useTheme } from '../../context/ThemeContext';
-import { getRandomColor } from '../../styles/colors';
+import colors, { getRandomColor } from '../../styles/colors';
 import Divider from '../Divider';
 import ImageAvatar from '../contacts/ImageAvatar';
 import { ProfileAvatarButton, ProfileModal, ProfileNameInput } from './profile';
@@ -56,7 +55,6 @@ export default function WalletProfileState({
 
   const dismissProfileModal = useDismissCurrentRoute(Routes.MODAL_SCREEN);
 
-  const { colors } = useTheme();
   const [color, setColor] = useState(
     (profile.color !== null && profile.color) || getRandomColor()
   );

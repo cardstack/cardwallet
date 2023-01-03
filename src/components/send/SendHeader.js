@@ -2,7 +2,6 @@ import { useNavigation } from '@react-navigation/native';
 import { get, isEmpty, isNumber, toLower } from 'lodash';
 import React, { Fragment, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
-import { useTheme } from '../../context/ThemeContext';
 import Divider from '../Divider';
 import { AddContactButton, PasteAddressButton } from '../buttons';
 import { AddressField } from '../fields';
@@ -11,6 +10,7 @@ import { Text } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
 import { useClipboard, useDimensions } from '@rainbow-me/hooks';
 import { padding } from '@rainbow-me/styles';
+import colors, { getRandomColor } from '@rainbow-me/styles/colors';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 const AddressInputContainer = styled(Row).attrs({ align: 'center' })`
@@ -40,7 +40,6 @@ export default function SendHeader({
   const { setClipboard } = useClipboard();
   const { isSmallPhone } = useDimensions();
   const { navigate } = useNavigation();
-  const { colors } = useTheme();
 
   const contact = useMemo(() => {
     return get(contacts, `${[toLower(recipient)]}`, DefaultContactItem);
@@ -49,7 +48,7 @@ export default function SendHeader({
   const handleNavigateToContact = useCallback(() => {
     let color = get(contact, 'color');
     if (!isNumber(color)) {
-      color = colors.getRandomColor();
+      color = getRandomColor();
     }
 
     navigate(Routes.MODAL_SCREEN, {
@@ -59,7 +58,7 @@ export default function SendHeader({
       contact: isEmpty(contact.address) ? false : contact,
       type: 'contact_profile',
     });
-  }, [colors, contact, navigate, recipient]);
+  }, [contact, navigate, recipient]);
 
   const handleOpenContactActionSheet = useCallback(async () => {
     return showActionSheetWithOptions(

@@ -2,13 +2,13 @@ import { toUpper } from 'lodash';
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
 import styled from 'styled-components';
-import { useTheme } from '../../context/ThemeContext';
 import { getFirstGrapheme } from '../../utils';
 import { Centered } from '../layout';
 import { Text } from '../text';
 import { borders } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
 
-const sizeConfigs = () => ({
+const sizeConfigs = {
   xxlarge: {
     dimensions: 100,
     textSize: 'biggest',
@@ -41,7 +41,7 @@ const sizeConfigs = () => ({
     dimensions: 36,
     textSize: 'large',
   },
-});
+};
 
 const ContactAvatarContainer = styled(View)`
   background-color: ${({ backgroundColor = 'transparent' }) => backgroundColor};
@@ -52,11 +52,7 @@ const ContactAvatarContainer = styled(View)`
 `;
 
 const ContactAvatar = ({ color, size = 'medium', value, ...props }) => {
-  const { colors } = useTheme();
-  const { dimensions, textSize } = useMemo(() => sizeConfigs(colors)[size], [
-    colors,
-    size,
-  ]);
+  const { dimensions, textSize } = useMemo(() => sizeConfigs[size], [size]);
 
   return (
     <ContactAvatarContainer

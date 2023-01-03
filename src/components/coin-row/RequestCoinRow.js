@@ -3,7 +3,6 @@ import { addHours, differenceInMinutes, isPast } from 'date-fns';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { useTheme } from '../../context/ThemeContext';
 import { RequestCoinIcon } from '../coin-icon';
 import { RowWithMargins } from '../layout';
 import { Emoji, Text } from '../text';
@@ -12,6 +11,7 @@ import CoinRow from './CoinRow';
 import { AnimatedPressable } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
 import { removeRequest } from '@cardstack/redux/requests';
+import colors from '@rainbow-me/styles/colors';
 
 const getPercentageOfTimeElapsed = (startDate, endDate) => {
   const originalDifference = differenceInMinutes(endDate, startDate);
@@ -52,7 +52,6 @@ const RequestCoinRow = ({ item, ...props }) => {
   const [expiresAt, setExpiresAt] = useState(null);
   const [expirationColor, setExpirationColor] = useState(null);
   const [percentElapsed, setPercentElapsed] = useState(null);
-  const { colors } = useTheme();
 
   useEffect(() => {
     if (item?.displayDetails?.timestampInMs) {
@@ -68,7 +67,7 @@ const RequestCoinRow = ({ item, ...props }) => {
         _percentElapsed > 25 ? colors.appleBlue : colors.orange
       );
     }
-  }, [colors, item]);
+  }, [item]);
 
   const handleExpiredRequests = useCallback(() => {
     if (isPast(expiresAt)) {
