@@ -1,6 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useRef, useState } from 'react';
-import { Keyboard } from 'react-native';
 import styled from 'styled-components';
 import { useAccountSettings, useContacts } from '../../hooks';
 import { magicMemo } from '../../utils';
@@ -13,8 +12,8 @@ import {
   OptionItem,
   Text,
 } from '@cardstack/components';
+import { dismissKeyboardOnAndroid } from '@cardstack/navigation';
 import theme, { avatarColor } from '@cardstack/theme';
-import { Device } from '@cardstack/utils';
 import { padding } from '@rainbow-me/styles';
 
 const WalletProfileDivider = styled(Divider).attrs(() => ({
@@ -43,21 +42,16 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
   const inputRef = useRef(null);
   const { network } = useAccountSettings();
 
-  const dismissKeyBoardOnAndroid = useCallback(() => {
-    Device.isAndroid && Keyboard.dismiss();
-  }, []);
-
   const handleAddContact = useCallback(() => {
     if (value.length > 0 || color !== colorProp) {
       onAddOrUpdateContacts(address, value, color, network);
       goBack();
     }
-    dismissKeyBoardOnAndroid();
+    dismissKeyboardOnAndroid();
   }, [
     address,
     color,
     colorProp,
-    dismissKeyBoardOnAndroid,
     goBack,
     network,
     onAddOrUpdateContacts,
@@ -71,13 +65,13 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
       onDelete: goBack,
       removeContact: onRemoveContact,
     });
-    dismissKeyBoardOnAndroid();
-  }, [address, dismissKeyBoardOnAndroid, goBack, onRemoveContact, value]);
+    dismissKeyboardOnAndroid();
+  }, [address, goBack, onRemoveContact, value]);
 
   const handleDismiss = useCallback(() => {
     goBack();
-    dismissKeyBoardOnAndroid();
-  }, [dismissKeyBoardOnAndroid, goBack]);
+    dismissKeyboardOnAndroid();
+  }, [goBack]);
 
   return (
     <ContactProfileModal onPressBackdrop={handleAddContact}>
