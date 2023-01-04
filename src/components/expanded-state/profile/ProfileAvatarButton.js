@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 import { ContactAvatar } from '../../contacts';
 import { AnimatedPressable } from '@cardstack/components';
-import colors from '@rainbow-me/styles/colors';
+import { avatarColor } from '@cardstack/theme';
 
 const ProfileAvatarButton = ({ color, marginBottom = 15, setColor, value }) => {
   const handleChangeColor = useCallback(
-    () => setColor?.(prevColor => (prevColor + 1) % colors.avatarColor.length),
+    () => setColor?.(prevColor => (prevColor + 1) % avatarColor.length),
     [setColor]
   );
 

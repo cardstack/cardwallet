@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useRef, useState } from 'react';
 import styled from 'styled-components';
 
-import colors, { getRandomColor } from '../../styles/colors';
+import { getRandomColor } from '../../styles/colors';
 import Divider from '../Divider';
 import ImageAvatar from '../contacts/ImageAvatar';
 import { ProfileAvatarButton, ProfileModal, ProfileNameInput } from './profile';
@@ -13,7 +13,7 @@ import {
   Text,
 } from '@cardstack/components';
 import { Routes, useDismissCurrentRoute } from '@cardstack/navigation';
-import theme from '@cardstack/theme';
+import theme, { avatarColor } from '@cardstack/theme';
 import {
   removeFirstEmojiFromString,
   returnStringFirstEmoji,
@@ -124,7 +124,7 @@ export default function WalletProfileState({
           onSubmitEditing={handleSubmit}
           placeholder="Name your account"
           ref={inputRef}
-          selectionColor={colors.avatarColor[color]}
+          selectionColor={avatarColor[color]}
           testID="wallet-info-input"
           value={value}
         />

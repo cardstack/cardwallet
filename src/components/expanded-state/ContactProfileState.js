@@ -13,10 +13,9 @@ import {
   OptionItem,
   Text,
 } from '@cardstack/components';
-import theme from '@cardstack/theme';
+import theme, { avatarColor } from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
 import { padding } from '@rainbow-me/styles';
-import colors from '@rainbow-me/styles/colors';
 
 const WalletProfileDivider = styled(Divider).attrs(() => ({
   borderRadius: 1,
@@ -96,7 +95,7 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
           onSubmitEditing={handleAddContact}
           placeholder="Name"
           ref={inputRef}
-          selectionColor={colors.avatarColor[color]}
+          selectionColor={avatarColor[color]}
           testID="contact-profile-name-input"
           value={value}
         />

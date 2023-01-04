@@ -5,8 +5,8 @@ import styled from 'styled-components';
 import { getFirstGrapheme } from '../../utils';
 import { Centered } from '../layout';
 import { Text } from '../text';
+import { avatarColor, colors } from '@cardstack/theme';
 import { borders } from '@rainbow-me/styles';
-import colors from '@rainbow-me/styles/colors';
 
 const sizeConfigs = {
   xxlarge: {
@@ -58,12 +58,12 @@ const ContactAvatar = ({ color, size = 'medium', value, ...props }) => {
     <ContactAvatarContainer
       {...props}
       {...borders.buildCircleAsObject(dimensions)}
-      backgroundColor={colors.avatarColor[color] || color}
+      backgroundColor={avatarColor[color] || color}
     >
       <Centered flex={1}>
         <Text
           align="center"
-          color={props.textColor || colors.whiteLabel}
+          color={props.textColor || colors.white}
           letterSpacing="zero"
           size={textSize}
           weight="bold"

@@ -16,7 +16,7 @@ import { ColumnWithMargins, Row, RowWithMargins } from '../layout';
 import { colors } from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
 import { padding, position } from '@rainbow-me/styles';
-import { lightModeThemeColors } from '@rainbow-me/styles/colors';
+import rbColors from '@rainbow-me/styles/colors';
 
 const { block, cond, set, startClock, stopClock } = Animated;
 
@@ -31,7 +31,7 @@ const Container = styled.View`
 
 const FakeAvatar = styled.View`
   ${position.size(40)};
-  background-color: ${lightModeThemeColors.skeleton};
+  background-color: ${rbColors.skeleton};
   border-radius: 20;
 `;
 
@@ -45,7 +45,7 @@ const FakeRow = styled(Row).attrs({
 })(Row);
 
 const FakeText = styled.View`
-  background-color: ${lightModeThemeColors.skeleton};
+  background-color: ${rbColors.skeleton};
   border-radius: 5;
   height: 10;
 `;
