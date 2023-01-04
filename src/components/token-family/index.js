@@ -3,4 +3,3 @@ export {
   TokenFamilyHeaderAnimationDuration,
   TokenFamilyHeaderHeight,
 } from './TokenFamilyHeader';
-export { default as TokenFamilyWrap } from './TokenFamilyWrap';

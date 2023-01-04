@@ -1,4 +1,3 @@
-export { default as Emoji } from './Emoji';
 export { default as Monospace } from './Monospace';
 export { default as PlaceholderText } from './PlaceholderText';
 export { default as Smallcaps } from './Smallcaps';

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import CaretImageSource from '../../assets/family-dropdown-arrow.png';
 import { interpolate } from '../animations';
 import { Row, RowWithMargins } from '../layout';
-import { Emoji, Text, TruncatedText } from '../text';
+import { Text, TruncatedText } from '../text';
 import TokenFamilyHeaderIcon from './TokenFamilyHeaderIcon';
 import { AnimatedPressable } from '@cardstack/components';
 import { ImgixImage } from '@rainbow-me/images';
@@ -61,7 +61,6 @@ const TitleText = styled(TruncatedText).attrs({
 
 const TokenFamilyHeader = ({
   childrenAmount,
-  emoji,
   familyImage,
   isCoinRow,
   isOpen,
@@ -83,16 +82,12 @@ const TokenFamilyHeader = ({
   return (
     <AnimatedPressable onPress={onPress}>
       <Content isCoinRow={isCoinRow}>
-        <RowWithMargins align="center" margin={emoji ? 5 : 9}>
-          {emoji ? (
-            <Emoji name={emoji} size="lmedium" />
-          ) : (
-            <TokenFamilyHeaderIcon
-              familyImage={familyImage}
-              familyName={title}
-              isCoinRow={isCoinRow}
-            />
-          )}
+        <RowWithMargins align="center" margin={9}>
+          <TokenFamilyHeaderIcon
+            familyImage={familyImage}
+            familyName={title}
+            isCoinRow={isCoinRow}
+          />
         </RowWithMargins>
         <TitleText>{title}</TitleText>
         <RowWithMargins align="center" margin={13}>

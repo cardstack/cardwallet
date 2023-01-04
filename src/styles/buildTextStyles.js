@@ -1,6 +1,5 @@
 import { get, isNil } from 'lodash';
 import { css } from 'styled-components';
-import colors from './colors';
 import fonts from './fonts';
 import { Device } from '@cardstack/utils';
 
@@ -43,8 +42,7 @@ function familyFontWithAndroidWidth(weight, family, mono) {
 
 const buildTextStyles = css`
   /* Color */
-  color: ${({ color, theme }) =>
-    colors.get(color, theme.colors) || theme.colors.dark};
+  color: ${({ color }) => color};
 
   /* Font Family */
   ${({ isEmoji, family = 'SFProRounded', mono, weight }) => {

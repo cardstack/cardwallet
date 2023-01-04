@@ -2,10 +2,9 @@ import { useNavigation } from '@react-navigation/native';
 import { addHours, differenceInMinutes, isPast } from 'date-fns';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import styled from 'styled-components';
 import { RequestCoinIcon } from '../coin-icon';
 import { RowWithMargins } from '../layout';
-import { Emoji, Text } from '../text';
+import { Text } from '../text';
 import CoinName from './CoinName';
 import CoinRow from './CoinRow';
 import { AnimatedPressable } from '@cardstack/components';
@@ -20,13 +19,6 @@ const getPercentageOfTimeElapsed = (startDate, endDate) => {
   return Math.floor((currentDifference * 100) / originalDifference);
 };
 
-const ClockEmoji = styled(Emoji).attrs({
-  name: 'clock4',
-  size: 'tiny',
-})`
-  margin-top: 1.75;
-`;
-
 const BottomRow = ({ dappName, expirationColor }) => (
   <CoinName color={expirationColor} weight="semibold">
     {dappName}
@@ -38,7 +30,6 @@ const TopRow = ({ expirationColor, expiresAt }) => {
 
   return (
     <RowWithMargins margin={2}>
-      <ClockEmoji />
       <Text color={expirationColor} size="smedium" weight="semibold">
         Expires in {minutes || 0}m
       </Text>
