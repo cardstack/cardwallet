@@ -7,7 +7,6 @@ import React, {
   useState,
 } from 'react';
 
-import { useTheme } from '../../context/ThemeContext';
 import ExchangeInput from '../exchange/ExchangeInput';
 import { Row } from '../layout';
 import { Button, Container, Text } from '@cardstack/components';
@@ -96,15 +95,12 @@ const UnderlineField = (
     }
   }, [forwardedRef, value, valueProp, wasButtonPressed]);
 
-  const { isDarkMode } = useTheme();
-
   return (
     <Container flex={1} {...props}>
       <Row align="center" justify="space-between">
         <ExchangeInput
           autoFocus={autoFocus}
           color={isFocused ? 'black' : 'settingsTeal'}
-          isDarkMode={isDarkMode}
           isTinyPhone={isTinyPhone}
           keyboardType={keyboardType}
           mask={mask}

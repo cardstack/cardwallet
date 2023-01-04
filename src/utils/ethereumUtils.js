@@ -16,7 +16,7 @@ import { ETHERSCAN_API_KEY } from 'react-native-dotenv';
 import URL from 'url-parse';
 
 import { NetworkType } from '@cardstack/types';
-import { normalizeTxHash } from '@cardstack/utils';
+import { Device, normalizeTxHash } from '@cardstack/utils';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import { DEFAULT_HD_PATH, WalletLibraryType } from '@rainbow-me/model/wallet';
 import store from '@rainbow-me/redux/store';
@@ -165,7 +165,7 @@ const checkIfUrlIsAScam = async url => {
 
 const deriveAccountFromMnemonic = async (mnemonic, index = 0) => {
   let seed;
-  if (ios) {
+  if (Device.isIOS) {
     seed = await mnemonicToSeed(mnemonic);
   } else {
     const res = await RNBip39.mnemonicToSeed({ mnemonic, passphrase: null });

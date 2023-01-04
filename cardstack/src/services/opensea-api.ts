@@ -81,7 +81,7 @@ const parseCollectiblesFromOpenSeaResponse = (
         'total_supply',
         'wiki_link',
       ]),
-      background: background_color ? `#${background_color}` : null,
+      background: background_color ? `#${background_color}` : undefined,
       familyImage: asset_contract.image_url,
       id: tokenID,
       isSendable:

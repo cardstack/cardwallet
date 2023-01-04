@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import ShadowItem from './ShadowItem';
+import { Device } from '@cardstack/utils';
 
 const ShadowStack = React.forwardRef(
   (
@@ -40,13 +41,13 @@ const ShadowStack = React.forwardRef(
         {...props}
         backgroundColor="transparent"
         borderRadius={borderRadius}
-        height={ios ? height : height || 0}
+        height={height || 0}
         ref={ref}
         style={style}
         width={width}
         zIndex={1}
       >
-        {ios && shadows?.map(renderItem)}
+        {Device.isIOS && shadows?.map(renderItem)}
         <View
           {...props}
           borderRadius={borderRadius}
@@ -57,7 +58,7 @@ const ShadowStack = React.forwardRef(
           height={height}
           overflow="hidden"
           style={[StyleSheet.absoluteFill, { backgroundColor }]}
-          width={ios ? width : width || 0}
+          width={width || 0}
           zIndex={shadows?.length + 2 || 0}
         >
           {children}

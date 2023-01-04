@@ -5,6 +5,7 @@ import { SIGN_TYPED_DATA } from '../../utils/signingMethods';
 import { Row } from '../layout';
 import { Text } from '../text';
 import { padding } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
 import { deviceUtils } from '@rainbow-me/utils';
 
 const deviceWidth = deviceUtils.dimensions.width;
@@ -16,8 +17,7 @@ const Container = styled(Row)`
 `;
 const MessageWrapper = styled(ScrollView)`
   ${padding(12, 15)}
-  border-color: ${({ theme: { colors } }) =>
-    colors.alpha(colors.blueGreyDark, 0.08)};
+  border-color: ${colors.alpha(colors.blueGreyDark, 0.08)};
   border-radius: 20;
   border-width: 1;
   margin-bottom: 14;
@@ -25,7 +25,6 @@ const MessageWrapper = styled(ScrollView)`
 `;
 
 const TransactionMessage = ({ maxHeight = 150, message, method }) => {
-  const { colors } = useTheme();
   let msg = message;
   let maximumHeight = maxHeight;
   let minimumHeight = 150;

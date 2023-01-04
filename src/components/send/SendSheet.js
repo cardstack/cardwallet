@@ -11,6 +11,7 @@ import {
   SendTransactionSpeed,
 } from '.';
 import { Sheet, useMessageOverlay } from '@cardstack/components';
+import { Device } from '@cardstack/utils';
 import {
   useAccountSettings,
   useContacts,
@@ -94,7 +95,7 @@ export default function SendSheet({
 
   return (
     <Sheet isFullScreen scrollEnabled>
-      {ios && <StatusBar barStyle="light-content" />}
+      {Device.isIOS && <StatusBar barStyle="light-content" />}
       <SendHeader
         contacts={contacts}
         isValidAddress={isValidAddress}

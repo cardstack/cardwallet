@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
-import React, { Fragment, useMemo } from 'react';
+import React, { Fragment, memo, useMemo } from 'react';
 import { css } from 'styled-components';
-import { useTheme } from '../../context/ThemeContext';
 import { buildAssetUniqueIdentifier } from '../../helpers/assets';
-import { deviceUtils, magicMemo } from '../../utils';
+import { deviceUtils } from '../../utils';
 import Divider from '../Divider';
 import { RequestVendorLogoIcon } from '../coin-icon';
 import { Centered, InnerBorder } from '../layout';
@@ -12,6 +11,7 @@ import CoinName from './CoinName';
 import CoinRow from './CoinRow';
 import { AnimatedPressable } from '@cardstack/components';
 import { padding } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
 
 const dividerHeight = 22;
 const isTinyPhone = deviceUtils.dimensions.height <= 568;
@@ -22,17 +22,11 @@ const selectedStyles = css`
   height: ${selectedHeight};
 `;
 
-const BottomRow = ({ subtitle }) => {
-  const { colors } = useTheme();
-  return (
-    <TruncatedText
-      color={colors.alpha(colors.blueGreyDark, 0.5)}
-      size="smedium"
-    >
-      {subtitle}
-    </TruncatedText>
-  );
-};
+const BottomRow = ({ subtitle }) => (
+  <TruncatedText color={colors.alpha(colors.blueGreyDark, 0.5)} size="smedium">
+    {subtitle}
+  </TruncatedText>
+);
 
 const TopRow = ({ id, name, selected }) => (
   <CoinName
@@ -43,32 +37,29 @@ const TopRow = ({ id, name, selected }) => (
   </CoinName>
 );
 
-const CollectibleCoinIcon = magicMemo(
+const CollectibleCoinIcon = memo(
   ({
     asset_contract: { name },
     background,
     image_thumbnail_url,
     shouldPrioritizeImageLoading,
     ...props
-  }) => {
-    const { colors } = useTheme();
-    return (
-      <Centered>
-        <RequestVendorLogoIcon
-          backgroundColor={background || colors.lightestGrey}
-          borderRadius={8}
-          dappName={name}
-          imageUrl={image_thumbnail_url}
-          shouldPrioritizeImageLoading={shouldPrioritizeImageLoading}
-          {...props}
-        />
-        <InnerBorder opacity={0.04} radius={8} zIndex={2} />
-      </Centered>
-    );
-  },
-  ['background', 'image_thumbnail_url']
+  }) => (
+    <Centered>
+      <RequestVendorLogoIcon
+        backgroundColor={background || colors.lightestGrey}
+        borderRadius={8}
+        dappName={name}
+        imageUrl={image_thumbnail_url}
+        shouldPrioritizeImageLoading={shouldPrioritizeImageLoading}
+        {...props}
+      />
+      <InnerBorder opacity={0.04} radius={8} zIndex={2} />
+    </Centered>
+  )
 );
 
+CollectibleCoinIcon.displayName = 'CollectibleCoinIcon';
 CollectibleCoinIcon.propTypes = {
   asset_contract: PropTypes.shape({ name: PropTypes.string }),
   background: PropTypes.string,
@@ -83,7 +74,6 @@ const arePropsEqual = (props, nextProps) =>
 // eslint-disable-next-line react/display-name
 const CollectiblesSendRow = React.memo(
   ({ item, isFirstRow, onPress, selected, testID, ...props }) => {
-    const { colors } = useTheme();
     const subtitle = useMemo(
       () =>
         item.name

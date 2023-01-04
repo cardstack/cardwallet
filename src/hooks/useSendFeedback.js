@@ -8,6 +8,7 @@ import {
   appVersion,
   SUPPORT_EMAIL_ADDRESS,
 } from '@cardstack/constants';
+import { Device } from '@cardstack/utils';
 
 const setClipboardToFeedbackEmail = () =>
   Clipboard.setString(SUPPORT_EMAIL_ADDRESS);
@@ -37,7 +38,9 @@ const handleMailError = debounce(
 function feedbackEmailOptions(appVersion) {
   return {
     recipients: [SUPPORT_EMAIL_ADDRESS],
-    subject: `${appName} Feedback - ${ios ? 'iOS' : 'Android'} ${appVersion}`,
+    subject: `${appName} Feedback - ${
+      Device.isIOS ? 'iOS' : 'Android'
+    } ${appVersion}`,
   };
 }
 

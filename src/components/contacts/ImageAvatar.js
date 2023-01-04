@@ -2,12 +2,14 @@ import React, { useMemo } from 'react';
 import { Image } from 'react-native';
 import styled from 'styled-components';
 import { Centered } from '../layout';
+import { avatarColor } from '@cardstack/theme';
 import { borders } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
 import ShadowStack from 'react-native-shadow-stack';
 
 const buildSmallShadows = (color, colors) => [
   [0, 3, 5, colors.shadow, 0.14],
-  [0, 6, 10, colors.avatarColor[color] || color, 0.2],
+  [0, 6, 10, avatarColor[color] || color, 0.2],
 ];
 
 const sizeConfigs = colors => ({
@@ -39,16 +41,14 @@ const Avatar = styled(Image)`
 `;
 
 const ImageAvatar = ({ image, size = 'medium', ...props }) => {
-  const { colors } = useTheme();
   const { dimensions, shadow } = useMemo(() => sizeConfigs(colors)[size], [
-    colors,
     size,
   ]);
 
   const shadows = useMemo(
     () =>
       size === 'small' ? buildSmallShadows(colors.shadow, colors) : shadow,
-    [shadow, size, colors]
+    [shadow, size]
   );
 
   return (

@@ -11,8 +11,9 @@ import { EmptyAssetList } from '../asset-list';
 import AddressRow from './AddressRow';
 import { Container, OptionItem } from '@cardstack/components';
 import { NetworkType } from '@cardstack/types';
-import { getAddressPreview } from '@cardstack/utils';
+import { Device, getAddressPreview } from '@cardstack/utils';
 import { position } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
 
 const listTopPadding = 7.5;
 const rowHeight = 59;
@@ -51,11 +52,11 @@ const EmptyWalletList = styled(EmptyAssetList).attrs({
   pointerEvents: 'none',
 })`
   ${position.cover};
-  background-color: ${({ theme: { colors } }) => colors.white};
+  background-color: ${colors.white};
   padding-top: ${listTopPadding};
 `;
 
-const WalletListDivider = styled(Divider).attrs(({ theme: { colors } }) => ({
+const WalletListDivider = styled(Divider).attrs(() => ({
   color: colors.rowDividerExtraLight,
   inset: [0, 15],
 }))`
@@ -72,7 +73,6 @@ export default function WalletList({
   onChangeAccount,
   onEditWallet,
   onPressAddAccount,
-  scrollEnabled,
   showDividers,
 }) {
   const [rows, setRows] = useState([]);
@@ -147,7 +147,7 @@ export default function WalletList({
   useEffect(() => {
     if (rows && rows.length && !ready) {
       setTimeout(() => {
-        if (ios) {
+        if (Device.isIOS) {
           skeletonTransitionRef.current?.animateNextTransition();
         }
         setReady(true);
@@ -213,12 +213,13 @@ export default function WalletList({
           <FlatList
             data={rows}
             getItemLayout={getItemLayout}
+            horizontal
             initialNumToRender={rows.length}
             keyExtractor={keyExtractor}
             ref={scrollView}
             removeClippedSubviews
             renderItem={renderItem}
-            scrollEnabled={scrollEnabled}
+            scrollEnabled={false}
           />
           {showDividers && <WalletListDivider />}
           <Container justifyContent="flex-end" marginBottom={1} marginLeft={5}>

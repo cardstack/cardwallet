@@ -3,6 +3,8 @@ import { View } from 'react-native';
 import { Transition, Transitioning } from 'react-native-reanimated';
 import { Icon } from '../icons';
 import { Centered } from '../layout';
+import { Device } from '@cardstack/utils';
+import colors from '@rainbow-me/styles/colors';
 
 const duration = 200;
 const transition = (
@@ -35,11 +37,9 @@ const transition = (
 const SendEmptyState = () => {
   const ref = useRef();
 
-  if (ref.current && ios) {
+  if (ref.current && Device.isIOS) {
     ref.current.animateNextTransition();
   }
-
-  const { colors } = useTheme();
 
   const icon = (
     <Icon
@@ -47,14 +47,14 @@ const SendEmptyState = () => {
       height={88}
       name="send"
       style={{
-        marginBottom: ios ? 0 : 150,
-        marginTop: ios ? 0 : 150,
+        marginBottom: Device.isIOS ? 0 : 150,
+        marginTop: Device.isIOS ? 0 : 150,
       }}
       width={91}
     />
   );
 
-  if (android) {
+  if (Device.isAndroid) {
     return <View style={{ alignItems: 'center', flex: 1 }}>{icon}</View>;
   }
 

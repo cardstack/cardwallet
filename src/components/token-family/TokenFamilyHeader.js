@@ -5,11 +5,12 @@ import styled from 'styled-components';
 import CaretImageSource from '../../assets/family-dropdown-arrow.png';
 import { interpolate } from '../animations';
 import { Row, RowWithMargins } from '../layout';
-import { Emoji, Text, TruncatedText } from '../text';
+import { Text, TruncatedText } from '../text';
 import TokenFamilyHeaderIcon from './TokenFamilyHeaderIcon';
 import { AnimatedPressable } from '@cardstack/components';
 import { ImgixImage } from '@rainbow-me/images';
 import { padding } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
 
 const AnimatedImgixImage = Animated.createAnimatedComponent(ImgixImage);
 
@@ -21,7 +22,7 @@ const Content = styled(Row).attrs({
   justify: 'space-between',
 })`
   ${({ isCoinRow }) => padding(0, isCoinRow ? 16 : 19)};
-  background-color: ${({ theme: { colors } }) => colors.white};
+  background-color: ${colors.white};
   height: ${TokenFamilyHeaderHeight};
   width: 100%;
 `;
@@ -34,13 +35,11 @@ const ChildrenAmountText = styled(Text).attrs({
   margin-bottom: 1;
 `;
 
-const RotatingArrowIcon = styled(AnimatedImgixImage).attrs(
-  ({ theme: { colors } }) => ({
-    resizeMode: ImgixImage.resizeMode.contain,
-    source: CaretImageSource,
-    tintColor: colors.dark,
-  })
-)`
+const RotatingArrowIcon = styled(AnimatedImgixImage).attrs(() => ({
+  resizeMode: ImgixImage.resizeMode.contain,
+  source: CaretImageSource,
+  tintColor: colors.dark,
+}))`
   height: 18;
   margin-bottom: 1;
   right: 5;
@@ -62,7 +61,6 @@ const TitleText = styled(TruncatedText).attrs({
 
 const TokenFamilyHeader = ({
   childrenAmount,
-  emoji,
   familyImage,
   isCoinRow,
   isOpen,
@@ -84,16 +82,12 @@ const TokenFamilyHeader = ({
   return (
     <AnimatedPressable onPress={onPress}>
       <Content isCoinRow={isCoinRow}>
-        <RowWithMargins align="center" margin={emoji ? 5 : 9}>
-          {emoji ? (
-            <Emoji name={emoji} size="lmedium" />
-          ) : (
-            <TokenFamilyHeaderIcon
-              familyImage={familyImage}
-              familyName={title}
-              isCoinRow={isCoinRow}
-            />
-          )}
+        <RowWithMargins align="center" margin={9}>
+          <TokenFamilyHeaderIcon
+            familyImage={familyImage}
+            familyName={title}
+            isCoinRow={isCoinRow}
+          />
         </RowWithMargins>
         <TitleText>{title}</TitleText>
         <RowWithMargins align="center" margin={13}>

@@ -33,7 +33,7 @@ const CollectibleImageWrapper = ({
         backgroundColor={collectible.background}
         imageUrl={imageUrl}
         item={collectible}
-        resizeMode="contain"
+        resizeMode={'contain' as any} // Casting to be used on js file
       />
     </CenteredContainer>
   );

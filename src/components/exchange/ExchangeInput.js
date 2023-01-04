@@ -1,8 +1,7 @@
-import React, { Fragment, useCallback, useState } from 'react';
+import React, { Fragment, memo, useCallback, useState } from 'react';
 import { InteractionManager } from 'react-native';
 
 import { InputMask } from '@cardstack/components';
-import { magicMemo } from '@rainbow-me/utils';
 
 const ExchangeInput = (
   {
@@ -100,12 +99,4 @@ const ExchangeInput = (
   );
 };
 
-export default magicMemo(React.forwardRef(ExchangeInput), [
-  'color',
-  'editable',
-  'placeholder',
-  'placeholderTextColor',
-  'onChangeText',
-  'onFocus',
-  'value',
-]);
+export default memo(React.forwardRef(ExchangeInput));

@@ -1,4 +1,5 @@
 import { Dimensions, Platform } from 'react-native';
+import { Device } from '@cardstack/utils';
 
 const { height, width } = Dimensions.get('window');
 
@@ -21,6 +22,6 @@ deviceUtils.dimensions = {
   width,
 };
 
-deviceUtils.isIOS14 = ios && parseFloat(Platform.Version) >= 14;
+deviceUtils.isIOS14 = Device.isIOS && parseFloat(Platform.Version) >= 14;
 
 export default deviceUtils;

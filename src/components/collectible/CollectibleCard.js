@@ -1,12 +1,12 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import styled from 'styled-components';
-import { magicMemo } from '../../utils';
 
 import { InnerBorder } from '../layout';
 import CollectibleImage from './CollectibleImage';
 import { AnimatedPressable } from '@cardstack/components';
 import { shadow as shadowUtil } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
 
 const CollectibleCardBorderRadius = 20;
 const CollectibleCardShadowFactory = colors => [0, 2, 6, colors.shadow, 0.08];
@@ -30,7 +30,6 @@ const CollectibleCard = ({
   item: { background, image_preview_url, ...item },
   onPress,
   resizeMode,
-
   shadow,
   style,
   width,
@@ -42,11 +41,7 @@ const CollectibleCard = ({
     }
   }, [item, onPress]);
 
-  const { colors } = useTheme();
-
-  const defaultShadow = useMemo(() => CollectibleCardShadowFactory(colors), [
-    colors,
-  ]);
+  const defaultShadow = useMemo(() => CollectibleCardShadowFactory(colors), []);
 
   return (
     <Container
@@ -75,9 +70,4 @@ const CollectibleCard = ({
   );
 };
 
-export default magicMemo(CollectibleCard, [
-  'height',
-  'item.id',
-  'style',
-  'width',
-]);
+export default memo(CollectibleCard);

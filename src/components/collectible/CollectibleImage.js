@@ -1,34 +1,25 @@
-import React, { useCallback, useState } from 'react';
-import { useTheme } from '../../context/ThemeContext';
+import React, { memo, useCallback, useState } from 'react';
 import { buildCollectibleName } from '../../helpers/assets';
-import { magicMemo } from '../../utils';
 import { Centered } from '../layout';
 import { Monospace } from '../text';
 import { ImageWithCachedMetadata, ImgixImage } from '@rainbow-me/images';
 import { position } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
 
-const FallbackTextColorVariants = (darkMode, colors) => ({
-  dark: darkMode
-    ? colors.alpha(colors.white, 0.25)
-    : colors.alpha(colors.blueGreyDark, 0.5),
-  light: darkMode ? colors.alpha(colors.blueGreyDark, 0.25) : colors.white,
-});
-
-const getFallbackTextColor = (bg, darkMode, colors) =>
-  colors.getTextColorForBackground(
-    bg,
-    FallbackTextColorVariants(darkMode, colors)
-  );
+const getFallbackTextColor = bg =>
+  colors.getTextColorForBackground(bg, {
+    dark: colors.alpha(colors.blueGreyDark, 0.5),
+    light: colors.white,
+  });
 
 const CollectibleImage = ({
-  backgroundColor,
+  backgroundColor = 'white',
   imageUrl,
   item,
   resizeMode = ImgixImage.resizeMode.cover,
 }) => {
   const [error, setError] = useState(null);
   const handleError = useCallback(error => setError(error), [setError]);
-  const { isDarkMode, colors } = useTheme();
 
   return (
     <Centered backgroundColor={backgroundColor} style={position.coverAsObject}>
@@ -42,7 +33,7 @@ const CollectibleImage = ({
       ) : (
         <Monospace
           align="center"
-          color={getFallbackTextColor(backgroundColor, isDarkMode, colors)}
+          color={getFallbackTextColor(backgroundColor)}
           lineHeight="looser"
           size="smedium"
         >
@@ -53,4 +44,4 @@ const CollectibleImage = ({
   );
 };
 
-export default magicMemo(CollectibleImage, 'imageUrl');
+export default memo(CollectibleImage);

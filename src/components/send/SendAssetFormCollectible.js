@@ -7,6 +7,7 @@ import { OpacityToggler } from '../animations';
 import { CollectibleCard } from '../collectible';
 import { Column, ColumnWithMargins } from '../layout';
 import { padding, position } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
 
 const defaultImageDimensions = { height: 512, width: 512 };
 
@@ -24,14 +25,12 @@ const Footer = styled(Column).attrs({ justify: 'end' })`
   width: 100%;
 `;
 
-const Gradient = styled(LinearGradient).attrs(
-  ({ isTallPhone, theme: { colors } }) => ({
-    colors: colors.gradients.sendBackground,
-    end: { x: 0.5, y: isTallPhone ? 0.2 : 0.4 },
-    pointerEvents: 'none',
-    start: { x: 0.5, y: 0 },
-  })
-)`
+const Gradient = styled(LinearGradient).attrs(({ isTallPhone }) => ({
+  colors: colors.gradients.sendBackground,
+  end: { x: 0.5, y: isTallPhone ? 0.2 : 0.4 },
+  pointerEvents: 'none',
+  start: { x: 0.5, y: 0 },
+}))`
   ${position.cover};
   border-radius: 19;
   overflow: hidden;
@@ -43,15 +42,13 @@ const GradientToggler = styled(OpacityToggler).attrs({
   ${position.cover};
 `;
 
-const SendFormCollectibleCard = styled(CollectibleCard).attrs(
-  ({ theme: { colors } }) => ({
-    borderEnabled: false,
-    enableHapticFeedback: false,
-    resizeMode: 'contain',
-    scaleTo: 1,
-    shadow: [0, 10, 25, colors.shadow, 0.4],
-  })
-)`
+const SendFormCollectibleCard = styled(CollectibleCard).attrs(() => ({
+  borderEnabled: false,
+  enableHapticFeedback: false,
+  resizeMode: 'contain',
+  scaleTo: 1,
+  shadow: [0, 10, 25, colors.shadow, 0.4],
+}))`
   opacity: 1;
 `;
 

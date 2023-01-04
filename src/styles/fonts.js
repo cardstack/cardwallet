@@ -1,8 +1,10 @@
+import { Device } from '@cardstack/utils/device';
+
 const font = {};
 
 font.family = {
   SFMono: 'SFMono-Regular',
-  SFProRounded: ios ? 'SF Pro Rounded' : 'SF-Pro-Rounded',
+  SFProRounded: Device.isIOS ? 'SF Pro Rounded' : 'SF-Pro-Rounded',
 };
 
 font.letterSpacing = {

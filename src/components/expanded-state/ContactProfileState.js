@@ -1,8 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useRef, useState } from 'react';
-import { Keyboard } from 'react-native';
 import styled from 'styled-components';
-import { useTheme } from '../../context/ThemeContext';
 import { useAccountSettings, useContacts } from '../../hooks';
 import { magicMemo } from '../../utils';
 import Divider from '../Divider';
@@ -14,7 +12,8 @@ import {
   OptionItem,
   Text,
 } from '@cardstack/components';
-import theme from '@cardstack/theme';
+import { dismissKeyboardOnAndroid } from '@cardstack/navigation';
+import theme, { avatarColor } from '@cardstack/theme';
 import { padding } from '@rainbow-me/styles';
 
 const WalletProfileDivider = styled(Divider).attrs(() => ({
@@ -48,7 +47,7 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
       onAddOrUpdateContacts(address, value, color, network);
       goBack();
     }
-    android && Keyboard.dismiss();
+    dismissKeyboardOnAndroid();
   }, [
     address,
     color,
@@ -66,10 +65,13 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
       onDelete: goBack,
       removeContact: onRemoveContact,
     });
-    android && Keyboard.dismiss();
+    dismissKeyboardOnAndroid();
   }, [address, goBack, onRemoveContact, value]);
 
-  const { colors } = useTheme();
+  const handleDismiss = useCallback(() => {
+    goBack();
+    dismissKeyboardOnAndroid();
+  }, [goBack]);
 
   return (
     <ContactProfileModal onPressBackdrop={handleAddContact}>
@@ -87,7 +89,7 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
           onSubmitEditing={handleAddContact}
           placeholder="Name"
           ref={inputRef}
-          selectionColor={colors.avatarColor[color]}
+          selectionColor={avatarColor[color]}
           testID="contact-profile-name-input"
           value={value}
         />
@@ -104,14 +106,7 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
       </CenteredContainer>
       <CenteredContainer marginBottom={6} marginTop={5}>
         <AnimatedPressable
-          onPress={
-            contact
-              ? handleDeleteContact
-              : () => {
-                  goBack();
-                  android && Keyboard.dismiss();
-                }
-          }
+          onPress={contact ? handleDeleteContact : handleDismiss}
         >
           <Text color="grayText" textAlign="center" weight="bold">
             {contact ? 'Delete Contact' : 'Cancel'}

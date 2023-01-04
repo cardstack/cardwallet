@@ -1,22 +1,3 @@
-const fs = require('fs');
-const { parse: babelParse } = require('@babel/parser');
-const data = fs.readFileSync('./globalVariables.js', 'utf8');
-const { parse } = require('ast-parser');
-
-// syntax in globalVariables.js's imports is not supported here
-const globalVars = parse(babelParse(data, { sourceType: 'module' }))
-  .program.body.find(e => e.nodeType === 'ExportDefaultDeclaration')
-  .declaration.properties.map(e => e.key.name)
-  .reduce(
-    (acc, variable) => {
-      acc[variable] = true;
-      return acc;
-    },
-    {
-      __DEV__: true,
-    }
-  );
-
 module.exports = {
   extends: 'satya164',
   plugins: ['jest'],
@@ -38,7 +19,9 @@ module.exports = {
       },
     },
   },
-  globals: globalVars,
+  globals: {
+    __DEV__: true,
+  },
   rules: {
     'no-console': 0,
     'sort-imports': [

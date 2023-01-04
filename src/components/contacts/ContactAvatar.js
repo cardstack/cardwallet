@@ -2,13 +2,13 @@ import { toUpper } from 'lodash';
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
 import styled from 'styled-components';
-import { useTheme } from '../../context/ThemeContext';
 import { getFirstGrapheme } from '../../utils';
 import { Centered } from '../layout';
 import { Text } from '../text';
+import { avatarColor, colors } from '@cardstack/theme';
 import { borders } from '@rainbow-me/styles';
 
-const sizeConfigs = () => ({
+const sizeConfigs = {
   xxlarge: {
     dimensions: 100,
     textSize: 'biggest',
@@ -41,7 +41,7 @@ const sizeConfigs = () => ({
     dimensions: 36,
     textSize: 'large',
   },
-});
+};
 
 const ContactAvatarContainer = styled(View)`
   background-color: ${({ backgroundColor = 'transparent' }) => backgroundColor};
@@ -52,22 +52,18 @@ const ContactAvatarContainer = styled(View)`
 `;
 
 const ContactAvatar = ({ color, size = 'medium', value, ...props }) => {
-  const { colors } = useTheme();
-  const { dimensions, textSize } = useMemo(() => sizeConfigs(colors)[size], [
-    colors,
-    size,
-  ]);
+  const { dimensions, textSize } = useMemo(() => sizeConfigs[size], [size]);
 
   return (
     <ContactAvatarContainer
       {...props}
       {...borders.buildCircleAsObject(dimensions)}
-      backgroundColor={colors.avatarColor[color] || color}
+      backgroundColor={avatarColor[color] || color}
     >
       <Centered flex={1}>
         <Text
           align="center"
-          color={props.textColor || colors.whiteLabel}
+          color={props.textColor || colors.white}
           letterSpacing="zero"
           size={textSize}
           weight="bold"

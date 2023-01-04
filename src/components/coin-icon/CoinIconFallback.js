@@ -2,11 +2,12 @@ import React, { useMemo } from 'react';
 import { FallbackIcon } from 'react-coin-icon';
 import { Image } from 'react-native';
 import styled from 'styled-components';
-import { useTheme } from '../../context/ThemeContext';
 import { Centered } from '../layout';
 import { useBooleanState } from '@cardstack/hooks';
 import { colors } from '@cardstack/theme';
+import { Device } from '@cardstack/utils';
 import { borders, fonts, position, shadow } from '@rainbow-me/styles';
+import rbColors from '@rainbow-me/styles/colors';
 import { getUrlForTrustIconFallback, magicMemo } from '@rainbow-me/utils';
 
 const fallbackTextStyles = {
@@ -40,19 +41,21 @@ function WrappedFallbackImage({
   size,
   ...props
 }) {
-  const { colors } = useTheme();
   return (
     <Centered
       {...props}
       {...position.coverAsObject}
       {...borders.buildCircleAsObject(size)}
-      backgroundColor={colors.alpha(color || colors.dark, shadowOpacity || 0.3)}
+      backgroundColor={rbColors.alpha(
+        color || rbColors.dark,
+        shadowOpacity || 0.3
+      )}
       elevation={showImage ? elevation : 0}
       opacity={showImage ? 1 : 0}
     >
       <FallbackImage
         {...props}
-        overlayColor={color || colors.dark}
+        overlayColor={color || rbColors.dark}
         shadowOpacity={shadowOpacity}
         showImage={showImage}
         size={size}
@@ -61,7 +64,9 @@ function WrappedFallbackImage({
   );
 }
 
-const FallbackImageElement = android ? WrappedFallbackImage : FallbackImage;
+const FallbackImageElement = Device.isAndroid
+  ? WrappedFallbackImage
+  : FallbackImage;
 
 const CoinIconFallback = fallbackProps => {
   const { address = '', height, symbol, width } = fallbackProps;

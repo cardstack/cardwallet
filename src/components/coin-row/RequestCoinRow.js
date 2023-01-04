@@ -2,16 +2,15 @@ import { useNavigation } from '@react-navigation/native';
 import { addHours, differenceInMinutes, isPast } from 'date-fns';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import styled from 'styled-components';
-import { useTheme } from '../../context/ThemeContext';
 import { RequestCoinIcon } from '../coin-icon';
 import { RowWithMargins } from '../layout';
-import { Emoji, Text } from '../text';
+import { Text } from '../text';
 import CoinName from './CoinName';
 import CoinRow from './CoinRow';
 import { AnimatedPressable } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
 import { removeRequest } from '@cardstack/redux/requests';
+import colors from '@rainbow-me/styles/colors';
 
 const getPercentageOfTimeElapsed = (startDate, endDate) => {
   const originalDifference = differenceInMinutes(endDate, startDate);
@@ -19,13 +18,6 @@ const getPercentageOfTimeElapsed = (startDate, endDate) => {
 
   return Math.floor((currentDifference * 100) / originalDifference);
 };
-
-const ClockEmoji = styled(Emoji).attrs({
-  name: 'clock4',
-  size: 'tiny',
-})`
-  margin-top: 1.75;
-`;
 
 const BottomRow = ({ dappName, expirationColor }) => (
   <CoinName color={expirationColor} weight="semibold">
@@ -38,7 +30,6 @@ const TopRow = ({ expirationColor, expiresAt }) => {
 
   return (
     <RowWithMargins margin={2}>
-      <ClockEmoji />
       <Text color={expirationColor} size="smedium" weight="semibold">
         Expires in {minutes || 0}m
       </Text>
@@ -52,7 +43,6 @@ const RequestCoinRow = ({ item, ...props }) => {
   const [expiresAt, setExpiresAt] = useState(null);
   const [expirationColor, setExpirationColor] = useState(null);
   const [percentElapsed, setPercentElapsed] = useState(null);
-  const { colors } = useTheme();
 
   useEffect(() => {
     if (item?.displayDetails?.timestampInMs) {
@@ -68,7 +58,7 @@ const RequestCoinRow = ({ item, ...props }) => {
         _percentElapsed > 25 ? colors.appleBlue : colors.orange
       );
     }
-  }, [colors, item]);
+  }, [item]);
 
   const handleExpiredRequests = useCallback(() => {
     if (isPast(expiresAt)) {

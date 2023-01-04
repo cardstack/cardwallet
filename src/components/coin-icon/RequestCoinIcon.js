@@ -1,6 +1,6 @@
 import React from 'react';
-import { useTheme } from '../../context/ThemeContext';
 import RequestVendorLogoIcon from './RequestVendorLogoIcon';
+import { colors } from '@cardstack/theme';
 
 const RequestCoinIconSize = 48;
 
@@ -8,17 +8,13 @@ const RequestCoinIcon = ({
   dappName,
   imageUrl,
   size = RequestCoinIconSize,
-}) => {
-  const { colors } = useTheme();
-
-  return (
-    <RequestVendorLogoIcon
-      backgroundColor={colors.white}
-      borderRadius={size}
-      dappName={dappName}
-      imageUrl={imageUrl}
-    />
-  );
-};
+}) => (
+  <RequestVendorLogoIcon
+    backgroundColor={colors.white}
+    borderRadius={size}
+    dappName={dappName}
+    imageUrl={imageUrl}
+  />
+);
 
 export default React.memo(RequestCoinIcon);

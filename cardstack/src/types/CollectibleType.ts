@@ -20,7 +20,7 @@ export interface CollectibleType {
     symbol: string;
     total_supply: string | null;
   };
-  background: string | null;
+  background: string | undefined;
   familyImage: string | null;
   id: string;
   isSendable: boolean;

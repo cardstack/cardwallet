@@ -1,6 +1,6 @@
 import { nativeCurrencies, NativeCurrency } from '@cardstack/cardpay-sdk';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 
 import { Container, SheetHandle, RadioList } from '@cardstack/components';
 import { RouteType } from '@cardstack/navigation/types';
@@ -8,11 +8,18 @@ import { RouteType } from '@cardstack/navigation/types';
 interface NavParams {
   onCurrencyChange?: (currency: NativeCurrency) => void;
   selectedCurrency: NativeCurrency;
+  skipGoBack?: boolean;
+  isModal?: boolean;
 }
 
-const CurrencySelectionGlobalModal = () => {
+const CurrencySelection = () => {
   const {
-    params: { selectedCurrency, onCurrencyChange },
+    params: {
+      selectedCurrency,
+      onCurrencyChange,
+      skipGoBack = false,
+      isModal = true,
+    },
   } = useRoute<RouteType<NavParams>>();
 
   const { goBack } = useNavigation();
@@ -21,10 +28,13 @@ const CurrencySelectionGlobalModal = () => {
     (currency: NativeCurrency) => {
       if (selectedCurrency !== currency) {
         onCurrencyChange?.(currency);
-        goBack();
+
+        if (!skipGoBack) {
+          goBack();
+        }
       }
     },
-    [selectedCurrency, onCurrencyChange, goBack]
+    [selectedCurrency, onCurrencyChange, skipGoBack, goBack]
   );
 
   const items = useMemo(() => {
@@ -42,6 +52,10 @@ const CurrencySelectionGlobalModal = () => {
 
     return [{ data: currencyListItems }];
   }, [selectedCurrency]);
+
+  if (!isModal) {
+    return <RadioList items={items} onChange={onSelectCurrency} />;
+  }
 
   return (
     <Container flex={1} justifyContent="flex-end" alignItems="center">
@@ -63,4 +77,4 @@ const CurrencySelectionGlobalModal = () => {
   );
 };
 
-export default CurrencySelectionGlobalModal;
+export default memo(CurrencySelection);
