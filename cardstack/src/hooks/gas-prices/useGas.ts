@@ -8,6 +8,7 @@ import {
 } from '@cardstack/cardpay-sdk';
 import { useCallback, useMemo, useState } from 'react';
 
+import { useAssets } from '@cardstack/hooks/assets/useAssets';
 import { useGetGasPricesQuery } from '@cardstack/services';
 import { GasPricesQueryResults } from '@cardstack/services/hub/gas-prices/gas-prices-types';
 import { capitalizeFirstLetter } from '@cardstack/utils';
@@ -15,9 +16,7 @@ import { capitalizeFirstLetter } from '@cardstack/utils';
 import { estimateGasLimit } from '@rainbow-me/handlers/web3';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { ethUnits } from '@rainbow-me/references';
-import { showActionSheetWithOptions } from '@rainbow-me/utils';
-
-import { useAssets } from '../assets/useAssets';
+import showActionSheetWithOptions from '@rainbow-me/utils/actionsheet';
 
 import { ParseTxFeeParams, TxFee } from './types';
 
@@ -149,8 +148,6 @@ export const useGas = () => {
   return {
     updateTxFees,
     selectedFee: txFees?.[selectedGasSpeed],
-    setSelectedGasSpeed,
-    selectedGasSpeed,
     hasSufficientForGas,
     showTransactionSpeedActionSheet,
   };
