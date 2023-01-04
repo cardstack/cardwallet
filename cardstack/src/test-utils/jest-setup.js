@@ -7,7 +7,7 @@ import '@testing-library/jest-native/extend-expect';
 import 'react-native-gesture-handler/jestSetup';
 import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock';
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
-import { Device } from '@cardstack/utils';
+import { Device } from '@cardstack/utils/device';
 
 // GLOBAL LIBS MOCKS
 global.__reanimatedWorkletInit = jest.fn();
