@@ -104,7 +104,6 @@ export const settingsChangeLanguage = language => async dispatch => {
 };
 
 export const settingsChangeNativeCurrency = nativeCurrency => async dispatch => {
-  dispatch(dataResetState());
   try {
     dispatch({
       payload: nativeCurrency,

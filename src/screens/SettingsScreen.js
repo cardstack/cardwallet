@@ -14,7 +14,6 @@ import {
   ListFooter,
   ListItem,
   ListItemArrowGroup,
-  ListItemDivider,
 } from '@rainbow-me/components/list';
 import { useAccountSettings, useSendFeedback } from '@rainbow-me/hooks';
 
@@ -22,7 +21,12 @@ export default function SettingsScreen() {
   const { navigate } = useNavigation();
   const { params } = useRoute();
   const { hasManualBackup } = useSelectedWallet();
-  const { nativeCurrency, network, accountAddress } = useAccountSettings();
+  const {
+    nativeCurrency,
+    network,
+    accountAddress,
+    settingsChangeNativeCurrency,
+  } = useAccountSettings();
   const networkName = getConstantByNetwork('name', network);
   const onSendFeedback = useSendFeedback();
 
@@ -56,9 +60,20 @@ export default function SettingsScreen() {
     }
   }, [navigate, params]);
 
+  const onPressCurrencySection = useCallback(() => {
+    navigate(Routes.CURRENCY_SECTION, {
+      selectedCurrency: nativeCurrency,
+      onCurrencyChange: currency => {
+        settingsChangeNativeCurrency(currency);
+      },
+      skipGoBack: true,
+      isModal: false,
+    });
+  }, [nativeCurrency, navigate, settingsChangeNativeCurrency]);
+
   return (
     <ScrollView backgroundColor="white">
-      <ColumnWithDividers dividerRenderer={ListItemDivider} marginTop={7}>
+      <ColumnWithDividers marginTop={7}>
         <ListItem
           icon={<Icon color="settingsTeal" name="camera-icon" />}
           label="My Wallet Address"
@@ -91,7 +106,7 @@ export default function SettingsScreen() {
         <ListItem
           icon={<Icon color="settingsTeal" name="dollar-sign" />}
           label="Currency"
-          onPress={onPressSection(Routes.CURRENCY_SECTION)}
+          onPress={onPressCurrencySection}
           testID="currency-section"
         >
           <ListItemArrowGroup>{nativeCurrency || ''}</ListItemArrowGroup>
@@ -113,7 +128,7 @@ export default function SettingsScreen() {
         </ListItem>
       </ColumnWithDividers>
       <ListFooter />
-      <ColumnWithDividers dividerRenderer={ListItemDivider}>
+      <ColumnWithDividers>
         <ListItem
           icon={<Icon color="settingsTeal" name="refresh" />}
           label="Backup"

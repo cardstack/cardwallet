@@ -15,11 +15,11 @@ import {
   WalletConnectSessions,
   WalletAddressScreen,
   DesignSystemScreen,
+  CurrencySelection,
 } from '@cardstack/screens';
 import { palette } from '@cardstack/theme';
 
 import {
-  CurrencySection,
   NetworkSection,
   NotificationsSection,
   WalletConnectLegacySessionsSection,
@@ -90,7 +90,7 @@ export const SettingsGroup = ({ Stack }: { Stack: StackType }) => {
       />
       <Stack.Group screenOptions={{ ...horizontalNonStackingInterpolator }}>
         <Stack.Screen
-          component={CurrencySection}
+          component={CurrencySelection}
           name={Routes.CURRENCY_SECTION}
           options={{ title: 'Currency' }}
         />

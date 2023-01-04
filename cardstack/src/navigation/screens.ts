@@ -4,7 +4,7 @@ import { StackNavigationEventMap } from '@react-navigation/stack/lib/typescript/
 
 import {
   BuyPrepaidCard,
-  CurrencySelectionGlobalModal,
+  CurrencySelection,
   DepotScreen,
   ErrorFallbackScreen,
   MerchantScreen,
@@ -173,7 +173,7 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
     options: { ...sheetPreset(), gestureEnabled: false },
   },
   CURRENCY_SELECTION_MODAL: {
-    component: CurrencySelectionGlobalModal,
+    component: CurrencySelection,
     options: sheetPreset({ backgroundOpacity: 'half' }),
   },
   COLOR_PICKER_MODAL: {
