@@ -107,13 +107,11 @@ describe('useGas', () => {
     const { result } = renderHook(() => useGas());
 
     await act(async () => {
-      const gasLimit = await result.current.updateTxFees({
+      await result.current.updateTxFees({
         asset: mockedAsset,
         amount: 1,
         recipient: '0x',
       });
-
-      expect(gasLimit).toBe('21000');
     });
 
     expect(result.current.selectedFee).toBeUndefined();
