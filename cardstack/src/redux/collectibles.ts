@@ -255,7 +255,7 @@ const fetchNFTsViaRpcNode = () => async (
               animation_url: null,
               permalink: tokenURIJSON.home_url || tokenURIJSON.external_url,
               traits: [],
-              background: null,
+              background: undefined,
               familyImage: null,
               isSendable: !!schema_name,
               isInterfaceValidated: true,
