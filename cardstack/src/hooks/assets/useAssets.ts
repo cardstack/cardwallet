@@ -175,12 +175,16 @@ const useAssets = () => {
   );
 
   const refresh = useCallback(() => {
+    if (isOnCardPayNetwork) {
+      refetchGnosisPrices();
+    }
+
     refetchAssets();
     refetchBalances();
     refetchPrices();
-    refetchGnosisPrices();
     refetchNativePrice();
   }, [
+    isOnCardPayNetwork,
     refetchAssets,
     refetchBalances,
     refetchGnosisPrices,
