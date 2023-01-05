@@ -7,7 +7,6 @@ export { default as getUrlForTrustIconFallback } from './getUrlForTrustIconFallb
 export { default as haptics } from './haptics';
 export { default as isETH } from './isETH';
 export { default as logger } from './logger';
-export { default as magicMemo } from './magicMemo';
 export { default as neverRerender } from './neverRerender';
 export { default as reduceArrayToObject } from './reduceArrayToObject';
 export { default as sentryUtils } from './sentry';

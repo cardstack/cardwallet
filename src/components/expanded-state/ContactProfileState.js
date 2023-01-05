@@ -1,8 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { memo, useCallback, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useAccountSettings, useContacts } from '../../hooks';
-import { magicMemo } from '../../utils';
 import Divider from '../Divider';
 import { showDeleteContactActionSheet } from '../contacts';
 import { ProfileAvatarButton, ProfileModal, ProfileNameInput } from './profile';
@@ -117,4 +116,4 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
   );
 };
 
-export default magicMemo(ContactProfileState, ['address', 'color', 'contact']);
+export default memo(ContactProfileState);
