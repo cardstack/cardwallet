@@ -74,12 +74,6 @@ jest.mock('react-redux', () => ({
   useDispatch: jest.fn(),
 }));
 
-jest.mock('react-native-iphone-x-helper', () => ({
-  isIphoneX: jest.fn(),
-  getStatusBarHeight: jest.fn(),
-  getBottomSpace: jest.fn(),
-}));
-
 jest.mock('react-native-redash', () => ({
   useValue: jest.fn(),
 }));
@@ -156,7 +150,6 @@ jest.mock('@rainbow-me/react-native-payments', () => ({
 jest.mock('@rainbow-me/references/migratedTokens.json', () => ({}));
 
 jest.mock('@rainbow-me/utils', () => ({
-  magicMemo: jest.fn(),
   neverRerender: jest.fn(),
 }));
 
