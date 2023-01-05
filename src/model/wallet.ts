@@ -9,7 +9,6 @@ import {
 } from 'ethereumjs-wallet';
 
 import { ethers } from 'ethers';
-import lang from 'i18n-js';
 import { find, findKey, forEach, get, isEmpty } from 'lodash';
 import { Alert } from 'react-native';
 import { ACCESSIBLE, AuthenticationPrompt } from 'react-native-keychain';
@@ -182,14 +181,13 @@ export const sendTransaction = async ({
       logger.log('tx result', result);
       return result;
     } catch (error) {
-      logger.log('Failed to SEND transaction', error);
-      Alert.alert(lang.t('wallet.transaction.alert.failed_transaction'));
-      logger.sentry('Failed to SEND transaction, alerted user');
+      Alert.alert('Failed to send transaction');
+      logger.sentry('Failed to sendo transaction', error);
       captureException(error);
       return null;
     }
   } catch (error) {
-    Alert.alert(lang.t('wallet.transaction.alert.authentication'));
+    Alert.alert('Authentication Failed');
     logger.sentry(
       'Failed to SEND transaction due to authentication, alerted user'
     );
@@ -209,13 +207,13 @@ export const signTransaction = async ({
     try {
       return wallet.signTransaction(transaction);
     } catch (error) {
-      Alert.alert(lang.t('wallet.transaction.alert.failed_transaction'));
+      Alert.alert('Failed to send transaction');
       logger.sentry('Failed to SIGN transaction, alerted user');
       captureException(error);
       return null;
     }
   } catch (error) {
-    Alert.alert(lang.t('wallet.transaction.alert.authentication'));
+    Alert.alert('Authentication Failed');
     logger.sentry(
       'Failed to SIGN transaction due to authentication, alerted user'
     );
@@ -239,13 +237,13 @@ export const signPersonalMessage = async (
           : message
       );
     } catch (error) {
-      Alert.alert(lang.t('wallet.transaction.alert.failed_sign_message'));
+      Alert.alert('Failed to sign message');
       logger.sentry('Failed to SIGN personal message, alerted user');
       captureException(error);
       return null;
     }
   } catch (error) {
-    Alert.alert(lang.t('wallet.transaction.alert.authentication'));
+    Alert.alert('Authentication Failed');
     logger.sentry(
       'Failed to SIGN personal message due to authentication, alerted user'
     );
@@ -292,13 +290,13 @@ export const signTypedDataMessage = async (
           return signTypedDataLegacy(pkeyBuffer, { data: parsedData });
       }
     } catch (error) {
-      Alert.alert(lang.t('wallet.transaction.alert.failed_sign_message'));
+      Alert.alert('Failed to sign message');
       logger.sentry('Failed to SIGN typed data message, alerted user');
       captureException(error);
       return null;
     }
   } catch (error) {
-    Alert.alert(lang.t('wallet.transaction.alert.authentication'));
+    Alert.alert('Authentication Failed');
     logger.sentry(
       'Failed to SIGN typed data message due to authentication, alerted user'
     );
