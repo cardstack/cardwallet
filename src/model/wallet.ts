@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { captureException } from '@sentry/react-native';
 import { generateMnemonic } from 'bip39';
 import { signTypedData_v4, signTypedDataLegacy } from 'eth-sig-util';
@@ -860,12 +861,25 @@ export const updateWalletWithNewPIN = async (newPin: string) => {
   }
 };
 
+const wipeAsyncStorage = async () => {
+  try {
+    const allKeys = await AsyncStorage.getAllKeys();
+
+    await AsyncStorage.multiRemove(allKeys);
+    logger.log('Async Storage cleared!');
+  } catch (e) {
+    logger.sentry('Error clearing async storage', e);
+    captureException(e);
+  }
+};
+
 export const resetWallet = async () => {
   try {
     const allWallets = await getAllWallets();
 
     // clearing secure storage and keychain
     if (allWallets) {
+      await wipeAsyncStorage();
       await wipeSecureStorage(allWallets);
       await keychain.wipeKeychain();
 
