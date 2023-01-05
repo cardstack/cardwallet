@@ -13,7 +13,10 @@ import { captureException } from '@sentry/react-native';
 
 import { getSafesInstance } from '@cardstack/models/safes-providers';
 import Web3Instance from '@cardstack/models/web3-instance';
-import { updateMerchantSafeWithCustomization } from '@cardstack/utils';
+import {
+  jsTimestampToUnixString,
+  updateMerchantSafeWithCustomization,
+} from '@cardstack/utils';
 
 import {
   getDepots,
@@ -82,14 +85,11 @@ export const fetchSafes = async (
       extendAllDepotSafes,
     ]);
 
-    // Unix timestamp
-    const timestamp = Math.ceil(Date.now() / 1000).toString();
-
     const data = {
       depots: extendedDepots,
       prepaidCards: extendedPrepaidCards,
       merchantSafes: extendedMerchantSafes,
-      timestamp,
+      timestamp: jsTimestampToUnixString(Date.now()),
     };
 
     const network = await getNetwork();
@@ -98,21 +98,21 @@ export const fetchSafes = async (
       data.prepaidCards,
       accountAddress,
       network,
-      timestamp
+      data.timestamp
     );
 
     const saveDepts = saveDepots(
       data.depots,
       accountAddress,
       network,
-      timestamp
+      data.timestamp
     );
 
     const saveMerchant = saveMerchantSafes(
       data.merchantSafes,
       accountAddress,
       network,
-      timestamp
+      data.timestamp
     );
 
     await Promise.all([saveCards, saveDepts, saveMerchant]);
