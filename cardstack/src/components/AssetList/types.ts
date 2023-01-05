@@ -31,6 +31,7 @@ export type AssetListSectionItem<ComponentProps> = {
   header: HeaderItem;
   data: ComponentProps[];
   timestamp?: string;
+  type: 'collectible' | 'safe' | 'eoaAsset';
 };
 
 export type SectionType =

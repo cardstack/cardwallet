@@ -32,7 +32,6 @@ export const useAssetList = ({
   const {
     sections,
     isLoadingAssets,
-    isEmpty,
     refetchSafes,
     isFetchingSafes,
   } = useAssetListData();
@@ -43,18 +42,26 @@ export const useAssetList = ({
   );
 
   // Handle refresh
-  const { refresh, isRefetching } = useAssets();
+  const {
+    refresh: refreshAssets,
+    isRefetching: isRefetchingEoaAssets,
+  } = useAssets();
+
   const { refetch: refetchServiceStatus } = useGetServiceStatusQuery();
 
-  const onRefresh = useCallback(async () => {
-    refetchSafes();
+  const { network, isOnCardPayNetwork } = useAccountSettings();
+
+  const onRefresh = useCallback(() => {
+    if (isOnCardPayNetwork) {
+      refetchSafes();
+    }
 
     // Refresh Service Status Notice
     refetchServiceStatus();
 
     // Refresh Account Data
-    refresh();
-  }, [refetchSafes, refetchServiceStatus, refresh]);
+    refreshAssets();
+  }, [isOnCardPayNetwork, refetchSafes, refetchServiceStatus, refreshAssets]);
 
   useEffect(() => {
     if (params?.forceRefreshOnce) {
@@ -97,9 +104,6 @@ export const useAssetList = ({
     navigate(Routes.BUY_PREPAID_CARD);
   }, [isDamaged, navigate]);
 
-  // Extra component props
-  const { network } = useAccountSettings();
-
   const networkName = useMemo(() => getConstantByNetwork('name', network), [
     network,
   ]);
@@ -107,9 +111,8 @@ export const useAssetList = ({
   return {
     isLoading: isLoadingAssets || isLoadingSafesDiffAccount,
     isFetchingSafes,
-    refreshing: isRefetching,
+    isRefetchingEoaAssets,
     sections,
-    isEmpty,
     goToBuyPrepaidCard,
     onRefresh,
     networkName,
