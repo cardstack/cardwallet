@@ -1,9 +1,9 @@
 import { isNil } from 'lodash';
-import React, { Fragment } from 'react';
+import React, { Fragment, memo } from 'react';
 import styled from 'styled-components';
 import CoinIconFallback from './CoinIconFallback';
 import { CoinIcon as ReactCoinIcon } from '@cardstack/components';
-import { getTokenMetadata, isETH, magicMemo } from '@rainbow-me/utils';
+import { getTokenMetadata, isETH } from '@rainbow-me/utils';
 
 export const CoinIconSize = 40;
 
@@ -35,4 +35,4 @@ const CoinIcon = ({
   );
 };
 
-export default magicMemo(CoinIcon, ['address', 'size', 'symbol']);
+export default memo(CoinIcon);

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { FallbackIcon } from 'react-coin-icon';
 import { Image } from 'react-native';
 import styled from 'styled-components';
@@ -8,7 +8,7 @@ import { colors } from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
 import { borders, fonts, position, shadow } from '@rainbow-me/styles';
 import rbColors from '@rainbow-me/styles/colors';
-import { getUrlForTrustIconFallback, magicMemo } from '@rainbow-me/utils';
+import { getUrlForTrustIconFallback } from '@rainbow-me/utils';
 
 const fallbackTextStyles = {
   fontFamily: fonts.family.SFProRounded,
@@ -104,4 +104,4 @@ const CoinIconFallback = fallbackProps => {
   );
 };
 
-export default magicMemo(CoinIconFallback, ['address', 'style', 'symbol']);
+export default memo(CoinIconFallback);

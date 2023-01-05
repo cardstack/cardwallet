@@ -1070,11 +1070,6 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.12.14.tgz#4adb7c5eef1d437ef965ad1569cd826db8c11dc9"
   integrity sha512-xcfxDq3OrBnDsA/Z8eK5/2iPcLD8qbOaSSfOw4RA6jp4i7e6dEQ7+wTwxItEwzcXPQcsry5nZk96gmVPKletjQ==
 
-"@babel/parser@^7.13.11":
-  version "7.13.11"
-  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.13.11.tgz#f93ebfc99d21c1772afbbaa153f47e7ce2f50b88"
-  integrity sha512-PhuoqeHoO9fc4ffMEVk4qb/w/s2iOSWohvbHxLtxui0eBg3Lg5gN1U8wp1V1u61hOWkPQJJyJzGH6Y+grwkq8Q==
-
 "@babel/parser@^7.13.16", "@babel/parser@^7.18.5":
   version "7.18.5"
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.18.5.tgz#337062363436a893a2d22faa60be5bb37091c83c"
@@ -2309,7 +2304,7 @@
     "@babel/parser" "^7.20.7"
     "@babel/types" "^7.20.7"
 
-"@babel/traverse@7.12.13", "@babel/traverse@^7.2.3":
+"@babel/traverse@7.12.13":
   version "7.12.13"
   resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.12.13.tgz#689f0e4b4c08587ad26622832632735fb8c4e0c0"
   integrity sha512-3Zb4w7eE/OslI0fTp8c7b286/cQps3+vdLW3UcwC8VSJC6GbKn55aeVVu2QJNuCDoeKyptLOFrPq8WqZZBodyA==
@@ -2563,11 +2558,6 @@
   dependencies:
     exec-sh "^0.3.2"
     minimist "^1.2.0"
-
-"@daybrush/utils@^0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@daybrush/utils/-/utils-0.11.0.tgz#3fd113fcedaab29d8c80773ca5f4d32551bdc9d8"
-  integrity sha512-PnrY1NDjXqXKASoREcjHokQt0WWHiUBClMJ0l9APx42QkeOCQ5nXB7k4VdmkaU23BndeSmNNYJDNL6eEsRitaA==
 
 "@egjs/hammerjs@^2.0.17":
   version "2.0.17"
@@ -8525,15 +8515,6 @@ assign-symbols@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/assign-symbols/-/assign-symbols-1.0.0.tgz#59667f41fadd4f20ccbc2bb96b8d4f7f78ec0367"
   integrity sha1-WWZ/QfrdTyDMvCu5a41Pf3jsA2c=
-
-ast-parser@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/ast-parser/-/ast-parser-0.0.5.tgz#6c6823b2219b3587811463896501ecdb9a506ef0"
-  integrity sha512-QoHDILPAcondUYeKUyzLlyrqtUN5Ioqp0krewMC7II29FVnAuEtVcjseUHCHSb/5q54XlYJkV6s9D5NBi2dL1w==
-  dependencies:
-    "@babel/traverse" "^7.2.3"
-    "@babel/types" "^7.3.0"
-    "@daybrush/utils" "^0.11.0"
 
 ast-types-flow@^0.0.7:
   version "0.0.7"
@@ -20457,11 +20438,6 @@ react-devtools@^4.24.3:
     react-devtools-core "4.24.6"
     update-notifier "^2.1.0"
 
-react-fast-compare@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
-  integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
-
 react-fast-compare@^3.0.1:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.0.tgz#641a9da81b6a6320f270e89724fb45a0b39e43bb"
@@ -20640,11 +20616,6 @@ react-native-iap@^8.2.1:
   integrity sha512-dRNGJj3SvL3XkJyEy67a+7R8f4pEvaeraxahfpR0tbU1sK3CrkJ8PRL4A4vPy2OokKJhAjbBdfZTELGmTRb8aQ==
   dependencies:
     dooboolab-welcome "1.3.2"
-
-react-native-iphone-x-helper@^1.2.1:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.3.0.tgz#84fd13e6b89cc3aa4daa80ec514bf15cb724d86d"
-  integrity sha512-+/bcZWFeZt0xSS/+3CHM5K7qPL4vDO/3ARLIowzFpUPGZiPsv9+NET+XNqqseRYwFJwYMmtX+Q4TZKxAVy09ew==
 
 react-native-keychain@6.2.0:
   version "6.2.0"
