@@ -564,8 +564,6 @@ PODS:
   - RNInputMask (4.1.0)
   - RNKeychain (6.2.0):
     - React
-  - RNLocalize (2.1.5):
-    - React-Core
   - RNNotifee (7.3.0):
     - React-Core
     - RNNotifee/NotifeeCore (= 7.3.0)
@@ -728,7 +726,6 @@ DEPENDENCIES:
   - RNIap (from `../node_modules/react-native-iap`)
   - RNInputMask (from `../node_modules/react-native-text-input-mask/ios/InputMask`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
-  - RNLocalize (from `../node_modules/react-native-localize`)
   - "RNNotifee (from `../node_modules/@notifee/react-native`)"
   - RNOS (from `../node_modules/react-native-os`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
@@ -923,8 +920,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-text-input-mask/ios/InputMask"
   RNKeychain:
     :path: "../node_modules/react-native-keychain"
-  RNLocalize:
-    :path: "../node_modules/react-native-localize"
   RNNotifee:
     :path: "../node_modules/@notifee/react-native"
   RNOS:
@@ -1049,7 +1044,6 @@ SPEC CHECKSUMS:
   RNIap: 7b833f386ecee6e4ab3a5303332274bd6844e4d9
   RNInputMask: 815461ebdf396beb62cf58916c35cf6930adb991
   RNKeychain: b8e0711b959a19c5b057d1e970d3c83d159b6da5
-  RNLocalize: 74b82db20cc3895ccc25af992c644879bcec2815
   RNNotifee: d585266dd69e1f355d26d074cbfdbdfa6c94b7d5
   RNOS: 31db6fa4a197d179afbba9e6b4d28d450a7f250b
   RNPermissions: 7043bacbf928eae25808275cfe73799b8f618911

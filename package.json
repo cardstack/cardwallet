@@ -138,7 +138,6 @@
     "react-native-keychain": "6.2.0",
     "react-native-level-fs": "^3.0.1",
     "react-native-linear-gradient": "^2.5.6",
-    "react-native-localize": "^2.1.5",
     "react-native-mail": "^6.1.1",
     "react-native-os": "software-mansion-labs/react-native-os#41a08e45260b8c1c53c77ad00e13ae954cb9337c",
     "react-native-permissions": "^3.0.5",
