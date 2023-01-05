@@ -32,7 +32,6 @@ export const useAssetList = ({
   const {
     sections,
     isLoadingAssets,
-    isEmpty,
     refetchSafes,
     isFetchingSafes,
   } = useAssetListData();
@@ -43,7 +42,7 @@ export const useAssetList = ({
   );
 
   // Handle refresh
-  const { refresh, isRefetching } = useAssets();
+  const { refresh, isRefetching: isRefetchingEoaAssets } = useAssets();
   const { refetch: refetchServiceStatus } = useGetServiceStatusQuery();
 
   const onRefresh = useCallback(async () => {
@@ -107,9 +106,8 @@ export const useAssetList = ({
   return {
     isLoading: isLoadingAssets || isLoadingSafesDiffAccount,
     isFetchingSafes,
-    refreshing: isRefetching,
+    isRefetchingEoaAssets,
     sections,
-    isEmpty,
     goToBuyPrepaidCard,
     onRefresh,
     networkName,

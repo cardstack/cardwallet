@@ -18,6 +18,7 @@ import {
 } from '@cardstack/services/eoa-assets/eoa-assets-api';
 import { AssetsDictionary } from '@cardstack/services/eoa-assets/eoa-assets-types';
 import { AssetWithNativeType } from '@cardstack/types';
+import { jsTimestampToUnixString } from '@cardstack/utils';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
 
@@ -43,6 +44,7 @@ const useAssets = () => {
     isLoading: isLoadingAssets,
     isFetching: isRefetchingAssets,
     refetch: refetchAssets,
+    fulfilledTimeStamp: assetsFulfilledTimeStamp = 0,
   } = useGetEOAAssetsQuery(
     {
       accountAddress,
@@ -58,7 +60,6 @@ const useAssets = () => {
   const {
     data: prices,
     isLoading: isLoadingPrices,
-    isFetching: isRefetchingPrices,
     refetch: refetchPrices,
   } = useGetAssetsPriceByContractQuery(
     { addresses: ids, nativeCurrency, network },
@@ -68,7 +69,6 @@ const useAssets = () => {
   const {
     data: gnosisPrices,
     isLoading: isLoadingGnosisPrices,
-    isFetching: isRefetchingGnosisPrices,
     refetch: refetchGnosisPrices,
   } = useGetCardPayTokensPricesQuery(
     { nativeCurrency },
@@ -81,7 +81,6 @@ const useAssets = () => {
   const {
     data: nativeTokenPrice,
     refetch: refetchNativePrice,
-    isFetching: isRefetchingNativePrice,
     isLoading: isLoadingNativePrice,
   } = useGetNativeTokensPriceQuery(
     {
@@ -96,6 +95,7 @@ const useAssets = () => {
     isLoading: isLoadingBalances,
     refetch: refetchBalances,
     isFetching: isRefetchingBalances,
+    fulfilledTimeStamp: balancesFullfiledTimestamp = 0,
   } = useGetOnChainTokenBalancesQuery(
     { assets, accountAddress, network },
     {
@@ -205,20 +205,16 @@ const useAssets = () => {
   );
 
   const isRefetching = useMemo(
-    () =>
-      isRefetchingPrices ||
-      isRefetchingBalances ||
-      isRefetchingGnosisPrices ||
-      isRefetchingAssets ||
-      isRefetchingNativePrice,
-    [
-      isRefetchingAssets,
-      isRefetchingBalances,
-      isRefetchingGnosisPrices,
-      isRefetchingNativePrice,
-      isRefetchingPrices,
-    ]
+    () => isRefetchingBalances || isRefetchingAssets,
+    [isRefetchingAssets, isRefetchingBalances]
   );
+
+  const unixFulfilledTimestamp = useMemo(() => {
+    const timestamps = [balancesFullfiledTimestamp, assetsFulfilledTimeStamp];
+    const latestTimestamp = Math.max(...timestamps);
+
+    return jsTimestampToUnixString(latestTimestamp);
+  }, [assetsFulfilledTimeStamp, balancesFullfiledTimestamp]);
 
   return {
     assetsIdWithoutNfts,
@@ -227,6 +223,7 @@ const useAssets = () => {
     legacyAssetsStruct,
     isLoading,
     isRefetching,
+    unixFulfilledTimestamp,
     refresh,
     refetchBalances,
     getAsset,

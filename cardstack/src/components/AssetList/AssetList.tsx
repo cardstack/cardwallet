@@ -27,7 +27,7 @@ export const AssetList = () => {
     isLoading,
     goToBuyPrepaidCard,
     onRefresh,
-    refreshing,
+    isRefetchingEoaAssets,
     networkName,
     hasClaimableRewards,
   } = useAssetList({ sectionListRef });
@@ -50,14 +50,15 @@ export const AssetList = () => {
   );
 
   const renderSectionFooter = useCallback(
-    ({ section: { timestamp, data } }) =>
+    ({ section: { timestamp, data, type } }) =>
       timestamp && !!data.length ? (
         <Container
           paddingHorizontal={4}
           alignItems="flex-end"
           justifyContent="center"
         >
-          {isFetchingSafes ? (
+          {(type === 'safe' && isFetchingSafes) ||
+          (type === 'eoaAsset' && isRefetchingEoaAssets) ? (
             <ActivityIndicator size={15} color="white" />
           ) : (
             <Text color="white" size="xs">
@@ -66,7 +67,7 @@ export const AssetList = () => {
           )}
         </Container>
       ) : null,
-    [isFetchingSafes]
+    [isFetchingSafes, isRefetchingEoaAssets]
   );
 
   const renderListHeaderComponent = useMemo(
@@ -93,8 +94,9 @@ export const AssetList = () => {
         refreshControl={
           <RefreshControl
             tintColor="white"
-            refreshing={refreshing}
             onRefresh={onRefresh}
+            // This is a required prop, but we are handling the visual feedback in another way
+            refreshing={false}
           />
         }
         sections={sections}

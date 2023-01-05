@@ -51,6 +51,7 @@ const usePrepaidCardSection = (
     data: prepaidCards,
     timestamp,
     Component: PrepaidCard,
+    type: 'safe',
   };
 };
 
@@ -64,6 +65,7 @@ const useDepotSection = (
   data: depots,
   timestamp,
   Component: Depot,
+  type: 'safe',
 });
 
 const useMerchantSafeSection = (
@@ -77,10 +79,15 @@ const useMerchantSafeSection = (
   data: merchantSafes,
   timestamp,
   Component: MerchantSafe,
+  type: 'safe',
 });
 
 const useOtherTokensSection = (): AssetListSectionItem<AssetWithNativeType> => {
-  const { legacyAssetsStruct, getTotalAssetNativeBalance } = useAssets();
+  const {
+    legacyAssetsStruct,
+    getTotalAssetNativeBalance,
+    unixFulfilledTimestamp,
+  } = useAssets();
 
   const { hidden } = usePinnedAndHiddenItemOptions();
 
@@ -98,6 +105,8 @@ const useOtherTokensSection = (): AssetListSectionItem<AssetWithNativeType> => {
     },
     data: assets,
     Component: BalanceCoinRowWrapper,
+    timestamp: unixFulfilledTimestamp,
+    type: 'eoaAsset',
   };
 };
 
@@ -113,6 +122,7 @@ const useCollectiblesSection = (): AssetListSectionItem<CollectibleType> => {
     },
     data: collectibles,
     Component: CollectibleRow,
+    type: 'collectible',
   };
 };
 
@@ -178,10 +188,8 @@ export const useAssetListData = () => {
         isOnCardPayNetwork)
   );
 
-  const isEmpty = !sections.length;
   return {
     isLoadingAssets,
-    isEmpty,
     sections,
     refetchSafes,
     isFetchingSafes,
