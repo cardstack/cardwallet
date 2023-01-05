@@ -114,13 +114,24 @@ export const groupAccumulations = (
   return '0';
 };
 
+// Unix timestamp measures time as a number of seconds,
+// whereas in JavaScript  measures  time as number of milliseconds
+const MS = 1000;
+
+export const jsTimestampToUnixString = (ts?: number) =>
+  ts ? Math.floor(ts / MS).toString() : '';
+
+const unixTimestampToJs = (ts: number) => ts * MS;
+
+// The default timestamp is in unix because all the services
+// return this format
 export const dateFormatter = (
-  ts: number,
+  unixTimestamp: number,
   dateTimeFormat = 'MMM-dd-yyyy',
   timeFormat = 'h:mm:ss a',
   delimitation = '\n'
 ) => {
-  const timestamp = new Date(ts * 1000);
+  const timestamp = new Date(unixTimestampToJs(unixTimestamp));
 
   return `${format(timestamp, dateTimeFormat)}${delimitation}${format(
     timestamp,
