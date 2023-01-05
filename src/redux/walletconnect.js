@@ -54,7 +54,6 @@ const baseCloudFunctionsUrl =
 
 // -- Actions ---------------------------------------- //
 const getNativeOptions = async () => {
-  const language = 'en'; // TODO use lang from settings
   const token = await getFCMToken();
 
   const nativeOptions = {
@@ -69,7 +68,7 @@ const getNativeOptions = async () => {
     },
     push: token
       ? {
-          language,
+          language: 'en',
           peerMeta: true,
           token,
           type: 'fcm',
