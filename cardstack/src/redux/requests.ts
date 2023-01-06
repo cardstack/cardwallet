@@ -55,12 +55,16 @@ export const addRequestToApprove = (
   requestId: any,
   payload: any,
   peerMeta: any
-) => (dispatch: AppDispatch, getState: AppGetState) => {
+) => async (dispatch: AppDispatch, getState: AppGetState) => {
   const { requests } = getState().requests;
   const { accountAddress, network, nativeCurrency } = getState().settings;
 
   // TODO: add assets from new hook
-  const displayDetails = getRequestDisplayDetails(payload, [], nativeCurrency);
+  const displayDetails = await getRequestDisplayDetails(
+    payload,
+    nativeCurrency,
+    network
+  );
 
   const oneHourAgoTs = Date.now() - EXPIRATION_THRESHOLD_IN_MS;
 

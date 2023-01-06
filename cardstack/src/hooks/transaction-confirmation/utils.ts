@@ -1,4 +1,4 @@
-import { getRequestDisplayDetails } from '@cardstack/parsers/signing-requests';
+import { DisplayDetailsType } from '@cardstack/parsers/signing-requests';
 
 import { TypedData } from '@rainbow-me/model/wallet';
 
@@ -39,14 +39,15 @@ export const extractPayloadParams = (
   return secondParam || payloadParamsFallback;
 };
 
-export const parseMessageRequestJson = (
-  displayDetails: ReturnType<typeof getRequestDisplayDetails>
-) => {
+export const parseMessageRequestJson = (displayDetails: DisplayDetailsType) => {
   let msg = displayDetails.request;
 
-  try {
-    msg = JSON.parse(msg);
-  } catch (e) {}
+  if (typeof msg === 'string') {
+    try {
+      // it parses the string to format it nicely
+      msg = JSON.parse(msg);
+    } catch (e) {}
+  }
 
   return JSON.stringify(msg, null, 4);
 };

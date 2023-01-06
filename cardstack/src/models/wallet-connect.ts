@@ -17,7 +17,9 @@ import { getRequestDisplayDetails } from '@cardstack/parsers/signing-requests';
 import { handleWalletConnectRequests } from '@cardstack/redux/requests';
 
 import store from '@rainbow-me/redux/store';
-import { logger } from '@rainbow-me/utils';
+import logger from 'logger';
+
+import { NetworkType } from '../types/NetworkType';
 
 const core = new Core({
   projectId: WALLET_CONNECT_PROJECT_ID,
@@ -157,7 +159,7 @@ const onSessionProposal = (params: SessionProposalParams) => {
   });
 };
 
-const onSessionRequest = (event: RequestEvent) => {
+const onSessionRequest = async (event: RequestEvent) => {
   const { nativeCurrency } = store.getState().settings;
 
   const {
@@ -168,11 +170,17 @@ const onSessionRequest = (event: RequestEvent) => {
 
   // chainId example -> eip155:8001
   const networkId = Number(chainId.split(':')[1]);
-  const txNetwork = convertChainIdToName(networkId);
+  const txNetwork = convertChainIdToName(networkId) as NetworkType;
+
+  const displayDetails = await getRequestDisplayDetails(
+    payload,
+    nativeCurrency,
+    txNetwork
+  );
 
   handleWalletConnectRequests({
     payload,
-    displayDetails: getRequestDisplayDetails(payload, [], nativeCurrency),
+    displayDetails,
     event, // To keep retro compatibility for now we need to "duplicate" the data
     dappName: dappInfo?.name,
     dappUrl: dappInfo?.url,
