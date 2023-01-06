@@ -18,7 +18,6 @@ import {
 } from '../handlers/localstorage/walletconnectSessions';
 import { sendRpcCall } from '../handlers/web3';
 import { dappLogoOverride, dappNameOverride } from '../helpers/dappNameHandler';
-import WalletTypes from '../helpers/walletTypes';
 import { isSigningMethod } from '../utils/signingMethods';
 import { appName } from '@cardstack/constants';
 import { getFCMToken } from '@cardstack/models/firebase';
@@ -29,7 +28,6 @@ import {
   handleWalletConnectRequests,
 } from '@cardstack/redux/requests';
 import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
-import { enableActionsOnReadOnlyWallet } from '@rainbow-me/config/debug';
 import logger from 'logger';
 
 // -- Constants --------------------------------------- //
@@ -200,17 +198,6 @@ const listenOnNewMessages = walletConnector => (dispatch, getState) => {
         });
       return;
     } else {
-      const { selected } = getState().wallets;
-      const selectedWallet = selected || {};
-      const isReadOnlyWallet = selectedWallet.type === WalletTypes.readOnly;
-      if (isReadOnlyWallet && !enableActionsOnReadOnlyWallet) {
-        Alert.alert(`You need to import the account in order to do this`);
-        walletConnector.rejectRequest({
-          error: { message: 'JSON RPC method not supported' },
-          id: payload.id,
-        });
-        return;
-      }
       const { requests: pendingRequests } = getState().requests;
       const request = !pendingRequests[requestId]
         ? await dispatch(
