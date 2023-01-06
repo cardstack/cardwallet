@@ -37,7 +37,6 @@ jest.mock('@cardstack/hooks/assets/useAssets', () => ({
       display: '',
     }),
     getAssetPrice: jest.fn().mockReturnValue('10'),
-    getAsset: jest.fn().mockReturnValue(mockedAsset),
   })),
 }));
 
@@ -136,7 +135,7 @@ describe('useGas', () => {
       },
       value: {
         amount: '0.002453553106599',
-        display: '0.00245 TST',
+        display: '0.00245 MATIC',
       },
     });
   });
@@ -236,7 +235,7 @@ describe('useGas', () => {
       },
       value: {
         amount: '0.002424722484534',
-        display: '0.00242 TST',
+        display: '0.00242 MATIC',
       },
     });
   });
