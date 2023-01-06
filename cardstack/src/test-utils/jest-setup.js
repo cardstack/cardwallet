@@ -139,6 +139,13 @@ jest.mock('@reduxjs/toolkit/query/react', () => ({
 
 // RAINBOW MOCKS
 
+jest.mock('@rainbow-me/redux/store', () => ({
+  default: jest.fn().mockImplementation(() => ({
+    dispatch: jest.fn(),
+    getState: jest.fn(),
+  })),
+}));
+
 jest.mock('@rainbow-me/references', () => ({
   spammyTokens: 'JSON-MOCK-RETURN',
 }));
