@@ -59,7 +59,6 @@ export const addRequestToApprove = (
   const { requests } = getState().requests;
   const { accountAddress, network, nativeCurrency } = getState().settings;
 
-  // TODO: add assets from new hook
   const displayDetails = await getRequestDisplayDetails(
     payload,
     nativeCurrency,
