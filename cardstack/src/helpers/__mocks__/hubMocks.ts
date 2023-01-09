@@ -347,57 +347,6 @@ export const reservationData = {
   },
 };
 
-export const wyrePriceData = {
-  data: {
-    data: [
-      {
-        id:
-          '0x6fe39ecfba1314933cb662d7de964273818644cfd1bb57546c7edf86a4b8722a',
-        type: 'wyre-prices',
-        attributes: {
-          'source-currency': 'USD',
-          'dest-currency': 'DAI',
-          'source-currency-price': 10,
-          'includes-fee': false,
-        },
-      },
-      {
-        id:
-          '0xa3a90961943b0b3b638a08f2b257b6e987565884b39b688001644d385aaa4c69',
-        type: 'wyre-prices',
-        attributes: {
-          'source-currency': 'USD',
-          'dest-currency': 'DAI',
-          'source-currency-price': 25,
-          'includes-fee': false,
-        },
-      },
-      {
-        id:
-          '0x968845ee3da5ab4ca796c43bb111647422a42e7985a95fdfa1a4c3e222a9ac6f',
-        type: 'wyre-prices',
-        attributes: {
-          'source-currency': 'USD',
-          'dest-currency': 'DAI',
-          'source-currency-price': 50,
-          'includes-fee': false,
-        },
-      },
-      {
-        id:
-          '0xc2a43f2c893491c384752d1440bd2ace9b69cc78a065323f2851ce06efe2977f',
-        type: 'wyre-prices',
-        attributes: {
-          'source-currency': 'USD',
-          'dest-currency': 'DAI',
-          'source-currency-price': 100,
-          'includes-fee': false,
-        },
-      },
-    ],
-  },
-};
-
 export const notificationsPreferences = {
   data: [
     {
