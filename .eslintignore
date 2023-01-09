@@ -5,3 +5,4 @@ android/*
 ios/*
 storybook
 cardstack/src/graphql/graphql-codegen.ts
+fastlane/*
