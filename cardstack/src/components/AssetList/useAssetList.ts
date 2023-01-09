@@ -5,16 +5,13 @@ import { SectionList } from 'react-native';
 
 import { useIsFetchingDataNewAccount } from '@cardstack/hooks';
 import { useAssets } from '@cardstack/hooks/assets/useAssets';
-import { Routes } from '@cardstack/navigation';
 import useRewardsDataFetch from '@cardstack/screens/RewardsCenterScreen/useRewardsDataFetch';
 import { useGetServiceStatusQuery } from '@cardstack/services';
 
-import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import {
   PinnedHiddenSectionOption,
   useAccountSettings,
   useAssetListData,
-  useWallets,
 } from '@rainbow-me/hooks';
 
 import { AssetListRouteType } from './types';
@@ -92,18 +89,6 @@ export const useAssetList = ({
     }
   }, [params, sectionListRef, sections, setParams]);
 
-  const { isDamaged } = useWallets();
-
-  const goToBuyPrepaidCard = useCallback(() => {
-    if (isDamaged) {
-      showWalletErrorAlert();
-
-      return;
-    }
-
-    navigate(Routes.BUY_PREPAID_CARD);
-  }, [isDamaged, navigate]);
-
   const networkName = useMemo(() => getConstantByNetwork('name', network), [
     network,
   ]);
@@ -113,7 +98,6 @@ export const useAssetList = ({
     isFetchingSafes,
     isRefetchingEoaAssets,
     sections,
-    goToBuyPrepaidCard,
     onRefresh,
     networkName,
     hasClaimableRewards,

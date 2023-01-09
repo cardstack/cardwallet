@@ -9,6 +9,5 @@ export const strings = {
       ', '
     )}`,
   newCardLabel: 'New Card',
-  buyCardLabel: 'Buy Prepaid Card',
   emptyCardMessage: `You don't own any\nPrepaid Cards yet`,
 };

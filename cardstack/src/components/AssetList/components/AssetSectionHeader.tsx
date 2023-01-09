@@ -1,13 +1,7 @@
 import React, { useMemo, memo } from 'react';
 
-import {
-  Button,
-  Container,
-  ListEmptyComponent,
-  Text,
-} from '@cardstack/components';
+import { Container, ListEmptyComponent, Text } from '@cardstack/components';
 import { PinnedHiddenSectionMenu } from '@cardstack/components/PinnedHiddenSection';
-import { useRemoteConfigs } from '@cardstack/hooks';
 
 import { PinnedHiddenSectionOption } from '@rainbow-me/hooks';
 
@@ -16,18 +10,13 @@ import { AssetListSectionItem, SectionType } from '../types';
 
 interface AssetSectionProps {
   section: AssetListSectionItem<SectionType>;
-  onBuyCardPress: () => void;
 }
 
-const AssetSectionHeader = ({ section, onBuyCardPress }: AssetSectionProps) => {
+const AssetSectionHeader = ({ section }: AssetSectionProps) => {
   const {
     header: { type, title, count, showContextMenu, total },
     data,
   } = section;
-
-  const {
-    configs: { featureWyre },
-  } = useRemoteConfigs();
 
   const isPrepaidCardSection = useMemo(
     () => type === PinnedHiddenSectionOption.PREPAID_CARDS,
@@ -72,15 +61,6 @@ const AssetSectionHeader = ({ section, onBuyCardPress }: AssetSectionProps) => {
           {showContextMenu && <PinnedHiddenSectionMenu type={type} />}
         </Container>
       </Container>
-      {isPrepaidCardSection && featureWyre && (
-        <Container
-          paddingBottom={4}
-          alignItems="center"
-          backgroundColor="backgroundDarkPurple"
-        >
-          <Button onPress={onBuyCardPress}>{strings.buyCardLabel}</Button>
-        </Container>
-      )}
       {isEmptyPrepaidCard && (
         <Container marginHorizontal={4} alignItems="center">
           <ListEmptyComponent
