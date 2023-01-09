@@ -182,7 +182,7 @@ export const sendTransaction = async ({
       return result;
     } catch (error) {
       Alert.alert('Failed to send transaction');
-      logger.sentry('Failed to sendo transaction', error);
+      logger.sentry('Failed to send transaction', error);
       captureException(error);
       return null;
     }
