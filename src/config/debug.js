@@ -3,12 +3,6 @@
  * could be useful during development.
  */
 
-export const enableActionsOnReadOnlyWallet = false;
-export const debugLayoutAnimations = false;
-export const forceFallbackProvider = false;
-export const alwaysRequireApprove = false;
-export const showReloadButton = false;
-export const showSwitchModeButton = false;
 export const parseAllTxnsOnReceive = false;
 export const reactNativeDisableYellowBox = true;
 export const showNetworkRequests = false;

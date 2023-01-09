@@ -10,6 +10,7 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { useAssets } from '@cardstack/hooks/assets/useAssets';
 import { useGetGasPricesQuery } from '@cardstack/services';
+import { getNativeTokenInfo } from '@cardstack/services/eoa-assets/eoa-assets-services';
 import { GasPricesQueryResults } from '@cardstack/services/hub/gas-prices/gas-prices-types';
 import { capitalizeFirstLetter } from '@cardstack/utils';
 
@@ -25,7 +26,7 @@ const GAS_PRICE_POLLING_INTERVAL = 10000; // 10s
 export const useGas = () => {
   const { nativeCurrency, network, accountAddress } = useAccountSettings();
 
-  const { getAssetBalance, getAssetPrice, getAsset } = useAssets();
+  const { getAssetBalance, getAssetPrice } = useAssets();
 
   const [txFees, setTxFees] = useState<TxFee>();
 
@@ -39,14 +40,14 @@ export const useGas = () => {
   );
 
   const nativeToken = useMemo(() => {
-    const address = getConstantByNetwork('nativeTokenAddress', network);
+    const token = getNativeTokenInfo(network);
 
     return {
-      price: getAssetPrice(address),
-      balance: getAssetBalance(address),
-      ...getAsset(address),
+      ...token,
+      price: getAssetPrice(token.id),
+      balance: getAssetBalance(token.id),
     };
-  }, [network, getAssetPrice, getAssetBalance, getAsset]);
+  }, [network, getAssetPrice, getAssetBalance]);
 
   const parseTxFees = useCallback(
     ({ gasLimit: updatedGasLimit }: ParseTxFeeParams) => {

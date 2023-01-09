@@ -7,7 +7,7 @@ import { toLower, uniqBy } from 'lodash';
 import Web3 from 'web3';
 
 import { collectiblesRefreshState } from '@cardstack/redux/collectibles';
-import { Asset, AssetTypes } from '@cardstack/types';
+import { Asset, AssetTypes, NetworkType } from '@cardstack/types';
 
 import {
   getAssets,
@@ -166,6 +166,15 @@ const getTxsTokenData = async (
   }
 };
 
+export const getNativeTokenInfo = (network: NetworkType) => ({
+  address: getConstantByNetwork('nativeTokenAddress', network),
+  name: getConstantByNetwork('nativeTokenName', network),
+  symbol: getConstantByNetwork('nativeTokenSymbol', network),
+  decimals: getConstantByNetwork('nativeTokenDecimals', network),
+  id: getConstantByNetwork('nativeTokenAddress', network),
+  type: AssetTypes.token,
+});
+
 export const getAccountAssets = async ({
   network,
   nativeCurrency,
@@ -179,14 +188,7 @@ export const getAccountAssets = async ({
   });
 
   // discoverTokens might not include the native token, so we add it manually
-  const nativeToken: Asset = {
-    address: getConstantByNetwork('nativeTokenAddress', network),
-    name: getConstantByNetwork('nativeTokenName', network),
-    symbol: getConstantByNetwork('nativeTokenSymbol', network),
-    decimals: getConstantByNetwork('nativeTokenDecimals', network),
-    id: getConstantByNetwork('nativeTokenAddress', network),
-    type: AssetTypes.token,
-  };
+  const nativeToken = getNativeTokenInfo(network);
 
   const tokensInWallet = uniqBy([...tokens, nativeToken], token => token.id);
 

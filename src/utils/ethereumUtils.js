@@ -1,4 +1,3 @@
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { captureException } from '@sentry/react-native';
 
@@ -10,7 +9,7 @@ import {
 } from 'ethereumjs-util';
 import { hdkey } from 'ethereumjs-wallet';
 import { Wallet } from 'ethers';
-import { find, isString, matchesProperty, replace, toLower } from 'lodash';
+import { isString, replace, toLower } from 'lodash';
 import { Linking, NativeModules } from 'react-native';
 import { ETHERSCAN_API_KEY } from 'react-native-dotenv';
 import URL from 'url-parse';
@@ -26,18 +25,6 @@ import logger from 'logger';
 const { RNBip39 } = NativeModules;
 
 const getHash = txn => txn.hash.split('-').shift();
-
-const getAsset = (assets, address) =>
-  find(assets, matchesProperty('address', toLower(address)));
-
-const getNativeTokenAsset = assets => {
-  const { network } = store.getState().settings;
-  const nativeTokenAddress = getConstantByNetwork(
-    'nativeTokenAddress',
-    network
-  );
-  return getAsset(assets, nativeTokenAddress);
-};
 
 /**
  * @desc remove hex prefix
@@ -220,10 +207,8 @@ export default {
   deriveAccountFromMnemonic,
   deriveAccountFromPrivateKey,
   deriveAccountFromWalletInput,
-  getAsset,
   getDataString,
   getHash,
-  getNativeTokenAsset,
   hasPreviousTransactions,
   isEthAddress,
   openTokenEtherscanURL,

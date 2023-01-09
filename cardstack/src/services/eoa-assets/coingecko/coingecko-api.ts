@@ -63,4 +63,5 @@ export const coingeckoApi = createApi({
 export const {
   useGetAssetsPriceByContractQuery,
   useGetNativeTokensPriceQuery,
+  endpoints: coingeckoApiEndpoints,
 } = coingeckoApi;

@@ -96,9 +96,9 @@ export const useTransactionSections = ({
 
   useEffect(() => {
     const setSectionsData = async () => {
-      if (isLoadingSafes) return;
+      if (isLoadingSafes || !transactions) return;
 
-      if (transactions && shouldUpdate) {
+      if (shouldUpdate) {
         setLoading(true);
 
         try {

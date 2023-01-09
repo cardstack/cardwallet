@@ -85,4 +85,5 @@ export const {
   useGetEOAAssetsQuery,
   useGetCardPayTokensPricesQuery,
   useGetOnChainTokenBalancesQuery,
+  endpoints: eoaAssetsApiEndpoints,
 } = eoaAssetsApi;

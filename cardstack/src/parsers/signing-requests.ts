@@ -3,12 +3,17 @@ import {
   convertHexToString,
   convertRawAmountToDecimalFormat,
   fromWei,
+  NativeCurrency,
 } from '@cardstack/cardpay-sdk';
 import { convertHexToUtf8 } from '@walletconnect/legacy-utils';
 import BigNumber from 'bignumber.js';
 import { utils } from 'ethers';
-import { get, isNil } from 'lodash';
 
+import { coingeckoApiEndpoints } from '@cardstack/services/eoa-assets/coingecko/coingecko-api';
+import { eoaAssetsApiEndpoints } from '@cardstack/services/eoa-assets/eoa-assets-api';
+import { getNativeTokenInfo } from '@cardstack/services/eoa-assets/eoa-assets-services';
+
+import store from '@rainbow-me/redux/store';
 import { ethUnits } from '@rainbow-me/references';
 import smartContractMethods from '@rainbow-me/references/smartcontract-methods.json';
 import { ethereumUtils } from '@rainbow-me/utils';
@@ -19,6 +24,9 @@ import {
   SIGN_TRANSACTION,
   SIGN_TYPED_DATA,
 } from '@rainbow-me/utils/signingMethods';
+import logger from 'logger';
+
+import { NetworkType } from '../types/NetworkType';
 
 interface GetTransactionDisplayDetailsResult {
   request: {
@@ -33,164 +41,156 @@ interface GetTransactionDisplayDetailsResult {
     value: any;
     nonce?: number;
   };
-  timestampInMs: number;
 }
 
-interface GetMessageDisplayDetailsResult {
-  request: any;
-  timestampInMs: number;
-}
+const hexToBigNumber = (value: string) =>
+  new BigNumber(convertHexToString(value));
 
-const getMessageDisplayDetails = (
-  message: any,
-  timestampInMs: number
-): GetMessageDisplayDetailsResult => ({
-  request: message,
-  timestampInMs,
-});
+const getTransactionDisplayDetails = async (
+  transaction: any = {},
+  nativeCurrency: NativeCurrency,
+  network: NetworkType
+): Promise<GetTransactionDisplayDetailsResult | Record<string, never>> => {
+  const { from, to, value, gasLimit, gasPrice, nonce } = transaction;
 
-const getTransactionDisplayDetails = (
-  transaction: any,
-  assets: any[],
-  nativeCurrency: string,
-  timestampInMs: number
-): GetTransactionDisplayDetailsResult | Record<string, never> => {
-  const tokenTransferHash = smartContractMethods.token_transfer.hash;
+  const transactionBase = {
+    from,
+    to,
+    value: fromWei(convertHexToString(value || '0x0')),
+    ...(gasLimit && {
+      gasLimit: hexToBigNumber(gasLimit),
+    }),
+    ...(gasPrice && {
+      gasPrice: hexToBigNumber(gasPrice),
+    }),
+    ...(nonce && {
+      nonce: hexToBigNumber(nonce).toNumber(),
+    }),
+  };
+
+  const { data: nativeTokenPrice } = await store.dispatch(
+    coingeckoApiEndpoints.getNativeTokensPrice.initiate({
+      nativeCurrency,
+      network,
+    })
+  );
+
+  const nativeToken = getNativeTokenInfo(network);
 
   if (transaction.data === '0x') {
-    const value = fromWei(convertHexToString(transaction.value));
-    const asset = ethereumUtils.getNativeTokenAsset(assets);
-    // TODO: handle price
-    const priceUnit = get(asset, 'price.value', 0);
+    const priceUnit = nativeTokenPrice?.[nativeToken.id] || 0;
 
     const { amount, display } = convertAmountAndPriceToNativeDisplay(
-      value,
+      transactionBase.value,
       priceUnit,
       nativeCurrency
     );
 
     return {
       request: {
-        asset,
-        from: transaction.from,
-        gasLimit: new BigNumber(convertHexToString(transaction.gasLimit)),
-        gasPrice: new BigNumber(convertHexToString(transaction.gasPrice)),
+        ...transactionBase,
+        asset: nativeToken,
         nativeAmount: amount,
         nativeAmountDisplay: display,
-        to: transaction.to,
-        value,
-        ...(!isNil(transaction.nonce)
-          ? { nonce: Number(convertHexToString(transaction.nonce)) }
-          : {}),
       },
-      timestampInMs,
     };
   }
 
+  const tokenTransferHash = smartContractMethods.token_transfer.hash;
+
   if (transaction.data.startsWith(tokenTransferHash)) {
-    const contractAddress = transaction.to;
-    const asset = ethereumUtils.getAsset(assets, contractAddress);
+    const contractAddress = to;
     const dataPayload = transaction.data.replace(tokenTransferHash, '');
     const toAddress = `0x${dataPayload.slice(0, 64).replace(/^0+/, '')}`;
     const amount = `0x${dataPayload.slice(64, 128).replace(/^0+/, '')}`;
 
-    const value = convertRawAmountToDecimalFormat(
-      convertHexToString(amount),
-      asset.decimals
+    const { data: price } = await store.dispatch(
+      coingeckoApiEndpoints.getAssetsPriceByContract.initiate({
+        nativeCurrency,
+        network,
+        addresses: [contractAddress],
+      })
     );
 
-    // TODO: handle price
-    const priceUnit = get(asset, 'price.value', 0);
+    const { accountAddress } = store.getState().settings;
+
+    const { data } = await store.dispatch(
+      eoaAssetsApiEndpoints.getEOAAssets.initiate({
+        nativeCurrency,
+        network,
+        accountAddress,
+      })
+    );
+
+    const asset = data?.assets?.[contractAddress];
+
+    const tokenValue = convertRawAmountToDecimalFormat(
+      convertHexToString(amount),
+      asset?.decimals
+    );
+
+    const priceUnit = price?.[contractAddress] || 0;
 
     const native = convertAmountAndPriceToNativeDisplay(
-      value,
+      tokenValue,
       priceUnit,
       nativeCurrency
     );
 
     return {
       request: {
-        asset,
-        from: transaction.from,
-        gasLimit: new BigNumber(convertHexToString(transaction.gasLimit)),
-        gasPrice: new BigNumber(convertHexToString(transaction.gasPrice)),
+        ...transactionBase,
+        asset: asset,
         nativeAmount: native.amount,
         nativeAmountDisplay: native.display,
-        ...(!isNil(transaction.nonce)
-          ? { nonce: Number(convertHexToString(transaction.nonce)) }
-          : {}),
         to: toAddress,
-        value,
+        value: tokenValue,
       },
-      timestampInMs,
     };
   }
 
   if (transaction.data) {
     // If it's not a token transfer, let's assume it's an ETH transaction
-    // Once it confirmed, zerion will show the correct data
-    const asset = ethereumUtils.getNativeTokenAsset(assets);
-
-    const value = transaction.value
-      ? fromWei(convertHexToString(transaction.value))
-      : 0;
-
     return {
       request: {
-        asset: asset.symbol,
-        value,
-        to: transaction.to,
+        ...transactionBase,
+        asset: nativeToken.symbol,
         data: transaction.data,
-        from: transaction.from,
-        ...(!isNil(transaction.gasLimit)
-          ? {
-              gasLimit: new BigNumber(convertHexToString(transaction.gasLimit)),
-            }
-          : {}),
-        ...(!isNil(transaction.gasPrice)
-          ? {
-              gasPrice: new BigNumber(convertHexToString(transaction.gasPrice)),
-            }
-          : {}),
-        ...(!isNil(transaction.nonce)
-          ? { nonce: Number(convertHexToString(transaction.nonce)) }
-          : {}),
       },
-      timestampInMs,
     };
   }
 
-  return {};
+  return transactionBase;
 };
 
 const getTimestampFromPayload = (payload: any): number =>
   parseInt(payload.id.toString().slice(0, -3), 10);
 
-export const getRequestDisplayDetails = (
+export interface DisplayDetailsType {
+  request: string | GetTransactionDisplayDetailsResult['request'];
+  timestampInMs: number;
+}
+
+export const getRequestDisplayDetails = async (
   payload: any,
-  assets: any[],
-  nativeCurrency: string
+  nativeCurrency: NativeCurrency,
+  network: NetworkType
 ) => {
-  let timestampInMs = Date.now();
+  const timestampInMs = payload.id
+    ? getTimestampFromPayload(payload)
+    : Date.now();
 
-  if (payload.id) {
-    timestampInMs = getTimestampFromPayload(payload);
-  }
+  const displayDetails: DisplayDetailsType = {
+    request: '',
+    timestampInMs,
+  };
 
-  if (
-    payload.method === SEND_TRANSACTION ||
-    payload.method === SIGN_TRANSACTION
-  ) {
-    const transaction = get(payload, 'params[0]', null);
+  if ([SEND_TRANSACTION, SIGN_TRANSACTION].includes(payload.method)) {
+    const transaction = payload?.params?.[0] || null;
 
     // Backwards compatibility with param name change
-    if (transaction.gas && !transaction.gasLimit) {
-      transaction.gasLimit = transaction.gas;
-    }
-
-    // We must pass a number through the bridge
     if (!transaction.gasLimit) {
-      transaction.gasLimit = ethUnits.basic_tx;
+      transaction.gasLimit = transaction.gas || ethUnits.basic_tx;
     }
 
     // Fallback for dapps sending no data
@@ -198,31 +198,31 @@ export const getRequestDisplayDetails = (
       transaction.data = '0x';
     }
 
-    return getTransactionDisplayDetails(
+    const { request } = await getTransactionDisplayDetails(
       transaction,
-      assets,
       nativeCurrency,
-      timestampInMs
+      network
     );
+
+    displayDetails.request = request;
   }
 
   if (payload.method === SIGN) {
-    const message = get(payload, 'params[1]');
-    return getMessageDisplayDetails(message, timestampInMs);
+    displayDetails.request = payload?.params?.[1];
   }
 
   if (payload.method === PERSONAL_SIGN) {
-    let message = get(payload, 'params[0]');
+    let message = payload?.params?.[0];
 
     try {
       if (utils.isHexString(message)) {
         message = convertHexToUtf8(message);
       }
     } catch (error) {
-      // TODO error handling
+      logger.log('Personal_sign failed error');
     }
 
-    return getMessageDisplayDetails(message, timestampInMs);
+    displayDetails.request = message;
   }
 
   // There's a lot of inconsistency in the parameter order for this method
@@ -231,17 +231,13 @@ export const getRequestDisplayDetails = (
   // Aside from expecting the address as the first parameter
   // and data as the second one it's safer to verify that
   // and switch order if needed to ensure max compatibility with dapps
-  if (payload.method === SIGN_TYPED_DATA) {
-    if (payload.params.length && payload.params[0]) {
-      let data = get(payload, 'params[0]', null);
+  if (payload.method === SIGN_TYPED_DATA && payload?.params?.length) {
+    const messageOrAddress = payload?.params?.[0] || '';
 
-      if (ethereumUtils.isEthAddress(get(payload, 'params[0]', ''))) {
-        data = get(payload, 'params[1]', null);
-      }
-
-      return getMessageDisplayDetails(data, timestampInMs);
-    }
+    displayDetails.request = ethereumUtils.isEthAddress(messageOrAddress)
+      ? payload?.params?.[1]
+      : messageOrAddress;
   }
 
-  return {};
+  return displayDetails;
 };
