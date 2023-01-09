@@ -29,7 +29,6 @@ import {
   TransactionConfirmationSheet,
   ColorPickerModal,
   RequestPrepaidCardScreen,
-  SupportAndFeesSheet,
   AvailableBalanceSheet,
   TokenSheet,
   WyreAuthenticationWidget,
@@ -174,10 +173,6 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   COLOR_PICKER_MODAL: {
     component: ColorPickerModal,
     options: sheetPreset({ backgroundOpacity: 'half' }),
-  },
-  SUPPORT_AND_FEES: {
-    component: SupportAndFeesSheet,
-    options: sheetPreset(),
   },
   AVAILABLE_BALANCE_SHEET: {
     component: AvailableBalanceSheet,
