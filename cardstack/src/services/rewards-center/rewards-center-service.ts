@@ -19,10 +19,6 @@ import {
   addNativePriceToToken,
   updateSafeWithTokenPrices,
 } from '../gnosis-service';
-import {
-  parseTemplateExplanation,
-  parseExplanationAmount,
-} from '../utils/reward-explanation';
 
 import {
   RegisterGasEstimateQueryParams,
@@ -135,37 +131,6 @@ export const fetchValidProofsWithToken = async ({
         ...claimingInfo,
         isClaimable: !!claimingInfo?.rootHash,
       };
-
-      if (proof.explanationData?.token) {
-        const { symbol, decimals } = await getTokenDetailsForAddress(
-          proof.explanationData.token
-        );
-
-        if (symbol) {
-          proof.explanationData.token = symbol;
-        }
-
-        if (proof.explanationData?.amount) {
-          proof.explanationData.amount = parseExplanationAmount(
-            proof.explanationData.amount,
-            decimals
-          );
-        }
-
-        if (proof.explanationData?.rollover_amount) {
-          proof.explanationData.rollover_amount = parseExplanationAmount(
-            proof.explanationData.rollover_amount,
-            decimals
-          );
-        }
-      }
-
-      if (proof.explanationData && proof.explanationTemplate) {
-        proof.parsedExplanation = parseTemplateExplanation(
-          proof.explanationTemplate,
-          proof.explanationData
-        );
-      }
 
       return proof;
     })
