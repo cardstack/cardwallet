@@ -5,7 +5,6 @@ import { NetworkType } from '@cardstack/types';
 import { logger } from 'logger';
 
 const IMAGE_METADATA = 'imageMetadata';
-const LANGUAGE = 'language';
 const NATIVE_CURRENCY = 'nativeCurrency';
 const NETWORK = 'network';
 const KEYCHAIN_INTEGRITY_STATE = 'keychainIntegrityState';
@@ -31,10 +30,6 @@ export const getPinAuthAttemptsLeft = () =>
 
 export const savePinAuthAttemptsLeft = amount =>
   saveGlobal(PIN_AUTH_ATTEMPTS_LEFT, amount);
-
-export const getLanguage = () => getGlobal(LANGUAGE, 'en');
-
-export const saveLanguage = language => saveGlobal(LANGUAGE, language);
 
 export const getNetwork = async () => {
   const defaultNetwork = NetworkType.gnosis;

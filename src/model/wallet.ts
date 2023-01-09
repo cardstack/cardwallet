@@ -9,7 +9,6 @@ import {
 } from 'ethereumjs-wallet';
 
 import { ethers } from 'ethers';
-import lang from 'i18n-js';
 import { find, findKey, forEach, get, isEmpty } from 'lodash';
 import { Alert } from 'react-native';
 import { ACCESSIBLE, AuthenticationPrompt } from 'react-native-keychain';
@@ -32,6 +31,7 @@ import {
   selectedWalletKey,
 } from '../utils/keychainConstants';
 import * as keychain from './keychain';
+import { strings } from './strings';
 import {
   getEthersWallet,
   getEthersWalletWithSeed,
@@ -182,14 +182,13 @@ export const sendTransaction = async ({
       logger.log('tx result', result);
       return result;
     } catch (error) {
-      logger.log('Failed to SEND transaction', error);
-      Alert.alert(lang.t('wallet.transaction.alert.failed_transaction'));
-      logger.sentry('Failed to SEND transaction, alerted user');
+      Alert.alert(strings.wallet.failedToSend);
+      logger.sentry(strings.wallet.failedToSend, error);
       captureException(error);
       return null;
     }
   } catch (error) {
-    Alert.alert(lang.t('wallet.transaction.alert.authentication'));
+    Alert.alert(strings.wallet.authFail);
     logger.sentry(
       'Failed to SEND transaction due to authentication, alerted user'
     );
@@ -209,13 +208,13 @@ export const signTransaction = async ({
     try {
       return wallet.signTransaction(transaction);
     } catch (error) {
-      Alert.alert(lang.t('wallet.transaction.alert.failed_transaction'));
+      Alert.alert(strings.wallet.failedToSign);
       logger.sentry('Failed to SIGN transaction, alerted user');
       captureException(error);
       return null;
     }
   } catch (error) {
-    Alert.alert(lang.t('wallet.transaction.alert.authentication'));
+    Alert.alert(strings.wallet.authFail);
     logger.sentry(
       'Failed to SIGN transaction due to authentication, alerted user'
     );
@@ -239,13 +238,13 @@ export const signPersonalMessage = async (
           : message
       );
     } catch (error) {
-      Alert.alert(lang.t('wallet.transaction.alert.failed_sign_message'));
+      Alert.alert(strings.wallet.failedToSign);
       logger.sentry('Failed to SIGN personal message, alerted user');
       captureException(error);
       return null;
     }
   } catch (error) {
-    Alert.alert(lang.t('wallet.transaction.alert.authentication'));
+    Alert.alert(strings.wallet.authFail);
     logger.sentry(
       'Failed to SIGN personal message due to authentication, alerted user'
     );
@@ -292,13 +291,13 @@ export const signTypedDataMessage = async (
           return signTypedDataLegacy(pkeyBuffer, { data: parsedData });
       }
     } catch (error) {
-      Alert.alert(lang.t('wallet.transaction.alert.failed_sign_message'));
+      Alert.alert(strings.wallet.failedToSign);
       logger.sentry('Failed to SIGN typed data message, alerted user');
       captureException(error);
       return null;
     }
   } catch (error) {
-    Alert.alert(lang.t('wallet.transaction.alert.authentication'));
+    Alert.alert(strings.wallet.authFail);
     logger.sentry(
       'Failed to SIGN typed data message due to authentication, alerted user'
     );
@@ -520,7 +519,10 @@ export const createOrImportWallet = async ({
     });
 
     if (existingWallet) {
-      Alert.alert('Oops!', 'Looks like you already imported this account!');
+      Alert.alert(
+        strings.wallet.accountImported.title,
+        strings.wallet.accountImported.message
+      );
       logger.sentry('[createWallet] - already imported this wallet');
       return null;
     }
@@ -643,10 +645,7 @@ const DEPRECATED_getSeedPhrase = async (
     })) as SeedPhraseData | -2;
 
     if (seedPhraseData === -2) {
-      Alert.alert(
-        'Error',
-        'Your current authentication method (Face Recognition) is not secure enough, please go to "Settings > Biometrics & Security" and enable an alternative biometric method like Fingerprint or Iris'
-      );
+      Alert.alert(strings.shared.error, strings.wallet.authSecurity);
       return null;
     }
 
@@ -822,7 +821,7 @@ export const migrateSecretsWithNewPin = async (
 
     const seedPhrase = await loadSeedPhrase(
       selectedWallet.id,
-      'Authenticate to migrate secrets',
+      strings.wallet.migrateSecrets,
       forceOldSeed
     );
 

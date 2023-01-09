@@ -1,6 +1,5 @@
 import { captureException } from '@sentry/react-native';
 import WalletConnectLegacy from '@walletconnect/legacy-client';
-import lang from 'i18n-js';
 import {
   forEach,
   get,
@@ -55,7 +54,6 @@ const baseCloudFunctionsUrl =
 
 // -- Actions ---------------------------------------- //
 const getNativeOptions = async () => {
-  const language = 'en'; // TODO use lang from settings
   const token = await getFCMToken();
 
   const nativeOptions = {
@@ -70,7 +68,7 @@ const getNativeOptions = async () => {
     },
     push: token
       ? {
-          language,
+          language: 'en',
           peerMeta: true,
           token,
           type: 'fcm',
@@ -163,12 +161,14 @@ export const walletConnectOnSessionRequest = (
       logger.log('Exception during wc session_request');
 
       captureException(error);
-      Alert.alert(lang.t('wallet.wallet_connect.error'));
+      Alert.alert('Error initializing with WalletConnect');
     }
   } catch (error) {
     logger.log('FCM exception during wc session_request');
     captureException(error);
-    Alert.alert(lang.t('wallet.wallet_connect.missing_fcm'));
+    Alert.alert(
+      'Unable to initialize WalletConnect: missing push notification token. Please try again'
+    );
   }
 };
 

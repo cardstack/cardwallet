@@ -2,11 +2,9 @@ import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import {
   getNativeCurrency,
   getNetwork,
-  saveLanguage,
   saveNativeCurrency,
   saveNetwork,
 } from '../handlers/localstorage/globalSettings';
-import { updateLanguage } from '../languages';
 
 import { dataResetState } from './data';
 import { walletConnectUpdateSessions } from './walletconnect';
@@ -24,8 +22,6 @@ const SETTINGS_UPDATE_SETTINGS_ADDRESS =
   'settings/SETTINGS_UPDATE_SETTINGS_ADDRESS';
 const SETTINGS_UPDATE_NATIVE_CURRENCY_SUCCESS =
   'settings/SETTINGS_UPDATE_NATIVE_CURRENCY_SUCCESS';
-const SETTINGS_UPDATE_LANGUAGE_SUCCESS =
-  'settings/SETTINGS_UPDATE_LANGUAGE_SUCCESS';
 const SETTINGS_UPDATE_NETWORK_SUCCESS =
   'settings/SETTINGS_UPDATE_NETWORK_SUCCESS';
 
@@ -90,19 +86,6 @@ export const settingsUpdateNetwork = network => async () => {
   }
 };
 
-export const settingsChangeLanguage = language => async dispatch => {
-  updateLanguage(language);
-  try {
-    dispatch({
-      payload: language,
-      type: SETTINGS_UPDATE_LANGUAGE_SUCCESS,
-    });
-    saveLanguage(language);
-  } catch (error) {
-    logger.log('Error changing language', error);
-  }
-};
-
 export const settingsChangeNativeCurrency = nativeCurrency => async dispatch => {
   try {
     dispatch({
@@ -119,7 +102,6 @@ export const settingsChangeNativeCurrency = nativeCurrency => async dispatch => 
 export const INITIAL_STATE = {
   accountAddress: '',
   chainId: 100,
-  language: 'en',
   nativeCurrency: 'USD',
   network: NetworkType.gnosis,
 };
@@ -141,11 +123,6 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         chainId: action.payload.chainId,
         network: action.payload.network,
-      };
-    case SETTINGS_UPDATE_LANGUAGE_SUCCESS:
-      return {
-        ...state,
-        language: action.payload,
       };
     default:
       return state;
