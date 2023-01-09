@@ -223,7 +223,6 @@
     "jest-circus": "^26.1.0",
     "jest-expo": "^47.0.1",
     "metro-react-native-babel-preset": "^0.67.0",
-    "prettier": "^2.8.2",
     "react-devtools": "^4.24.3",
     "react-native-storybook-loader": "^2.0.2",
     "react-test-renderer": "18.1.0",

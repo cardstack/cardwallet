@@ -3,10 +3,9 @@ const path = require('path-browserify');
 module.exports = {
   root: true,
   extends: [
+    '@react-native-community',
     'plugin:import/recommended',
     'plugin:import/typescript',
-    '@react-native-community',
-    'plugin:prettier/recommended',
   ],
   settings: {
     react: { version: 'detect' },
@@ -23,11 +22,19 @@ module.exports = {
         project: path.resolve(__dirname, '.tsconfig.json'),
       },
     },
+    '@typescript-eslint/naming-convention': [
+      'warn',
+      {
+        selector: ['variable', 'function', 'parameter'],
+        format: ['camelCase'],
+      },
+    ],
   },
   globals: {
     __DEV__: true,
   },
   rules: {
+    'prettier/prettier': 0,
     'react/jsx-curly-brace-presence': ['error', 'never'],
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/no-shadow': ['error'],
