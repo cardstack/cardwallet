@@ -78,12 +78,6 @@ const getValidProofs = async ({
   return validProofs;
 };
 
-const getTokenDetailsForAddress = async (tokenAddress: string) => {
-  const [web3, signer] = await getWeb3ProviderWithEthSigner();
-  const assetsAPI = await getSDK('Assets', web3, signer);
-  return await assetsAPI.getTokenInfo(tokenAddress);
-};
-
 // Queries
 
 export const fetchValidProofsWithToken = async ({
