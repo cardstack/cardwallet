@@ -42,5 +42,4 @@ export const remoteFlags = (): { [K in ConfigKey]: RemoteConfigValues[K] } => ({
   ),
   betaAccessGranted: getRemoteConfigAsBoolean('betaAccessGranted'),
   useHttpSokolNode: getRemoteConfigAsBoolean('useHttpSokolNode'),
-  featureWyre: getRemoteConfigAsBoolean('featureWyre'),
 });

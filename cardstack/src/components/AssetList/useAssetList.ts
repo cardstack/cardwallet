@@ -21,7 +21,7 @@ export const useAssetList = ({
 }: {
   sectionListRef: RefObject<SectionList>;
 }) => {
-  const { navigate, setParams } = useNavigation();
+  const { setParams } = useNavigation();
   const { params } = useRoute<AssetListRouteType>();
 
   const { hasClaimableRewards } = useRewardsDataFetch();
