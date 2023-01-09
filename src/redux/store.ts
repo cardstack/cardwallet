@@ -13,7 +13,6 @@ import { eoaAssetsApi } from '@cardstack/services/eoa-assets/eoa-assets-api';
 import { hubApi } from '@cardstack/services/hub/hub-api';
 import { safesApi } from '@cardstack/services/safes-api';
 import { serviceStatusApi } from '@cardstack/services/service-status-api';
-import { wyreApi } from '@cardstack/services/wyre-api';
 
 const enableReduxFlipper = true;
 
@@ -32,7 +31,6 @@ const persistConfig = {
 const apis = {
   safesApi,
   hubApi,
-  wyreApi,
   eoaAssetsApi,
   serviceStatusApi,
   coingeckoApi,
