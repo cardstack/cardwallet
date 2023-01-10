@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require('path-browserify');
 
 module.exports = {
@@ -6,6 +7,8 @@ module.exports = {
     '@react-native-community',
     'plugin:import/recommended',
     'plugin:import/typescript',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
   ],
   settings: {
     react: { version: 'detect' },
@@ -34,7 +37,18 @@ module.exports = {
     __DEV__: true,
   },
   rules: {
-    'prettier/prettier': 0,
+    curly: [2, 'multi-line'],
+    radix: ['error', 'as-needed'],
+    'comma-dangle': [
+      'error',
+      {
+        arrays: 'always-multiline',
+        objects: 'always-multiline',
+        imports: 'always-multiline',
+        exports: 'always-multiline',
+        functions: 'never',
+      },
+    ],
     'react/jsx-curly-brace-presence': ['error', 'never'],
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/no-shadow': ['error'],
