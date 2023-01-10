@@ -101,7 +101,6 @@
     "graphql-tag": "^2.10.3",
     "https-browserify": "0.0.1",
     "imgix-core-js": "^2.3.2",
-    "immer": "^8.0.1",
     "inherits": "^2.0.3",
     "lint-staged": "^10.0.7",
     "lodash": "^4.17.19",

@@ -109,12 +109,12 @@ class AssetListItemSkeleton extends PureComponent {
     this.props.animated && Device.isIOS ? this.startShimmerLoop() : () => null;
 
   renderShimmer() {
-    const { colors } = this.props;
+    const { colors: colorsProps } = this.props;
     const gradientColors = [
-      colors.skeleton,
-      colors.shimmer,
-      colors.skeleton,
-      colors.skeleton,
+      colorsProps.skeleton,
+      colorsProps.shimmer,
+      colorsProps.skeleton,
+      colorsProps.skeleton,
     ];
 
     const gradientSteps = [0, 0.2, 0.4, 1];

@@ -25,7 +25,7 @@ const Container = styled(Row).attrs({
   z-index: 2;
 `;
 
-function renderButton(child: any) {
+function renderButton(child: ReactNode) {
   if (Device.isAndroid) {
     return child;
   }

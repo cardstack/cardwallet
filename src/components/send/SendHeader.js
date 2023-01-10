@@ -83,8 +83,8 @@ export default function SendHeader({
               destructiveButtonIndex: 0,
               options: ['Delete Contact', 'Cancel'],
             },
-            async buttonIndex => {
-              if (buttonIndex === 0) {
+            async innerButtonIndex => {
+              if (innerButtonIndex === 0) {
                 removeContact(recipient);
               }
             }

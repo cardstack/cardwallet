@@ -2,33 +2,33 @@ import React, { useMemo } from 'react';
 import { Image } from 'react-native';
 import styled from 'styled-components';
 
-import { avatarColor } from '@cardstack/theme';
+import { avatarColor, colors } from '@cardstack/theme';
 
 import { borders } from '@rainbow-me/styles';
-import colors from '@rainbow-me/styles/colors';
+import rnColors from '@rainbow-me/styles/colors';
 import ShadowStack from 'react-native-shadow-stack';
 
 import { Centered } from '../layout';
 
-const buildSmallShadows = (color, colors) => [
-  [0, 3, 5, colors.shadow, 0.14],
+const buildSmallShadows = color => [
+  [0, 3, 5, rnColors.shadow, 0.14],
   [0, 6, 10, avatarColor[color] || color, 0.2],
 ];
 
-const sizeConfigs = colors => ({
+const sizeConfigs = () => ({
   large: {
     dimensions: 65,
     shadow: [
-      [0, 6, 10, colors.shadow, 0.12],
-      [0, 2, 5, colors.shadow, 0.08],
+      [0, 6, 10, rnColors.shadow, 0.12],
+      [0, 2, 5, rnColors.shadow, 0.08],
     ],
     textSize: 'bigger',
   },
   medium: {
     dimensions: 40,
     shadow: [
-      [0, 4, 6, colors.shadow, 0.04],
-      [0, 1, 3, colors.shadow, 0.08],
+      [0, 4, 6, rnColors.shadow, 0.04],
+      [0, 1, 3, rnColors.shadow, 0.08],
     ],
     textSize: 'larger',
   },
@@ -44,13 +44,10 @@ const Avatar = styled(Image)`
 `;
 
 const ImageAvatar = ({ image, size = 'medium', ...props }) => {
-  const { dimensions, shadow } = useMemo(() => sizeConfigs(colors)[size], [
-    size,
-  ]);
+  const { dimensions, shadow } = useMemo(() => sizeConfigs()[size], [size]);
 
   const shadows = useMemo(
-    () =>
-      size === 'small' ? buildSmallShadows(colors.shadow, colors) : shadow,
+    () => (size === 'small' ? buildSmallShadows(rnColors.shadow) : shadow),
     [shadow, size]
   );
 

@@ -1,6 +1,4 @@
 import { useNavigation } from '@react-navigation/native';
-//Rb side doesn't know how to handle globals
-
 import { OptionalUnion } from 'globals';
 import React, { useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';

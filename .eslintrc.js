@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require('path-browserify');
 
 module.exports = {
@@ -52,6 +51,14 @@ module.exports = {
     'react/jsx-curly-brace-presence': ['error', 'never'],
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/no-shadow': ['error'],
+    // To be re-enabled
+    'import/no-named-as-default': 0,
+    '@typescript-eslint/no-var-requires': 0,
+    '@typescript-eslint/no-explicit-any': 0,
+    'react-native/no-inline-styles': 0,
+    'react/no-unstable-nested-components': 0,
+    //
+    'import/no-named-as-default-member': 0,
     'import/order': [
       'error',
       {

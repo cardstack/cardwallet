@@ -264,11 +264,11 @@ export const usePayMerchant = () => {
   );
 
   const onCancelConfirmation = useCallback(
-    onStepChange(PAY_STEP.CHOOSE_PREPAID_CARD),
+    () => onStepChange(PAY_STEP.CHOOSE_PREPAID_CARD),
     [onStepChange]
   );
 
-  const onAmountNext = useCallback(onStepChange(getPayStep), [
+  const onAmountNext = useCallback(() => onStepChange(getPayStep), [
     onStepChange,
     getPayStep,
   ]);

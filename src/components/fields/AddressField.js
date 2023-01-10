@@ -29,8 +29,8 @@ const AddressField = (
     }
   }, [address, clipboard, setClipboard]);
 
-  const validateAddress = useCallback(async address => {
-    const newIsValid = await checkIsValidAddressOrDomain(address);
+  const validateAddress = useCallback(async possibleAddress => {
+    const newIsValid = await checkIsValidAddressOrDomain(possibleAddress);
     return setIsValid(newIsValid);
   }, []);
 

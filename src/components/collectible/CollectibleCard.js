@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { View } from 'react-native';
 import styled from 'styled-components';
 
@@ -12,7 +12,6 @@ import { InnerBorder } from '../layout';
 import CollectibleImage from './CollectibleImage';
 
 const CollectibleCardBorderRadius = 20;
-const CollectibleCardShadowFactory = colors => [0, 2, 6, colors.shadow, 0.08];
 
 const Container = styled(View)`
   ${({ shadow }) => shadowUtil.build(...shadow)};
@@ -44,15 +43,13 @@ const CollectibleCard = ({
     }
   }, [item, onPress]);
 
-  const defaultShadow = useMemo(() => CollectibleCardShadowFactory(colors), []);
-
   return (
     <Container
       as={AnimatedPressable}
       disabled={disabled}
       enableHapticFeedback={enableHapticFeedback}
       onPress={handlePress}
-      shadow={shadow || defaultShadow}
+      shadow={shadow || [0, 2, 6, colors.shadow, 0.08]}
     >
       <Content {...props} height={height} style={style} width={width}>
         <CollectibleImage

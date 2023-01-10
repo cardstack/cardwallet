@@ -5,9 +5,9 @@ import { createSelector } from 'reselect';
 const collectiblesSelector = state => state.collectibles.collectibles;
 
 const sendableCollectibles = collectibles => {
-  const sendableCollectibles = filter(collectibles, ['isSendable', true]);
+  const sendableCollectiblesItems = filter(collectibles, ['isSendable', true]);
   const grouped = groupBy(
-    sendableCollectibles,
+    sendableCollectiblesItems,
     token => token.asset_contract.name
   );
   const families = Object.keys(grouped).sort();

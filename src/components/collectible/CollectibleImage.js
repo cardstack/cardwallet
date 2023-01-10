@@ -21,7 +21,7 @@ const CollectibleImage = ({
   resizeMode = ImgixImage.resizeMode.cover,
 }) => {
   const [error, setError] = useState(null);
-  const handleError = useCallback(error => setError(error), [setError]);
+  const handleError = useCallback(e => setError(e), [setError]);
 
   return (
     <Centered backgroundColor={backgroundColor} style={position.coverAsObject}>

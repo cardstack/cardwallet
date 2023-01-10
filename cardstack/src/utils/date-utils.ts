@@ -65,7 +65,7 @@ export const groupTransactionsByDate = (transaction: {
   const timeStamp =
     transaction.timestamp || transaction.minedAt || transaction.createdAt || '';
 
-  const ts = parseInt(timeStamp, 10) * 1000;
+  const ts = parseInt(timeStamp) * 1000;
 
   if (ts > todayTimestamp) return 'Today';
   if (ts > yesterdayTimestamp) return 'Yesterday';
@@ -104,7 +104,7 @@ export const groupAccumulations = (
 
   for (let i = 0; i < timestamps.length; i++) {
     const ts = timestamps[i];
-    const accumulationTs = parseInt(accumulation.timestamp, 10) * 1000;
+    const accumulationTs = parseInt(accumulation.timestamp) * 1000;
 
     if (Number(accumulationTs) > ts) {
       return ts;

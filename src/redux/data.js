@@ -1,5 +1,4 @@
 import { isZero } from '@cardstack/cardpay-sdk';
-import produce from 'immer';
 import { concat, isEmpty, partition, toLower } from 'lodash';
 
 import {
@@ -35,7 +34,6 @@ const DATA_ADD_NEW_TRANSACTION_SUCCESS =
   'data/DATA_ADD_NEW_TRANSACTION_SUCCESS';
 
 const DATA_CLEAR_STATE = 'data/DATA_CLEAR_STATE';
-export const DATA_UPDATE_PREPAIDCARDS = 'data/DATA_UPDATE_PREPAIDCARDS';
 
 // -- Actions ---------------------------------------- //
 export const dataLoadTxState = () => async (dispatch, getState) => {
@@ -221,32 +219,26 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-  return produce(state, draft => {
-    switch (action.type) {
-      case DATA_UPDATE_TRANSACTIONS:
-        draft.isLoadingTransactions = false;
-        draft.transactions = action.payload;
-        break;
-      case DATA_LOAD_TRANSACTIONS_REQUEST:
-        draft.isLoadingTransactions = true;
-        break;
-      case DATA_LOAD_TRANSACTIONS_SUCCESS:
-        draft.isLoadingTransactions = false;
-        draft.transactions = action.payload;
-        break;
-      case DATA_LOAD_TRANSACTIONS_FAILURE:
-        draft.isLoadingTransactions = false;
-        break;
-      case DATA_ADD_NEW_TRANSACTION_SUCCESS:
-        draft.transactions = action.payload;
-        break;
-      case DATA_UPDATE_PREPAIDCARDS:
-        draft.prepaidCards = action.payload.prepaidCards;
-        break;
-      case DATA_CLEAR_STATE:
-        return INITIAL_STATE;
-      default:
-        break;
-    }
-  });
+  switch (action.type) {
+    case DATA_UPDATE_TRANSACTIONS:
+    case DATA_LOAD_TRANSACTIONS_SUCCESS:
+    case DATA_ADD_NEW_TRANSACTION_SUCCESS:
+      return {
+        ...state,
+        isLoadingTransactions: false,
+        transactions: [...state.transactions, action.payload],
+      };
+    case DATA_LOAD_TRANSACTIONS_REQUEST:
+      return {
+        ...state,
+        isLoadingTransactions: true,
+      };
+    case DATA_LOAD_TRANSACTIONS_FAILURE:
+      return {
+        ...state,
+        isLoadingTransactions: false,
+      };
+    default:
+      return INITIAL_STATE;
+  }
 };

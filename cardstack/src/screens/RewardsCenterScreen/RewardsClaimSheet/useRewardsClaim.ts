@@ -46,12 +46,15 @@ const useRewardsClaim = () => {
     { isSuccess: isClaimSuccess, isError: isClaimError },
   ] = useClaimAllRewardsMutation();
 
-  const claimParams = {
-    accountAddress,
-    rewardProgramId: defaultRewardProgramId,
-    tokenAddress: claimableBalanceTokenRef.current?.tokenAddress || '',
-    safeAddress: rewardSafeForProgram?.address || '',
-  };
+  const claimParams = useMemo(
+    () => ({
+      accountAddress,
+      rewardProgramId: defaultRewardProgramId,
+      tokenAddress: claimableBalanceTokenRef.current?.tokenAddress || '',
+      safeAddress: rewardSafeForProgram?.address || '',
+    }),
+    [accountAddress, defaultRewardProgramId, rewardSafeForProgram?.address]
+  );
 
   const {
     data: estimatedGasClaim,

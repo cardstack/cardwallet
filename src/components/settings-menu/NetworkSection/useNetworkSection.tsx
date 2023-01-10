@@ -14,9 +14,12 @@ import { useAccountSettings } from '../../../hooks';
 import { settingsUpdateNetwork } from '../../../redux/settings';
 
 export const useNetworkSection = () => {
-  const { network } = useAccountSettings();
   const dispatch = useDispatch();
-  const [selectedNetwork, setSelectedNetwork] = useState(network);
+
+  const { network: currentNetwork } = useAccountSettings();
+
+  const [selectedNetwork, setSelectedNetwork] = useState(currentNetwork);
+
   const [showAll, setShowAll] = useState<boolean>(
     !isMainnet(selectedNetwork) ?? false
   );
@@ -83,14 +86,14 @@ export const useNetworkSection = () => {
   }, [dispatch, selectedNetwork]);
 
   const onToggleShowAllNetworks = useCallback(
-    () => setShowAll(showAll => !showAll),
+    () => setShowAll(showAllState => !showAllState),
     []
   );
 
-  const isCurrentNetworkSelected = useMemo(() => selectedNetwork === network, [
-    network,
-    selectedNetwork,
-  ]);
+  const isCurrentNetworkSelected = useMemo(
+    () => selectedNetwork === currentNetwork,
+    [currentNetwork, selectedNetwork]
+  );
 
   return {
     isCurrentNetworkSelected,

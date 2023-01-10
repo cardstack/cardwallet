@@ -62,9 +62,9 @@ const PinAuthenticationScreen = () => {
     // If that's the case, we need to update the default
     // amount of attempts left to prevent abuse
     const init = async () => {
-      const attemptsLeft = await getPinAuthAttemptsLeft();
-      if (!isNaN(attemptsLeft)) {
-        setAttemptsLeft(attemptsLeft);
+      const defaultAttemptsLeft = await getPinAuthAttemptsLeft();
+      if (!isNaN(defaultAttemptsLeft)) {
+        setAttemptsLeft(defaultAttemptsLeft);
       }
     };
 

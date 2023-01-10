@@ -17,8 +17,8 @@ const contactsSelector = createSelector(
 
 export default function useContacts() {
   const dispatch = useDispatch();
-  const { network } = useSelector(({ settings: { network } }) => ({
-    network,
+  const { network } = useSelector(({ settings }) => ({
+    network: settings.network,
   }));
   const { contacts, sortedContacts } = useSelector(contactsSelector);
 

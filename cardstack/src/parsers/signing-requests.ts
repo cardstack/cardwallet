@@ -164,7 +164,7 @@ const getTransactionDisplayDetails = async (
 };
 
 const getTimestampFromPayload = (payload: any): number =>
-  parseInt(payload.id.toString().slice(0, -3), 10);
+  parseInt(payload.id.toString().slice(0, -3));
 
 export interface DisplayDetailsType {
   request: string | GetTransactionDisplayDetailsResult['request'];

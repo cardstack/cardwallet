@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { union, without } from 'lodash';
 import React, {
@@ -10,19 +11,17 @@ import React, {
 
 const PINNED_HIDDEN_STORAGE_KEY = 'PINNED_BALANCES_STORAGE_KEY';
 
-type PinnedAndHiddenItemOptionContextType = any;
-
 export enum PinnedHiddenSectionOption {
   BALANCES = 'BALANCES',
   PREPAID_CARDS = 'PREPAID_CARDS',
 }
 
 const PinnedHiddenItemOptionContext = createContext({
-  editing: null,
+  editing: undefined as undefined | PinnedHiddenSectionOption,
   toggle: (_key: PinnedHiddenSectionOption) => {},
-  pinned: [],
-  hidden: [],
-  selected: [],
+  pinned: [] as unknown[],
+  hidden: [] as unknown[],
+  selected: [] as string[],
   pin: () => {},
   unpin: () => {},
   hide: () => {},
@@ -31,7 +30,13 @@ const PinnedHiddenItemOptionContext = createContext({
   deselect: (_key: string) => {},
 });
 
-export const usePinnedAndHiddenItemOptions = (): PinnedAndHiddenItemOptionContextType =>
+interface Value {
+  pinned: unknown[];
+  hidden: unknown[];
+  selected: string[];
+}
+
+export const usePinnedAndHiddenItemOptions = () =>
   useContext(PinnedHiddenItemOptionContext);
 
 export const PinnedHiddenItemOptionProvider = ({
@@ -42,8 +47,10 @@ export const PinnedHiddenItemOptionProvider = ({
   const { getItem, setItem } = useAsyncStorage(PINNED_HIDDEN_STORAGE_KEY);
 
   const [ready, setReady] = useState<boolean>(false);
-  const [editing, setEditing] = useState<any>();
-  const [value, setValue] = useState<any>({
+  const [editing, setEditing] = useState<
+    PinnedHiddenSectionOption | undefined
+  >();
+  const [value, setValue] = useState<Value>({
     pinned: [],
     hidden: [],
     selected: [],
@@ -51,7 +58,7 @@ export const PinnedHiddenItemOptionProvider = ({
 
   const toggle = (type: PinnedHiddenSectionOption) => {
     if (type === editing) {
-      setEditing(null);
+      setEditing(undefined);
     } else {
       setEditing(type);
     }
@@ -126,7 +133,7 @@ export const PinnedHiddenItemOptionProvider = ({
   };
 
   useEffect(() => {
-    getItem((_err: any, result: any) => {
+    getItem((_err, result) => {
       if (result) {
         const { pinned = [], hidden = [] } = JSON.parse(result);
         setValue({ pinned, hidden, selected: [] });

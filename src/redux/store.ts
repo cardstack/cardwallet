@@ -47,8 +47,8 @@ type APIReducers = {
 const apiValues = Object.values(apis);
 
 const mapApisToReducers = apiValues.reduce(
-  (reducers, api) => ({
-    ...reducers,
+  (injectedReducers, api) => ({
+    ...injectedReducers,
     [api.reducerPath]: api.reducer,
   }),
   {} as APIReducers

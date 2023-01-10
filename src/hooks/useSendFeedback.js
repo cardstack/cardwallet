@@ -37,7 +37,7 @@ const handleMailError = debounce(
   250
 );
 
-function feedbackEmailOptions(appVersion) {
+function feedbackEmailOptions() {
   return {
     recipients: [SUPPORT_EMAIL_ADDRESS],
     subject: `${appName} Feedback - ${
@@ -48,7 +48,7 @@ function feedbackEmailOptions(appVersion) {
 
 export default function useSendFeedback() {
   const onSendFeedback = useCallback(
-    () => Mailer.mail(feedbackEmailOptions(appVersion), handleMailError),
+    () => Mailer.mail(feedbackEmailOptions(), handleMailError),
     []
   );
   return onSendFeedback;

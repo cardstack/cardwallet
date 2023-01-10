@@ -36,6 +36,7 @@ import {
   deletePinAuthAttemptsData,
 } from '@rainbow-me/handlers/localstorage/globalSettings';
 import store, { persistor } from '@rainbow-me/redux/store';
+import { WalletLibraryType } from '@rainbow-me/utils/ethereumUtils';
 import logger from 'logger';
 
 import AesEncryptor from '../handlers/aesEncryption';
@@ -150,11 +151,6 @@ interface RainbowSelectedWalletData {
 interface SeedPhraseData {
   seedphrase: EthereumPrivateKey;
   version: string;
-}
-
-export enum WalletLibraryType {
-  ethers = 'ethers',
-  bip39 = 'bip39',
 }
 
 const selectedWalletVersion = 1.0;
@@ -700,9 +696,9 @@ export const getAllWallets = async (): Promise<
   AllRainbowWallets | undefined
 > => {
   try {
-    const allWallets = (await keychain.loadObject(
+    const allWallets = ((await keychain.loadObject(
       allWalletsKey
-    )) as AllRainbowWalletsData;
+    )) as unknown) as AllRainbowWalletsData;
 
     return allWallets?.wallets;
   } catch (error) {

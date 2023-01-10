@@ -149,6 +149,11 @@ const checkIfUrlIsAScam = async url => {
   }
 };
 
+export const WalletLibraryType = {
+  ethers: 'ethers',
+  bip39: 'bip39',
+};
+
 const deriveAccountFromMnemonic = async (mnemonic, index = 0) => {
   let seed;
   if (Device.isIOS) {

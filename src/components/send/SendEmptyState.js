@@ -37,6 +37,17 @@ const transition = (
   </Transition.Sequence>
 );
 
+const style = {
+  icon: {
+    marginBottom: Device.isIOS ? 0 : 150,
+    marginTop: Device.isIOS ? 0 : 150,
+  },
+  androidWrapper: {
+    alignItems: 'center',
+    flex: 1,
+  },
+};
+
 const SendEmptyState = () => {
   const ref = useRef();
 
@@ -49,16 +60,13 @@ const SendEmptyState = () => {
       color={colors.alpha(colors.blueGreyDark, 0.06)}
       height={88}
       name="send"
-      style={{
-        marginBottom: Device.isIOS ? 0 : 150,
-        marginTop: Device.isIOS ? 0 : 150,
-      }}
+      style={style.icon}
       width={91}
     />
   );
 
   if (Device.isAndroid) {
-    return <View style={{ alignItems: 'center', flex: 1 }}>{icon}</View>;
+    return <View style={style.androidWrapper}>{icon}</View>;
   }
 
   return (

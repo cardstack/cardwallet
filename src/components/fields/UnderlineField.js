@@ -69,11 +69,11 @@ const UnderlineField = (
 
   const handleChangeText = useCallback(
     text => {
-      const formattedValue = format(text);
+      const formattedInput = format(text);
 
-      if (value !== formattedValue) {
-        setValue(formattedValue);
-        onChange?.(formattedValue);
+      if (value !== formattedInput) {
+        setValue(formattedInput);
+        onChange?.(formattedInput);
       }
     },
     [format, onChange, value]

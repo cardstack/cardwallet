@@ -26,7 +26,7 @@ const renderItemElement = renderItem =>
 const groupTransactionByDate = ({ pending, minedAt }) => {
   if (pending) return 'Pending';
 
-  const ts = parseInt(minedAt, 10) * 1000;
+  const ts = parseInt(minedAt) * 1000;
 
   if (ts > todayTimestamp) return 'Today';
   if (ts > yesterdayTimestamp) return 'Yesterday';
