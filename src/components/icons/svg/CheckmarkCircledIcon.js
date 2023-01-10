@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Path } from 'react-native-svg';
+
 import Svg from '../Svg';
 
 const CheckmarkCircledIcon = ({ color, colors, ...props }) => (

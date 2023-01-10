@@ -2,14 +2,17 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { createElement } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import styled from 'styled-components';
+
+import { CopyAddressSheet } from '@cardstack/screens';
+
+import { padding, position } from '@rainbow-me/styles';
+
 import TouchableBackdrop from '../components/TouchableBackdrop';
 import {
   ContactProfileState,
   WalletProfileState,
 } from '../components/expanded-state';
 import { Centered } from '../components/layout';
-import { CopyAddressSheet } from '@cardstack/screens';
-import { padding, position } from '@rainbow-me/styles';
 
 const ModalTypes = {
   contact_profile: ContactProfileState,

@@ -1,7 +1,7 @@
 import { isZero } from '@cardstack/cardpay-sdk';
 import produce from 'immer';
 import { concat, isEmpty, partition, toLower } from 'lodash';
-import { getTransactionReceipt } from '../handlers/web3';
+
 import {
   getLocalTransactions,
   saveLocalTransactions,
@@ -16,6 +16,8 @@ import {
 } from '@rainbow-me/parsers';
 import { ethereumUtils } from '@rainbow-me/utils';
 import logger from 'logger';
+
+import { getTransactionReceipt } from '../handlers/web3';
 
 let pendingTransactionsHandle = null;
 const TXN_WATCHER_MAX_TRIES = 60;
@@ -84,7 +86,6 @@ export const dataAddNewTransaction = (txDetails, txNetwork) => async (
     }
 
     return parsedTransaction;
-    // eslint-disable-next-line no-empty
   } catch (error) {}
 };
 

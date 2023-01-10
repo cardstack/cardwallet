@@ -4,6 +4,20 @@ import { captureException } from '@sentry/react-native';
 import { useCallback } from 'react';
 import { Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
+
+import { storeRegisteredFCMToken } from '@cardstack/models/firebase';
+import { getPin, getSeedPhrase } from '@cardstack/models/secure-storage';
+import { Routes, useLoadingOverlay } from '@cardstack/navigation';
+import { appStateUpdate } from '@cardstack/redux/appState';
+import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
+import { PinFlow } from '@cardstack/screens/PinScreen/types';
+import { PinScreenNavParams } from '@cardstack/screens/PinScreen/usePinScreen';
+import { mapDispatchToActions } from '@cardstack/utils';
+
+import { isValidSeed } from '@rainbow-me/helpers/validators';
+import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
+import logger from 'logger';
+
 import {
   CreateImportParams,
   createOrImportWallet,
@@ -21,21 +35,8 @@ import {
   walletsSetSelected,
   walletsUpdate,
 } from '../redux/wallets';
+
 import useInitializeAccount from './useInitializeAccount';
-
-import { storeRegisteredFCMToken } from '@cardstack/models/firebase';
-import { getPin, getSeedPhrase } from '@cardstack/models/secure-storage';
-import { Routes, useLoadingOverlay } from '@cardstack/navigation';
-import { appStateUpdate } from '@cardstack/redux/appState';
-import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
-import { PinFlow } from '@cardstack/screens/PinScreen/types';
-import { PinScreenNavParams } from '@cardstack/screens/PinScreen/usePinScreen';
-
-import { mapDispatchToActions } from '@cardstack/utils';
-import { isValidSeed } from '@rainbow-me/helpers/validators';
-import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
-
-import logger from 'logger';
 interface WalletsState {
   selectedWallet: RainbowWallet;
   wallets: RainbowWallet[];
@@ -66,7 +67,7 @@ export default function useWalletManager() {
   );
 
   const loadAllSeedPhrases = useCallback(
-    async (wallets: RainbowWallet[], forceOldSeed: boolean = true) => {
+    async (wallets: RainbowWallet[], forceOldSeed = true) => {
       const seeds = [];
 
       // Needs to be sequential

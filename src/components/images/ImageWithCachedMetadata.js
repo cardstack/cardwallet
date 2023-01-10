@@ -1,5 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
+
 import { useImageMetadata } from '../../hooks';
+
 import ImgixImage from './ImgixImage';
 
 const ImageWithCachedMetadata = (

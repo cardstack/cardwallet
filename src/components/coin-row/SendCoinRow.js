@@ -2,13 +2,15 @@ import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { memo } from 'react';
 
-import { deviceUtils } from '../../utils';
+import { AnimatedPressable, CenteredContainer } from '@cardstack/components';
 
+import colors from '@rainbow-me/styles/colors';
+
+import { deviceUtils } from '../../utils';
 import { Text } from '../text';
+
 import CoinName from './CoinName';
 import CoinRow from './CoinRow';
-import { AnimatedPressable, CenteredContainer } from '@cardstack/components';
-import colors from '@rainbow-me/styles/colors';
 
 const isTinyPhone = deviceUtils.dimensions.height <= 568;
 const selectedHeight = isTinyPhone ? 62 : 78;

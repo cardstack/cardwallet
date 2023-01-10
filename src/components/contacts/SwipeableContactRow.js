@@ -1,16 +1,20 @@
 import React, { useCallback, useImperativeHandle, useRef } from 'react';
 import { Animated } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+
+import { AnimatedPressable } from '@cardstack/components';
+
+import { ImgixImage } from '@rainbow-me/images';
+import { margin, position } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
+
 import DeleteIcon from '../../assets/swipeToDelete.png';
 import EditIcon from '../../assets/swipeToEdit.png';
 import { Centered, Row } from '../layout';
 import { Text } from '../text';
+
 import ContactRow from './ContactRow';
 import showDeleteContactActionSheet from './showDeleteContactActionSheet';
-import { AnimatedPressable } from '@cardstack/components';
-import { ImgixImage } from '@rainbow-me/images';
-import { margin, position } from '@rainbow-me/styles';
-import colors from '@rainbow-me/styles/colors';
 
 const AnimatedCentered = Animated.createAnimatedComponent(Centered);
 

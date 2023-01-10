@@ -7,10 +7,12 @@ import React, {
   useState,
 } from 'react';
 
+import { Button, Container, Text } from '@cardstack/components';
+
+import { useDimensions } from '@rainbow-me/hooks';
+
 import ExchangeInput from '../exchange/ExchangeInput';
 import { Row } from '../layout';
-import { Button, Container, Text } from '@cardstack/components';
-import { useDimensions } from '@rainbow-me/hooks';
 
 const defaultFormatter = string => string;
 

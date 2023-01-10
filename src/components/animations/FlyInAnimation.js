@@ -2,6 +2,7 @@ import React from 'react';
 import Animated, { EasingNode } from 'react-native-reanimated';
 import { useTimingTransition } from 'react-native-redash/lib/module/v1';
 import styled from 'styled-components';
+
 import { interpolate } from './procs';
 
 const AnimatedContainer = styled(Animated.View)`

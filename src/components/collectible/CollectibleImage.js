@@ -1,10 +1,12 @@
 import React, { memo, useCallback, useState } from 'react';
-import { buildCollectibleName } from '../../helpers/assets';
-import { Centered } from '../layout';
-import { Monospace } from '../text';
+
 import { ImageWithCachedMetadata, ImgixImage } from '@rainbow-me/images';
 import { position } from '@rainbow-me/styles';
 import colors from '@rainbow-me/styles/colors';
+
+import { buildCollectibleName } from '../../helpers/assets';
+import { Centered } from '../layout';
+import { Monospace } from '../text';
 
 const getFallbackTextColor = bg =>
   colors.getTextColorForBackground(bg, {

@@ -9,19 +9,14 @@ import { get, isEmpty, isString } from 'lodash';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Keyboard } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { SendSheetType } from '../components/send';
-import SendSheet, {
-  useSendAddressValidation,
-  useShowAssetFlags,
-} from '../components/send/SendSheet';
-import { createSignableTransaction } from '../handlers/web3';
-import { sendTransaction } from '../model/wallet';
+
 import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
 import { useGas } from '@cardstack/hooks';
 import { useAssets } from '@cardstack/hooks/assets/useAssets';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { AssetTypes } from '@cardstack/types';
 import { isNativeToken } from '@cardstack/utils';
+
 import { Alert } from '@rainbow-me/components/alerts';
 import {
   useAccountSettings,
@@ -30,8 +25,15 @@ import {
   useSendableCollectibles,
 } from '@rainbow-me/hooks';
 import { dataAddNewTransaction } from '@rainbow-me/redux/data';
-
 import logger from 'logger';
+
+import { SendSheetType } from '../components/send';
+import SendSheet, {
+  useSendAddressValidation,
+  useShowAssetFlags,
+} from '../components/send/SendSheet';
+import { createSignableTransaction } from '../handlers/web3';
+import { sendTransaction } from '../model/wallet';
 
 const useSendSheetScreen = () => {
   const dispatch = useDispatch();

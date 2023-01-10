@@ -1,10 +1,13 @@
 import React, { memo } from 'react';
 import styled from 'styled-components';
-import { Centered } from '../layout';
-import Icon from './Icon';
+
 import BiometryTypes from '@rainbow-me/helpers/biometryTypes';
 import { position } from '@rainbow-me/styles';
 import colors from '@rainbow-me/styles/colors';
+
+import { Centered } from '../layout';
+
+import Icon from './Icon';
 
 const BiometryTypeIcon = styled(Icon).attrs(({ type }) => ({
   color: colors.whiteLabel,

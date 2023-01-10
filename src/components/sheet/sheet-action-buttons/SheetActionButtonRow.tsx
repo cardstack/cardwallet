@@ -1,8 +1,11 @@
 import React, { Children, ReactNode } from 'react';
 import styled from 'styled-components';
-import { FlexItem, Row } from '../../layout';
+
 import { Device } from '@cardstack/utils';
+
 import { padding } from '@rainbow-me/styles';
+
+import { FlexItem, Row } from '../../layout';
 
 interface ContainerProps {
   ignorePaddingTop?: boolean;

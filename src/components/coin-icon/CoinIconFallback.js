@@ -2,13 +2,16 @@ import React, { memo, useMemo } from 'react';
 import { FallbackIcon } from 'react-coin-icon';
 import { Image } from 'react-native';
 import styled from 'styled-components';
-import { Centered } from '../layout';
+
 import { useBooleanState } from '@cardstack/hooks';
 import { colors } from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
+
 import { borders, fonts, position, shadow } from '@rainbow-me/styles';
 import rbColors from '@rainbow-me/styles/colors';
 import { getUrlForTrustIconFallback } from '@rainbow-me/utils';
+
+import { Centered } from '../layout';
 
 const fallbackTextStyles = {
   fontFamily: fonts.family.SFProRounded,

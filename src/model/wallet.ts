@@ -7,37 +7,16 @@ import {
   hdkey as EthereumHDKey,
   default as LibWallet,
 } from 'ethereumjs-wallet';
-
 import { ethers } from 'ethers';
 import { find, findKey, forEach, get, isEmpty } from 'lodash';
 import { Alert } from 'react-native';
 import { ACCESSIBLE, AuthenticationPrompt } from 'react-native-keychain';
-import AesEncryptor from '../handlers/aesEncryption';
-import {
-  DEPRECATED_authenticateWithPIN,
-  DEPRECATED_getExistingPIN,
-} from '../handlers/authentication';
-import { addHexPrefix, isHexStringIgnorePrefix } from '../handlers/web3';
-import { isValidSeed } from '../helpers/validators';
-import { EthereumWalletType } from '../helpers/walletTypes';
-import { getRandomColor } from '../styles/colors';
-import { ethereumUtils } from '../utils';
-import {
-  addressKey,
-  allWalletsKey,
-  pinKey,
-  privateKeyKey,
-  seedPhraseKey,
-  selectedWalletKey,
-} from '../utils/keychainConstants';
-import * as keychain from './keychain';
-import { strings } from './strings';
+
 import {
   getEthersWallet,
   getEthersWalletWithSeed,
 } from '@cardstack/models/ethers-wallet';
 import { backupUserDataIntoCloud } from '@cardstack/models/rn-cloud';
-
 import {
   getPin,
   getPrivateKey,
@@ -58,6 +37,28 @@ import {
 } from '@rainbow-me/handlers/localstorage/globalSettings';
 import store, { persistor } from '@rainbow-me/redux/store';
 import logger from 'logger';
+
+import AesEncryptor from '../handlers/aesEncryption';
+import {
+  DEPRECATED_authenticateWithPIN,
+  DEPRECATED_getExistingPIN,
+} from '../handlers/authentication';
+import { addHexPrefix, isHexStringIgnorePrefix } from '../handlers/web3';
+import { isValidSeed } from '../helpers/validators';
+import { EthereumWalletType } from '../helpers/walletTypes';
+import { getRandomColor } from '../styles/colors';
+import { ethereumUtils } from '../utils';
+import {
+  addressKey,
+  allWalletsKey,
+  pinKey,
+  privateKeyKey,
+  seedPhraseKey,
+  selectedWalletKey,
+} from '../utils/keychainConstants';
+
+import * as keychain from './keychain';
+import { strings } from './strings';
 
 const encryptor = new AesEncryptor();
 
@@ -745,7 +746,7 @@ export const generateAccount = async (
 export const loadSeedPhrase = async (
   id: RainbowWallet['id'],
   promptMessage?: string | AuthenticationPrompt,
-  forceOldSeed: boolean = false
+  forceOldSeed = false
 ): Promise<null | EthereumWalletSeed> => {
   try {
     const newPin = !!(await getPin());

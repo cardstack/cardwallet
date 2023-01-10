@@ -1,6 +1,8 @@
 import React from 'react';
-import { UnderlineField } from '../fields';
+
 import { CenteredContainer } from '@cardstack/components';
+
+import { UnderlineField } from '../fields';
 
 const SendAssetFormField = ({
   autoFocus,

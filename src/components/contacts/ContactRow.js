@@ -1,16 +1,19 @@
 import React, { memo } from 'react';
 
-import { removeFirstEmojiFromString } from '../../helpers/emojiHandler';
-import Column from '../layout/Column';
-import RowWithMargins from '../layout/RowWithMargins';
-import ContactAvatar from './ContactAvatar';
 import {
   AnimatedPressable,
   Text,
   TruncatedAddress,
 } from '@cardstack/components';
 import { Device } from '@cardstack/utils';
+
 import { margin } from '@rainbow-me/styles';
+
+import { removeFirstEmojiFromString } from '../../helpers/emojiHandler';
+import Column from '../layout/Column';
+import RowWithMargins from '../layout/RowWithMargins';
+
+import ContactAvatar from './ContactAvatar';
 
 const ContactRow = ({ address, color, nickname, ...props }, ref) => {
   return (

@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+
 import { Device } from '@cardstack/utils';
 
 const ShadowView = props => {

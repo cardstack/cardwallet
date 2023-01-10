@@ -1,9 +1,12 @@
 import { isNil } from 'lodash';
 import React, { Fragment, memo } from 'react';
 import styled from 'styled-components';
-import CoinIconFallback from './CoinIconFallback';
+
 import { CoinIcon as ReactCoinIcon } from '@cardstack/components';
+
 import { getTokenMetadata, isETH } from '@rainbow-me/utils';
+
+import CoinIconFallback from './CoinIconFallback';
 
 export const CoinIconSize = 40;
 

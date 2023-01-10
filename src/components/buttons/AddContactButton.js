@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View } from 'react-native';
 import { Transition, Transitioning } from 'react-native-reanimated';
+
 import { Button, Icon, Touchable } from '@cardstack/components';
 
 const duration = 200;

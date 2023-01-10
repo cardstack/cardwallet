@@ -2,7 +2,7 @@ const {
   DetoxCircusEnvironment,
   SpecReporter,
   WorkerAssignReporter,
-  // eslint-disable-next-line import/no-commonjs
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
 } = require('detox/runners/jest-circus');
 
 class CustomDetoxEnvironment extends DetoxCircusEnvironment {
@@ -21,5 +21,4 @@ class CustomDetoxEnvironment extends DetoxCircusEnvironment {
   }
 }
 
-// eslint-disable-next-line import/no-commonjs
 module.exports = CustomDetoxEnvironment;

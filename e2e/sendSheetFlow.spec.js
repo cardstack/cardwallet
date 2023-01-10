@@ -1,5 +1,4 @@
 /* eslint-disable no-undef */
-/* eslint-disable jest/expect-expect */
 import * as Helpers from './helpers';
 
 describe('Send Sheet Interaction Flow', () => {

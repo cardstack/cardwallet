@@ -1,7 +1,9 @@
 import { convertAmountToBalanceDisplay } from '@cardstack/cardpay-sdk';
 import { utils as ethersUtils } from 'ethers';
 import { isNil, pick } from 'lodash';
+
 import TransactionStatusTypes from '../helpers/transactionStatusTypes';
+
 import { getDescription, getTitle } from './transactions';
 
 /**

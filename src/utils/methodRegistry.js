@@ -1,7 +1,9 @@
 import { Contract } from 'ethers';
+
+import Web3WsProvider from '@cardstack/models/web3-provider';
+
 import namesOverrides from '../references/method-names-overrides.json';
 import methodRegistryABI from '../references/method-registry-abi.json';
-import Web3WsProvider from '@cardstack/models/web3-provider';
 
 const METHOD_REGISTRY_ADDRESS = '0x44691B39d1a75dC4E0A0346CBB15E310e6ED1E86';
 

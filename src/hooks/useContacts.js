@@ -2,8 +2,10 @@ import { sortBy, values } from 'lodash';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { contactsAddOrUpdate, removeContact } from '../redux/contacts';
+
 import { NetworkType } from '@cardstack/types';
+
+import { contactsAddOrUpdate, removeContact } from '../redux/contacts';
 
 const contactsSelector = createSelector(
   ({ contacts: { contacts } }) => contacts,

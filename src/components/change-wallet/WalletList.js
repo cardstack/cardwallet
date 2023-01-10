@@ -4,16 +4,19 @@ import { FlatList } from 'react-native-gesture-handler';
 import { Transition, Transitioning } from 'react-native-reanimated';
 import styled from 'styled-components';
 
+import { Container, OptionItem } from '@cardstack/components';
+import { NetworkType } from '@cardstack/types';
+import { Device, getAddressPreview } from '@cardstack/utils';
+
+import { position } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
+
 import WalletTypes from '../../helpers/walletTypes';
 import { useAccountSettings } from '../../hooks';
 import Divider from '../Divider';
 import { EmptyAssetList } from '../asset-list';
+
 import AddressRow from './AddressRow';
-import { Container, OptionItem } from '@cardstack/components';
-import { NetworkType } from '@cardstack/types';
-import { Device, getAddressPreview } from '@cardstack/utils';
-import { position } from '@rainbow-me/styles';
-import colors from '@rainbow-me/styles/colors';
 
 const listTopPadding = 7.5;
 const rowHeight = 59;

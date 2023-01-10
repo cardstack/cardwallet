@@ -1,7 +1,18 @@
 import { isEmpty } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { StatusBar } from 'react-native';
+
+import { Sheet, useMessageOverlay } from '@cardstack/components';
+import { Device } from '@cardstack/utils';
+
+import {
+  useAccountSettings,
+  useContacts,
+  useDimensions,
+} from '@rainbow-me/hooks';
+
 import { checkIsValidAddressOrDomain } from '../../helpers/validators';
+
 import {
   SendAssetForm,
   SendAssetList,
@@ -10,13 +21,6 @@ import {
   SendHeader,
   SendTransactionSpeed,
 } from '.';
-import { Sheet, useMessageOverlay } from '@cardstack/components';
-import { Device } from '@cardstack/utils';
-import {
-  useAccountSettings,
-  useContacts,
-  useDimensions,
-} from '@rainbow-me/hooks';
 
 const strings = {
   invalidPaste: 'Not a valid wallet address',

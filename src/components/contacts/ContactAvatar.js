@@ -2,11 +2,14 @@ import { toUpper } from 'lodash';
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
 import styled from 'styled-components';
+
+import { avatarColor, colors } from '@cardstack/theme';
+
+import { borders } from '@rainbow-me/styles';
+
 import { getFirstGrapheme } from '../../utils';
 import { Centered } from '../layout';
 import { Text } from '../text';
-import { avatarColor, colors } from '@cardstack/theme';
-import { borders } from '@rainbow-me/styles';
 
 const sizeConfigs = {
   xxlarge: {

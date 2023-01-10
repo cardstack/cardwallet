@@ -2,15 +2,19 @@ import React from 'react';
 import Animated, { EasingNode } from 'react-native-reanimated';
 import { toRad, useTimingTransition } from 'react-native-redash/lib/module/v1';
 import styled from 'styled-components';
+
+import { AnimatedPressable } from '@cardstack/components';
+
+import { ImgixImage } from '@rainbow-me/images';
+import { padding } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
+
 import CaretImageSource from '../../assets/family-dropdown-arrow.png';
 import { interpolate } from '../animations';
 import { Row, RowWithMargins } from '../layout';
 import { Text, TruncatedText } from '../text';
+
 import TokenFamilyHeaderIcon from './TokenFamilyHeaderIcon';
-import { AnimatedPressable } from '@cardstack/components';
-import { ImgixImage } from '@rainbow-me/images';
-import { padding } from '@rainbow-me/styles';
-import colors from '@rainbow-me/styles/colors';
 
 const AnimatedImgixImage = Animated.createAnimatedComponent(ImgixImage);
 

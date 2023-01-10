@@ -5,11 +5,13 @@ import {
 } from '@cardstack/cardpay-sdk';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useAccountSettings } from '../../../hooks';
-import { settingsUpdateNetwork } from '../../../redux/settings';
+
 import { Container, FloatingTag, RadioItemProps } from '@cardstack/components';
 import { NetworkType } from '@cardstack/types';
 import { isMainnet } from '@cardstack/utils';
+
+import { useAccountSettings } from '../../../hooks';
+import { settingsUpdateNetwork } from '../../../redux/settings';
 
 export const useNetworkSection = () => {
   const { network } = useAccountSettings();

@@ -16,7 +16,9 @@ import {
   setInternetCredentials,
   UserCredentials,
 } from 'react-native-keychain';
+
 import { Device } from '@cardstack/utils/device';
+
 import logger from 'logger';
 
 export async function saveString(
@@ -186,7 +188,6 @@ export async function getPrivateAccessControlOptions(): Promise<Options> {
         accessible: ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
       };
     }
-    // eslint-disable-next-line no-empty
   } catch (e) {}
 
   return res;

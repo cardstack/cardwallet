@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { Text as RNText } from 'react-native';
 import styled from 'styled-components';
+
 import { buildTextStyles } from '@rainbow-me/styles';
 
 const Text = styled(RNText).attrs({ allowFontScaling: false })`

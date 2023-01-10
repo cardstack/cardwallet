@@ -1,10 +1,13 @@
 import React, { useRef } from 'react';
 import { View } from 'react-native';
 import { Transition, Transitioning } from 'react-native-reanimated';
+
+import { Device } from '@cardstack/utils';
+
+import colors from '@rainbow-me/styles/colors';
+
 import { Icon } from '../icons';
 import { Centered } from '../layout';
-import { Device } from '@cardstack/utils';
-import colors from '@rainbow-me/styles/colors';
 
 const duration = 200;
 const transition = (

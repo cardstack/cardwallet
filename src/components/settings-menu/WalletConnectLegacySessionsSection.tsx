@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { Alert, FlatList } from 'react-native';
+
 import {
   Avatar,
   Button,
@@ -7,6 +8,7 @@ import {
   Container,
   Text,
 } from '@cardstack/components';
+
 import { useWalletConnectConnections } from '@rainbow-me/hooks';
 
 const WalletConnectLegacySessionsSection = () => {

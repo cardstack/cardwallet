@@ -2,11 +2,14 @@ import React, { memo, useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import styled from 'styled-components';
 
-import { InnerBorder } from '../layout';
-import CollectibleImage from './CollectibleImage';
 import { AnimatedPressable } from '@cardstack/components';
+
 import { shadow as shadowUtil } from '@rainbow-me/styles';
 import colors from '@rainbow-me/styles/colors';
+
+import { InnerBorder } from '../layout';
+
+import CollectibleImage from './CollectibleImage';
 
 const CollectibleCardBorderRadius = 20;
 const CollectibleCardShadowFactory = colors => [0, 2, 6, colors.shadow, 0.08];

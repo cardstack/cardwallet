@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
+
 import { Button, Container } from '@cardstack/components';
+
 import { checkIsValidAddressOrDomain } from '@rainbow-me/helpers/validators';
 import { useClipboard } from '@rainbow-me/hooks';
 import { deviceUtils } from '@rainbow-me/utils';

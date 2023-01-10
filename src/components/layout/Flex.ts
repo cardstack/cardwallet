@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { View, ViewStyle } from 'react-native';
 import styled from 'styled-components';
+
 import { buildFlexStyles } from '@rainbow-me/styles';
 
 const flexPropTypes = {

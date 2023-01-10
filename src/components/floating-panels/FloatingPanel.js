@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+
 import { Container } from '@cardstack/components';
+
 import { shadow } from '@rainbow-me/styles';
 import colors from '@rainbow-me/styles/colors';
 

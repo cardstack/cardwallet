@@ -1,8 +1,11 @@
 import React from 'react';
 import { BorderlessButton } from 'react-native-gesture-handler';
-import { neverRerender } from '../utils';
+
 import { colors } from '@cardstack/theme';
+
 import { position } from '@rainbow-me/styles';
+
+import { neverRerender } from '../utils';
 
 const TouchableBackdrop = ({ zIndex = 0, ...props }) => (
   <BorderlessButton

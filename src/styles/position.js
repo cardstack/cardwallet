@@ -1,5 +1,6 @@
 import { upperFirst } from 'lodash';
 import { StyleSheet } from 'react-native';
+
 import buildLayoutStyles from './buildLayoutStyles';
 
 const position = {};

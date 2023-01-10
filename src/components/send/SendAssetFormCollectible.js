@@ -2,12 +2,14 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Keyboard, TouchableWithoutFeedback } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import styled from 'styled-components';
+
+import { padding, position } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
+
 import { useDimensions, useImageMetadata } from '../../hooks';
 import { OpacityToggler } from '../animations';
 import { CollectibleCard } from '../collectible';
 import { Column, ColumnWithMargins } from '../layout';
-import { padding, position } from '@rainbow-me/styles';
-import colors from '@rainbow-me/styles/colors';
 
 const defaultImageDimensions = { height: 512, width: 512 };
 

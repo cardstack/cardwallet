@@ -1,10 +1,13 @@
 import { isCardPaySupportedNetwork } from '@cardstack/cardpay-sdk';
 import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+
+import { Device } from '@cardstack/utils';
+
 import { buildTransactionsSectionsSelector } from '../helpers/buildTransactionsSectionsSelector';
+
 import useContacts from './useContacts';
 import useRequests from './useRequests';
-import { Device } from '@cardstack/utils';
 
 export const NOE_PAGE = 30;
 

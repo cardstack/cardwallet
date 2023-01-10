@@ -2,13 +2,16 @@ import { isEmpty } from 'lodash';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { useAccountSettings } from '.';
+
 import { findLatestBackUp } from '@cardstack/models/backup';
+
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import { Account } from '@rainbow-me/model/wallet';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { AppState } from '@rainbow-me/redux/store';
 import logger from 'logger';
+
+import { useAccountSettings } from '.';
 
 const walletSelector = createSelector(
   ({ wallets: { selected = {}, walletNames, wallets } }: AppState) => ({

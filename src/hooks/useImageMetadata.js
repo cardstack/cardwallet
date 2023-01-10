@@ -1,8 +1,10 @@
 import { useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import useDimensions from './useDimensions';
+
 import { updateImageMetadataCache } from '@rainbow-me/redux/imageMetadata';
 import { position } from '@rainbow-me/styles';
+
+import useDimensions from './useDimensions';
 
 export default function useImageMetadata(imageUrl) {
   const dispatch = useDispatch();

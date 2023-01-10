@@ -9,18 +9,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { enableScreens } from 'react-native-screens';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { name as appName } from '../app.json';
-import {
-  reactNativeDisableYellowBox,
-  showNetworkRequests,
-  showNetworkResponses,
-} from './config/debug';
-import monitorNetwork from './debugging/network';
-import { PinnedHiddenItemOptionProvider } from './hooks';
 
-import store, { persistor } from './redux/store';
-import MaintenanceMode from './screens/MaintenanceMode';
-import { useAppInit } from './useAppInit';
 import { NetworkToast } from '@cardstack/components';
 import ErrorBoundary from '@cardstack/components/ErrorBoundary/ErrorBoundary';
 import { MinimumVersion } from '@cardstack/components/MinimumVersion';
@@ -29,6 +18,19 @@ import { AppContainer } from '@cardstack/navigation';
 import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
 import theme from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
+
+import { name as appName } from '../app.json';
+
+import {
+  reactNativeDisableYellowBox,
+  showNetworkRequests,
+  showNetworkResponses,
+} from './config/debug';
+import monitorNetwork from './debugging/network';
+import { PinnedHiddenItemOptionProvider } from './hooks';
+import store, { persistor } from './redux/store';
+import MaintenanceMode from './screens/MaintenanceMode';
+import { useAppInit } from './useAppInit';
 
 StatusBar.pushStackEntry({ animated: true, barStyle: 'light-content' });
 

@@ -1,4 +1,5 @@
 import chroma from 'chroma-js';
+
 import { avatarColor } from '@cardstack/theme';
 
 const buildRgba = (color, alpha = 1) => `rgba(${chroma(color).rgb()},${alpha})`;

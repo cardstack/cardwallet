@@ -1,5 +1,6 @@
 import React from 'react';
 import { G, Path } from 'react-native-svg';
+
 import Svg from '../Svg';
 
 // @ts-ignore

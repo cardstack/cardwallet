@@ -1,4 +1,3 @@
-import { getAccountLocal, saveAccountLocal } from './common';
 import {
   Asset,
   CollectibleType,
@@ -7,6 +6,8 @@ import {
   NetworkType,
   PrepaidCardType,
 } from '@cardstack/types';
+
+import { getAccountLocal, saveAccountLocal } from './common';
 
 const assetsVersion = '1.0.1';
 

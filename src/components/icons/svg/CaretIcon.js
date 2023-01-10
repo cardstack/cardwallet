@@ -1,7 +1,9 @@
 import React from 'react';
 import { Path } from 'react-native-svg';
-import Svg from '../Svg';
+
 import { Device } from '@cardstack/utils';
+
+import Svg from '../Svg';
 
 const CaretIcon = ({ color, colors, size, ...props }, ref) => (
   <Svg

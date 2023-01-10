@@ -1,13 +1,17 @@
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { initials } from '../../utils';
-import { Centered } from '../layout';
-import { Text } from '../text';
-import { CoinIconSize } from './CoinIcon';
+
 import { Container } from '@cardstack/components';
+
 import { ImgixImage } from '@rainbow-me/images';
 import { position } from '@rainbow-me/styles';
 import colors from '@rainbow-me/styles/colors';
+
+import { initials } from '../../utils';
+import { Centered } from '../layout';
+import { Text } from '../text';
+
+import { CoinIconSize } from './CoinIcon';
 
 const RVLIBorderRadius = 16.25;
 

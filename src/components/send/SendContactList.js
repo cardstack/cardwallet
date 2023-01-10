@@ -3,11 +3,15 @@ import { toLower } from 'lodash';
 import React, { useCallback, useMemo, useRef } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
 import styled from 'styled-components';
+
+import { Routes } from '@cardstack/navigation';
+
+import { filterList } from '@rainbow-me/utils';
+
 import { FlyInAnimation } from '../animations';
 import { SwipeableContactRow } from '../contacts';
+
 import SendEmptyState from './SendEmptyState';
-import { Routes } from '@cardstack/navigation';
-import { filterList } from '@rainbow-me/utils';
 
 const rowHeight = 62;
 const getItemLayout = (data, index) => ({

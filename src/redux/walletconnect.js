@@ -10,14 +10,7 @@ import {
   values,
 } from 'lodash';
 import { Alert, Linking } from 'react-native';
-import {
-  getAllValidWalletConnectSessions,
-  removeWalletConnectSessions,
-  saveWalletConnectSession,
-} from '../handlers/localstorage/walletconnectSessions';
-import { sendRpcCall } from '../handlers/web3';
-import { dappLogoOverride, dappNameOverride } from '../helpers/dappNameHandler';
-import { isSigningMethod } from '../utils/signingMethods';
+
 import { appName } from '@cardstack/constants';
 import { getFCMToken } from '@cardstack/models/firebase';
 import WalletConnect from '@cardstack/models/wallet-connect';
@@ -27,7 +20,17 @@ import {
   handleWalletConnectRequests,
 } from '@cardstack/redux/requests';
 import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
+
 import logger from 'logger';
+
+import {
+  getAllValidWalletConnectSessions,
+  removeWalletConnectSessions,
+  saveWalletConnectSession,
+} from '../handlers/localstorage/walletconnectSessions';
+import { sendRpcCall } from '../handlers/web3';
+import { dappLogoOverride, dappNameOverride } from '../helpers/dappNameHandler';
+import { isSigningMethod } from '../utils/signingMethods';
 
 // -- Constants --------------------------------------- //
 

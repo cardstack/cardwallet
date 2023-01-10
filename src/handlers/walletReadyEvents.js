@@ -1,7 +1,7 @@
-import { getKeychainIntegrityState } from './localstorage/globalSettings';
-
 import store from '@rainbow-me/redux/store';
 import { checkKeychainIntegrity } from '@rainbow-me/redux/wallets';
+
+import { getKeychainIntegrityState } from './localstorage/globalSettings';
 
 export const runKeychainIntegrityChecks = () => {
   setTimeout(async () => {

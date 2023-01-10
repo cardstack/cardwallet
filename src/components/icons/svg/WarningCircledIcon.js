@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { View } from 'react-native';
 import { Path } from 'react-native-svg';
+
 import Svg from '../Svg';
 
 const WarningCircledIcon = ({ color, colors, ...props }) => (

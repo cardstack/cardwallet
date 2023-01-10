@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert, Linking, NativeModules } from 'react-native';
+
 import { appName } from '@cardstack/constants';
 const { RainbowRequestReview } = NativeModules;
 

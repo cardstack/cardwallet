@@ -2,10 +2,6 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useRef, useState } from 'react';
 import styled from 'styled-components';
 
-import { getRandomColor } from '../../styles/colors';
-import Divider from '../Divider';
-import ImageAvatar from '../contacts/ImageAvatar';
-import { ProfileAvatarButton, ProfileModal, ProfileNameInput } from './profile';
 import {
   AnimatedPressable,
   Container,
@@ -14,13 +10,19 @@ import {
 } from '@cardstack/components';
 import { Routes, useDismissCurrentRoute } from '@cardstack/navigation';
 import theme, { avatarColor } from '@cardstack/theme';
+
 import {
   removeFirstEmojiFromString,
   returnStringFirstEmoji,
 } from '@rainbow-me/helpers/emojiHandler';
 import { useAccountProfile } from '@rainbow-me/hooks';
-
 import { padding } from '@rainbow-me/styles';
+
+import { getRandomColor } from '../../styles/colors';
+import Divider from '../Divider';
+import ImageAvatar from '../contacts/ImageAvatar';
+
+import { ProfileAvatarButton, ProfileModal, ProfileNameInput } from './profile';
 
 const Spacer = styled.View`
   height: 19;
@@ -32,7 +34,7 @@ const ProfileImage = styled(ImageAvatar)`
 
 const WalletProfileDivider = styled(Divider).attrs(() => ({
   borderRadius: 1,
-  color: theme.colors['borderGray'],
+  color: theme.colors.borderGray,
   inset: false,
 }))``;
 

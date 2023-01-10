@@ -10,19 +10,19 @@ import {
   multiply,
 } from '@cardstack/cardpay-sdk';
 import UnstoppableResolution from '@unstoppabledomains/resolution';
-
 import { BigNumber, Contract, utils as ethersUtils } from 'ethers';
 import { get, startsWith } from 'lodash';
 import Web3 from 'web3';
 
-import smartContractMethods from '../references/smartcontract-methods.json';
-import ethereumUtils from '../utils/ethereumUtils';
-
 import Web3WsProvider from '@cardstack/models/web3-provider';
 import { AssetTypes, NetworkType } from '@cardstack/types';
 import { isNativeToken } from '@cardstack/utils/cardpay-utils';
+
 import { erc721ABI, ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
+
+import smartContractMethods from '../references/smartcontract-methods.json';
+import ethereumUtils from '../utils/ethereumUtils';
 
 export const sendRpcCall = async payload => {
   const web3ProviderInstance = await Web3WsProvider.getEthers();

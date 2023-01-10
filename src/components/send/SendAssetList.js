@@ -5,8 +5,13 @@ import {
   LayoutProvider,
   RecyclerListView,
 } from 'recyclerlistview';
-
 import styled from 'styled-components';
+
+import { layoutEasingAnimation } from '@cardstack/utils';
+
+import { ImgixImage } from '@rainbow-me/images';
+import colors from '@rainbow-me/styles/colors';
+
 import { buildCoinsList } from '../../helpers/assets';
 import { deviceUtils } from '../../utils';
 import Divider, { DividerSize } from '../Divider';
@@ -14,9 +19,6 @@ import { FlyInAnimation } from '../animations';
 import { CollectiblesSendRow, SendCoinRow } from '../coin-row';
 import { Centered } from '../layout';
 import TokenFamilyHeader from '../token-family/TokenFamilyHeader';
-import { layoutEasingAnimation } from '@cardstack/utils';
-import { ImgixImage } from '@rainbow-me/images';
-import colors from '@rainbow-me/styles/colors';
 
 const dividerMargin = 10;
 const dividerHeight = DividerSize + dividerMargin * 2;

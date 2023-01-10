@@ -1,12 +1,13 @@
 import React from 'react';
 import { KeyboardAvoidingView } from 'react-native';
-import TouchableBackdrop from '../../TouchableBackdrop';
-import { AssetPanel, FloatingPanels } from '../../floating-panels';
 
 import { CenteredContainer } from '@cardstack/components';
 import { Device } from '@cardstack/utils';
 
 import { useDimensions } from '@rainbow-me/hooks';
+
+import TouchableBackdrop from '../../TouchableBackdrop';
+import { AssetPanel, FloatingPanels } from '../../floating-panels';
 
 export default function ProfileModal({ onPressBackdrop, ...props }) {
   const { width: deviceWidth } = useDimensions();

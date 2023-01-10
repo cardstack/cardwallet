@@ -13,6 +13,21 @@ import { InteractionManager } from 'react-native';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import { useDispatch } from 'react-redux';
 
+import { Container, Sheet, Text, Touchable } from '@cardstack/components';
+import { removeFCMToken } from '@cardstack/models/firebase';
+import { Routes, useLoadingOverlay } from '@cardstack/navigation';
+import { getAddressPreview } from '@cardstack/utils';
+
+import { Alert } from '@rainbow-me/components/alerts';
+import {
+  useAccountSettings,
+  useWalletManager,
+  useWallets,
+} from '@rainbow-me/hooks';
+import { resetWallet } from '@rainbow-me/model/wallet';
+import { deviceUtils, showActionSheetWithOptions } from '@rainbow-me/utils';
+import logger from 'logger';
+
 import Divider from '../components/Divider';
 import WalletList from '../components/change-wallet/WalletList';
 import { removeWalletData } from '../handlers/localstorage/removeWallet';
@@ -25,20 +40,6 @@ import {
   walletsUpdate,
 } from '../redux/wallets';
 import colors, { getRandomColor } from '../styles/colors';
-import { Container, Sheet, Text, Touchable } from '@cardstack/components';
-import { removeFCMToken } from '@cardstack/models/firebase';
-import { Routes, useLoadingOverlay } from '@cardstack/navigation';
-import { getAddressPreview } from '@cardstack/utils';
-import { Alert } from '@rainbow-me/components/alerts';
-import {
-  useAccountSettings,
-  useWalletManager,
-  useWallets,
-} from '@rainbow-me/hooks';
-
-import { resetWallet } from '@rainbow-me/model/wallet';
-import { deviceUtils, showActionSheetWithOptions } from '@rainbow-me/utils';
-import logger from 'logger';
 
 const getWalletRowCount = wallets => {
   let count = 0;

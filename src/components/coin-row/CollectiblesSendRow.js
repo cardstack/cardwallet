@@ -1,17 +1,21 @@
 import PropTypes from 'prop-types';
 import React, { Fragment, memo, useMemo } from 'react';
 import { css } from 'styled-components';
+
+import { AnimatedPressable } from '@cardstack/components';
+
+import { padding } from '@rainbow-me/styles';
+import colors from '@rainbow-me/styles/colors';
+
 import { buildAssetUniqueIdentifier } from '../../helpers/assets';
 import { deviceUtils } from '../../utils';
 import Divider from '../Divider';
 import { RequestVendorLogoIcon } from '../coin-icon';
 import { Centered, InnerBorder } from '../layout';
 import { TruncatedText } from '../text';
+
 import CoinName from './CoinName';
 import CoinRow from './CoinRow';
-import { AnimatedPressable } from '@cardstack/components';
-import { padding } from '@rainbow-me/styles';
-import colors from '@rainbow-me/styles/colors';
 
 const dividerHeight = 22;
 const isTinyPhone = deviceUtils.dimensions.height <= 568;
@@ -71,7 +75,6 @@ const arePropsEqual = (props, nextProps) =>
   buildAssetUniqueIdentifier(props.item) !==
   buildAssetUniqueIdentifier(nextProps.item);
 
-// eslint-disable-next-line react/display-name
 const CollectiblesSendRow = React.memo(
   ({ item, isFirstRow, onPress, selected, testID, ...props }) => {
     const subtitle = useMemo(

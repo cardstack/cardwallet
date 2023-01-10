@@ -6,6 +6,7 @@ import {
 } from 'react-native-dotenv';
 import { Source } from 'react-native-fast-image';
 import parse from 'url-parse';
+
 import logger from 'logger';
 
 const shouldCreateImgixClient = (): ImgixClient | null => {

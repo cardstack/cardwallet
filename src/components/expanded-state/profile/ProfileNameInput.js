@@ -1,7 +1,8 @@
 import React, { Fragment, useCallback, useEffect, useRef } from 'react';
 
-import { PlaceholderText } from '../../text';
 import { Input } from '@cardstack/components';
+
+import { PlaceholderText } from '../../text';
 
 function ProfileNameInput(
   { onChange, placeholder, testID, value, ...props },

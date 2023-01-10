@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { InteractionManager, StatusBar } from 'react-native';
 import RNBootSplash from 'react-native-bootsplash';
+
 import { Device } from '@cardstack/utils';
 
 export default function useHideSplashScreen() {
