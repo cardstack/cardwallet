@@ -216,13 +216,11 @@ export default function WalletList({
           <FlatList
             data={rows}
             getItemLayout={getItemLayout}
-            horizontal
             initialNumToRender={rows.length}
             keyExtractor={keyExtractor}
             ref={scrollView}
             removeClippedSubviews
             renderItem={renderItem}
-            scrollEnabled={false}
           />
           {showDividers && <WalletListDivider />}
           <Container justifyContent="flex-end" marginBottom={1} marginLeft={5}>
