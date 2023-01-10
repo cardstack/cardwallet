@@ -1,7 +1,9 @@
 import { get, isNil } from 'lodash';
 import { css } from 'styled-components';
-import fonts from './fonts';
+
 import { Device } from '@cardstack/utils';
+
+import fonts from './fonts';
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);

@@ -1,10 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { removeFirstEmojiFromString } from '../../helpers/emojiHandler';
-
-import { ContactAvatar } from '../contacts';
-import ImageAvatar from '../contacts/ImageAvatar';
 import {
   AnimatedPressable,
   Container,
@@ -17,7 +13,12 @@ import {
   getSymbolCharacterFromAddress,
   screenWidth,
 } from '@cardstack/utils';
+
 import { useAccountSettings } from '@rainbow-me/hooks';
+
+import { removeFirstEmojiFromString } from '../../helpers/emojiHandler';
+import { ContactAvatar } from '../contacts';
+import ImageAvatar from '../contacts/ImageAvatar';
 
 const sx = StyleSheet.create({
   accountRow: {

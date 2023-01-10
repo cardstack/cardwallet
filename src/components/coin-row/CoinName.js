@@ -1,7 +1,10 @@
 import styled from 'styled-components';
-import { TruncatedText } from '../text';
+
 import { Device } from '@cardstack/utils';
+
 import colors from '@rainbow-me/styles/colors';
+
+import { TruncatedText } from '../text';
 
 const CoinName = styled(TruncatedText).attrs(({ color }) => ({
   color: color || colors.dark,

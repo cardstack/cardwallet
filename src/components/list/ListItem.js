@@ -1,9 +1,12 @@
 import { isString } from 'lodash';
 import React, { useCallback } from 'react';
+
+import { AnimatedPressable, Text } from '@cardstack/components';
+
+import { padding, position } from '@rainbow-me/styles';
+
 import { Icon } from '../icons';
 import { Centered, Row, RowWithMargins } from '../layout';
-import { AnimatedPressable, Text } from '@cardstack/components';
-import { padding, position } from '@rainbow-me/styles';
 
 const ListItemHeight = 56;
 

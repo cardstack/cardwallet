@@ -1,4 +1,3 @@
-import { getAccountLocal, saveAccountLocal } from './common';
 import {
   Asset,
   CollectibleType,
@@ -7,6 +6,8 @@ import {
   NetworkType,
   PrepaidCardType,
 } from '@cardstack/types';
+
+import { getAccountLocal, saveAccountLocal } from './common';
 
 const assetsVersion = '1.0.1';
 
@@ -42,7 +43,7 @@ export const getAssets = (
     ASSETS,
     accountAddress,
     network,
-    { latestTxBlockNumber: undefined, assets: [] } as any,
+    { latestTxBlockNumber: undefined, assets: [] } as never,
     assetsVersion
   );
 
@@ -71,7 +72,7 @@ export const getPrepaidCards = (
     PREPAID_CARDS,
     accountAddress,
     network,
-    { prepaidCards: [], timestamp: '' } as any,
+    { prepaidCards: [], timestamp: '' } as never,
     prepaidCardsVersion
   );
 
@@ -97,7 +98,7 @@ export const getDepots = (
     DEPOTS,
     accountAddress,
     network,
-    { depots: [], timestamp: '' } as any,
+    { depots: [], timestamp: '' } as never,
     depotVersion
   );
 
@@ -123,7 +124,7 @@ export const getMerchantSafes = (
     MERCHANT_SAFES,
     accountAddress,
     network,
-    { merchantSafes: [], timestamp: '' } as any,
+    { merchantSafes: [], timestamp: '' } as never,
     merchantSafeVersion
   );
 
@@ -154,7 +155,7 @@ export const getLocalTransactions = (
   );
 
 export const saveLocalTransactions = (
-  transactions: any[],
+  transactions: [],
   accountAddress: string,
   network: NetworkType
 ) =>

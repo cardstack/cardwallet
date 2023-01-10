@@ -1,5 +1,4 @@
 import React, { memo, useCallback, useRef } from 'react';
-
 import { VERSION_TAP_COUNT } from 'react-native-dotenv';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 

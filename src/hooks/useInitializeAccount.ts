@@ -1,17 +1,19 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { dataLoadTxState } from '../redux/data';
-import { walletConnectLoadState } from '../redux/walletconnect';
-import useAccountSettings from './useAccountSettings';
-
 import WalletConnect, { signClient } from '@cardstack/models/wallet-connect';
 import { collectiblesLoadState } from '@cardstack/redux/collectibles';
 import { requestsLoadState } from '@cardstack/redux/requests';
 import { mapDispatchToActions } from '@cardstack/utils';
+
 import { imageMetadataCacheLoadState } from '@rainbow-me/redux/imageMetadata';
 import { settingsLoadCurrency } from '@rainbow-me/redux/settings';
 import logger from 'logger';
+
+import { dataLoadTxState } from '../redux/data';
+import { walletConnectLoadState } from '../redux/walletconnect';
+
+import useAccountSettings from './useAccountSettings';
 
 export default function useInitializeAccount() {
   const { accountAddress } = useAccountSettings();

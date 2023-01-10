@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
 import { persistReducer, persistStore } from 'redux-persist';
-import reducers from './reducers';
+
 import { authSlice } from '@cardstack/redux/authSlice';
 import { biometryToggleSliceName } from '@cardstack/redux/biometryToggleSlice';
 import { persistedFlagsName } from '@cardstack/redux/persistedFlagsSlice';
@@ -13,6 +13,8 @@ import { eoaAssetsApi } from '@cardstack/services/eoa-assets/eoa-assets-api';
 import { hubApi } from '@cardstack/services/hub/hub-api';
 import { safesApi } from '@cardstack/services/safes-api';
 import { serviceStatusApi } from '@cardstack/services/service-status-api';
+
+import reducers from './reducers';
 
 const enableReduxFlipper = true;
 
@@ -45,8 +47,8 @@ type APIReducers = {
 const apiValues = Object.values(apis);
 
 const mapApisToReducers = apiValues.reduce(
-  (reducers, api) => ({
-    ...reducers,
+  (injectedReducers, api) => ({
+    ...injectedReducers,
     [api.reducerPath]: api.reducer,
   }),
   {} as APIReducers

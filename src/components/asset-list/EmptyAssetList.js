@@ -1,9 +1,12 @@
 import { times } from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
-import { Centered, Column } from '../layout';
-import AssetListItemSkeleton from './AssetListItemSkeleton';
+
 import { position } from '@rainbow-me/styles';
+
+import { Centered, Column } from '../layout';
+
+import AssetListItemSkeleton from './AssetListItemSkeleton';
 
 const Container = styled(Column)`
   ${position.size('100%')};

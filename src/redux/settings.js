@@ -1,4 +1,14 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+
+import { collectiblesResetState } from '@cardstack/redux/collectibles';
+import { requestsResetState } from '@cardstack/redux/requests';
+import { getExchangeRatesQuery } from '@cardstack/services/hub/hub-service';
+import { NetworkType } from '@cardstack/types';
+import { mapDispatchToActions, restartApp } from '@cardstack/utils';
+
+import { saveAddress } from '@rainbow-me/model/wallet';
+import logger from 'logger';
+
 import {
   getNativeCurrency,
   getNetwork,
@@ -8,13 +18,6 @@ import {
 
 import { dataResetState } from './data';
 import { walletConnectUpdateSessions } from './walletconnect';
-import { collectiblesResetState } from '@cardstack/redux/collectibles';
-import { requestsResetState } from '@cardstack/redux/requests';
-import { getExchangeRatesQuery } from '@cardstack/services/hub/hub-service';
-import { NetworkType } from '@cardstack/types';
-import { mapDispatchToActions, restartApp } from '@cardstack/utils';
-import { saveAddress } from '@rainbow-me/model/wallet';
-import logger from 'logger';
 
 // -- Constants ------------------------------------------------------------- //
 

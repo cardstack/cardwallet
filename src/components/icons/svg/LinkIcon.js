@@ -1,16 +1,10 @@
 import React from 'react';
 import { G, Path } from 'react-native-svg';
+
 import Svg from '../Svg';
 
-// @ts-ignore
 const LinkIcon = props => (
-  <Svg
-    height={39}
-    viewBox="0 0 40 39"
-    width={40}
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
+  <Svg height={39} viewBox="0 0 40 39" width={40} {...props}>
     <G data-name="Group 12650">
       <G data-name="Group 12648">
         <Path

@@ -1,4 +1,7 @@
 import React from 'react';
+
+import colors from '@rainbow-me/styles/colors';
+
 import { Flex } from '../layout';
 import { Emoji } from '../text';
 
@@ -60,7 +63,6 @@ import TouchIdIcon from './svg/TouchIdIcon';
 import WalletConnectIcon from './svg/WalletConnectIcon';
 import WarningCircledIcon from './svg/WarningCircledIcon';
 import WarningIcon from './svg/WarningIcon';
-import colors from '@rainbow-me/styles/colors';
 
 const IconTypes = {
   applePay: ApplePayIcon,

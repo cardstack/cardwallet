@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
 import { get } from 'lodash';
+
 import TransactionStatusTypes from '../helpers/transactionStatusTypes';
 import TransactionTypes from '../helpers/transactionTypes';
 

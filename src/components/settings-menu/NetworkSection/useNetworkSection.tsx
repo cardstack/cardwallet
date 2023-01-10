@@ -5,16 +5,21 @@ import {
 } from '@cardstack/cardpay-sdk';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useAccountSettings } from '../../../hooks';
-import { settingsUpdateNetwork } from '../../../redux/settings';
+
 import { Container, FloatingTag, RadioItemProps } from '@cardstack/components';
 import { NetworkType } from '@cardstack/types';
 import { isMainnet } from '@cardstack/utils';
 
+import { useAccountSettings } from '../../../hooks';
+import { settingsUpdateNetwork } from '../../../redux/settings';
+
 export const useNetworkSection = () => {
-  const { network } = useAccountSettings();
   const dispatch = useDispatch();
-  const [selectedNetwork, setSelectedNetwork] = useState(network);
+
+  const { network: currentNetwork } = useAccountSettings();
+
+  const [selectedNetwork, setSelectedNetwork] = useState(currentNetwork);
+
   const [showAll, setShowAll] = useState<boolean>(
     !isMainnet(selectedNetwork) ?? false
   );
@@ -81,14 +86,14 @@ export const useNetworkSection = () => {
   }, [dispatch, selectedNetwork]);
 
   const onToggleShowAllNetworks = useCallback(
-    () => setShowAll(showAll => !showAll),
+    () => setShowAll(showAllState => !showAllState),
     []
   );
 
-  const isCurrentNetworkSelected = useMemo(() => selectedNetwork === network, [
-    network,
-    selectedNetwork,
-  ]);
+  const isCurrentNetworkSelected = useMemo(
+    () => selectedNetwork === currentNetwork,
+    [currentNetwork, selectedNetwork]
+  );
 
   return {
     isCurrentNetworkSelected,

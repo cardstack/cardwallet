@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import LayoutWithMargins from './LayoutWithMargins';
 
 const ColumnWithMargins = styled(LayoutWithMargins).attrs(

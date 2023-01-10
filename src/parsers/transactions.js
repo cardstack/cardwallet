@@ -22,6 +22,7 @@ import {
   uniqBy,
   upperFirst,
 } from 'lodash';
+
 import { parseAllTxnsOnReceive } from '../config/debug';
 import { toChecksumAddress } from '../handlers/web3';
 import ProtocolTypes from '../helpers/protocolTypes';
@@ -360,24 +361,29 @@ export const getTransactionLabel = ({
   status,
   type,
 }) => {
-  if (status === TransactionStatusTypes.cancelling)
+  if (status === TransactionStatusTypes.cancelling) {
     return TransactionStatusTypes.cancelling;
+  }
 
-  if (status === TransactionStatusTypes.cancelled)
+  if (status === TransactionStatusTypes.cancelled) {
     return TransactionStatusTypes.cancelled;
+  }
 
-  if (status === TransactionStatusTypes.speeding_up)
+  if (status === TransactionStatusTypes.speeding_up) {
     return TransactionStatusTypes.speeding_up;
+  }
 
-  if (pending && type === TransactionTypes.purchase)
+  if (pending && type === TransactionTypes.purchase) {
     return TransactionStatusTypes.purchasing;
+  }
 
   const isFromAccount = direction === DirectionTypes.out;
   const isToAccount = direction === DirectionTypes.in;
   const isSelf = direction === DirectionTypes.self;
 
-  if (pending && type === TransactionTypes.authorize)
+  if (pending && type === TransactionTypes.authorize) {
     return TransactionStatusTypes.approving;
+  }
 
   if (pending && type === TransactionTypes.deposit) {
     if (protocol === ProtocolTypes.compound.name) {
@@ -398,16 +404,20 @@ export const getTransactionLabel = ({
   if (pending && isFromAccount) return TransactionStatusTypes.sending;
   if (pending && isToAccount) return TransactionStatusTypes.receiving;
 
-  if (status === TransactionStatusTypes.failed)
+  if (status === TransactionStatusTypes.failed) {
     return TransactionStatusTypes.failed;
+  }
 
-  if (type === TransactionTypes.trade && isFromAccount)
+  if (type === TransactionTypes.trade && isFromAccount) {
     return TransactionStatusTypes.swapped;
+  }
 
-  if (type === TransactionTypes.authorize)
+  if (type === TransactionTypes.authorize) {
     return TransactionStatusTypes.approved;
-  if (type === TransactionTypes.purchase)
+  }
+  if (type === TransactionTypes.purchase) {
     return TransactionStatusTypes.purchased;
+  }
 
   if (type === TransactionTypes.deposit) {
     if (protocol === ProtocolTypes.compound.name) {

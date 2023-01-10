@@ -4,15 +4,9 @@ import { useFlipper } from '@react-navigation/devtools';
 import { useCallback, useEffect, useRef } from 'react';
 import { Linking } from 'react-native';
 import { useDispatch } from 'react-redux';
-import handleWcDeepLink from './handlers/deeplinks';
-import { runKeychainIntegrityChecks } from './handlers/walletReadyEvents';
 
-import { useRainbowSelector } from './redux/hooks';
-import store from './redux/store';
-import { walletConnectLoadState } from './redux/walletconnect';
 import { useAppRequirements, useAppState } from '@cardstack/hooks';
 import { registerTokenRefreshListener } from '@cardstack/models/firebase';
-
 import { Navigation, Routes } from '@cardstack/navigation';
 import { navigationRef } from '@cardstack/navigation/Navigation';
 import {
@@ -23,6 +17,12 @@ import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
 import { requestsForTopic } from '@cardstack/redux/requests';
 
 import logger from 'logger';
+
+import handleWcDeepLink from './handlers/deeplinks';
+import { runKeychainIntegrityChecks } from './handlers/walletReadyEvents';
+import { useRainbowSelector } from './redux/hooks';
+import store from './redux/store';
+import { walletConnectLoadState } from './redux/walletconnect';
 
 const WALLETCONNECT_SYNC_DELAY = 500;
 

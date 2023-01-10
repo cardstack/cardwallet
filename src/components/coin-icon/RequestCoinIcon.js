@@ -1,6 +1,8 @@
 import React from 'react';
-import RequestVendorLogoIcon from './RequestVendorLogoIcon';
+
 import { colors } from '@cardstack/theme';
+
+import RequestVendorLogoIcon from './RequestVendorLogoIcon';
 
 const RequestCoinIconSize = 48;
 

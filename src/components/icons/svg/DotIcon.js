@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Circle } from 'react-native-svg';
+
 import Svg from '../Svg';
 
 const DotIcon = ({ color, colors, ...props }) => (

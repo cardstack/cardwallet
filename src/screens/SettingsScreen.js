@@ -8,6 +8,7 @@ import { SettingsExternalURLs } from '@cardstack/constants';
 import { useSelectedWallet } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils';
+
 import AppVersionStamp from '@rainbow-me/components/AppVersionStamp';
 import { ColumnWithDividers } from '@rainbow-me/components/layout';
 import {

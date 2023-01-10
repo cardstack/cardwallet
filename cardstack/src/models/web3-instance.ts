@@ -19,7 +19,7 @@ const Web3Instance = {
       if (web3Instance.currentProvider === null || isProviderDisconnected) {
         const network = await getNetwork();
 
-        web3Instance.setProvider(await Web3WsProvider.get(network));
+        web3Instance.setProvider((await Web3WsProvider.get(network)) as any);
       }
     } catch (e) {
       logger.log('Failed while getting web3Instance', e);
@@ -29,7 +29,7 @@ const Web3Instance = {
   },
   // Separated instance with custom network for wc requests
   withNetwork: async (network: NetworkType) =>
-    new Web3(await Web3WsProvider.get(network)),
+    new Web3((await Web3WsProvider.get(network)) as any),
 };
 
 export default Web3Instance;

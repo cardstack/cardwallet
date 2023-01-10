@@ -1,4 +1,5 @@
 import { NativeModules } from 'react-native';
+
 import { Device } from '@cardstack/utils/device';
 const AesEncryption = NativeModules.Aes;
 
@@ -35,7 +36,6 @@ export default class AesEncryptor {
       const result = await this.encryptWithKey(string, key);
       result.salt = salt;
       return JSON.stringify(result);
-      // eslint-disable-next-line no-empty
     } catch (e) {}
   };
 
@@ -45,7 +45,6 @@ export default class AesEncryptor {
       const key = await this.keyFromPassword(password, encryptedData.salt);
       const data = await this.decryptWithKey(encryptedData, key);
       return data;
-      // eslint-disable-next-line no-empty
     } catch (e) {}
   };
 }

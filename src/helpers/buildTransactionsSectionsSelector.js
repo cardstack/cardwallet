@@ -2,15 +2,18 @@ import { format } from 'date-fns';
 import { get, groupBy, isEmpty, map, toLower } from 'lodash';
 import { createElement } from 'react';
 import { createSelector } from 'reselect';
+
+import { ERC20Transaction } from '@cardstack/components';
+
 import { RequestCoinRow } from '../components/coin-row';
 import TransactionStatusTypes from '../helpers/transactionStatusTypes';
+
 import {
   thisMonthTimestamp,
   thisYearTimestamp,
   todayTimestamp,
   yesterdayTimestamp,
 } from './transactions';
-import { ERC20Transaction } from '@cardstack/components';
 
 const contactsSelector = state => state.contacts;
 const requestsSelector = state => state.requests;
@@ -23,7 +26,7 @@ const renderItemElement = renderItem =>
 const groupTransactionByDate = ({ pending, minedAt }) => {
   if (pending) return 'Pending';
 
-  const ts = parseInt(minedAt, 10) * 1000;
+  const ts = parseInt(minedAt) * 1000;
 
   if (ts > todayTimestamp) return 'Today';
   if (ts > yesterdayTimestamp) return 'Yesterday';

@@ -7,6 +7,14 @@ import React, {
   useState,
 } from 'react';
 import { Alert, Keyboard } from 'react-native';
+
+import { CenteredContainer, Icon, Text } from '@cardstack/components';
+import { appName } from '@cardstack/constants';
+import { Routes, useDismissCurrentRoute } from '@cardstack/navigation';
+import { colors } from '@cardstack/theme';
+
+import { padding } from '@rainbow-me/styles';
+
 import { Centered, Column, ColumnWithMargins } from '../components/layout';
 import { Numpad, PinValue } from '../components/numpad';
 import {
@@ -17,11 +25,6 @@ import {
 } from '../handlers/localstorage/globalSettings';
 import { useDimensions } from '../hooks';
 import { useBlockBackButton } from '../hooks/useBlockBackButton';
-import { CenteredContainer, Icon, Text } from '@cardstack/components';
-import { appName } from '@cardstack/constants';
-import { Routes, useDismissCurrentRoute } from '@cardstack/navigation';
-import { colors } from '@cardstack/theme';
-import { padding } from '@rainbow-me/styles';
 
 const layouts = {
   iconSize: 80,
@@ -59,9 +62,9 @@ const PinAuthenticationScreen = () => {
     // If that's the case, we need to update the default
     // amount of attempts left to prevent abuse
     const init = async () => {
-      const attemptsLeft = await getPinAuthAttemptsLeft();
-      if (!isNaN(attemptsLeft)) {
-        setAttemptsLeft(attemptsLeft);
+      const defaultAttemptsLeft = await getPinAuthAttemptsLeft();
+      if (!isNaN(defaultAttemptsLeft)) {
+        setAttemptsLeft(defaultAttemptsLeft);
       }
     };
 

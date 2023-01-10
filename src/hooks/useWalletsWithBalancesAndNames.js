@@ -1,5 +1,6 @@
 import { map, mapValues } from 'lodash';
 import { useMemo } from 'react';
+
 import useWallets from './useWallets';
 
 export const useWalletsWithBalancesAndNames = () => {

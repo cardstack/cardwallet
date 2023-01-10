@@ -1,7 +1,9 @@
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
-import { Column, Row } from '../layout';
+
 import { CoinIcon } from '@cardstack/components';
+
+import { Column, Row } from '../layout';
 
 // Note that `width` is always smaller than `iconSize`. We do this to force the
 // `CoinIcon`'s to overlap each other (imagine the Olympics logo).

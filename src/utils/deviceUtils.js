@@ -1,4 +1,5 @@
 import { Dimensions, Platform } from 'react-native';
+
 import { Device } from '@cardstack/utils';
 
 const { height, width } = Dimensions.get('window');

@@ -1,8 +1,11 @@
 import { nativeCurrencies } from '@cardstack/cardpay-sdk';
 import React, { Fragment } from 'react';
-import SendAssetFormField from './SendAssetFormField';
+
 import { Container } from '@cardstack/components';
+
 import { removeLeadingZeros } from '@rainbow-me/utils';
+
+import SendAssetFormField from './SendAssetFormField';
 
 export default function SendAssetFormToken({
   assetAmount,

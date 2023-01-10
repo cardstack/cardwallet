@@ -1,6 +1,8 @@
 import { isValidAddress } from 'ethereumjs-util';
 import { utils as ethersUtils } from 'ethers';
+
 import Web3WsProvider from '@cardstack/models/web3-provider';
+
 import {
   isHexStringIgnorePrefix,
   resolveUnstoppableDomain,

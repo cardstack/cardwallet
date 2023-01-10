@@ -2,13 +2,15 @@ import Clipboard from '@react-native-community/clipboard';
 import { debounce } from 'lodash';
 import { useCallback } from 'react';
 import Mailer from 'react-native-mail';
-import { Alert } from '../components/alerts';
+
 import {
   appName,
   appVersion,
   SUPPORT_EMAIL_ADDRESS,
 } from '@cardstack/constants';
 import { Device } from '@cardstack/utils';
+
+import { Alert } from '../components/alerts';
 
 const setClipboardToFeedbackEmail = () =>
   Clipboard.setString(SUPPORT_EMAIL_ADDRESS);
@@ -35,7 +37,7 @@ const handleMailError = debounce(
   250
 );
 
-function feedbackEmailOptions(appVersion) {
+function feedbackEmailOptions() {
   return {
     recipients: [SUPPORT_EMAIL_ADDRESS],
     subject: `${appName} Feedback - ${
@@ -46,7 +48,7 @@ function feedbackEmailOptions(appVersion) {
 
 export default function useSendFeedback() {
   const onSendFeedback = useCallback(
-    () => Mailer.mail(feedbackEmailOptions(appVersion), handleMailError),
+    () => Mailer.mail(feedbackEmailOptions(), handleMailError),
     []
   );
   return onSendFeedback;

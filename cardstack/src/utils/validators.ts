@@ -1,4 +1,6 @@
+// eslint-disable-next-line no-useless-escape
 const emailTester = /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
+// eslint-disable-next-line no-useless-escape
 const partialEmailTester = /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*(?!@[\.\-])(@[a-zA-Z0-9]?)?((?!(\-\.|\.\.))-*\.?[a-zA-Z0-9]?)*\.?([a-zA-Z](-?[a-zA-Z0-9])+)?$/;
 
 const isBaseEmailValid = (email: string) => {

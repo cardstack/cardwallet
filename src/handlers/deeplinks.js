@@ -1,12 +1,15 @@
 import URL from 'url-parse';
+
+import { decodeNestedURI } from '@cardstack/utils';
+
+import logger from 'logger';
+
 import store from '../redux/store';
 import {
   walletConnectOnSessionRequest,
   walletConnectRemovePendingRedirect,
   walletConnectSetPendingRedirect,
 } from '../redux/walletconnect';
-import { decodeNestedURI } from '@cardstack/utils';
-import logger from 'logger';
 
 export default function handleWcDeepLink(url) {
   if (!url || typeof url !== 'string') return;

@@ -1,7 +1,9 @@
 import React, { memo } from 'react';
+
+import { Button, Checkbox, Container, RadioList } from '@cardstack/components';
+
 import { strings } from './strings';
 import { useNetworkSection } from './useNetworkSection';
-import { Button, Checkbox, Container, RadioList } from '@cardstack/components';
 
 const NetworkSection = () => {
   const {

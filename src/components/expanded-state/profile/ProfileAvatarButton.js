@@ -1,7 +1,9 @@
 import React, { useCallback } from 'react';
-import { ContactAvatar } from '../../contacts';
+
 import { AnimatedPressable } from '@cardstack/components';
 import { avatarColor } from '@cardstack/theme';
+
+import { ContactAvatar } from '../../contacts';
 
 const ProfileAvatarButton = ({ color, marginBottom = 15, setColor, value }) => {
   const handleChangeColor = useCallback(

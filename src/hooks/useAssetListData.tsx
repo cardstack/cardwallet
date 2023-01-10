@@ -1,10 +1,5 @@
 import { orderBy } from 'lodash';
-import { BalanceCoinRowWrapper } from '../components/coin-row';
-import useAccountSettings from './useAccountSettings';
-import {
-  PinnedHiddenSectionOption,
-  usePinnedAndHiddenItemOptions,
-} from './usePinnedAndHiddenItemOptions';
+
 import {
   CollectibleRow,
   Depot,
@@ -23,6 +18,14 @@ import {
 } from '@cardstack/types';
 
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+
+import { BalanceCoinRowWrapper } from '../components/coin-row';
+
+import useAccountSettings from './useAccountSettings';
+import {
+  PinnedHiddenSectionOption,
+  usePinnedAndHiddenItemOptions,
+} from './usePinnedAndHiddenItemOptions';
 
 const usePrepaidCardSection = (
   prepaidCards: PrepaidCardType[],

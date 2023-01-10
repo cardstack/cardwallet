@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Defs, G, LinearGradient, Path, Stop } from 'react-native-svg';
+
 import Svg from '../Svg';
 
 const PasscodeIcon = ({ color: givenColor, colors, size, ...props }) => {

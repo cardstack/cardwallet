@@ -1,8 +1,10 @@
 import Clipboard from '@react-native-community/clipboard';
 import { debounce } from 'lodash';
 import Mailer from 'react-native-mail';
-import { Alert } from '../components/alerts';
+
 import { SUPPORT_EMAIL_ADDRESS } from '@cardstack/constants';
+
+import { Alert } from '../components/alerts';
 
 const setClipboardToSupportEmail = () =>
   Clipboard.setString(SUPPORT_EMAIL_ADDRESS);

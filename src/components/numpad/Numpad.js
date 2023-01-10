@@ -1,7 +1,5 @@
 import React, { useCallback } from 'react';
 
-import { useDimensions } from '../../hooks';
-
 import {
   AnimatedPressable,
   CenteredContainer,
@@ -9,6 +7,8 @@ import {
   Icon,
   Text,
 } from '@cardstack/components';
+
+import { useDimensions } from '../../hooks';
 
 const KeyboardButton = ({ children, ...props }) => {
   const { isTallPhone } = useDimensions();

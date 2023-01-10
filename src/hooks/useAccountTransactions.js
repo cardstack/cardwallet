@@ -1,27 +1,27 @@
 import { isCardPaySupportedNetwork } from '@cardstack/cardpay-sdk';
 import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+
+import { Device } from '@cardstack/utils';
+
 import { buildTransactionsSectionsSelector } from '../helpers/buildTransactionsSectionsSelector';
+
 import useContacts from './useContacts';
 import useRequests from './useRequests';
-import { Device } from '@cardstack/utils';
 
 export const NOE_PAGE = 30;
 
 export default function useAccountTransactions(initialized, isFocused) {
   const { isLoadingTransactions, network, transactions } = useSelector(
-    ({
-      data: { isLoadingTransactions, transactions },
-      settings: { network },
-    }) => ({
-      isLoadingTransactions,
-      network,
-      transactions,
+    ({ data, settings }) => ({
+      isLoadingTransactions: data.isLoadingTransactions,
+      network: settings.network,
+      transactions: data.transactions,
     })
   );
 
   const [page, setPage] = useState(1);
-  const nextPage = useCallback(() => setPage(page => page + 1), []);
+  const nextPage = useCallback(() => setPage(pg => pg + 1), []);
 
   const slicedTransaction = useMemo(
     () => transactions.slice(0, page * NOE_PAGE),

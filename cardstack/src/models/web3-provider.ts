@@ -6,7 +6,7 @@ import {
 } from '@cardstack/cardpay-sdk';
 import { ethers } from 'ethers';
 import Web3 from 'web3';
-import { WebsocketProvider } from 'web3-core';
+import type { WebsocketProvider } from 'web3-core';
 
 import { remoteFlags } from '@cardstack/services/remote-config';
 import { NetworkType } from '@cardstack/types';
@@ -134,7 +134,7 @@ const Web3WsProvider = {
     if (!current.provider?.connected && !current.isConnecting) {
       current.isConnecting = true;
 
-      current.provider = await createProvider(network);
+      current.provider = (await createProvider(network)) as any;
     }
 
     const connectedProvider = await checkProviderConnection(network);

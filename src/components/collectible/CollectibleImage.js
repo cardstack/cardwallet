@@ -1,10 +1,12 @@
 import React, { memo, useCallback, useState } from 'react';
-import { buildCollectibleName } from '../../helpers/assets';
-import { Centered } from '../layout';
-import { Monospace } from '../text';
+
 import { ImageWithCachedMetadata, ImgixImage } from '@rainbow-me/images';
 import { position } from '@rainbow-me/styles';
 import colors from '@rainbow-me/styles/colors';
+
+import { buildCollectibleName } from '../../helpers/assets';
+import { Centered } from '../layout';
+import { Monospace } from '../text';
 
 const getFallbackTextColor = bg =>
   colors.getTextColorForBackground(bg, {
@@ -19,7 +21,7 @@ const CollectibleImage = ({
   resizeMode = ImgixImage.resizeMode.cover,
 }) => {
   const [error, setError] = useState(null);
-  const handleError = useCallback(error => setError(error), [setError]);
+  const handleError = useCallback(e => setError(e), [setError]);
 
   return (
     <Centered backgroundColor={backgroundColor} style={position.coverAsObject}>

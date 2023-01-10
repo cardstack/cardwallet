@@ -2,9 +2,9 @@
 import detox from 'detox';
 import adapter from 'detox/runners/jest/adapter';
 import specReporter from 'detox/runners/jest/specReporter';
+
 import { detox as config } from '../package.json';
 
-// eslint-disable-next-line import/no-commonjs
 require('dotenv').config({ path: '.env' });
 
 jest.retryTimes(1);

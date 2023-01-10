@@ -2,15 +2,19 @@ import { useNavigation } from '@react-navigation/native';
 import { addHours, differenceInMinutes, isPast } from 'date-fns';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { RequestCoinIcon } from '../coin-icon';
-import { RowWithMargins } from '../layout';
-import { Text } from '../text';
-import CoinName from './CoinName';
-import CoinRow from './CoinRow';
+
 import { AnimatedPressable } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
 import { removeRequest } from '@cardstack/redux/requests';
+
 import colors from '@rainbow-me/styles/colors';
+
+import { RequestCoinIcon } from '../coin-icon';
+import { RowWithMargins } from '../layout';
+import { Text } from '../text';
+
+import CoinName from './CoinName';
+import CoinRow from './CoinRow';
 
 const getPercentageOfTimeElapsed = (startDate, endDate) => {
   const originalDifference = differenceInMinutes(endDate, startDate);

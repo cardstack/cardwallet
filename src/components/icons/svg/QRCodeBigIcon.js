@@ -1,8 +1,8 @@
 import React from 'react';
 import { G, Path, Rect } from 'react-native-svg';
+
 import Svg from '../Svg';
 
-// @ts-ignore
 const QRCodeBigIcon = props => {
   return (
     <Svg fill="#000" height={39} viewBox="0 0 40 39" width={40} {...props}>

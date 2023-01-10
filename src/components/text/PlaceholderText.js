@@ -1,5 +1,8 @@
 import React, { useImperativeHandle, useState } from 'react';
+
 import { Text } from '@cardstack/components';
+
+const style = { marginBottom: -27 };
 
 const PlaceholderText = (props, ref) => {
   const [value, updateValue] = useState(' ');
@@ -9,7 +12,7 @@ const PlaceholderText = (props, ref) => {
       color="grayText"
       fontSize={20}
       ref={ref}
-      style={{ marginBottom: -27 }}
+      style={style}
       textAlign="center"
       weight="bold"
       width="100%"

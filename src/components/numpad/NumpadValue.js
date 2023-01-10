@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { useDimensions } from '../../hooks';
 import { Text } from '@cardstack/components';
+
+import { useDimensions } from '../../hooks';
 
 const NumpadValue = ({ value }) => {
   const { width } = useDimensions();

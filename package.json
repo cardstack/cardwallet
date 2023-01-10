@@ -101,7 +101,6 @@
     "graphql-tag": "^2.10.3",
     "https-browserify": "0.0.1",
     "imgix-core-js": "^2.3.2",
-    "immer": "^8.0.1",
     "inherits": "^2.0.3",
     "lint-staged": "^10.0.7",
     "lodash": "^4.17.19",
@@ -184,6 +183,7 @@
     "@graphql-codegen/typescript-react-apollo": "1.17.6",
     "@graphql-codegen/typescript-resolvers": "1.17.4",
     "@lavamoat/allow-scripts": "^1.0.3",
+    "@react-native-community/eslint-config": "^3.2.0",
     "@react-navigation/devtools": "^6.0.7",
     "@storybook/addon-knobs": "^6.1.20",
     "@storybook/addon-ondevice-knobs": "^5.3.25",
@@ -212,17 +212,18 @@
     "chance": "^1.1.7",
     "detox": "^17.11.0",
     "dotenv": "^8.2.0",
-    "eslint": "^7.32.0",
-    "eslint-config-satya164": "^3.1.12",
-    "eslint-import-resolver-babel-module": "^5.1.2",
-    "eslint-plugin-echobind": "^0.2.0",
+    "eslint": "^8.31.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-import-resolver-typescript": "^3.5.2",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.11",
     "graphql": "^15.3.0",
     "husky": "^8.0.0",
     "jest": "^28.0.0",
     "jest-circus": "^26.1.0",
     "jest-expo": "^47.0.1",
     "metro-react-native-babel-preset": "^0.67.0",
-    "prettier": "^2.2.1",
     "react-devtools": "^4.24.3",
     "react-native-storybook-loader": "^2.0.2",
     "react-test-renderer": "18.1.0",
@@ -235,8 +236,6 @@
   },
   "resolutions": {
     "**/resolve": "1.10.1",
-    "**/@typescript-eslint/eslint-plugin": "4.31.0",
-    "**/@typescript-eslint/parser": "4.31.0",
     "**/promise": "8.3.0"
   },
   "detox": {
@@ -352,7 +351,7 @@
     }
   },
   "volta": {
-    "node": "14.17.0",
+    "node": "14.18.0",
     "yarn": "1.22.11"
   }
 }

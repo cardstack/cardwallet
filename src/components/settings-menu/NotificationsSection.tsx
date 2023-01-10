@@ -8,7 +8,6 @@ import {
   Switch,
 } from 'react-native';
 
-import { strings } from './strings';
 import {
   Button,
   CenteredContainer,
@@ -27,6 +26,8 @@ import {
 import { NotificationsOptionsType } from '@cardstack/types';
 
 import { Alert } from '@rainbow-me/components/alerts';
+
+import { strings } from './strings';
 
 const showPermissionAlert = () =>
   Alert({

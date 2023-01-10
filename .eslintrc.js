@@ -1,49 +1,64 @@
+const path = require('path-browserify');
+
 module.exports = {
-  extends: 'satya164',
-  plugins: ['jest'],
+  root: true,
+  extends: [
+    '@react-native-community',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
+  ],
   settings: {
-    'react': { version: '18' },
+    react: { version: 'detect' },
+    'import/ignore': [
+      'node_modules/react-native/index\\.js$',
+      'node_modules/react-native-keychain',
+    ],
     'import/resolver': {
-      'node': {
-        extensions: [
-          '.js',
-          '.ios.js',
-          '.android.js',
-          '.native.js',
-          '.ts',
-          '.tsx',
-        ],
+      node: {
+        extensions: ['.js', '.ts', '.tsx', '.png'],
+        paths: ['.'],
       },
-      'babel-module': {
-        alias: {},
+      typescript: {
+        project: path.resolve(__dirname, '.tsconfig.json'),
       },
     },
+    '@typescript-eslint/naming-convention': [
+      'warn',
+      {
+        selector: ['variable', 'function', 'parameter'],
+        format: ['camelCase'],
+      },
+    ],
   },
   globals: {
     __DEV__: true,
   },
   rules: {
-    'no-console': 0,
-    'sort-imports': [
+    curly: [2, 'multi-line'],
+    radix: ['error', 'as-needed'],
+    'comma-dangle': [
       'error',
       {
-        ignoreCase: true,
-        ignoreDeclarationSort: true,
-        ignoreMemberSort: false,
-        memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
+        arrays: 'always-multiline',
+        objects: 'always-multiline',
+        imports: 'always-multiline',
+        exports: 'always-multiline',
+        functions: 'never',
       },
     ],
-    'jest/no-truthy-falsy': 0,
-    'react/jsx-sort-props': [
-      'error',
-      {
-        ignoreCase: false,
-      },
-    ],
-    'react-native/no-inline-styles': 0,
-    'import/named': 0,
+    'react/jsx-curly-brace-presence': ['error', 'never'],
+    '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/no-shadow': ['error'],
+    // To be re-enabled
     'import/no-named-as-default': 0,
-    '@typescript-eslint/no-use-before-define': 0,
+    '@typescript-eslint/no-var-requires': 0,
+    '@typescript-eslint/no-explicit-any': 0,
+    'react-native/no-inline-styles': 0,
+    'react/no-unstable-nested-components': 0,
+    //
+    'import/no-named-as-default-member': 0,
     'import/order': [
       'error',
       {
@@ -51,31 +66,29 @@ module.exports = {
           order: 'asc',
           caseInsensitive: false,
         },
-        groups: ['builtin', 'external', 'parent', 'sibling', 'index'],
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          'parent',
+          'sibling',
+          'index',
+        ],
         pathGroups: [
           {
-            pattern: '../../../../**',
-            group: 'parent',
-            position: 'before',
+            pattern: '@cardstack/**',
+            group: 'external',
+            position: 'after',
           },
           {
-            pattern: '../../../**',
-            group: 'parent',
-            position: 'before',
-          },
-          {
-            pattern: '../../**',
-            group: 'parent',
-            position: 'before',
+            pattern: '@/**',
+            group: 'external',
+            position: 'after',
           },
         ],
+        'newlines-between': 'always',
       },
     ],
-    'react/display-name': 2,
-    'react/no-array-index-key': 0,
-    'jest/no-test-prefixes': 0,
-    'jest/no-disabled-tests': 0,
-    'babel/no-unused-expressions': 'off',
   },
-  env: { browser: true, node: true }, // browser needs to be true so it finds btoa and fetch polyfills
+  env: { browser: true, node: true, jest: true }, // browser needs to be true so it finds btoa and fetch polyfills
 };

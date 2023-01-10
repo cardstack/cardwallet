@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { captureException } from '@sentry/react-native';
-
 import { mnemonicToSeed } from 'bip39';
 import {
   addHexPrefix,
@@ -16,10 +15,10 @@ import URL from 'url-parse';
 
 import { NetworkType } from '@cardstack/types';
 import { Device, normalizeTxHash } from '@cardstack/utils';
-import WalletTypes from '@rainbow-me/helpers/walletTypes';
-import { DEFAULT_HD_PATH, WalletLibraryType } from '@rainbow-me/model/wallet';
-import store from '@rainbow-me/redux/store';
 
+import WalletTypes from '@rainbow-me/helpers/walletTypes';
+import { DEFAULT_HD_PATH, walletLibraryType } from '@rainbow-me/model/wallet';
+import store from '@rainbow-me/redux/store';
 import logger from 'logger';
 
 const { RNBip39 } = NativeModules;
@@ -168,7 +167,7 @@ const deriveAccountFromMnemonic = async (mnemonic, index = 0) => {
     root,
     type: WalletTypes.mnemonic,
     wallet,
-    walletType: WalletLibraryType.bip39,
+    walletType: walletLibraryType.bip39,
   };
 };
 
@@ -180,7 +179,7 @@ const deriveAccountFromPrivateKey = privateKey => {
     root: null,
     type: WalletTypes.privateKey,
     wallet: ethersWallet,
-    walletType: WalletLibraryType.ethers,
+    walletType: walletLibraryType.ethers,
   };
 };
 

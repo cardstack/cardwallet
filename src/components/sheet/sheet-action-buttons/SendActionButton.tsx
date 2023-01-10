@@ -1,10 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
-//Rb side doesn't know how to handle globals
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { OptionalUnion } from 'globals';
 import React, { useCallback, useMemo } from 'react';
-
 import { useDispatch } from 'react-redux';
+
 import { Button, IconProps } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
 import {
@@ -13,6 +11,7 @@ import {
   CollectibleType,
   TokenType,
 } from '@cardstack/types';
+
 import { contactsLoadState } from '@rainbow-me/redux/contacts';
 
 const iconProps: IconProps = {

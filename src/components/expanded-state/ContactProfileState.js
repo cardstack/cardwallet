@@ -1,10 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { memo, useCallback, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { useAccountSettings, useContacts } from '../../hooks';
-import Divider from '../Divider';
-import { showDeleteContactActionSheet } from '../contacts';
-import { ProfileAvatarButton, ProfileModal, ProfileNameInput } from './profile';
+
 import {
   AnimatedPressable,
   CenteredContainer,
@@ -13,11 +10,18 @@ import {
 } from '@cardstack/components';
 import { dismissKeyboardOnAndroid } from '@cardstack/navigation';
 import theme, { avatarColor } from '@cardstack/theme';
+
 import { padding } from '@rainbow-me/styles';
+
+import { useAccountSettings, useContacts } from '../../hooks';
+import Divider from '../Divider';
+import { showDeleteContactActionSheet } from '../contacts';
+
+import { ProfileAvatarButton, ProfileModal, ProfileNameInput } from './profile';
 
 const WalletProfileDivider = styled(Divider).attrs(() => ({
   borderRadius: 1,
-  color: theme.colors['borderGray'],
+  color: theme.colors.borderGray,
   inset: false,
 }))``;
 

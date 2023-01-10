@@ -2,12 +2,14 @@ import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 import Animated from 'react-native-reanimated';
 
-import { Icon } from '../icons';
-import { Centered, InnerBorder } from '../layout';
 import { AnimatedPressable, Container } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
+
 import { Text } from '@rainbow-me/components/text';
 import { position } from '@rainbow-me/styles';
+
+import { Icon } from '../icons';
+import { Centered, InnerBorder } from '../layout';
 
 const AnimatedCenter = Animated.createAnimatedComponent(Centered);
 

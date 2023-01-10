@@ -1,4 +1,3 @@
-import produce from 'immer';
 import {
   getImageMetadata,
   saveImageMetadata,
@@ -37,13 +36,22 @@ const INITIAL_STATE = {
   imageMetadata: {},
 };
 
-export default (state = INITIAL_STATE, action) =>
-  produce(state, draft => {
-    if (action.type === LOAD) {
-      draft.imageMetadata = action.payload;
-    } else if (action.type === MERGE) {
-      draft.imageMetadata[action.id] = action.metadata;
-    } else if (action.type === CLEAR) {
+export default (state = INITIAL_STATE, action) => {
+  switch (action.type) {
+    case LOAD:
+      return {
+        ...state,
+        imageMetadata: action.payload,
+      };
+    case MERGE:
+      return {
+        ...state,
+        imageMetadata: {
+          ...state.imageMetadata,
+          [action.id]: action.metadata,
+        },
+      };
+    default:
       return INITIAL_STATE;
-    }
-  });
+  }
+};

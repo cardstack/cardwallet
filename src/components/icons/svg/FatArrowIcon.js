@@ -1,6 +1,7 @@
 import React from 'react';
 import Animated from 'react-native-reanimated';
 import { Path } from 'react-native-svg';
+
 import Svg from '../Svg';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);

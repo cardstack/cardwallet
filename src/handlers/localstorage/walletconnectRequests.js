@@ -1,5 +1,6 @@
 import { differenceInMinutes } from 'date-fns';
 import { pickBy } from 'lodash';
+
 import { getAccountLocal, saveAccountLocal } from './common';
 
 const REQUESTS = 'requests';

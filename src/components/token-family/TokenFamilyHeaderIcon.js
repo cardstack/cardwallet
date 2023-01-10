@@ -1,11 +1,14 @@
 import React, { useMemo } from 'react';
 import { FallbackIcon } from 'react-coin-icon';
-import { initials } from '../../utils';
+
 import { Device } from '@cardstack/utils';
+
 import { ImageWithCachedMetadata } from '@rainbow-me/images';
 import { borders } from '@rainbow-me/styles';
 import colors from '@rainbow-me/styles/colors';
 import ShadowStack from 'react-native-shadow-stack';
+
+import { initials } from '../../utils';
 
 const shadowsFactory = () => [
   [0, 4, Device.isAndroid ? 1 : 6, colors.shadow, 0.04],

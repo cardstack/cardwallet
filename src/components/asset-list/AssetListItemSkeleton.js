@@ -9,14 +9,17 @@ import Animated, {
   Value,
 } from 'react-native-reanimated';
 import styled from 'styled-components';
+
+import { colors } from '@cardstack/theme';
+import { Device } from '@cardstack/utils';
+
+import { padding, position } from '@rainbow-me/styles';
+import rbColors from '@rainbow-me/styles/colors';
+
 import { deviceUtils } from '../../utils';
 import { interpolate } from '../animations';
 import { CoinRowHeight } from '../coin-row';
 import { ColumnWithMargins, Row, RowWithMargins } from '../layout';
-import { colors } from '@cardstack/theme';
-import { Device } from '@cardstack/utils';
-import { padding, position } from '@rainbow-me/styles';
-import rbColors from '@rainbow-me/styles/colors';
 
 const { block, cond, set, startClock, stopClock } = Animated;
 
@@ -106,12 +109,12 @@ class AssetListItemSkeleton extends PureComponent {
     this.props.animated && Device.isIOS ? this.startShimmerLoop() : () => null;
 
   renderShimmer() {
-    const { colors } = this.props;
+    const { colors: colorsProps } = this.props;
     const gradientColors = [
-      colors.skeleton,
-      colors.shimmer,
-      colors.skeleton,
-      colors.skeleton,
+      colorsProps.skeleton,
+      colorsProps.shimmer,
+      colorsProps.skeleton,
+      colorsProps.skeleton,
     ];
 
     const gradientSteps = [0, 0.2, 0.4, 1];

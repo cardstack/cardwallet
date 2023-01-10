@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+
 import { Container } from '@cardstack/components';
+
 import { shadow } from '@rainbow-me/styles';
-import colors from '@rainbow-me/styles/colors';
+import rnColors from '@rainbow-me/styles/colors';
 
 const FloatingPanelBorderRadius = 18;
 
@@ -10,9 +12,6 @@ export const FloatingPanelPadding = {
   x: 19,
   y: 0,
 };
-
-const FloatingPanelShadow = colors =>
-  shadow.build(0, 10, 50, colors.shadow, 0.6);
 
 const FloatingPanel = ({
   color,
@@ -28,7 +27,9 @@ const FloatingPanel = ({
       {...props}
       backgroundColor={color || 'white'}
       borderRadius={radius}
-      hideShadow={hideShadow ? '' : FloatingPanelShadow(colors)}
+      hideShadow={
+        hideShadow ? '' : shadow.build(0, 10, 50, rnColors.shadow, 0.6)
+      }
       minHeight={height}
       overflow={overflow}
       testID={testID + '-container'}

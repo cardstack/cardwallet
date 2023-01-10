@@ -1,12 +1,14 @@
 import { utils as ethersUtils } from 'ethers';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { checkIsValidAddressOrDomain } from '../../helpers/validators';
-import { Row } from '../layout';
 import { Container, Input, Text, Touchable } from '@cardstack/components';
 import { Device } from '@cardstack/utils';
+
 import { useClipboard } from '@rainbow-me/hooks';
 import { abbreviations, addressUtils } from '@rainbow-me/utils';
+
+import { checkIsValidAddressOrDomain } from '../../helpers/validators';
+import { Row } from '../layout';
 
 const formatValue = value =>
   ethersUtils.isHexString(value) && value.length === addressUtils.maxLength
@@ -27,8 +29,8 @@ const AddressField = (
     }
   }, [address, clipboard, setClipboard]);
 
-  const validateAddress = useCallback(async address => {
-    const newIsValid = await checkIsValidAddressOrDomain(address);
+  const validateAddress = useCallback(async possibleAddress => {
+    const newIsValid = await checkIsValidAddressOrDomain(possibleAddress);
     return setIsValid(newIsValid);
   }, []);
 

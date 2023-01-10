@@ -1,8 +1,10 @@
 import { isSupportedChain } from '@cardstack/cardpay-sdk';
-import { getGlobal, removeLocal, saveGlobal } from './common';
 
 import { NetworkType } from '@cardstack/types';
+
 import { logger } from 'logger';
+
+import { getGlobal, removeLocal, saveGlobal } from './common';
 
 const IMAGE_METADATA = 'imageMetadata';
 const NATIVE_CURRENCY = 'nativeCurrency';

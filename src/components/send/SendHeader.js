@@ -2,16 +2,19 @@ import { useNavigation } from '@react-navigation/native';
 import { get, isEmpty, isNumber, toLower } from 'lodash';
 import React, { Fragment, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
-import Divider from '../Divider';
-import { AddContactButton, PasteAddressButton } from '../buttons';
-import { AddressField } from '../fields';
-import { Row } from '../layout';
+
 import { Text } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
+
 import { useClipboard, useDimensions } from '@rainbow-me/hooks';
 import { padding } from '@rainbow-me/styles';
 import colors, { getRandomColor } from '@rainbow-me/styles/colors';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
+
+import Divider from '../Divider';
+import { AddContactButton, PasteAddressButton } from '../buttons';
+import { AddressField } from '../fields';
+import { Row } from '../layout';
 
 const AddressInputContainer = styled(Row).attrs({ align: 'center' })`
   ${({ isSmallPhone }) => (isSmallPhone ? padding(12, 15) : padding(19, 15))};
@@ -80,8 +83,8 @@ export default function SendHeader({
               destructiveButtonIndex: 0,
               options: ['Delete Contact', 'Cancel'],
             },
-            async buttonIndex => {
-              if (buttonIndex === 0) {
+            async innerButtonIndex => {
+              if (innerButtonIndex === 0) {
                 removeContact(recipient);
               }
             }

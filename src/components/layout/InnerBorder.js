@@ -1,5 +1,7 @@
 import styled from 'styled-components';
+
 import { colors } from '@cardstack/theme';
+
 import { position } from '@rainbow-me/styles';
 
 const InnerBorder = styled.View.withConfig({

@@ -1,8 +1,8 @@
 import { keyBy, map, toLower } from 'lodash';
 
-import RAINBOW_TOKEN_LIST_DATA from './rainbow-token-list.json';
-
 import { RainbowToken } from '@rainbow-me/entities';
+
+import RAINBOW_TOKEN_LIST_DATA from './rainbow-token-list.json';
 
 const tokenList: RainbowToken[] = map(RAINBOW_TOKEN_LIST_DATA.tokens, token => {
   const { address: rawAddress, decimals, name, symbol, extensions } = token;

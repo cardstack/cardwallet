@@ -7,10 +7,12 @@ import React, {
   useState,
 } from 'react';
 
+import { Button, Container, Text } from '@cardstack/components';
+
+import { useDimensions } from '@rainbow-me/hooks';
+
 import ExchangeInput from '../exchange/ExchangeInput';
 import { Row } from '../layout';
-import { Button, Container, Text } from '@cardstack/components';
-import { useDimensions } from '@rainbow-me/hooks';
 
 const defaultFormatter = string => string;
 
@@ -67,11 +69,11 @@ const UnderlineField = (
 
   const handleChangeText = useCallback(
     text => {
-      const formattedValue = format(text);
+      const formattedInput = format(text);
 
-      if (value !== formattedValue) {
-        setValue(formattedValue);
-        onChange?.(formattedValue);
+      if (value !== formattedInput) {
+        setValue(formattedInput);
+        onChange?.(formattedInput);
       }
     },
     [format, onChange, value]

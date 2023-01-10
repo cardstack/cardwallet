@@ -1,4 +1,5 @@
 import { omit, toLower } from 'lodash';
+
 import { getContacts, saveContacts } from '../handlers/localstorage/contacts';
 
 // -- Constants --------------------------------------- //
@@ -14,7 +15,6 @@ export const contactsLoadState = () => async dispatch => {
       payload: contacts,
       type: CONTACTS_LOAD,
     });
-    // eslint-disable-next-line no-empty
   } catch (error) {}
 };
 

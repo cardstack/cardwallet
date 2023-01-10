@@ -1,11 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 import { ScrollView } from 'react-native';
-import { ListFooter, ListItem } from '../list';
+
 import { deleteAllCloudBackups } from '@cardstack/models/rn-cloud';
 import { restartApp } from '@cardstack/utils';
+
 import { resetWallet } from '@rainbow-me/model/wallet';
 import { clearImageMetadataCache } from '@rainbow-me/redux/imageMetadata';
+
+import { ListFooter, ListItem } from '../list';
 
 const DeveloperSettings = () => (
   <ScrollView testID="developer-settings-modal">
