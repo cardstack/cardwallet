@@ -5,14 +5,6 @@ declare module 'react-native-dotenv' {
   export const MERCHANT_ID: string;
   export const MERCHANT_ID_TEST: string;
   export const CARDWALLET_MASTER_KEY: string;
-  export const WYRE_ACCOUNT_ID: string;
-  export const WYRE_ACCOUNT_ID_TEST: string;
-  export const WYRE_API_KEY: string;
-  export const WYRE_API_KEY_TEST: string;
-  export const WYRE_ENDPOINT: string;
-  export const WYRE_ENDPOINT_TEST: string;
-  export const WYRE_SECRET_KEY: string;
-  export const WYRE_SECRET_KEY_TEST: string;
   export const HUB_URL: string;
   export const HUB_URL_STAGING: string;
   export const STATUS_API_BASE_URL: string;
