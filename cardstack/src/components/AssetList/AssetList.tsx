@@ -25,7 +25,6 @@ export const AssetList = () => {
     sections,
     isFetchingSafes,
     isLoading,
-    goToBuyPrepaidCard,
     onRefresh,
     isRefetchingEoaAssets,
     networkName,
@@ -33,13 +32,8 @@ export const AssetList = () => {
   } = useAssetList({ sectionListRef });
 
   const renderSectionHeader = useCallback(
-    ({ section }) => (
-      <AssetSectionHeader
-        section={section}
-        onBuyCardPress={goToBuyPrepaidCard}
-      />
-    ),
-    [goToBuyPrepaidCard]
+    ({ section }) => <AssetSectionHeader section={section} />,
+    []
   );
 
   const renderItem = useCallback(

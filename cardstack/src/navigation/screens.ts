@@ -3,7 +3,6 @@ import { StackNavigationOptions } from '@react-navigation/stack';
 import { StackNavigationEventMap } from '@react-navigation/stack/lib/typescript/src/types';
 
 import {
-  BuyPrepaidCard,
   CurrencySelection,
   DepotScreen,
   ErrorFallbackScreen,
@@ -30,7 +29,6 @@ import {
   TransactionConfirmationSheet,
   ColorPickerModal,
   RequestPrepaidCardScreen,
-  SupportAndFeesSheet,
   AvailableBalanceSheet,
   TokenSheet,
   WyreAuthenticationWidget,
@@ -71,10 +69,6 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   PREPAID_CARD_MODAL: {
     component: PrepaidCardModal,
     options: { ...sheetPreset(), gestureEnabled: Device.isIOS },
-  },
-  BUY_PREPAID_CARD: {
-    component: BuyPrepaidCard,
-    options: sheetPreset(),
   },
   SEND_FLOW_DEPOT: {
     component: SendSheetDepot,
@@ -179,10 +173,6 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   COLOR_PICKER_MODAL: {
     component: ColorPickerModal,
     options: sheetPreset({ backgroundOpacity: 'half' }),
-  },
-  SUPPORT_AND_FEES: {
-    component: SupportAndFeesSheet,
-    options: sheetPreset(),
   },
   AVAILABLE_BALANCE_SHEET: {
     component: AvailableBalanceSheet,

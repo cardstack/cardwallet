@@ -8,5 +8,4 @@ export * from './merchant/merchant-api';
 export * from './prepaid-cards/prepaid-card-api';
 export * from './opensea-api';
 export * from './hub/endpoints/hub-profile-api';
-export * from './hub/endpoints/hub-wyre-api';
 export * from './hub/gas-prices/gas-prices-api';

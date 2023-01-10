@@ -1,4 +1,3 @@
-export { default as BuyPrepaidCard } from './BuyPrepaidCard/BuyPrepaidCard';
 export { default as DepotScreen } from './DepotScreen';
 export { default as MerchantScreen } from './MerchantScreen/MerchantScreen';
 export { default as TransactionConfirmation } from './TransactionConfirmation';
@@ -34,7 +33,6 @@ export { default as TransactionConfirmationSheet } from './sheets/TransactionCon
 export { default as RequestPrepaidCardScreen } from './RequestPrepaidCardScreen/RequestPrepaidCardScreen';
 export { default as PinScreen } from './PinScreen/PinScreen';
 export { default as UnlockScreen } from './UnlockScreen/UnlockScreen';
-export { default as SupportAndFeesSheet } from './sheets/SupportAndFeesSheet/SupportAndFeesSheet';
 export { default as AvailableBalanceSheet } from './sheets/AvailableBalanceSheet/AvailableBalanceSheet';
 export { default as TokenSheet } from './sheets/TokenSheet/TokenSheet';
 export { default as SeedPhraseBackup } from './SeedPhraseBackup/SeedPhraseBackup';

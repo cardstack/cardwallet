@@ -208,7 +208,7 @@ const safesMappedByType = {
         '0xEba6d63dDf30174B87272D5cF566D63547e60119',
       ],
       cardCustomization: {
-        issuerName: 'Wyre',
+        issuerName: 'Cardstack',
         background: '#0069F9',
         patternColor: 'black',
         textColor: 'white',
@@ -245,7 +245,7 @@ const safesMappedByType = {
         '0xEba6d63dDf30174B87272D5cF566D63547e60119',
       ],
       cardCustomization: {
-        issuerName: 'Wyre',
+        issuerName: 'Cardstack',
         background: '#0069F9',
         patternColor: 'black',
         textColor: 'white',
