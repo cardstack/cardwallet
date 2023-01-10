@@ -30,7 +30,12 @@ const timeout = {
 
 const timeoutRacer = (ms = timeout.defaultMs) =>
   new Promise(
-    (_, reject) => (timeout.id = setTimeout(reject, ms, timeout.error))
+    (_, reject) =>
+      (timeout.id = (setTimeout(
+        reject,
+        ms,
+        timeout.error
+      ) as unknown) as number)
   );
 
 export const queryPromiseWrapper = async <TResult, TArgs>(

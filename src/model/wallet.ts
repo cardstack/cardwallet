@@ -36,7 +36,6 @@ import {
   deletePinAuthAttemptsData,
 } from '@rainbow-me/handlers/localstorage/globalSettings';
 import store, { persistor } from '@rainbow-me/redux/store';
-import { WalletLibraryType } from '@rainbow-me/utils/ethereumUtils';
 import logger from 'logger';
 
 import AesEncryptor from '../handlers/aesEncryption';
@@ -106,7 +105,7 @@ export interface EthereumWalletFromSeed {
   isHDWallet: boolean;
   wallet: LibWallet;
   type: EthereumWalletType;
-  walletType: WalletLibraryType;
+  walletType: string;
   root: EthereumHDKey;
   address: EthereumAddress;
 }
@@ -455,6 +454,11 @@ const addAccountsWithTxHistory = async (
   }
 };
 
+export const walletLibraryType = {
+  ethers: 'ethers',
+  bip39: 'bip39',
+} as const;
+
 export interface CreateImportParams {
   seed?: string;
   color?: number;
@@ -615,7 +619,7 @@ export const createOrImportWallet = async ({
     if (walletResult && walletAddress) {
       // bip39 are derived from mnemioc
       const createdWallet =
-        walletType === WalletLibraryType.bip39
+        walletType === walletLibraryType.bip39
           ? new ethers.Wallet(privateKey)
           : null;
 
@@ -673,7 +677,7 @@ export const getSelectedWallet = async (): Promise<null | RainbowSelectedWalletD
   try {
     const selectedWalletData = await keychain.loadObject(selectedWalletKey);
     if (selectedWalletData) {
-      return selectedWalletData as RainbowSelectedWalletData;
+      return (selectedWalletData as unknown) as RainbowSelectedWalletData;
     }
     return null;
   } catch (error) {

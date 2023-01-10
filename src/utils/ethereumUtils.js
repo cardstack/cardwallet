@@ -17,7 +17,7 @@ import { NetworkType } from '@cardstack/types';
 import { Device, normalizeTxHash } from '@cardstack/utils';
 
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
-import { DEFAULT_HD_PATH, WalletLibraryType } from '@rainbow-me/model/wallet';
+import { DEFAULT_HD_PATH, walletLibraryType } from '@rainbow-me/model/wallet';
 import store from '@rainbow-me/redux/store';
 import logger from 'logger';
 
@@ -149,11 +149,6 @@ const checkIfUrlIsAScam = async url => {
   }
 };
 
-export const WalletLibraryType = {
-  ethers: 'ethers',
-  bip39: 'bip39',
-};
-
 const deriveAccountFromMnemonic = async (mnemonic, index = 0) => {
   let seed;
   if (Device.isIOS) {
@@ -172,7 +167,7 @@ const deriveAccountFromMnemonic = async (mnemonic, index = 0) => {
     root,
     type: WalletTypes.mnemonic,
     wallet,
-    walletType: WalletLibraryType.bip39,
+    walletType: walletLibraryType.bip39,
   };
 };
 
@@ -184,7 +179,7 @@ const deriveAccountFromPrivateKey = privateKey => {
     root: null,
     type: WalletTypes.privateKey,
     wallet: ethersWallet,
-    walletType: WalletLibraryType.ethers,
+    walletType: walletLibraryType.ethers,
   };
 };
 

@@ -2,7 +2,6 @@ import * as rnKeychain from 'react-native-keychain';
 
 import { Routes } from '@cardstack/navigation';
 
-// @ts-expect-error ts doesn't know about
 declare let __DEV__: boolean;
 declare let akd: boolean;
 
@@ -41,6 +40,7 @@ export type StackParamsList = Record<RouteNames, any>;
 
 declare global {
   namespace ReactNavigation {
-    type RootParamList = StackParamsList;
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface RootParamList extends StackParamsList {}
   }
 }
