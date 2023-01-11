@@ -27,5 +27,5 @@ export const defaultErrorAlert = {
 
 export const cardSpaceSuffix = 'card.xyz';
 export const cardSpaceDomain = `.${cardSpaceSuffix}`;
-export const appName = 'Cardstack Wallet';
+export const appName = 'Card Pay Wallet';
 export const appVersion = `${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`;
