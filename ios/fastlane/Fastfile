@@ -35,6 +35,12 @@ platform :ios do
       scheme: "Rainbow",
       configuration: "Release"
     )
+
+    # As build was successful, set an appropriate git tag
+    set_git_tag(build_number: options[:build_number])
+
+    # Push new tag
+    push_to_git_remote()
   end
 
   ########################################################################
@@ -76,6 +82,12 @@ platform :ios do
       username: "hassan@cardstack.com",
       team_id: "QS5AFH4668"
     )
+
+    # As build was successful, set an appropriate git tag
+    set_git_tag(build_number: options[:build_number])
+
+    # Push new tag
+    push_to_git_remote()
   end
 
   ########################################################################
@@ -112,6 +124,12 @@ platform :ios do
       username: "hassan@cardstack.com",
       team_id: "QS5AFH4668"
     )
+
+    # As build was successful, set an appropriate git tag
+    set_git_tag(build_number: options[:build_number])
+
+    # Push new tag
+    push_to_git_remote()
   end
 
   desc "Version bump"
@@ -122,6 +140,18 @@ platform :ios do
         target: 'Rainbow'
       )
     end
+  end
+
+  desc "Set Git Tag"
+  lane :set_git_tag do |options|
+    version = get_version_number_from_xcodeproj()
+
+    # Create a local tag with the new version
+    add_git_tag(
+      tag: "v#{version}-ios-#{options[:build_number]}",
+      prefix: "v",
+      build_number: version
+    )
   end
 
   error do |lane, exception|
