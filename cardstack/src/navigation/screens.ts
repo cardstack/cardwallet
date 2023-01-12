@@ -31,7 +31,6 @@ import {
   RequestPrepaidCardScreen,
   AvailableBalanceSheet,
   TokenSheet,
-  WyreAuthenticationWidget,
 } from '@cardstack/screens';
 import {
   RewardWithdrawConfirmationScreen,
@@ -181,9 +180,6 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   TOKEN_SHEET: {
     component: TokenSheet,
     options: sheetPreset({ backgroundOpacity: 'half' }),
-  },
-  WYRE_AUTH_WIDGET: {
-    component: WyreAuthenticationWidget,
   },
 };
 

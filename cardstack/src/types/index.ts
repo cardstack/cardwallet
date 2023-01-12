@@ -5,7 +5,6 @@ export * from './AssetType';
 export * from './DepotType';
 export * from './MerchantSafeType';
 export * from './CollectibleType';
-export * from './WyreTypes';
 export * from './transaction-confirmation-types';
 export * from './transaction-types';
 export * from './NoticeType';
