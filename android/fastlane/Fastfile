@@ -29,7 +29,13 @@ platform :android do
       'versionCode' => nextVersionCode,
     })
 
-    upload_to_play_store(track: 'internal', version_name: nextVersionCode.to_s)
+    # upload_to_play_store(track: 'internal', version_name: nextVersionCode.to_s)
+
+    # As build was successful, set an appropriate git tag
+    set_git_tag(build_number: nextVersionCode)
+
+    # Push new tag
+    # push_to_git_remote()
   end
 
   lane :alpha do
@@ -46,6 +52,22 @@ platform :android do
   lane :production do
     gradle(task: "clean assembleRelease")
     upload_to_play_store
+  end
+
+  desc "Set Git Tag"
+  lane :set_git_tag do |options|
+    APK_LOCATION = "#{lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]}"   
+    version = get_android_version(apk: APK_LOCATION)
+
+    # Create a local tag with the new version
+    add_git_tag(
+      tag: "v#{version}-ios-#{options[:build_number]}",
+      prefix: "v",
+      build_number: version
+    )
+
+    # Push new tag
+    # push_to_git_remote()
   end
 
 end
