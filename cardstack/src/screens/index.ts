@@ -38,7 +38,6 @@ export { default as TokenSheet } from './sheets/TokenSheet/TokenSheet';
 export { default as SeedPhraseBackup } from './SeedPhraseBackup/SeedPhraseBackup';
 export { default as SecurityScreen } from './SecurityScreen/SecurityScreen';
 export * from './Profile';
-export { default as WyreAuthenticationWidget } from './WyreAuthenticationWidget';
 export * from './Backup';
 export { default as MessageOverlayScreen } from './MessageOverlayScreen';
 export { default as WalletAddressScreen } from './WalletAddressScreen/WalletAddressScreen';

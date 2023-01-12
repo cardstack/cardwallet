@@ -1,7 +1,7 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { KebabToCamelCaseKeys } from 'globals';
 
-import { CustodialWalletAttrs, IAPProviderType } from '@cardstack/types';
+import { IAPProviderType } from '@cardstack/types';
 
 export interface HubBaseResponse<Attrs> {
   id: string;
@@ -14,8 +14,6 @@ export interface BaseQueryExtraOptions {
   authenticate?: boolean;
   appendFCMToken?: boolean;
 }
-
-export type GetCustodialWalletQueryResult = KebabToCamelCaseKeys<CustodialWalletAttrs>;
 
 export interface RequestCardDropQueryParams {
   email: string;
