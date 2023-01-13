@@ -94,7 +94,7 @@ const usePayMerchantRequest = ({
     dismissLoadingOverlay();
 
     // Navigate to Transaction screen
-    navigate(Routes.HOME_SCREEN);
+    navigate(Routes.HOME_SCREEN, { forceRefresh: true });
 
     // Wait goBack action to navigate
     InteractionManager.runAfterInteractions(() => {

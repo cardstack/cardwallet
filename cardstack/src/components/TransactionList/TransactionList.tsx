@@ -1,5 +1,5 @@
-import { useFocusEffect } from '@react-navigation/native';
-import React, { memo, useCallback, useMemo } from 'react';
+import { useRoute } from '@react-navigation/native';
+import React, { memo, useCallback, useEffect } from 'react';
 import { RefreshControl, SectionList, ActivityIndicator } from 'react-native';
 
 import {
@@ -9,20 +9,24 @@ import {
   TransactionItem,
   TransactionItemProps,
 } from '@cardstack/components';
-import { useFullTransactionList } from '@cardstack/hooks';
-
-import { useAccountSettings } from '@rainbow-me/hooks';
+import { useCardPayCompatible } from '@cardstack/hooks';
+import { RouteType } from '@cardstack/navigation/types';
 
 import { TransactionListLoading } from './TransactionListLoading';
 import { strings } from './strings';
+
+const NUM_OF_ITEMS_PER_VIEW = 5;
 
 interface TransactionListProps {
   Header?: JSX.Element;
   accountAddress: string;
 }
+interface NavParams {
+  forceRefresh?: boolean;
+}
 
 export const TransactionList = memo(({ Header }: TransactionListProps) => {
-  const { isOnCardPayNetwork, network } = useAccountSettings();
+  const { params } = useRoute<RouteType<NavParams>>();
 
   const {
     onEndReached,
@@ -31,7 +35,19 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
     sections,
     refetch,
     refetchLoading,
-  } = useFullTransactionList();
+  } = useCardPayCompatible();
+
+  const onRefresh = useCallback(() => {
+    if (!isLoadingTransactions || !refetchLoading) {
+      refetch?.();
+    }
+  }, [isLoadingTransactions, refetch, refetchLoading]);
+
+  useEffect(() => {
+    if (params?.forceRefresh) {
+      onRefresh();
+    }
+  }, [params, onRefresh]);
 
   const renderSectionHeader = useCallback(
     ({ section: { title } }: { section: { title: string } }) => (
@@ -48,24 +64,15 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
     []
   );
 
-  const onRefresh = useCallback(() => {
-    refetch && refetch();
-  }, [refetch]);
-
-  useFocusEffect(onRefresh);
-
   const renderItem = useCallback(
     ({ item }: TransactionItemProps) => <TransactionItem item={item} />,
     []
   );
 
-  const title = useMemo(
-    () =>
-      isOnCardPayNetwork
-        ? strings.emptyComponent
-        : strings.nonCardPayNetwork(network),
-    [isOnCardPayNetwork, network]
-  );
+  const keyExtractor = useCallback(({ item }, index) => {
+    const key = item?.transactionHash || item?.hash || item?.type;
+    return `${key}-${index}`;
+  }, []);
 
   return (
     <SectionList
@@ -74,7 +81,11 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
           <TransactionListLoading />
         ) : (
           <Container paddingTop={4}>
-            <ListEmptyComponent text={title} textColor="blueText" hasRoundBox />
+            <ListEmptyComponent
+              text={strings.emptyComponent}
+              textColor="blueText"
+              hasRoundBox
+            />
           </Container>
         )
       }
@@ -94,6 +105,10 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
       }
       onEndReached={onEndReached}
       onEndReachedThreshold={1}
+      keyExtractor={keyExtractor}
+      maxToRenderPerBatch={NUM_OF_ITEMS_PER_VIEW}
+      initialNumToRender={NUM_OF_ITEMS_PER_VIEW}
+      removeClippedSubviews
     />
   );
 });
