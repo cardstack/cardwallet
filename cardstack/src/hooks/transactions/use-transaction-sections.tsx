@@ -31,7 +31,7 @@ interface UseTransactionSectionsProps {
 }
 
 export const useTransactionSections = ({
-  transactions,
+  transactions = [],
   isEmpty,
   transactionsCount,
   networkStatus,
@@ -48,7 +48,7 @@ export const useTransactionSections = ({
   } = useAccountSettings();
 
   const [sections, setSections] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [isMappingTx, setIsMappingTx] = useState(false);
 
   const {
     prepaidCards,
@@ -92,14 +92,20 @@ export const useTransactionSections = ({
     isNewtx ||
     isPagination ||
     isMerchantTransaction ||
-    didNativeCurrencyChanged;
+    didNativeCurrencyChanged ||
+    !sections.length;
+
+  const isLoading =
+    networkStatus === NetworkStatus.loading || isMappingTx || isLoadingSafes;
 
   useEffect(() => {
     const setSectionsData = async () => {
-      if (isLoadingSafes || !transactions) return;
+      if (isLoading || isEmpty) {
+        return;
+      }
 
       if (shouldUpdate) {
-        setLoading(true);
+        setIsMappingTx(true);
 
         try {
           const merchantSafeAddresses = merchantSafes?.map(
@@ -147,31 +153,26 @@ export const useTransactionSections = ({
         } catch (e) {
           logger.sentry('Error setting transaction sections data', e);
         }
-
-        setLoading(false);
-      } else if (isEmpty) {
-        setSections([]);
       }
+
+      setIsMappingTx(false);
     };
 
     setSectionsData();
   }, [
-    nativeCurrency,
     accountAddress,
-    transactions,
+    depot?.address,
+    isDepotTransaction,
     isEmpty,
+    isLoading,
     merchantSafeAddress,
-    depot,
-    transactionStrategies,
     merchantSafes,
+    nativeCurrency,
     prepaidCards,
     shouldUpdate,
-    isDepotTransaction,
-    isLoadingSafes,
+    transactionStrategies,
+    transactions,
   ]);
-
-  const isLoading =
-    networkStatus === NetworkStatus.loading || loading || isLoadingSafes;
 
   const isFetchingMore = !!sections.length && isLoading;
 
