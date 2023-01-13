@@ -1,5 +1,5 @@
-import { useFocusEffect } from '@react-navigation/native';
-import React, { memo, useCallback, useMemo } from 'react';
+import { useRoute, useMemo } from '@react-navigation/native';
+import React, { memo, useCallback, useEffect } from 'react';
 import { RefreshControl, SectionList, ActivityIndicator } from 'react-native';
 
 import {
@@ -10,19 +10,26 @@ import {
   TransactionItemProps,
 } from '@cardstack/components';
 import { useFullTransactionList } from '@cardstack/hooks';
+import { RouteType } from '@cardstack/navigation/types';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
 
 import { TransactionListLoading } from './TransactionListLoading';
 import { strings } from './strings';
 
+const NUM_OF_ITEMS_PER_VIEW = 5;
+
 interface TransactionListProps {
   Header?: JSX.Element;
   accountAddress: string;
 }
+interface NavParams {
+  forceRefresh?: boolean;
+}
 
 export const TransactionList = memo(({ Header }: TransactionListProps) => {
   const { isOnCardPayNetwork, network } = useAccountSettings();
+  const { params } = useRoute<RouteType<NavParams>>();
 
   const {
     onEndReached,
@@ -32,6 +39,18 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
     refetch,
     refetchLoading,
   } = useFullTransactionList();
+
+  const onRefresh = useCallback(() => {
+    if (!isLoadingTransactions || !refetchLoading) {
+      refetch?.();
+    }
+  }, [isLoadingTransactions, refetch, refetchLoading]);
+
+  useEffect(() => {
+    if (params?.forceRefresh) {
+      onRefresh();
+    }
+  }, [params, onRefresh]);
 
   const renderSectionHeader = useCallback(
     ({ section: { title } }: { section: { title: string } }) => (
@@ -48,16 +67,15 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
     []
   );
 
-  const onRefresh = useCallback(() => {
-    refetch && refetch();
-  }, [refetch]);
-
-  useFocusEffect(onRefresh);
-
   const renderItem = useCallback(
     ({ item }: TransactionItemProps) => <TransactionItem item={item} />,
     []
   );
+
+  const keyExtractor = useCallback(({ item }, index) => {
+    const key = item?.transactionHash || item?.hash || item?.type;
+    return `${key}-${index}`;
+  }, []);
 
   const title = useMemo(
     () =>
@@ -94,6 +112,10 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
       }
       onEndReached={onEndReached}
       onEndReachedThreshold={1}
+      keyExtractor={keyExtractor}
+      maxToRenderPerBatch={NUM_OF_ITEMS_PER_VIEW}
+      initialNumToRender={NUM_OF_ITEMS_PER_VIEW}
+      removeClippedSubviews
     />
   );
 });
