@@ -1,4 +1,4 @@
-import { useRoute, useMemo } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import React, { memo, useCallback, useEffect } from 'react';
 import { RefreshControl, SectionList, ActivityIndicator } from 'react-native';
 
@@ -9,10 +9,8 @@ import {
   TransactionItem,
   TransactionItemProps,
 } from '@cardstack/components';
-import { useFullTransactionList } from '@cardstack/hooks';
+import { useCardPayCompatible } from '@cardstack/hooks';
 import { RouteType } from '@cardstack/navigation/types';
-
-import { useAccountSettings } from '@rainbow-me/hooks';
 
 import { TransactionListLoading } from './TransactionListLoading';
 import { strings } from './strings';
@@ -28,7 +26,6 @@ interface NavParams {
 }
 
 export const TransactionList = memo(({ Header }: TransactionListProps) => {
-  const { isOnCardPayNetwork, network } = useAccountSettings();
   const { params } = useRoute<RouteType<NavParams>>();
 
   const {
@@ -38,7 +35,7 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
     sections,
     refetch,
     refetchLoading,
-  } = useFullTransactionList();
+  } = useCardPayCompatible();
 
   const onRefresh = useCallback(() => {
     if (!isLoadingTransactions || !refetchLoading) {
@@ -77,14 +74,6 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
     return `${key}-${index}`;
   }, []);
 
-  const title = useMemo(
-    () =>
-      isOnCardPayNetwork
-        ? strings.emptyComponent
-        : strings.nonCardPayNetwork(network),
-    [isOnCardPayNetwork, network]
-  );
-
   return (
     <SectionList
       ListEmptyComponent={
@@ -92,7 +81,11 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
           <TransactionListLoading />
         ) : (
           <Container paddingTop={4}>
-            <ListEmptyComponent text={title} textColor="blueText" hasRoundBox />
+            <ListEmptyComponent
+              text={strings.emptyComponent}
+              textColor="blueText"
+              hasRoundBox
+            />
           </Container>
         )
       }
