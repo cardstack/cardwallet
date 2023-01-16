@@ -68,11 +68,11 @@ platform :android do
       version = old
 
       if type == "patch"
-          version = "#{oldArr[0]}.#{oldArr[1]}.#{oldArr[2] + 1}"
+        version = "#{oldArr[0]}.#{oldArr[1]}.#{oldArr[2] + 1}"
       elsif type == "minor"
-          version = "#{oldArr[0]}.#{oldArr[1] + 1}.0"
+        version = "#{oldArr[0]}.#{oldArr[1] + 1}.0"
       elsif type == "major"
-          version = "#{oldArr[0] + 1}.0.0"
+        version = "#{oldArr[0] + 1}.0.0"
       end
 
       filename = '../gradle.properties'
