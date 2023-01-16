@@ -35,7 +35,7 @@ platform :android do
     set_git_tag(build_number: nextVersionCode)
 
     # Push new tag
-    # push_to_git_remote()
+    push_to_git_remote()
   end
 
   lane :alpha do
@@ -54,10 +54,40 @@ platform :android do
     upload_to_play_store
   end
 
+  desc "Version bump"
+  lane :version_bump do |options|
+    p options[:type]
+    type = ENV['VERSION_CHANGE_TYPE'] ? ENV['VERSION_CHANGE_TYPE'] : options[:type]
+    if ['major', 'minor', 'patch'].include?(type)
+
+      old = gradle_properties(
+        property_name: "VERSION_NAME"
+      )
+
+      oldArr = old.split('.').map{|v| v.to_i}
+      version = old
+
+      if type == "patch"
+          version = "#{oldArr[0]}.#{oldArr[1]}.#{oldArr[2] + 1}"
+      elsif type == "minor"
+          version = "#{oldArr[0]}.#{oldArr[1] + 1}.0"
+      elsif type == "major"
+          version = "#{oldArr[0] + 1}.0.0"
+      end
+
+      filename = '../gradle.properties'
+      properties = File.read(filename)
+      updatedProperties = properties.gsub(/VERSION_NAME=.*/, "VERSION_NAME=" + version)
+      File.open(filename, "w") { |file| file << updatedProperties }
+    end
+  end
+
   desc "Set Git Tag"
   lane :set_git_tag do |options|
-    APK_LOCATION = "#{lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]}"   
-    version = get_android_version(apk: APK_LOCATION)
+
+    version = gradle_properties(
+      property_name: "VERSION_NAME"
+    )
 
     # Create a local tag with the new version
     add_git_tag(
@@ -67,7 +97,7 @@ platform :android do
     )
 
     # Push new tag
-    # push_to_git_remote()
+    push_to_git_remote()
   end
 
 end

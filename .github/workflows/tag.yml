@@ -36,6 +36,9 @@ jobs:
       - name: Bump iOS version
         if: ${{ env.VERSION_BUMP == 'true'}}
         run: cd ios && bundle install && bundle exec fastlane version_bump
+      - name: Bump Android version
+        if: ${{ env.VERSION_BUMP == 'true'}}
+        run: cd android && bundle install && bundle exec fastlane version_bump
       - name: Create Pull Request
         if: ${{ env.VERSION_BUMP == 'true'}}
         uses: peter-evans/create-pull-request@v4
@@ -49,5 +52,3 @@ jobs:
             release
             automated pr
           delete-branch: true
-      - name: Create tag
-        run: cd ci-scripts && yarn && yarn createTag
