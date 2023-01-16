@@ -114,7 +114,7 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 - (BOOL)concurrentRootEnabled
 {
   // Switch this bool to turn on and off the concurrent root
-  return true;
+  return false; //Temp Opt-out react 18
 }
 - (NSDictionary *)prepareInitialProps
 {
