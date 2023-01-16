@@ -1,7 +1,9 @@
+import { supportedChainsArray } from '@cardstack/cardpay-sdk';
 import { ethers, utils, Wallet } from 'ethers';
 
 import {
   DEFAULT_HD_PATH,
+  loadAddress,
   loadPrivateKey,
   loadSeedPhrase,
 } from '@rainbow-me/model/wallet';
@@ -54,18 +56,32 @@ export const getEthersWalletWithSeed = async (
   }
 };
 
+const wallets = supportedChainsArray.reduce(
+  (chains, network) => ({
+    ...chains,
+    [network]: {},
+  }),
+  {} as Record<NetworkType, Record<string, Wallet>>
+);
+
 export const getEthersWallet = async ({
   accountAddress,
-  network,
+  network = NetworkType.gnosis,
 }: EthersSignerParams = {}) => {
   try {
-    const privateKey = await loadPrivateKey(accountAddress);
+    const address = accountAddress || (await loadAddress()) || '';
 
-    const provider = (await Web3WsProvider.getEthers(
-      network
-    )) as ethers.providers.Provider;
+    if (!wallets[network][address]) {
+      const privateKey = await loadPrivateKey(address);
 
-    return new Wallet(privateKey, provider);
+      const provider = (await Web3WsProvider.getEthers(
+        network
+      )) as ethers.providers.Provider;
+
+      wallets[network][address] = new Wallet(privateKey, provider);
+    }
+
+    return wallets[network][address];
   } catch (e) {
     logger.sentry('Error getting ethersWallet' + e);
   }
