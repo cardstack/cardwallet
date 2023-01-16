@@ -59,6 +59,6 @@ jobs:
       - name: Create a Release
         uses: elgohr/Github-Release-Action@v4
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ env.GITHUB_AUTH_TOKEN }}
         with:
           title: 'Released at ${{ github.event.repository.updated_at}}'
