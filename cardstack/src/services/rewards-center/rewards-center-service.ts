@@ -242,11 +242,11 @@ export const getClaimRewardsGasEstimate = async ({
     }));
 
   const estimatedAmounts = await Promise.all(
-    validProofs?.map(async ({ leaf, proofArray }) => {
+    validProofs?.map(async ({ leaf, proofBytes }) => {
       const { amount } = await rewardPoolInstance.claimGasEstimate(
         safeAddress,
         leaf,
-        proofArray,
+        proofBytes,
         false
       );
 
@@ -355,11 +355,11 @@ export const claimRewards = async ({
   const receipts = [];
 
   // Needs to be sequential, promise.all won't work
-  for (const { leaf, proofArray } of validProofs) {
+  for (const { leaf, proofBytes } of validProofs) {
     const receipt = await rewardPoolInstance.claim(
       safeAddress,
       leaf,
-      proofArray,
+      proofBytes,
       false,
       undefined,
       { from: accountAddress }
