@@ -37,24 +37,18 @@ const colors = {
 const isColorLight = targetColor =>
   chroma(targetColor || colors.white).luminance() > 0.5;
 
-const getTextColorForBackground = (targetColor, textColors = {}) => {
-  const { dark = colors.black, light = colors.white } = textColors;
+const getFallbackTextColor = backgroundColor => {
+  const dark = colors.alpha(colors.blueGreyDark, 0.5);
+  const light = colors.whiteLabel;
 
-  return isColorLight(targetColor) ? dark : light;
+  return isColorLight(backgroundColor) ? dark : light;
 };
-
-const getFallbackTextColor = bg =>
-  colors.getTextColorForBackground(bg, {
-    dark: colors.alpha(colors.blueGreyDark, 0.5),
-    light: colors.whiteLabel,
-  });
 
 export const getRandomColor = () =>
   Math.floor(Math.random() * avatarColor.length);
 
 export default {
   ...colors,
-  getTextColorForBackground,
   getFallbackTextColor,
   getRandomColor,
 };

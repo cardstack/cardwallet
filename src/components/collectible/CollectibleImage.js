@@ -2,17 +2,11 @@ import React, { memo, useCallback, useState } from 'react';
 
 import { ImageWithCachedMetadata, ImgixImage } from '@rainbow-me/images';
 import { position } from '@rainbow-me/styles';
-import colors from '@rainbow-me/styles/colors';
+import { getFallbackTextColor } from '@rainbow-me/styles/colors';
 
 import { buildCollectibleName } from '../../helpers/assets';
 import { Centered } from '../layout';
 import { Monospace } from '../text';
-
-const getFallbackTextColor = bg =>
-  colors.getTextColorForBackground(bg, {
-    dark: colors.alpha(colors.blueGreyDark, 0.5),
-    light: colors.white,
-  });
 
 const CollectibleImage = ({
   backgroundColor = 'white',
