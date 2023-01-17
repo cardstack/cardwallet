@@ -5,7 +5,7 @@ import { Container } from '@cardstack/components';
 
 import { ImgixImage } from '@rainbow-me/images';
 import { position } from '@rainbow-me/styles';
-import colors from '@rainbow-me/styles/colors';
+import colors, { getFallbackTextColor } from '@rainbow-me/styles/colors';
 
 import { initials } from '../../utils';
 import { Centered } from '../layout';
@@ -60,7 +60,7 @@ export default function RequestVendorLogoIcon({
         ) : (
           <Text
             align="center"
-            color={colors.getFallbackTextColor(bgColor)}
+            color={getFallbackTextColor(bgColor)}
             size="smedium"
             weight="semibold"
           >
