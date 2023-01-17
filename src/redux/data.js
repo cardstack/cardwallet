@@ -226,7 +226,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isLoadingTransactions: false,
-        transactions: [...state.transactions, action.payload],
+        transactions: [...state.transactions, ...action.payload],
       };
     case DATA_LOAD_TRANSACTIONS_REQUEST:
       return {
