@@ -6,6 +6,13 @@ on:
         description: 'Type of version bump (major, minor, patch, none)'
         required: true
         default: 'none'
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+          - none
+
 jobs:
   bump-version:
     name: Bump iOS and Android project versions
@@ -41,6 +48,7 @@ jobs:
           delete-branch: true
 
   create-release:
+    needs: bump-version
     name: Create tagged release
     runs-on: macos-latest
     env:
@@ -50,4 +58,4 @@ jobs:
     steps:
       - name: Test
         # run: cd ci-scripts && yarn && yarn createTag
-        run: echo "$BRANCH_TO_TAG $VERSION_CHANGE_TYPE"
+        run: echo "${{ env.BRANCH_TO_TAG }} ${{ env.VERSION_CHANGE_TYPE }}"
