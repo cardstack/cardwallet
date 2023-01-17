@@ -2,7 +2,8 @@ import chroma from 'chroma-js';
 
 import { avatarColor } from '@cardstack/theme';
 
-const buildRgba = (color, alpha = 1) => `rgba(${chroma(color).rgb()},${alpha})`;
+const buildRgba = (color: string, alpha = 1) =>
+  `rgba(${chroma(color).rgb()},${alpha})`;
 
 const colors = {
   appleBlue: '#0E76FD', // '14, 118, 253'
@@ -34,27 +35,16 @@ const colors = {
   alpha: buildRgba,
 };
 
-const isColorLight = targetColor =>
-  chroma(targetColor || colors.white).luminance() > 0.5;
+export const getFallbackTextColor = (backgroundColor?: string) => {
+  const dark = colors.alpha(colors.blueGreyDark, 0.5);
+  const light = colors.whiteLabel;
+  const isColorLight =
+    chroma(backgroundColor || colors.white).luminance() > 0.5;
 
-const getTextColorForBackground = (targetColor, textColors = {}) => {
-  const { dark = colors.black, light = colors.white } = textColors;
-
-  return isColorLight(targetColor) ? dark : light;
+  return isColorLight ? dark : light;
 };
-
-const getFallbackTextColor = bg =>
-  colors.getTextColorForBackground(bg, {
-    dark: colors.alpha(colors.blueGreyDark, 0.5),
-    light: colors.whiteLabel,
-  });
 
 export const getRandomColor = () =>
   Math.floor(Math.random() * avatarColor.length);
 
-export default {
-  ...colors,
-  getTextColorForBackground,
-  getFallbackTextColor,
-  getRandomColor,
-};
+export default colors;
