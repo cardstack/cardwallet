@@ -134,13 +134,14 @@ platform :ios do
 
   desc "Version bump"
   lane :version_bump do |options|
+    p ENV
     if ['major', 'minor', 'patch'].include?(ENV['VERSION_CHANGE_TYPE'])
       increment_version_number_in_xcodeproj(
         bump_type: ENV['VERSION_CHANGE_TYPE'],
         target: 'Rainbow'
       )
 
-      version = get_version_number_from_xcodeproj()
+      version = get_version_number_from_xcodeproj( target: 'Rainbow' )
       p "iOS version updated to " + version
     end
   end
