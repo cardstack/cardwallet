@@ -79,6 +79,8 @@ platform :android do
       properties = File.read(filename)
       updatedProperties = properties.gsub(/VERSION_NAME=.*/, "VERSION_NAME=" + version)
       File.open(filename, "w") { |file| file << updatedProperties }
+
+      p "Android version updated to " + version
     end
   end
 
