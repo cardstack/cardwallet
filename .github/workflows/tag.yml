@@ -46,5 +46,7 @@ jobs:
         GITHUB_AUTH_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
         BRANCH_TO_TAG: ${{ github.ref_name }}
         VERSION_CHANGE_TYPE: ${{ github.event.inputs.versionChangeType }}
-      # run: cd ci-scripts && yarn && yarn createTag
-      run: echo "$BRANCH_TO_TAG $VERSION_CHANGE_TYPE"
+      steps:
+        - name: Test
+          # run: cd ci-scripts && yarn && yarn createTag
+          run: echo "$BRANCH_TO_TAG $VERSION_CHANGE_TYPE"
