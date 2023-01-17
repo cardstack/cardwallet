@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-        ref: $GITHUB_REF_NAME
+          ref: $GITHUB_REF_NAME
 
       - name: Bump iOS version
         run: cd ios && bundle install && bundle exec fastlane version_bump
