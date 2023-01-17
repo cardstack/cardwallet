@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { memo, useCallback, useEffect } from 'react';
 import { RefreshControl, SectionList, ActivityIndicator } from 'react-native';
 
@@ -26,6 +26,7 @@ interface NavParams {
 }
 
 export const TransactionList = memo(({ Header }: TransactionListProps) => {
+  const { setParams } = useNavigation();
   const { params } = useRoute<RouteType<NavParams>>();
 
   const {
@@ -46,8 +47,10 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
   useEffect(() => {
     if (params?.forceRefresh) {
       onRefresh();
+      // Set to false to avoid infinite loop after first usage
+      setParams({ forceRefresh: false });
     }
-  }, [params, onRefresh]);
+  }, [params, onRefresh, setParams]);
 
   const renderSectionHeader = useCallback(
     ({ section: { title } }: { section: { title: string } }) => (
