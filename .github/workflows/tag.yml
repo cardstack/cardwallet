@@ -31,7 +31,7 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
-          branch: $VERSION_CHANGE_BRANCH_TO_TAG
+          branch: ${{ env.VERSION_CHANGE_BRANCH_TO_TAG }}
           title: 'release: ${{ github.event.inputs.versionChangeType }} version release'
           commit-message: 'release: ${{ github.event.inputs.versionChangeType }} version release'
           author: '${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>'
@@ -40,10 +40,11 @@ jobs:
             automated pr
           delete-branch: true
 
-  # create-release:
-  #   - name: Create release
-  #     env:
-  #       GITHUB_AUTH_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
-  #       BRANCH_TO_TAG: ${{ github.ref_name }}
-  #       VERSION_CHANGE_TYPE: ${{ github.event.inputs.versionChangeType }}
-  #     run: cd ci-scripts && yarn && yarn createTag
+  create-release:
+    - name: Create release
+      env:
+        GITHUB_AUTH_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
+        BRANCH_TO_TAG: ${{ github.ref_name }}
+        VERSION_CHANGE_TYPE: ${{ github.event.inputs.versionChangeType }}
+      # run: cd ci-scripts && yarn && yarn createTag
+      run: echo "$BRANCH_TO_TAG $VERSION_CHANGE_TYPE"
