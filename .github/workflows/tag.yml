@@ -28,19 +28,15 @@ jobs:
           if [$VERSION_CHANGE_TYPE != 'none']
           then
             echo "BRANCH_TO_TAG=${{ env.VERSION_CHANGE_BRANCH_TO_TAG }}" >> $GITHUB_ENV
-            echo "VERSION_BUMP=true" >> $GITHUB_ENV
           else
             echo "BRANCH_TO_TAG=develop" >> $GITHUB_ENV
-            echo "VERSION_BUMP=false" >> $GITHUB_ENV
           fi
       - uses: actions/checkout@v3
         with:
           ref: ${{ env.BASE_BRANCH }}
       - name: Bump iOS version
-        if: ${{ env.VERSION_BUMP == 'true'}}
         run: cd ios && bundle install && bundle exec fastlane version_bump
       - name: Bump Android version
-        if: ${{ env.VERSION_BUMP == 'true'}}
         run: cd android && bundle install && bundle exec fastlane version_bump
       - name: Create Pull Request
         if: ${{ env.VERSION_BUMP == 'true'}}
