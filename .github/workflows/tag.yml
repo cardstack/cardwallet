@@ -40,13 +40,5 @@ jobs:
             automated pr
           delete-branch: true
 
-  create-release:
-    - name: Create release
-      env:
-        GITHUB_AUTH_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
-        BRANCH_TO_TAG: ${{ github.ref_name }}
-        VERSION_CHANGE_TYPE: ${{ github.event.inputs.versionChangeType }}
-      steps:
-        - name: Test
-          # run: cd ci-scripts && yarn && yarn createTag
-          run: echo "$BRANCH_TO_TAG $VERSION_CHANGE_TYPE"
+      - name: Create Tagged Release
+        run: cd ci-scripts && yarn && yarn createTag
