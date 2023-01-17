@@ -55,5 +55,5 @@ jobs:
             release
             automated pr
           delete-branch: true
-      - name: Create tag
-        run: cd ci-scripts && yarn && yarn createTag
+      # - name: Create tag
+      #   run: cd ci-scripts && yarn && yarn createTag
