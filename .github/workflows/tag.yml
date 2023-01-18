@@ -53,5 +53,9 @@ jobs:
     name: Create tagged release
     runs-on: macos-latest
     steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref_name }}
+
       - name: ci-script/createTag
         run: cd ci-scripts && yarn && yarn createTag
