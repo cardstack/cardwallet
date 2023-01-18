@@ -26,11 +26,11 @@ const createTag = async () => {
   const data = await response.json();
   const mostRecentTag = data[0].name;
   const [tagVersion, tagVersionNumber] = mostRecentTag.split('-');
-  const cleanTag = tagVersion.split('-')[0].replace('v', '');
+  const cleanTag = tagVersion.replace('v', '');
   const newTag = getNewTag(cleanTag);
   const updatedTagVersionNumber =
     cleanTag === newTag ? Number(tagVersionNumber) + 1 : 1;
-  const tagName = `v${newTag}-${updatedTagVersionNumber}-release`;
+  const tagName = `v${newTag}-${updatedTagVersionNumber}-tagrelease`;
 
   const branchToTag =
     process.env.VERSION_CHANGE_TYPE !== 'none'
