@@ -35,7 +35,7 @@ platform :android do
     set_git_tag(build_number: nextVersionCode)
 
     # Push new tag
-    # push_to_git_remote()
+    push_to_git_remote()
   end
 
   lane :alpha do
@@ -67,7 +67,7 @@ platform :android do
     )
 
     # Push new tag
-    # push_to_git_remote()
+    push_to_git_remote()
   end
 
 end
