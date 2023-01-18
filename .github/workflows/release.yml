@@ -1,53 +1,98 @@
-name: Create New Release
+name: Release
 on:
   workflow_dispatch:
     inputs:
-      versionChangeType:
-        description: 'Type of version bump (major, minor, patch, none)'
+      releaseStage:
+        description: 'alpha, beta or production release (alpha does not upload to TestFlight)'
         required: true
-        default: 'none'
+        default: 'beta'
+      githubRef:
+        description: 'Github ref to build and release'
+        required: true
+        default: 'develop'
+  release:
+    types: [created]
 
 jobs:
-  create-new-tag:
-    name: Create new tag with version bump
+  release-ios:
+    name: Release iOS
     runs-on: macos-latest
     env:
-      GITHUB_AUTH_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
-      BASE_BRANCH: 'develop'
+      CRYPTEX_GIT_URL: https://${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}@github.com/${{ secrets.CRYPTEX_GIT_REPOSITORY }}.git
+      CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
     steps:
       - name: Set environment variables
         env:
-          DEFAULT_VERSION_CHANGE_TYPE: none
-          VERSION_CHANGE_BRANCH_TO_TAG: 'release/${{ github.event.inputs.versionChangeType }}-version-${{ github.run_id }}'
+          DEFAULT_STAGE: beta
+          DEFAULT_REF: ${{ github.event.release.tag_name }}
         run: |
-          echo "VERSION_CHANGE_TYPE=${{ github.event.inputs.versionChangeType || env.DEFAULT_VERSION_CHANGE_TYPE}}" >> $GITHUB_ENV
-
-          if [$VERSION_CHANGE_TYPE != 'none']
-          then
-            echo "BRANCH_TO_TAG=${{ env.VERSION_CHANGE_BRANCH_TO_TAG }}" >> $GITHUB_ENV
-            echo "VERSION_BUMP=true"
-          else
-            echo "BRANCH_TO_TAG=develop" >> $GITHUB_ENV
-            echo "VERSION_BUMP=false"
-          fi
-      - uses: actions/checkout@v3
+          echo "CHECKOUT_REF=${{ github.event.inputs.githubRef || env.DEFAULT_REF }}" >> $GITHUB_ENV
+          echo "RELEASE_STAGE=${{ github.event.inputs.releaseStage || env.DEFAULT_STAGE}}" >> $GITHUB_ENV
+      - uses: sarisia/actions-status-discord@v1
+        if: ${{ always() }}
         with:
-          ref: ${{ env.BASE_BRANCH }}
-      - name: Bump iOS version
-        if: ${{ env.VERSION_BUMP == 'true'}}
-        run: cd ios && bundle install && bundle exec fastlane version_bump
-      - name: Create Pull Request
-        if: ${{ env.VERSION_BUMP == 'true'}}
-        uses: peter-evans/create-pull-request@v4
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: TestFlight release started
+          color: 0xFFFFFF
+      - name: Checkout tag
+        uses: actions/checkout@v3
         with:
-          token: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
-          branch: '${{ env.BRANCH_TO_TAG }}'
-          title: 'release: ${{ github.event.inputs.versionChangeType }} version release'
-          commit-message: 'release: ${{ github.event.inputs.versionChangeType }} version release'
-          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
-          labels: |
-            release
-            automated pr
-          delete-branch: true
-      - name: Create tag
-        run: cd ci-scripts && yarn && yarn createTag
+          ref: ${{ env.CHECKOUT_REF }}
+      - uses: volta-cli/action@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: 'package.json'
+          cache: 'yarn'
+      - name: Setup Ruby & bundle
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - name: Decrypt fastlane vars
+        run: bundle exec fastlane run decrypt_fastlane_vars
+      - uses: actions/cache@v3
+        with:
+          path: '**/Pods'
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: ${{ runner.os }}-pods-
+      - name: Yarn Install
+        run: yarn install --prefer-offline --frozen --frozen-lockfile
+      - name: Patch Packages
+        run: yarn patch-package
+      - name: RN Nodeify
+        run: yarn nodeify
+      - name: Bundle Install (ios)
+        run: yarn install-bundle
+      - name: Pod Install (ios)
+        run: yarn install-pods-fast
+      - name: Sync google_services
+        run: yarn contexts:sync:google_services
+      - name: Sync sentry_properties
+        run: yarn fastlane sync_sentry_properties
+      - name: Run fastlane (ios)
+        run: cd ios && bundle exec fastlane ${{ env.FASTLANE_STAGE }} build_number:${{ env.BUILD_NUMBER }}
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+          FASTLANE_STAGE: ${{ env.RELEASE_STAGE }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLICATION_SPECIFIC_PASSWORD }}
+          MATCH_GIT_URL: ${{ env.CRYPTEX_GIT_URL }}
+          MATCH_PASSWORD: ${{ env.CRYPTEX_PASSWORD }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Rainbow IPA
+          path: ios/Rainbow.ipa
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Rainbow DYSM
+          path: ios/Rainbow.app.dSYM.zip
+      - uses: sarisia/actions-status-discord@v1
+        if: ${{ failure() }}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: TestFlight release failed
+          color: 0xFF5054
+      - uses: sarisia/actions-status-discord@v1
+        if: ${{ success() }}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: TestFlight release completed
+          color: 0x37EB77
