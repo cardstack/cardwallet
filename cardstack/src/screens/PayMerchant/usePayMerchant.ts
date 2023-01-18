@@ -263,16 +263,6 @@ export const usePayMerchant = () => {
     []
   );
 
-  const onCancelConfirmation = useCallback(
-    () => onStepChange(PAY_STEP.CHOOSE_PREPAID_CARD),
-    [onStepChange]
-  );
-
-  const onAmountNext = useCallback(() => onStepChange(getPayStep), [
-    onStepChange,
-    getPayStep,
-  ]);
-
   const txSheetData = useMemo(
     () => ({
       ...initialTxSheetData,
@@ -296,8 +286,8 @@ export const usePayMerchant = () => {
     onStepChange,
     onSelectPrepaidCard: selectPrepaidCard,
     setInputValue,
-    onCancelConfirmation,
-    onAmountNext,
+    onCancelConfirmation: onStepChange(PAY_STEP.CHOOSE_PREPAID_CARD),
+    onAmountNext: onStepChange(getPayStep),
     isLoadingMerchantInfo,
     isInvalid,
     canSubmit,
