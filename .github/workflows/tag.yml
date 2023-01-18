@@ -13,16 +13,17 @@ on:
           - patch
           - none
 
+env:
+  GITHUB_AUTH_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
+  BRANCH_TO_TAG: ${{ github.ref_name }}
+  VERSION_CHANGE_BRANCH_TO_TAG: 'release/${{ github.event.inputs.versionChangeType }}-version-${{ github.run_id }}'
+  VERSION_CHANGE_TYPE: ${{ github.event.inputs.versionChangeType }}
+
 jobs:
   bump-version:
     name: Bump iOS and Android project versions
     if: ${{ github.event.inputs.versionChangeType != 'none' }}
     runs-on: macos-latest
-    env:
-      GITHUB_AUTH_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
-      BRANCH_TO_TAG: ${{ github.ref_name }}
-      VERSION_CHANGE_BRANCH_TO_TAG: 'release/${{ github.event.inputs.versionChangeType }}-version-${{ github.run_id }}'
-      VERSION_CHANGE_TYPE: ${{ github.event.inputs.versionChangeType }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -51,10 +52,6 @@ jobs:
     needs: bump-version
     name: Create tagged release
     runs-on: macos-latest
-    env:
-      GITHUB_AUTH_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
-      BRANCH_TO_TAG: ${{ github.ref_name }}
-      VERSION_CHANGE_TYPE: ${{ github.event.inputs.versionChangeType }}
     steps:
       - name: ci-script/createTag
         run: cd ci-scripts && yarn && yarn createTag
