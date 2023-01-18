@@ -13,44 +13,52 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
-## iOS
+## Android
 
-### ios alpha
+### android internal
 
 ```sh
-[bundle exec] fastlane ios alpha
+[bundle exec] fastlane android internal
 ```
 
-Alpha build
 
-### ios beta
+
+### android alpha
 
 ```sh
-[bundle exec] fastlane ios beta
+[bundle exec] fastlane android alpha
 ```
 
-Beta build
 
-### ios production
+
+### android beta
 
 ```sh
-[bundle exec] fastlane ios production
+[bundle exec] fastlane android beta
 ```
 
-Production build
 
-### ios version_bump
+
+### android production
 
 ```sh
-[bundle exec] fastlane ios version_bump
+[bundle exec] fastlane android production
+```
+
+Deploy a new version to the Google Play
+
+### android version_bump
+
+```sh
+[bundle exec] fastlane android version_bump
 ```
 
 Version bump
 
-### ios set_git_tag
+### android set_git_tag
 
 ```sh
-[bundle exec] fastlane ios set_git_tag
+[bundle exec] fastlane android set_git_tag
 ```
 
 Set Git Tag
