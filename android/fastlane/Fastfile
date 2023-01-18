@@ -29,29 +29,13 @@ platform :android do
       'versionCode' => nextVersionCode,
     })
 
-    # upload_to_play_store(track: 'internal', version_name: nextVersionCode.to_s)
+    upload_to_play_store(track: 'internal', version_name: nextVersionCode.to_s)
 
     # As build was successful, set an appropriate git tag
     set_git_tag(build_number: nextVersionCode)
 
     # Push new tag
     push_to_git_remote()
-  end
-
-  lane :alpha do
-    gradle(task: 'assemble', build_type: 'Release')
-    upload_to_play_store(track: 'alpha')
-  end
-  
-  lane :beta do
-    gradle(task: 'assemble', build_type: 'Release')
-    upload_to_play_store(track: 'beta')
-  end
-
-  desc "Deploy a new version to the Google Play"
-  lane :production do
-    gradle(task: "clean assembleRelease")
-    upload_to_play_store
   end
 
   desc "Version bump"
