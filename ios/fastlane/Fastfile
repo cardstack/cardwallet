@@ -40,7 +40,7 @@ platform :ios do
     set_git_tag(build_number: options[:build_number])
 
     # Push new tag
-    push_to_git_remote()
+    push_git_tags()
   end
 
   ########################################################################
@@ -87,7 +87,7 @@ platform :ios do
     set_git_tag(build_number: options[:build_number])
 
     # Push new tag
-    push_to_git_remote()
+    push_git_tags()
   end
 
   ########################################################################
@@ -129,7 +129,7 @@ platform :ios do
     set_git_tag(build_number: options[:build_number])
 
     # Push new tag
-    push_to_git_remote()
+    push_git_tags()
   end
 
   desc "Version bump"
