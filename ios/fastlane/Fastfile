@@ -38,9 +38,6 @@ platform :ios do
 
     # As build was successful, set an appropriate git tag
     set_git_tag(build_number: options[:build_number])
-
-    # Push new tag
-    push_git_tags()
   end
 
   ########################################################################
@@ -85,9 +82,6 @@ platform :ios do
 
     # As build was successful, set an appropriate git tag
     set_git_tag(build_number: options[:build_number])
-
-    # Push new tag
-    push_git_tags()
   end
 
   ########################################################################
@@ -127,9 +121,6 @@ platform :ios do
 
     # As build was successful, set an appropriate git tag
     set_git_tag(build_number: options[:build_number])
-
-    # Push new tag
-    push_git_tags()
   end
 
   desc "Version bump"
@@ -155,5 +146,8 @@ platform :ios do
       prefix: "v",
       build_number: version
     )
+
+    # Push new tag
+    push_git_tags()
   end
 end

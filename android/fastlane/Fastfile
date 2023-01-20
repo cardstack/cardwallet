@@ -33,9 +33,6 @@ platform :android do
 
     # As build was successful, set an appropriate git tag
     set_git_tag(build_number: nextVersionCode)
-
-    # Push new tag
-    push_git_tags()
   end
 
   desc "Version bump"
