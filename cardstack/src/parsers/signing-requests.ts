@@ -18,11 +18,10 @@ import { ethUnits } from '@rainbow-me/references';
 import smartContractMethods from '@rainbow-me/references/smartcontract-methods.json';
 import { ethereumUtils } from '@rainbow-me/utils';
 import {
-  PERSONAL_SIGN,
-  SEND_TRANSACTION,
-  SIGN,
-  SIGN_TRANSACTION,
-  SIGN_TYPED_DATA,
+  isSignFirstParamType,
+  isSignSecondParamType,
+  isSignTypedData,
+  isTransactionDisplayType,
 } from '@rainbow-me/utils/signingMethods';
 import logger from 'logger';
 
@@ -185,7 +184,7 @@ export const getRequestDisplayDetails = async (
     timestampInMs,
   };
 
-  if ([SEND_TRANSACTION, SIGN_TRANSACTION].includes(payload.method)) {
+  if (isTransactionDisplayType(payload.method)) {
     const transaction = payload?.params?.[0] || null;
 
     // Backwards compatibility with param name change
@@ -207,11 +206,11 @@ export const getRequestDisplayDetails = async (
     displayDetails.request = request;
   }
 
-  if (payload.method === SIGN) {
+  if (isSignSecondParamType(payload.method)) {
     displayDetails.request = payload?.params?.[1];
   }
 
-  if (payload.method === PERSONAL_SIGN) {
+  if (isSignFirstParamType(payload.method)) {
     let message = payload?.params?.[0];
 
     try {
@@ -231,7 +230,7 @@ export const getRequestDisplayDetails = async (
   // Aside from expecting the address as the first parameter
   // and data as the second one it's safer to verify that
   // and switch order if needed to ensure max compatibility with dapps
-  if (payload.method === SIGN_TYPED_DATA && payload?.params?.length) {
+  if (isSignTypedData(payload.method) && payload?.params?.length) {
     const messageOrAddress = payload?.params?.[0] || '';
 
     displayDetails.request = ethereumUtils.isEthAddress(messageOrAddress)

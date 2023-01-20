@@ -8,9 +8,9 @@ import { removeRequest } from '@cardstack/redux/requests';
 import { dataAddNewTransaction } from '@rainbow-me/redux/data';
 import { walletConnectSendStatus } from '@rainbow-me/redux/walletconnect';
 import {
-  SEND_TRANSACTION,
   isSignFirstParamType,
-  SIGN_TYPED_DATA,
+  isSignTypedData,
+  SEND_TRANSACTION,
 } from '@rainbow-me/utils/signingMethods';
 import logger from 'logger';
 
@@ -144,8 +144,9 @@ export const useTransactionActions = (isMessageRequest: boolean) => {
     const messageForSigning = params?.[isSignFirstParamType(method) ? 0 : 1];
 
     try {
-      const sign =
-        method === SIGN_TYPED_DATA ? signTypedDataMessage : signPersonalMessage;
+      const sign = isSignTypedData(method)
+        ? signTypedDataMessage
+        : signPersonalMessage;
 
       const flatFormatSignature = await sign(messageForSigning, txNetwork);
 
