@@ -147,7 +147,7 @@ platform :ios do
 
   desc "Set Git Tag"
   lane :set_git_tag do |options|
-    version = get_version_number_from_xcodeproj()
+    version = get_version_number_from_xcodeproj( target: 'Rainbow' )
 
     # Create a local tag with the new version
     add_git_tag(
