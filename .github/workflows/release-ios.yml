@@ -1,4 +1,4 @@
-name: Release
+name: Release iOS
 on:
   workflow_dispatch:
     inputs:
