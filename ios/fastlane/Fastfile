@@ -1,19 +1,20 @@
 
 default_platform(:ios)
 
+STARTING_BUILD_NUMBER = 630
+
 platform :ios do
   before_all do |options|
     setup_ci
   end
 
-  ########################################################################
-  # Alpha Lane
-  ########################################################################
-  desc "Alpha build"
-  lane :alpha do |options|
-    decrypt_app_vars(
-      namespace: 'alpha'
-    )
+  def build_and_release(build_number:, should_upload:)
+    ########################
+    # Handle build number
+    ########################
+ 
+
+    next_build_number = STARTING_BUILD_NUMBER + build_number.to_i
 
     ########################
     # Pull certs & profiles
@@ -23,7 +24,7 @@ platform :ios do
     ########################
     # Increment the build number
     ########################
-    increment_build_number(build_number: options[:build_number])
+    increment_build_number(build_number: next_build_number)
 
     ########################
     # Build the app
@@ -36,8 +37,29 @@ platform :ios do
       configuration: "Release"
     )
 
+    if should_upload
+      upload_to_testflight(
+        skip_waiting_for_build_processing: true,
+        apple_id: "1549183378",
+        username: "hassan@cardstack.com",
+        team_id: "QS5AFH4668"
+      )
+    end
+
     # As build was successful, set an appropriate git tag
-    set_git_tag(build_number: options[:build_number])
+    set_git_tag(build_number: next_build_number)
+  end
+  
+  ########################################################################
+  # Alpha Lane
+  ########################################################################
+  desc "Alpha build"
+  lane :alpha do |options|
+    decrypt_app_vars(
+      namespace: 'alpha'
+    )
+
+    build_and_release(build_number: options[:build_number], should_upload: false)
   end
 
   ########################################################################
@@ -49,39 +71,7 @@ platform :ios do
       namespace: 'beta'
     )
 
-    ########################
-    # Pull certs & profiles
-    ########################
-    sync_code_signing(type: "appstore")
-
-    ########################
-    # Increment the build number
-    ########################
-    increment_build_number(build_number: options[:build_number])
-
-    ########################
-    # Build the app
-    ########################
-    build_ios_app(
-      export_method: "app-store",
-      include_bitcode: false,
-      skip_profile_detection: true,
-      scheme: "Rainbow",
-      configuration: "Release"
-    )
-
-    ########################
-    # Upload to TestFlight
-    ########################
-    upload_to_testflight(
-      skip_waiting_for_build_processing: true,
-      apple_id: "1549183378",
-      username: "hassan@cardstack.com",
-      team_id: "QS5AFH4668"
-    )
-
-    # As build was successful, set an appropriate git tag
-    set_git_tag(build_number: options[:build_number])
+    build_and_release(build_number: options[:build_number], should_upload: true)
   end
 
   ########################################################################
@@ -89,38 +79,11 @@ platform :ios do
   ########################################################################
   desc "Production build"
   lane :production do |options|
-    
     decrypt_app_vars(
       namespace: 'release'
     )
 
-    ########################
-    # Pull certs & profiles
-    ########################
-    sync_code_signing(type: "appstore")
-
-    ########################
-    # Build the app
-    ########################
-    increment_build_number(build_number: options[:build_number])
-
-    build_ios_app(
-      export_method: "app-store",
-      include_bitcode: false
-    )
-
-    ########################
-    # Upload to TestFlight
-    ########################
-    upload_to_testflight(
-      skip_waiting_for_build_processing: true,
-      apple_id: "1549183378",
-      username: "hassan@cardstack.com",
-      team_id: "QS5AFH4668"
-    )
-
-    # As build was successful, set an appropriate git tag
-    set_git_tag(build_number: options[:build_number])
+    build_and_release(build_number: options[:build_number], should_upload: true)
   end
 
   desc "Version bump"
