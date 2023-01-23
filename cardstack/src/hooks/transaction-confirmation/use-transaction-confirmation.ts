@@ -72,7 +72,7 @@ export const useTransactionConfirmation = () => {
       setLoading(false);
     };
 
-    if (domain?.verifyingContract) setDecodedData();
+    setDecodedData();
   }, [message, domain, primaryType, network, nativeCurrency]);
 
   return {
