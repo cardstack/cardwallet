@@ -30,22 +30,57 @@ platform :android do
     })
 
     upload_to_play_store(track: 'internal', version_name: nextVersionCode.to_s)
+
+    # As build was successful, set an appropriate git tag
+    set_git_tag(build_number: nextVersionCode)
   end
 
-  lane :alpha do
-    gradle(task: 'assemble', build_type: 'Release')
-    upload_to_play_store(track: 'alpha')
-  end
-  
-  lane :beta do
-    gradle(task: 'assemble', build_type: 'Release')
-    upload_to_play_store(track: 'beta')
+  desc "Version bump"
+  lane :version_bump do |options|
+    p options[:type]
+    type = ENV['VERSION_CHANGE_TYPE'] ? ENV['VERSION_CHANGE_TYPE'] : options[:type]
+    if ['major', 'minor', 'patch'].include?(type)
+
+      old = gradle_properties(
+        property_name: "VERSION_NAME"
+      )
+
+      oldArr = old.split('.').map{|v| v.to_i}
+      version = old
+
+      if type == "patch"
+        version = "#{oldArr[0]}.#{oldArr[1]}.#{oldArr[2] + 1}"
+      elsif type == "minor"
+        version = "#{oldArr[0]}.#{oldArr[1] + 1}.0"
+      elsif type == "major"
+        version = "#{oldArr[0] + 1}.0.0"
+      end
+
+      filename = '../gradle.properties'
+      properties = File.read(filename)
+      updatedProperties = properties.gsub(/VERSION_NAME=.*/, "VERSION_NAME=" + version)
+      File.open(filename, "w") { |file| file << updatedProperties }
+
+      p "Android version updated to " + version
+    end
   end
 
-  desc "Deploy a new version to the Google Play"
-  lane :production do
-    gradle(task: "clean assembleRelease")
-    upload_to_play_store
+  desc "Set Git Tag"
+  lane :set_git_tag do |options|
+
+    version = gradle_properties(
+      property_name: "VERSION_NAME"
+    )
+
+    # Create a local tag with the new version
+    add_git_tag(
+      tag: "v#{version}-ios-#{options[:build_number]}",
+      prefix: "v",
+      build_number: version
+    )
+
+    # Push new tag
+    push_git_tags()
   end
 
 end

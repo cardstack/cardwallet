@@ -1,4 +1,4 @@
-name: Tag
+name: Create New Release
 on:
   workflow_dispatch:
     inputs:
@@ -6,48 +6,56 @@ on:
         description: 'Type of version bump (major, minor, patch, none)'
         required: true
         default: 'none'
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+          - none
+
+env:
+  GITHUB_AUTH_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
+  BRANCH_TO_TAG: ${{ github.ref_name }}
+  VERSION_CHANGE_BRANCH_TO_TAG: 'release/${{ github.event.inputs.versionChangeType }}-version-${{ github.run_id }}'
+  VERSION_CHANGE_TYPE: ${{ github.event.inputs.versionChangeType }}
 
 jobs:
-  create-new-tag:
-    name: Create new tag with version bump
+  bump-version:
+    name: Bump iOS and Android project versions
+    if: ${{ github.event.inputs.versionChangeType != 'none' }}
     runs-on: macos-latest
-    env:
-      GITHUB_AUTH_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
-      BASE_BRANCH: 'develop'
     steps:
-      - name: Set environment variables
-        env:
-          DEFAULT_VERSION_CHANGE_TYPE: none
-          VERSION_CHANGE_BRANCH_TO_TAG: 'release/${{ github.event.inputs.versionChangeType }}-version-${{ github.run_id }}'
-        run: |
-          echo "VERSION_CHANGE_TYPE=${{ github.event.inputs.versionChangeType || env.DEFAULT_VERSION_CHANGE_TYPE}}" >> $GITHUB_ENV
-
-          if [$VERSION_CHANGE_TYPE != 'none']
-          then
-            echo "BRANCH_TO_TAG=${{ env.VERSION_CHANGE_BRANCH_TO_TAG }}" >> $GITHUB_ENV
-            echo "VERSION_BUMP=true"
-          else
-            echo "BRANCH_TO_TAG=develop" >> $GITHUB_ENV
-            echo "VERSION_BUMP=false"
-          fi
       - uses: actions/checkout@v3
         with:
-          ref: ${{ env.BASE_BRANCH }}
+          ref: ${{ github.ref_name }}
+
       - name: Bump iOS version
-        if: ${{ env.VERSION_BUMP == 'true'}}
         run: cd ios && bundle install && bundle exec fastlane version_bump
+
+      - name: Bump Android version
+        run: cd android && bundle install && bundle exec fastlane version_bump
+
       - name: Create Pull Request
-        if: ${{ env.VERSION_BUMP == 'true'}}
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
-          branch: '${{ env.BRANCH_TO_TAG }}'
+          branch: ${{ env.VERSION_CHANGE_BRANCH_TO_TAG }}
           title: 'release: ${{ github.event.inputs.versionChangeType }} version release'
           commit-message: 'release: ${{ github.event.inputs.versionChangeType }} version release'
-          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          author: '${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>'
           labels: |
             release
             automated pr
           delete-branch: true
-      - name: Create tag
+
+  create-release:
+    needs: bump-version
+    name: Create tagged release
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: ci-script/createTag
         run: cd ci-scripts && yarn && yarn createTag
